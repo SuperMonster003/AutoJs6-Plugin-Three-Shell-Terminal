@@ -8,7 +8,7 @@
   "p_introduction_what": "3-Shell Terminal asume el terminal integrado de AutoJs6: el interruptor \"Terminal\" del cajón de inicio, \"Abrir en el terminal\" en el menú de carpetas del gestor de archivos y en la barra de herramientas del proyecto, y el objeto global `terminal` del lado del script para abrir, controlar y observar sesiones. Cada sesión es un shell del sistema (`/system/bin/sh`) ejecutado en un pty que sigue en segundo plano al salir de la pantalla.",
   "p_introduction_how": "AutoJs6 descubre el plugin mediante su servicio Binder, abre la pantalla del terminal con un Intent explícito y usa el Binder para leer el número de sesiones, cerrarlas todas o controlar sesiones de script; la salida vuelve a los scripts por una tubería. Con el plugin Node.js Runtime instalado, el terminal lee directamente su contrato de manifiesto, verifica la firma y el lanzador y ofrece node / npm / npx / corepack / yarn / pnpm.",
   "h3_status": "Estado",
-  "p_status": "Vista previa de desarrollo P2: sesiones shell, acceso al almacenamiento, integración de Node.js con verificación de firmas y control de sesiones desde el anfitrión implementados. La pantalla de terminal, la API de scripts y los ajustes seguirán las etapas de ROADMAP.md. AutoJs6 {{ required_host_version_name }} (build {{ required_host_version_code }}+).",
+  "p_status": "Vista previa de desarrollo P2: sesiones shell, acceso al almacenamiento, integración de Node.js con verificación de firmas y control de sesiones desde el anfitrión implementados. La pantalla de terminal, la API de scripts y los ajustes seguirán las etapas de [ROADMAP.md]({{ roadmap_url }}). AutoJs6 {{ required_host_version_name }} (build {{ required_host_version_code }}+).",
   "h3_features": "Funciones",
   "p_features_intro": "El complemento ofrece las siguientes capacidades",
   "features": [
@@ -29,7 +29,7 @@
   "p_node_intro": "Cómo obtiene el terminal node / npm y cuáles son los límites",
   "node_points": [
     "Requiere el plugin Node.js Runtime 1.5.0 o posterior; el plugin lee su contrato de manifiesto, verifica la firma, el lanzador y el archivo npm / corepack, y enlaza los comandos en `PATH` cada vez que arranca una sesión. Sin el plugin, o si la verificación falla, el terminal sigue siendo utilizable sin esos comandos.",
-    "Android se niega a ejecutar archivos escritos por las aplicaciones: `node_modules/.bin/*` y los ejecutables nativos de los paquetes npm fallan con `EACCES`; usa `node <archivo de entrada>` o `npx`. Los complementos nativos (`.node`) no se pueden cargar.",
+    "Android impide ejecutar archivos escritos por la aplicación. npm desactiva los enlaces bin de forma predeterminada, por lo que `node_modules/.bin/*` y `npx <paquete>` no pueden ejecutar directamente los puntos de entrada. Usa `node node_modules/<paquete>/<entrada>.js`. Los ejecutables nativos incluidos en paquetes npm fallan con `EACCES`, y no se pueden cargar extensiones nativas (`.node`).",
     "corepack usa por defecto sus pnpm 11.x y Yarn 1.x integrados (`COREPACK_DEFAULT_TO_LATEST=0`) y descarga una versión nombrada explícitamente bajo petición; el registro npm puede cambiarse a npmmirror o a una URL https personalizada en los ajustes."
   ],
   "h3_quick_start": "Inicio rapido",

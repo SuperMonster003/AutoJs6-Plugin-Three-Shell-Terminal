@@ -21,11 +21,11 @@ import kotlin.concurrent.withLock
  * drains an [OutputBuffer] of at most [TerminalContract.OUTPUT_BUFFER_BYTES] into the write end,
  * and the pty tap that feeds it on the main thread. When the host stops reading, the pipe fills,
  * the buffer overflows, the oldest bytes are dropped and the drop is reported (coalesced to one
- * report per second). The write end closes after the buffer is drained when the subscription is
- * cancelled or the session finishes, and immediately when the host is gone.
+ * report per second). The write end drains on session exit and closes immediately on cancellation
+ * or host death.
  * zh-CN: 一个输出订阅 (D21): 读端交给宿主的管道, 把至多 [TerminalContract.OUTPUT_BUFFER_BYTES] 的 [OutputBuffer]
  * 排入写端的写线程, 以及在主线程喂入数据的 pty tap. 宿主停止读取时管道填满, 缓冲溢出, 丢弃最旧字节并报告
- * (每秒合并为一次). 取消订阅或会话结束时先刷完缓冲再关闭写端, 宿主消失时立即关闭.
+ * (每秒合并为一次). 会话结束时先刷完缓冲再关闭写端, 取消订阅或宿主消失时立即关闭.
  */
 internal class OutputSubscription(
     val id: String,

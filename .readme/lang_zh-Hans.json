@@ -8,7 +8,7 @@
   "p_introduction_what": "3-Shell Terminal 接管 AutoJs6 的内置终端: 主页抽屉的 \"终端\" 开关, 文件管理器目录菜单与项目工具栏的 \"在终端中打开\", 以及脚本侧用于打开, 驱动与监听终端会话的全局对象 `terminal`. 每个会话都是一个在 pty 中运行的系统 shell (`/system/bin/sh`), 离开界面后继续在后台运行.",
   "p_introduction_how": "AutoJs6 通过 Binder 服务发现插件, 以显式 Intent 打开终端界面, 并经 Binder 获取会话数, 关闭全部会话或驱动脚本会话; 会话输出经管道传回脚本. 安装了 Node.js Runtime 插件时, 终端直接读取其清单契约, 校验签名与启动器后提供 node / npm / npx / corepack / yarn / pnpm 命令.",
   "h3_status": "当前状态",
-  "p_status": "P2 开发预览: 已实现 shell 会话, 存储访问, 带签名信任的 Node.js 集成与宿主会话控制. 终端界面, 脚本 API 与设置页将继续按 ROADMAP.md 的阶段推进. AutoJs6 {{ required_host_version_name }} (build {{ required_host_version_code }}+).",
+  "p_status": "P2 开发预览: 已实现 shell 会话, 存储访问, 带签名信任的 Node.js 集成与宿主会话控制. 终端界面, 脚本 API 与设置页将继续按 [ROADMAP.md]({{ roadmap_url }}) 的阶段推进. AutoJs6 {{ required_host_version_name }} (build {{ required_host_version_code }}+).",
   "h3_features": "功能",
   "p_features_intro": "插件提供以下能力",
   "features": [
@@ -29,7 +29,7 @@
   "p_node_intro": "终端如何获得 node / npm 以及相关限制",
   "node_points": [
     "需要 Node.js Runtime 插件 1.5.0 或更高版本; 插件读取其清单契约, 校验签名, 启动器与 npm / corepack 归档后, 在每次新建会话时把命令链接进 `PATH`. 未安装或校验失败时终端仍可用, 只是不含这些命令.",
-    "Android 禁止执行应用写出的文件: `node_modules/.bin/*` 与 npm 包自带的原生可执行文件会以 `EACCES` 失败, 请改用 `node <入口文件>` 或 `npx`; 原生扩展 (`.node`) 不可加载.",
+    "Android 禁止执行应用写出的文件: npm 默认关闭 bin 链接, 因而 `node_modules/.bin/*` 与 `npx <包名>` 不能直接运行包入口. 请使用 `node node_modules/<包名>/<入口>.js`. npm 包自带的原生可执行文件会以 `EACCES` 失败, 原生扩展 (`.node`) 不可加载.",
     "corepack 默认使用内置的 pnpm 11.x 与 Yarn 1.x (`COREPACK_DEFAULT_TO_LATEST=0`), 显式指定版本时按指定版本下载; npm 镜像源可在设置中切换为 npmmirror 或自定义 https 地址."
   ],
   "h3_quick_start": "快速开始",

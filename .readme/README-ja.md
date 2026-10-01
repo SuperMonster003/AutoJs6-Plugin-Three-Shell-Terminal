@@ -52,7 +52,7 @@ AutoJs6 は Binder サービスでプラグインを検出し, 明示的な Inte
 
 ******
 
-P2 開発プレビュー: shell セッション, ストレージアクセス, 署名を検証する Node.js 統合, ホストからのセッション操作を実装済みです. 端末画面, スクリプト API, 設定画面は ROADMAP.md の段階に従って実装します. AutoJs6 6.8.0 (build 5304+).
+P2 開発プレビュー: shell セッション, ストレージアクセス, 署名を検証する Node.js 統合, ホストからのセッション操作を実装済みです. 端末画面, スクリプト API, 設定画面は [ROADMAP.md](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/blob/master/ROADMAP.md) の段階に従って実装します. AutoJs6 6.8.0 (build 5304+).
 
 ******
 
@@ -88,7 +88,7 @@ P2 開発プレビュー: shell セッション, ストレージアクセス, �
 ターミナルが node / npm を得る仕組みと制限:
 
 - Node.js Runtime プラグイン 1.5.0 以降が必要です. プラグインはそのマニフェスト契約を読み, 署名, ランチャー, npm / corepack アーカイブを検証したうえで, セッション開始のたびにコマンドを `PATH` にリンクします. プラグインがない場合や検証に失敗した場合も, これらのコマンドを除いてターミナルは使えます.
-- Android はアプリが書き出したファイルの実行を拒否します: `node_modules/.bin/*` や npm パッケージ同梱のネイティブ実行ファイルは `EACCES` で失敗するため, `node <エントリファイル>` または `npx` を使ってください. ネイティブアドオン (`.node`) は読み込めません.
+- Android はアプリが書き出したファイルの実行を禁止します. npm は既定で bin リンクを無効にするため, `node_modules/.bin/*` や `npx <パッケージ>` で入口を直接実行できません. `node node_modules/<パッケージ>/<入口>.js` を使用してください. npm パッケージ内のネイティブ実行ファイルは `EACCES` で失敗し, ネイティブアドオン (`.node`) は読み込めません.
 - corepack は既定で同梱の pnpm 11.x と Yarn 1.x を使い (`COREPACK_DEFAULT_TO_LATEST=0`), 明示的に指定したバージョンは要求時にダウンロードします. npm レジストリは設定で npmmirror またはカスタム https URL に切り替えられます.
 
 ******
@@ -204,7 +204,9 @@ _2026/10/02_
 - `機能` ストレージアクセスの解決 (`StorageAccess`): プラグイン自身の権限状態で判定 (API 30 未満は従来の実行時権限, API 30 以降は "すべてのファイルへのアクセス"), `/sdcard` や `/storage/...` などの共有ストレージと自身の `Android/{data,obb,media}` フォルダーの識別, 開始ディレクトリの `$HOME` へのフォールバックと `STORAGE_PERMISSION_REQUIRED` / `DIRECTORY_INACCESSIBLE` の理由, すべてのファイルへのアクセス設定を開く Intent
 - `機能` 署名者の信頼を伴う Node.js 連携 (`NodeCliTrust`, `NodeCliLocator`, `SessionAssembly`): Node.js Runtime プラグインは AutoJs6 公式プラグイン鍵またはこのプラグイン自身の鍵で署名されている場合のみ使用, 設定スイッチはいかなる探索よりも先に短絡, すべての結果を契約の `node-cli` 状態 (`available`, `disabled`, `plugin-missing`, `plugin-untrusted`, `plugin-too-old`, `executable-missing`, `exec-denied`, `setup-failed`) に対応付け, セッション開始ごとに `usr/bin` のコマンドリンクを更新し, npm / corepack アーカイブをダイジェストごとに一度だけ展開して npm / corepack 環境変数を出力
 - `機能` AutoJs6 から最大 16 個の端末セッションを作成して操作し, セッションごとに最大 4 個のリスナーで出力を受信できます. 最近の出力と shell 環境も取得できます. AutoJs6 を閉じてもセッションは継続し, 無効な要求には具体的な理由が返されます.
+- `機能` パッケージ管理で npm init, 依存関係や指定パッケージのインストール, package.json スクリプトの一覧と実行, Yarn / pnpm コマンド, npm 検索をサポートします. npmjs, npmmirror, カスタム HTTPS レジストリとインストールスクリプトの無視を設定できます. データ消去は全セッションを閉じてから home / usr を初期化し, 設定と外部プロジェクトを保持します. メニューと設定画面は後続の段階で追加します.
 - `修正` システムがバックグラウンド動作を制限していても, セッション開始時にプラグインがクラッシュしなくなりました. セッションはフォアグラウンドサービスの保護なしで継続します.
+- `修正` 長い出力履歴は最新のテキストを保持し, プロセス間応答のサイズ上限を超えないようにします.
 - `依存関係` 端末エミュレーションと pty ネイティブライブラリとして jackpal Android-Terminal-Emulator (term 1.0.70, emulatorview 1.0.42, libtermexec 1.0, Apache-2.0) を追加し, `locks/vendored-aars.lock` でハッシュを固定
 - `依存関係` 共有プラグイン契約と Node.js マニフェスト契約として `common-plugin-api.aar` と `nodejs-api.aar` (AutoJs6 モジュール `plugin-api/common-plugin-api` と `plugin-api/nodejs-api`, ホストビルド 6.8.0 / 5303, MPL 2.0) を追加し, `locks/host-api-aars.lock` でハッシュを固定
 - `依存関係` ターミナル契約 V1 (`ITerminalPlugin` / `ITerminalCallback`, ID, 上限, エラーコード) として `terminal-api.aar` (AutoJs6 モジュール `plugin-api/terminal-api`, ホストビルド 6.8.0 / 5304, MPL 2.0) を追加. プラグインの ID 定数はこれから取得し, `locks/host-api-aars.lock` でハッシュを固定

@@ -1,6 +1,8 @@
 package io.github.supermonster003.autojs6.plugin.three.shell.terminal.node
 
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.core.TerminalPaths
+import java.net.URI
+import java.util.Locale
 
 /**
  * Environment variables that expose the Node.js Runtime plugin's node / npm inside a terminal session.
@@ -35,15 +37,20 @@ object TerminalNodeEnvironment {
     )
 
     /**
-     * Returns [url] when it is an acceptable custom registry (`https://` only), otherwise null.
-     * zh-CN: [url] 为可接受的自定义 registry (仅 `https://`) 时原样返回, 否则返回 null.
+     * Normalizes an HTTPS registry base URL with a host and optional path/port. Credentials,
+     * query strings and fragments do not belong in the base URL; invalid input returns null.
+     * zh-CN: 规范化带主机及可选路径 / 端口的 HTTPS 镜像源地址, 不接受凭据, 查询参数或片段; 无效输入返回 null.
      */
     @JvmStatic
     fun sanitizeRegistry(url: String?): String? {
         val trimmed = url?.trim().orEmpty()
-        if (!trimmed.startsWith("https://", ignoreCase = true) || trimmed.length <= "https://".length) return null
-        if (trimmed.any { it.isWhitespace() || it == ' ' }) return null
-        return if (trimmed.endsWith("/")) trimmed else "$trimmed/"
+        if (trimmed.any { it.isWhitespace() || it.code < 32 || it.code == 127 }) return null
+        val uri = runCatching { URI(trimmed) }.getOrNull() ?: return null
+        if (!uri.scheme.equals("https", ignoreCase = true) || uri.host.isNullOrBlank()) return null
+        if (uri.rawUserInfo != null || uri.rawQuery != null || uri.rawFragment != null) return null
+        if (uri.port != -1 && uri.port !in 1..65535) return null
+        val path = uri.normalize().rawPath.orEmpty().trimEnd('/')
+        return "https://${uri.rawAuthority.lowercase(Locale.ROOT)}$path/"
     }
 
     @JvmStatic

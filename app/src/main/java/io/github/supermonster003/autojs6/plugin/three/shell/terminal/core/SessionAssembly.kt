@@ -28,6 +28,7 @@ object SessionAssembly {
         val directory: StorageAccess.Resolved,
         val node: TerminalNodeSetup.Prepared,
         val environment: Map<String, String>,
+        internal val dataGeneration: Long,
     ) {
         val nodeResolution: NodeCliLocator.Resolution get() = node.resolution
     }
@@ -46,13 +47,17 @@ object SessionAssembly {
         requestedDirectory: String?,
         preferences: TerminalPreferences = TerminalPreferences(context),
         refreshNode: Boolean = false,
+        dataGeneration: Long = TerminalDataLifecycle.ticket(),
     ): Plan {
-        val app = context.applicationContext
-        val paths = TerminalPaths.of(app).ensureLayout()
-        val directory = StorageAccess.resolveDirectory(app, requestedDirectory, paths.home)
-        val resolution = NodeCliLocator.resolve(app, refreshNode, preferences.nodeIntegrationEnabled)
-        val node = TerminalNodeSetup.prepare(app, paths, resolution, preferences.nodeEnvironmentOptions())
-        return Plan(paths, directory, node, node.environment)
+        return synchronized(TerminalDataLifecycle.ioLock) {
+            TerminalDataLifecycle.checkTicket(dataGeneration)
+            val app = context.applicationContext
+            val paths = TerminalPaths.of(app).ensureLayout()
+            val directory = StorageAccess.resolveDirectory(app, requestedDirectory, paths.home)
+            val resolution = NodeCliLocator.resolve(app, refreshNode, preferences.nodeIntegrationEnabled)
+            val node = TerminalNodeSetup.prepare(app, paths, resolution, preferences.nodeEnvironmentOptions())
+            Plan(paths, directory, node, node.environment, dataGeneration)
+        }
     }
 
     /**
@@ -76,6 +81,7 @@ object SessionAssembly {
         keepOpen: Boolean = true,
         id: String? = null,
     ): TerminalSessionManager.Session {
+        TerminalDataLifecycle.checkTicket(plan.dataGeneration)
         val environment = LinkedHashMap<String, String?>(plan.environment)
         environment.putAll(extraEnvironment)
         val directory = plan.directory.directory.path

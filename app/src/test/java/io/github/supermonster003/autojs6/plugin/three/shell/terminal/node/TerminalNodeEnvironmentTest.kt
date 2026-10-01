@@ -55,6 +55,17 @@ class TerminalNodeEnvironmentTest {
     }
 
     @Test
+    fun registryNormalizationRequiresARealHostAndAnUnambiguousBaseUrl() {
+        assertEquals("https://mirror.example.com/npm/", TerminalNodeEnvironment.sanitizeRegistry(" HTTPS://MIRROR.EXAMPLE.COM/a/../npm "))
+        assertEquals("https://mirror.example.com:8443/a%20b/", TerminalNodeEnvironment.sanitizeRegistry("https://mirror.example.com:8443/a%20b"))
+        listOf(
+            "https:///missing-host", "https://?host=example.com", "https://example.com:0", "https://example.com:65536",
+            "https://user:password@example.com", "https://example.com/#fragment", "https://example.com/?token=abc",
+            "https://example.com/\u0000bad", "https://example.com/\\bad", "https://example.com/%xy",
+        ).forEach { assertNull(it, TerminalNodeEnvironment.sanitizeRegistry(it)) }
+    }
+
+    @Test
     fun theSessionEnvironmentKeepsNodeVariablesAndRejectsNothingValid() {
         val extras = TerminalNodeEnvironment.build(paths, TerminalNodeEnvironment.Options(registry = TerminalNodeEnvironment.NPMMIRROR_REGISTRY, ignoreScripts = true))
         val spec = TerminalEnvironment.Spec(

@@ -16,7 +16,9 @@
 * `新增` 儲存空間存取解析 (`StorageAccess`): 以外掛自身的權限狀態判定 (API 30 以下為舊式執行階段權限, API 30 起為 "所有檔案存取權限"), 識別 `/sdcard`, `/storage/...` 等共用儲存空間與自有 `Android/{data,obb,media}` 目錄, 起始目錄退回 `$HOME` 並給出 `STORAGE_PERMISSION_REQUIRED` 或 `DIRECTORY_INACCESSIBLE`, 以及開啟所有檔案存取開關的設定 Intent
 * `新增` 帶簽章信任的 Node.js 整合 (`NodeCliTrust`, `NodeCliLocator`, `SessionAssembly`): 僅當 Node.js Runtime 外掛由 AutoJs6 官方外掛金鑰或本外掛自身金鑰簽署時才使用, 設定開關在任何查詢之前短路, 每種結果對應到契約的 `node-cli` 狀態 (`available`, `disabled`, `plugin-missing`, `plugin-untrusted`, `plugin-too-old`, `executable-missing`, `exec-denied`, `setup-failed`), 每次工作階段啟動時重新整理 `usr/bin` 命令連結, 按摘要只解壓一次 npm / corepack 封存並匯出 npm / corepack 環境變數
 * `新增` AutoJs6 可建立和控制最多 16 個終端工作階段, 每個工作階段支援最多 4 個即時輸出監聽, 並可讀取最近輸出和查詢 shell 環境. 關閉 AutoJs6 後工作階段繼續執行; 無效要求會傳回具體原因.
+* `新增` 套件管理支援 npm init, 安裝相依套件或指定套件, 讀取並執行 package.json 指令碼, 查看 Yarn / pnpm 命令與搜尋 npm. 支援 npmjs, npmmirror 與自訂 HTTPS 鏡像來源, 以及忽略安裝指令碼. 清除終端資料會先關閉所有工作階段, 再清空 home / usr 並重建目錄, 保留設定和外部專案. 選單與設定頁將於後續階段接入.
 * `修復` 系統限制背景活動時, 啟動工作階段不再導致外掛程式當機; 工作階段會在沒有前景服務保護的情況下繼續執行.
+* `修復` 讀取較長轉錄時保留最新文字, 並控制回覆大小, 避免跨程序訊息超限.
 * `相依性` 附加 jackpal Android-Terminal-Emulator (term 1.0.70, emulatorview 1.0.42, libtermexec 1.0, Apache-2.0) 作為終端機模擬與 pty 原生程式庫, 並在 `locks/vendored-aars.lock` 中鎖定雜湊
 * `相依性` 附加 `common-plugin-api.aar` 與 `nodejs-api.aar` (AutoJs6 模組 `plugin-api/common-plugin-api` 與 `plugin-api/nodejs-api`, 主程式建置 6.8.0 / 5303, MPL 2.0) 作為共用外掛契約與 Node.js 清單契約, 並在 `locks/host-api-aars.lock` 中鎖定雜湊
 * `相依性` 附加 `terminal-api.aar` (AutoJs6 模組 `plugin-api/terminal-api`, 主程式建置 6.8.0 / 5304, MPL 2.0) 作為終端機契約 V1 (`ITerminalPlugin` / `ITerminalCallback`, 身份, 上限與錯誤碼), 外掛身份常數改由它提供, 並在 `locks/host-api-aars.lock` 中鎖定雜湊

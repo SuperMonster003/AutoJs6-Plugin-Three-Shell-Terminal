@@ -202,6 +202,7 @@ _2026/10/01_
 - `新增` 10 种语言的 README, 插件中心说明与更新日志
 - `新增` 自宿主终端迁入会话核心: 基于 pty 的 shell 会话与进程级注册表 (记录标题与退出码供 Binder 使用), 插件自有文件目录下的会话环境与目录布局, Node.js 启动器发现与 npm / corepack 安装器, 以及保持会话运行并提供 "关闭会话" 通知的前台服务 (渠道 `three.shell.terminal.sessions`)
 - `新增` 存储访问解析 (`StorageAccess`): 以插件自身的权限状态判定 (API 30 以下为旧式运行时权限, API 30 起为 "所有文件访问权限"), 识别 `/sdcard`, `/storage/...` 等共享存储与自有 `Android/{data,obb,media}` 目录, 起始目录回退 `$HOME` 并给出 `STORAGE_PERMISSION_REQUIRED` 或 `DIRECTORY_INACCESSIBLE`, 以及打开所有文件访问开关的设置 Intent
+- `新增` 带签名信任的 Node.js 集成 (`NodeCliTrust`, `NodeCliLocator`, `SessionAssembly`): 仅当 Node.js Runtime 插件由 AutoJs6 官方插件密钥或本插件自身密钥签名时才使用, 设置开关在任何查找之前短路, 每种结果映射到契约的 `node-cli` 状态 (`available`, `disabled`, `plugin-missing`, `plugin-untrusted`, `plugin-too-old`, `executable-missing`, `exec-denied`, `setup-failed`), 每次会话启动刷新 `usr/bin` 命令链接, 按摘要只解压一次 npm / corepack 归档并导出 npm / corepack 环境变量
 - `依赖` 附加 jackpal Android-Terminal-Emulator (term 1.0.70, emulatorview 1.0.42, libtermexec 1.0, Apache-2.0) 作为终端仿真与 pty 原生库, 并在 `locks/vendored-aars.lock` 中锁定哈希
 - `依赖` 附加 `common-plugin-api.aar` 与 `nodejs-api.aar` (AutoJs6 模块 `plugin-api/common-plugin-api` 与 `plugin-api/nodejs-api`, 宿主构建 6.8.0 / 5303, MPL 2.0) 作为共享插件契约与 Node.js 清单契约, 并在 `locks/host-api-aars.lock` 中锁定哈希
 - `依赖` 附加 `terminal-api.aar` (AutoJs6 模块 `plugin-api/terminal-api`, 宿主构建 6.8.0 / 5304, MPL 2.0) 作为终端契约 V1 (`ITerminalPlugin` / `ITerminalCallback`, 身份, 上限与错误码), 插件身份常量改由它提供, 并在 `locks/host-api-aars.lock` 中锁定哈希

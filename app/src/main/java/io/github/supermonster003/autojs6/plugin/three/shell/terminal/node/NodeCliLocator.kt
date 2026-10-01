@@ -8,22 +8,25 @@ import android.os.Build
 import android.os.Bundle
 import androidx.core.content.pm.PackageInfoCompat
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.ThreeShellTerminalPlugin
+import io.github.supermonster003.autojs6.plugin.three.shell.terminal.core.TerminalPreferences
 import org.autojs.plugin.nodejs.api.NodeJsPluginActions
 import org.autojs.plugin.nodejs.api.NodeJsPluginIds
+import org.autojs.plugin.terminal.api.TerminalContract
 import java.io.File
 
 /**
  * Decides whether the terminal can offer `node` / `npm`, and why not otherwise.
  *
- * Resolution order: a Node.js Runtime plugin must be installed and enabled, it must declare the
- * launcher contract in its manifest, the launcher must exist as a real ELF file in the plugin's
- * native library directory, and a one-shot `--version` run must succeed on this device. The result
- * is cached per plugin build (package, version code, last update time), so an update or a
- * reinstall of the Node.js plugin misses the cache by construction. The signer trust rule and the
- * settings switch of plugin roadmap D17 / P2.3 are layered on top of [discover].
+ * Resolution order (roadmap D17): the integration switch must be on, a Node.js Runtime plugin must
+ * be installed and enabled, its signer must pass [NodeCliTrust], it must declare the launcher
+ * contract in its manifest, the launcher must exist as a real ELF file in the plugin's native
+ * library directory, and a one-shot `--version` run must succeed on this device. The result is
+ * cached per plugin build (package, version code, last update time), so an update or a reinstall
+ * of the Node.js plugin misses the cache by construction; the switch is never cached.
  *
- * zh-CN: 判定终端能否提供 `node` / `npm`, 不能时给出原因. 结果按插件构建 (包名, 版本号, 更新时间) 缓存,
- * 因此 Node.js 插件更新或重装天然不命中缓存. 路线图 D17 / P2.3 的签名信任规则与设置开关叠加在 [discover] 之上.
+ * zh-CN: 判定终端能否提供 `node` / `npm`, 不能时给出原因. 顺序 (路线图 D17): 集成开关打开, 已安装且启用的 Node.js
+ * 运行时插件, 签名通过 [NodeCliTrust], manifest 声明启动器契约, native 库目录中存在 ELF 启动器, 一次性 `--version`
+ * 探测成功. 结果按插件构建 (包名, 版本号, 更新时间) 缓存, 因此更新或重装天然不命中缓存; 开关状态不缓存.
  */
 object NodeCliLocator {
 
@@ -54,8 +57,14 @@ object NodeCliLocator {
 
         sealed class Unavailable : Resolution() {
 
+            /** The Node.js integration is switched off in the plugin settings. zh-CN: 插件设置中关闭了 Node.js 集成. */
+            object IntegrationDisabled : Unavailable()
+
             /** No enabled runtime plugin service is installed at all. zh-CN: 完全没有已启用的运行时插件. */
             object PluginMissing : Unavailable()
+
+            /** Installed, but signed by neither the official key nor this plugin's key (D17). zh-CN: 已安装但签名既非官方也非本插件 (D17). */
+            data class PluginNotTrusted(val packageName: String, val signers: List<String>) : Unavailable()
 
             /** The plugin predates the launcher contract. zh-CN: 插件早于启动器契约. */
             data class PluginTooOld(val packageName: String, val reason: String) : Unavailable()
@@ -70,6 +79,19 @@ object NodeCliLocator {
             data class SetupFailed(val launcher: Launcher, val message: String) : Unavailable()
 
         }
+
+        /** The contract vocabulary (`TerminalContract.NODE_CLI_*`) for capabilities and the environment document. zh-CN: 能力表与环境文档使用的契约词汇. */
+        val contractState: String
+            get() = when (this) {
+                is Available -> TerminalContract.NODE_CLI_AVAILABLE
+                is Unavailable.IntegrationDisabled -> TerminalContract.NODE_CLI_DISABLED
+                is Unavailable.PluginMissing -> TerminalContract.NODE_CLI_PLUGIN_MISSING
+                is Unavailable.PluginNotTrusted -> TerminalContract.NODE_CLI_PLUGIN_UNTRUSTED
+                is Unavailable.PluginTooOld -> TerminalContract.NODE_CLI_PLUGIN_TOO_OLD
+                is Unavailable.ExecutableMissing -> TerminalContract.NODE_CLI_EXECUTABLE_MISSING
+                is Unavailable.ExecDenied -> TerminalContract.NODE_CLI_EXEC_DENIED
+                is Unavailable.SetupFailed -> TerminalContract.NODE_CLI_SETUP_FAILED
+            }
 
     }
 
@@ -103,30 +125,63 @@ object NodeCliLocator {
     /**
      * Blocking; runs the launcher probe on first use per plugin build. Call it off the main thread.
      *
-     * @param refresh re-run the launcher check even when a cached result exists
-     * zh-CN: 阻塞调用, 每个插件构建首次使用时运行启动器探测; 勿在主线程使用.
+     * @param refresh            re-run the launcher check even when a cached result exists
+     * @param integrationEnabled the settings switch; false short-circuits before any discovery
+     * zh-CN: 阻塞调用, 每个插件构建首次使用时运行启动器探测; 勿在主线程使用. 开关关闭时在任何发现之前短路.
      */
     @JvmStatic
     @JvmOverloads
-    fun resolve(context: Context, refresh: Boolean = false): Resolution {
-        val candidate = discover(context) ?: return Resolution.Unavailable.PluginMissing
+    fun resolve(
+        context: Context,
+        refresh: Boolean = false,
+        integrationEnabled: Boolean = TerminalPreferences(context).nodeIntegrationEnabled,
+    ): Resolution {
+        val candidate = when (val gated = gate(integrationEnabled) { discover(context) }) {
+            is Gate.Stop -> return gated.resolution
+            is Gate.Proceed -> gated.candidate
+        }
         val cacheKey = candidate.cacheKey
         if (!refresh) {
             synchronized(lock) { cache?.takeIf { it.key == cacheKey }?.let { return it.resolution } }
         }
-        val resolution = resolveUncached(candidate)
+        val resolution = resolveUncached(context, candidate)
         synchronized(lock) { cache = CacheEntry(cacheKey, resolution) }
         return resolution
+    }
+
+    /** Outcome of [gate]: the candidate to resolve, or a final unavailable state. zh-CN: [gate] 的结果: 待解析的候选, 或最终的不可用态. */
+    sealed class Gate {
+        data class Proceed(val candidate: Candidate) : Gate()
+        data class Stop(val resolution: Resolution.Unavailable) : Gate()
+    }
+
+    /**
+     * The decisions taken before any cache lookup: [Resolution.Unavailable.IntegrationDisabled]
+     * without calling [discover], [Resolution.Unavailable.PluginMissing] when it yields nothing,
+     * otherwise the [Candidate] to resolve.
+     * zh-CN: 缓存查询之前的判定: 开关关闭则不调用 [discover] 直接返回禁用态; 无候选则返回缺失态; 否则返回待解析的候选.
+     */
+    @JvmStatic
+    fun gate(integrationEnabled: Boolean, discover: () -> Candidate?): Gate {
+        if (!integrationEnabled) return Gate.Stop(Resolution.Unavailable.IntegrationDisabled)
+        return discover()?.let { Gate.Proceed(it) } ?: Gate.Stop(Resolution.Unavailable.PluginMissing)
     }
 
     fun cachedOrNull(): Resolution? = synchronized(lock) { cache?.resolution }
 
     fun invalidate() = synchronized(lock) { cache = null }
 
-    /** Pure resolution of one candidate's manifest and native library directory, probe included. zh-CN: 对单个候选的 manifest 与 native 库目录的解析, 含探测. */
+    /**
+     * Resolution of one candidate without the cache: trust (D17), manifest contract, launcher file, probe.
+     * zh-CN: 不经缓存解析单个候选: 信任 (D17), manifest 契约, 启动器文件, 探测.
+     */
     @JvmStatic
-    fun resolveUncached(candidate: Candidate): Resolution {
+    fun resolveUncached(context: Context, candidate: Candidate): Resolution {
         val packageName = candidate.packageName
+        val verdict = NodeCliTrust.verdict(context, packageName)
+        if (verdict is NodeCliTrust.Verdict.Untrusted) {
+            return Resolution.Unavailable.PluginNotTrusted(packageName, verdict.signers)
+        }
         val descriptor = when (val parsed = NodeCliMetadata.parse(candidate.serviceInfo.metaData?.toMap())) {
             is NodeCliMetadata.ParseResult.Missing -> return Resolution.Unavailable.PluginTooOld(packageName, parsed.reason)
             is NodeCliMetadata.ParseResult.Valid -> parsed.descriptor

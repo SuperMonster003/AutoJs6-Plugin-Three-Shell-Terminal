@@ -14,6 +14,7 @@
 * `新增` 10 種語言的 README, 外掛中心說明與更新日誌
 * `新增` 自主程式終端機遷入工作階段核心: 基於 pty 的 shell 工作階段與處理程序級註冊表 (記錄標題與結束代碼供 Binder 使用), 外掛自有檔案目錄下的工作階段環境與目錄佈局, Node.js 啟動器發現與 npm / corepack 安裝器, 以及保持工作階段執行並提供 "關閉工作階段" 通知的前景服務 (頻道 `three.shell.terminal.sessions`)
 * `新增` 儲存空間存取解析 (`StorageAccess`): 以外掛自身的權限狀態判定 (API 30 以下為舊式執行階段權限, API 30 起為 "所有檔案存取權限"), 識別 `/sdcard`, `/storage/...` 等共用儲存空間與自有 `Android/{data,obb,media}` 目錄, 起始目錄退回 `$HOME` 並給出 `STORAGE_PERMISSION_REQUIRED` 或 `DIRECTORY_INACCESSIBLE`, 以及開啟所有檔案存取開關的設定 Intent
+* `新增` 帶簽章信任的 Node.js 整合 (`NodeCliTrust`, `NodeCliLocator`, `SessionAssembly`): 僅當 Node.js Runtime 外掛由 AutoJs6 官方外掛金鑰或本外掛自身金鑰簽署時才使用, 設定開關在任何查詢之前短路, 每種結果對應到契約的 `node-cli` 狀態 (`available`, `disabled`, `plugin-missing`, `plugin-untrusted`, `plugin-too-old`, `executable-missing`, `exec-denied`, `setup-failed`), 每次工作階段啟動時重新整理 `usr/bin` 命令連結, 按摘要只解壓一次 npm / corepack 封存並匯出 npm / corepack 環境變數
 * `相依性` 附加 jackpal Android-Terminal-Emulator (term 1.0.70, emulatorview 1.0.42, libtermexec 1.0, Apache-2.0) 作為終端機模擬與 pty 原生程式庫, 並在 `locks/vendored-aars.lock` 中鎖定雜湊
 * `相依性` 附加 `common-plugin-api.aar` 與 `nodejs-api.aar` (AutoJs6 模組 `plugin-api/common-plugin-api` 與 `plugin-api/nodejs-api`, 主程式建置 6.8.0 / 5303, MPL 2.0) 作為共用外掛契約與 Node.js 清單契約, 並在 `locks/host-api-aars.lock` 中鎖定雜湊
 * `相依性` 附加 `terminal-api.aar` (AutoJs6 模組 `plugin-api/terminal-api`, 主程式建置 6.8.0 / 5304, MPL 2.0) 作為終端機契約 V1 (`ITerminalPlugin` / `ITerminalCallback`, 身份, 上限與錯誤碼), 外掛身份常數改由它提供, 並在 `locks/host-api-aars.lock` 中鎖定雜湊

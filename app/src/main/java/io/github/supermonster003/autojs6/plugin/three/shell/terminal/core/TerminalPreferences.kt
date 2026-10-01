@@ -41,6 +41,18 @@ class TerminalPreferences(private val preferences: SharedPreferences) {
     val npmRegistry: String?
         get() = resolveRegistry(npmRegistryChoice, npmRegistryCustomUrl)
 
+    /** Validate before atomically committing the choice and URL; a rejected custom URL changes nothing. */
+    fun setRegistry(choice: String, customUrl: String? = null) {
+        require(choice in REGISTRY_CHOICES) { "Unknown npm registry choice" }
+        val normalized = if (choice == REGISTRY_CUSTOM) {
+            requireNotNull(TerminalNodeEnvironment.sanitizeRegistry(customUrl)) { "Custom registry must be a valid HTTPS URL" }
+        } else null
+        preferences.edit().apply {
+            putString(KEY_NPM_REGISTRY, choice)
+            if (normalized != null) putString(KEY_NPM_REGISTRY_CUSTOM_URL, normalized)
+        }.apply()
+    }
+
     var npmIgnoreScripts: Boolean
         get() = preferences.getBoolean(KEY_NPM_IGNORE_SCRIPTS, false)
         set(value) = preferences.edit().putBoolean(KEY_NPM_IGNORE_SCRIPTS, value).apply()

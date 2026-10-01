@@ -2,6 +2,7 @@ package io.github.supermonster003.autojs6.plugin.three.shell.terminal.core
 
 import android.content.Context
 import java.io.File
+import java.io.IOException
 
 /**
  * Directory layout of the terminal, rooted at `<filesDir>/terminal` of the plugin (plugin roadmap D16).
@@ -39,7 +40,9 @@ class TerminalPaths(val root: File) {
      * zh-CN: 创建 shell 所需目录, 并在首次时写入默认 profile.
      */
     fun ensureLayout(): TerminalPaths {
-        listOf(home, bin, etc, tmp, lib).forEach { it.mkdirs() }
+        listOf(home, bin, etc, tmp, lib).forEach {
+            if (!it.isDirectory && !it.mkdirs() && !it.isDirectory) throw IOException("Could not create terminal directory ${it.name}")
+        }
         if (!profile.exists() || profile.readText() == LEGACY_DEFAULT_PROFILE) {
             profile.writeText(DEFAULT_PROFILE)
         }
@@ -50,7 +53,7 @@ class TerminalPaths(val root: File) {
      * Removes everything under the terminal root, including caches and installed packages.
      * zh-CN: 删除终端根目录下的全部内容, 包括缓存与已安装的包.
      */
-    fun clearAll(): Boolean = root.deleteRecursively()
+    fun clearAll(): Boolean = TerminalDataCleaner.deleteTree(root)
 
     /**
      * Renders [path] relative to `$HOME` using `~`, mirroring what the prompt shows.

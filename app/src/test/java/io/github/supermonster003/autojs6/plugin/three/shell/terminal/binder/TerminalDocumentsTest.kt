@@ -165,4 +165,14 @@ class TerminalDocumentsTest {
         assertEquals("端" to true, TerminalDocuments.trimTranscript("a终端", 5))
     }
 
+    @Test
+    fun transcriptRepliesAlsoRespectTheUtf16ParcelBudget() {
+        val text = "x".repeat(600_000) + "\uD83D\uDE00end"
+        val trimmed = TerminalDocuments.trimTranscript(text, TerminalContract.MAX_TRANSCRIPT_BYTES, 491_520)
+        assertTrue(trimmed.second)
+        assertEquals(491_520, trimmed.first.length)
+        assertTrue(trimmed.first.endsWith("\uD83D\uDE00end"))
+        assertEquals("end" to true, TerminalDocuments.trimTranscript("x\uD83D\uDE00end", 100, 4))
+    }
+
 }

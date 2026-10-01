@@ -57,8 +57,10 @@ object TerminalSessionManager {
 
     private val nextId = AtomicLong(1)
     private val sessions = LinkedHashMap<String, Session>()
+    private val closingSessions = LinkedHashMap<String, Session>()
     private val listeners = ArrayList<() -> Unit>()
     private val exitListeners = ArrayList<ExitListener>()
+    private val closeAllListeners = ArrayList<() -> Int>()
 
     val activeSessions: List<Session>
         @Synchronized get() = sessions.values.filter { it.pty.isProcessAlive }
@@ -69,6 +71,10 @@ object TerminalSessionManager {
     /** Every registered session including ones whose shell exited but was not closed yet. zh-CN: 全部已注册会话, 含已退出但尚未关闭者. */
     val allSessions: List<Session>
         @Synchronized get() = sessions.values.toList()
+
+    /** Includes shells removed from the visible list but still inside the SIGHUP grace period. */
+    internal val sessionsAwaitingExit: List<Session>
+        @Synchronized get() = sessions.values.toList() + closingSessions.values
 
     @Synchronized
     fun get(id: String?): Session? = id?.let(sessions::get)
@@ -100,6 +106,7 @@ object TerminalSessionManager {
         id: String? = null,
         argv: List<String>? = null,
     ): Session {
+        TerminalDataLifecycle.ticket()
         val paths = TerminalPaths.of(context).ensureLayout()
         val environment = TerminalEnvironment.build(buildSpec(paths, extraEnvironment))
         val pty = TerminalPtySession(argv ?: TerminalSessionLauncher.buildCommand(directory), environment)
@@ -110,6 +117,7 @@ object TerminalSessionManager {
         }
         pty.setFinishCallback { remove(session.id) }
         pty.onProcessReaped = { code ->
+            synchronized(this) { closingSessions.remove(session.id) }
             notifyExited(session, code)
             remove(session.id)
         }
@@ -149,10 +157,17 @@ object TerminalSessionManager {
 
     /** Ends every live session; returns how many were closed. zh-CN: 结束全部存活会话, 返回关闭数. */
     fun closeAll(): Int {
+        val pendingClosed = synchronized(this) { closeAllListeners.toList() }.sumOf { it() }
         val live = activeSessions
         live.forEach { close(it.id) }
-        return live.size
+        return pendingClosed + live.size
     }
+
+    @Synchronized
+    internal fun addCloseAllListener(listener: () -> Int) { closeAllListeners.add(listener) }
+
+    @Synchronized
+    internal fun removeCloseAllListener(listener: () -> Int) { closeAllListeners.remove(listener) }
 
     @Synchronized
     fun addListener(listener: () -> Unit) {
@@ -175,7 +190,9 @@ object TerminalSessionManager {
     }
 
     private fun remove(id: String) {
-        val removed = synchronized(this) { sessions.remove(id) } ?: return
+        val removed = synchronized(this) {
+            sessions.remove(id)?.also { if (it.exitCode == null) closingSessions[id] = it }
+        } ?: return
         removed.pty.onProcessExited = null
         notifyChanged()
     }

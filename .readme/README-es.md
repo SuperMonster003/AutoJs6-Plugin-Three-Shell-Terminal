@@ -52,7 +52,7 @@ AutoJs6 descubre el plugin mediante su servicio Binder, abre la pantalla del ter
 
 ******
 
-Vista previa de desarrollo P2: sesiones shell, acceso al almacenamiento, integración de Node.js con verificación de firmas y control de sesiones desde el anfitrión implementados. La pantalla de terminal, la API de scripts y los ajustes seguirán las etapas de ROADMAP.md. AutoJs6 6.8.0 (build 5304+).
+Vista previa de desarrollo P2: sesiones shell, acceso al almacenamiento, integración de Node.js con verificación de firmas y control de sesiones desde el anfitrión implementados. La pantalla de terminal, la API de scripts y los ajustes seguirán las etapas de [ROADMAP.md](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/blob/master/ROADMAP.md). AutoJs6 6.8.0 (build 5304+).
 
 ******
 
@@ -88,7 +88,7 @@ El complemento ofrece las siguientes capacidades:
 Cómo obtiene el terminal node / npm y cuáles son los límites:
 
 - Requiere el plugin Node.js Runtime 1.5.0 o posterior; el plugin lee su contrato de manifiesto, verifica la firma, el lanzador y el archivo npm / corepack, y enlaza los comandos en `PATH` cada vez que arranca una sesión. Sin el plugin, o si la verificación falla, el terminal sigue siendo utilizable sin esos comandos.
-- Android se niega a ejecutar archivos escritos por las aplicaciones: `node_modules/.bin/*` y los ejecutables nativos de los paquetes npm fallan con `EACCES`; usa `node <archivo de entrada>` o `npx`. Los complementos nativos (`.node`) no se pueden cargar.
+- Android impide ejecutar archivos escritos por la aplicación. npm desactiva los enlaces bin de forma predeterminada, por lo que `node_modules/.bin/*` y `npx <paquete>` no pueden ejecutar directamente los puntos de entrada. Usa `node node_modules/<paquete>/<entrada>.js`. Los ejecutables nativos incluidos en paquetes npm fallan con `EACCES`, y no se pueden cargar extensiones nativas (`.node`).
 - corepack usa por defecto sus pnpm 11.x y Yarn 1.x integrados (`COREPACK_DEFAULT_TO_LATEST=0`) y descarga una versión nombrada explícitamente bajo petición; el registro npm puede cambiarse a npmmirror o a una URL https personalizada en los ajustes.
 
 ******
@@ -204,7 +204,9 @@ _2026/10/02_
 - `Función` Resolución del acceso al almacenamiento (`StorageAccess`): estado de permisos propio del plugin (permisos en tiempo de ejecución heredados por debajo de API 30, "Acceso a todos los archivos" desde API 30), detección del almacenamiento compartido para `/sdcard`, `/storage/...` y las carpetas `Android/{data,obb,media}` propias, retorno del directorio inicial a `$HOME` con `STORAGE_PERMISSION_REQUIRED` o `DIRECTORY_INACCESSIBLE`, y los Intents de ajustes que abren el acceso a todos los archivos
 - `Función` Integración de Node.js con confianza del firmante (`NodeCliTrust`, `NodeCliLocator`, `SessionAssembly`): el plugin Node.js Runtime solo se usa cuando está firmado por la clave oficial de plugins de AutoJs6 o por la clave propia de este plugin, el interruptor de ajustes cortocircuita antes de cualquier búsqueda, cada resultado se asigna a los estados `node-cli` del contrato (`available`, `disabled`, `plugin-missing`, `plugin-untrusted`, `plugin-too-old`, `executable-missing`, `exec-denied`, `setup-failed`), y cada inicio de sesión renueva los enlaces de comandos de `usr/bin`, extrae el archivo npm / corepack una sola vez por resumen y exporta el entorno npm / corepack
 - `Función` AutoJs6 puede crear y controlar hasta 16 sesiones de terminal, recibir salida en directo con hasta 4 oyentes por sesión, leer la salida reciente y consultar el entorno shell. Las sesiones continúan al cerrar AutoJs6; las solicitudes no válidas se rechazan con un motivo concreto.
+- `Función` La gestión de paquetes admite npm init, instalación de dependencias y paquetes, listado y ejecución de scripts de package.json, comandos Yarn / pnpm y búsqueda en npm. Se puede elegir npmjs, npmmirror o una URL HTTPS personalizada e ignorar scripts de instalación. Borrar los datos cierra todas las sesiones antes de restablecer home / usr, conservando los ajustes y proyectos externos. Los menús y la interfaz de ajustes llegarán en etapas posteriores.
 - `Corrección` Las restricciones del sistema sobre la actividad en segundo plano ya no provocan un cierre del complemento al iniciar una sesión. La sesión continúa sin la protección del servicio en primer plano.
+- `Corrección` La lectura de transcripciones largas conserva el texto más reciente sin superar el límite de tamaño de las respuestas entre procesos.
 - `Dependencia` Se añade jackpal Android-Terminal-Emulator (term 1.0.70, emulatorview 1.0.42, libtermexec 1.0, Apache-2.0) como emulación de terminal y bibliotecas nativas pty, con hash bloqueado en `locks/vendored-aars.lock`
 - `Dependencia` Se añaden `common-plugin-api.aar` y `nodejs-api.aar` (módulos AutoJs6 `plugin-api/common-plugin-api` y `plugin-api/nodejs-api`, build del host 6.8.0 / 5303, MPL 2.0) como contrato de plugin compartido y contrato de manifiesto Node.js, con hash bloqueado en `locks/host-api-aars.lock`
 - `Dependencia` Se añade `terminal-api.aar` (módulo AutoJs6 `plugin-api/terminal-api`, build del host 6.8.0 / 5304, MPL 2.0) como contrato de terminal V1 (`ITerminalPlugin` / `ITerminalCallback`, identidad, límites y códigos de error); las constantes de identidad del plugin provienen ahora de él, con hash bloqueado en `locks/host-api-aars.lock`

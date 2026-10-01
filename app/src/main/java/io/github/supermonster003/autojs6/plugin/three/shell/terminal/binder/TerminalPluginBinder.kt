@@ -13,6 +13,7 @@ import io.github.supermonster003.autojs6.plugin.three.shell.terminal.ThreeShellT
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.capabilitiesBundle
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.core.SessionAssembly
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.core.TerminalEnvironment
+import io.github.supermonster003.autojs6.plugin.three.shell.terminal.core.TerminalDataLifecycle
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.core.TerminalPaths
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.core.TerminalPreferences
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.core.TerminalPtySession
@@ -31,6 +32,7 @@ import java.io.ByteArrayOutputStream
 import java.io.Closeable
 import java.io.IOException
 import java.util.concurrent.Callable
+import java.util.concurrent.CancellationException
 import java.util.concurrent.ExecutionException
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -56,7 +58,9 @@ import java.util.concurrent.atomic.AtomicLong
 internal class TerminalPluginBinder(
     context: Context,
     private val guard: CallerGuard = HostCallerGuard(context),
-    private val planSession: (Context, String?, TerminalPreferences) -> SessionAssembly.Plan = { ctx, cwd, preferences -> SessionAssembly.plan(ctx, cwd, preferences) },
+    private val planSession: (Context, String?, TerminalPreferences, Long) -> SessionAssembly.Plan = { ctx, cwd, preferences, generation ->
+        SessionAssembly.plan(ctx, cwd, preferences, dataGeneration = generation)
+    },
 ) : ITerminalPlugin.Stub(), Closeable {
 
     private val context: Context = context.applicationContext
@@ -76,14 +80,16 @@ internal class TerminalPluginBinder(
 
     private val sessionsListener: () -> Unit = { publishSessions() }
     private val exitListener = TerminalSessionManager.ExitListener { session, exitCode -> onSessionExited(session, exitCode) }
+    private val closeAllListener: () -> Int = { cancelPendingSessions() }
 
     init {
         TerminalSessionManager.addListener(sessionsListener)
         TerminalSessionManager.addExitListener(exitListener)
+        TerminalSessionManager.addCloseAllListener(closeAllListener)
     }
 
     /** A session answered as `pending` while its plan runs on the worker. zh-CN: 计划仍在工作线程运行时以 `pending` 回答的会话. */
-    private class PendingSession(val id: String, val cwd: String, val title: String) {
+    private class PendingSession(val id: String, val cwd: String, val title: String, val dataGeneration: Long) {
         val createdAt: Long = System.currentTimeMillis()
 
         @Volatile
@@ -119,6 +125,7 @@ internal class TerminalPluginBinder(
     override fun listSessions(): String = document("listSessions") { TerminalDocuments.sessions(sessionViews()) }
 
     override fun openSession(requestJson: String?): String = document("openSession") {
+        val generation = TerminalDataLifecycle.ticket()
         val request = TerminalDocuments.parseOpenRequest(requestJson)
         val paths = TerminalPaths.of(context)
         val resolved = StorageAccess.resolveDirectory(context, request.cwd, paths.home)
@@ -127,10 +134,11 @@ internal class TerminalPluginBinder(
         val preferences = TerminalPreferences(context)
         val title = TerminalSessionManager.defaultTitle(cwd, request.title, request.command)
         val record = synchronized(lock) {
+            TerminalDataLifecycle.checkTicket(generation)
             if (sessionCountLocked() >= TerminalContract.MAX_SESSIONS) {
                 throw TerminalFailure(TerminalErrorCodes.SESSION_LIMIT, "at most ${TerminalContract.MAX_SESSIONS} sessions may be open")
             }
-            PendingSession(TerminalSessionManager.reserveId(), cwd, title).also { pending[it.id] = it }
+            PendingSession(TerminalSessionManager.reserveId(), cwd, title, generation).also { pending[it.id] = it }
         }
         // Even a warm plan touches disk and refreshes command links. All preparation belongs on the worker.
         val answer = TerminalDocuments.session(pendingView(record)).toString()
@@ -154,15 +162,18 @@ internal class TerminalPluginBinder(
     }
 
     override fun closeAllSessions(): Int = action("closeAllSessions") {
+        onMain { TerminalSessionManager.closeAll() }
+    }
+
+    private fun cancelPendingSessions(): Int {
         val cancelled = synchronized(lock) { pending.values.toList().also { records -> records.forEach { it.cancelled = true }; pending.clear() } }
         cancelled.forEach { record ->
             record.cancelled = true
             record.subscribers.forEach { (subscription, _) -> subscription.abort() }
             callbacks.dispatch { it.onSessionExited(record.id, TerminalPtySession.START_FAILURE_CODE) }
         }
-        val closedNow = onMain { TerminalSessionManager.closeAll() }
         if (cancelled.isNotEmpty()) publishSessions()
-        cancelled.size + closedNow
+        return cancelled.size
     }
 
     override fun writeInput(sessionId: String?, data: ByteArray?) {
@@ -248,7 +259,9 @@ internal class TerminalPluginBinder(
             val session = TerminalSessionManager.get(id) ?: throw TerminalFailure(TerminalErrorCodes.SESSION_NOT_FOUND, "no session $id", id)
             onMain { runCatching { session.pty.transcriptText }.getOrNull().orEmpty() }
         }
-        val (trimmed, truncated) = TerminalDocuments.trimTranscript(text, limit)
+        // Parcel stores Strings as UTF-16: 1 MiB of ASCII would otherwise exceed Binder's 1 MiB
+        // transaction buffer. Keep room for the Bundle header, as well as respecting the UTF-8 limit.
+        val (trimmed, truncated) = TerminalDocuments.trimTranscript(text, limit, MAX_TRANSCRIPT_REPLY_CHARS)
         Bundle().apply {
             putString(TerminalContract.KEY_TEXT, trimmed)
             putBoolean(TerminalContract.KEY_TRUNCATED, truncated)
@@ -274,8 +287,8 @@ internal class TerminalPluginBinder(
 
     /**
      * Every client unbound: the host is gone, so its callbacks are dropped and its subscriptions
-     * drain and close; sessions keep running for the next binding (and the UI).
-     * zh-CN: 所有客户端已解绑: 宿主离开, 丢弃其回调, 其订阅刷完后关闭; 会话继续运行以待下次绑定 (与界面).
+     * close immediately; sessions keep running for the next binding (and the UI).
+     * zh-CN: 所有客户端已解绑: 宿主离开, 丢弃其回调, 其订阅立即关闭; 会话继续运行以待下次绑定 (与界面).
      */
     fun onClientsGone() {
         callbacks.clear()
@@ -287,6 +300,7 @@ internal class TerminalPluginBinder(
         closed = true
         TerminalSessionManager.removeListener(sessionsListener)
         TerminalSessionManager.removeExitListener(exitListener)
+        TerminalSessionManager.removeCloseAllListener(closeAllListener)
         onClientsGone()
         worker.shutdown()
         synchronized(lock) {
@@ -325,7 +339,7 @@ internal class TerminalPluginBinder(
     private fun completePending(record: PendingSession, request: TerminalDocuments.OpenRequest, preferences: TerminalPreferences) {
         try {
             if (record.cancelled) return
-            val plan = planSession(context, request.cwd, preferences)
+            val plan = planSession(context, request.cwd, preferences, record.dataGeneration)
             onMain {
                 synchronized(lock) {
                     if (record.cancelled) return@onMain
@@ -513,6 +527,8 @@ internal class TerminalPluginBinder(
             throw e
         } catch (e: TerminalFailure) {
             e.toJson()
+        } catch (_: CancellationException) {
+            TerminalDocuments.error(TerminalErrorCodes.CANCELLED, "terminal data is being cleared")
         } catch (e: IOException) {
             Log.w(TAG, "$name failed: ${e.message}")
             TerminalDocuments.error(TerminalErrorCodes.PTY_FAILED, "the pty could not be opened")
@@ -547,6 +563,7 @@ internal class TerminalPluginBinder(
         const val DEFAULT_ROWS = 24
 
         private const val MAX_QUEUED_INPUT_BYTES = 4 * TerminalContract.MAX_INPUT_BYTES
+        private const val MAX_TRANSCRIPT_REPLY_CHARS = (TerminalContract.MAX_TRANSCRIPT_BYTES - 64 * 1024) / 2
         private const val MAIN_THREAD_TIMEOUT_MS = 10_000L
         private const val EXIT_FLUSH_GRACE_MS = 2_000L
     }

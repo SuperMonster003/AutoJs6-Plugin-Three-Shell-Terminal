@@ -52,7 +52,7 @@ AutoJs6 discovers the plugin through its Binder service, opens the terminal scre
 
 ******
 
-P2 development preview: shell sessions, storage access, trusted Node.js integration and host session control are implemented. The terminal screen, script API and settings page will follow the stages in ROADMAP.md. AutoJs6 6.8.0 (build 5304+).
+P2 development preview: shell sessions, storage access, trusted Node.js integration and host session control are implemented. The terminal screen, script API and settings page will follow the stages in [ROADMAP.md](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/blob/master/ROADMAP.md). AutoJs6 6.8.0 (build 5304+).
 
 ******
 
@@ -88,7 +88,7 @@ The plugin provides the following capabilities:
 How the terminal obtains node / npm and what the limits are:
 
 - Requires the Node.js Runtime plugin 1.5.0 or later; the plugin reads its manifest contract, verifies the signature, the launcher and the npm / corepack archive, and links the commands into `PATH` whenever a session starts. Without the plugin, or when verification fails, the terminal stays usable without these commands.
-- Android refuses to execute files written by apps: `node_modules/.bin/*` and native executables shipped by npm packages fail with `EACCES`; run `node <entry file>` or `npx` instead. Native addons (`.node`) cannot be loaded.
+- Android prevents execution of app-written files. npm disables bin links by default, so `node_modules/.bin/*` and `npx <package>` cannot directly run package entry points. Use `node node_modules/<package>/<entry>.js`. Native executables bundled in npm packages fail with `EACCES`, and native addons (`.node`) cannot be loaded.
 - corepack defaults to its bundled pnpm 11.x and Yarn 1.x (`COREPACK_DEFAULT_TO_LATEST=0`) and downloads an explicitly named version on request; the npm registry can be switched to npmmirror or a custom https URL in the settings.
 
 ******
@@ -204,7 +204,9 @@ _2026/10/02_
 - `Feature` Storage access resolution (`StorageAccess`): the plugin's own permission state (legacy runtime permissions below API 30, "All files access" from API 30), shared-storage detection for `/sdcard`, `/storage/...` and the own `Android/{data,obb,media}` folders, start-directory fallback to `$HOME` with `STORAGE_PERMISSION_REQUIRED` or `DIRECTORY_INACCESSIBLE`, and the settings intents that open the all-files-access switch
 - `Feature` Node.js integration with signer trust (`NodeCliTrust`, `NodeCliLocator`, `SessionAssembly`): the Node.js Runtime plugin is used only when it is signed by the official AutoJs6 plugin key or by this plugin's own key, the settings switch short-circuits before any lookup, every outcome maps onto the contract's `node-cli` states (`available`, `disabled`, `plugin-missing`, `plugin-untrusted`, `plugin-too-old`, `executable-missing`, `exec-denied`, `setup-failed`), and each session start refreshes the `usr/bin` command links, extracts the npm / corepack archive once per digest and exports the npm / corepack environment
 - `Feature` AutoJs6 can create and control up to 16 terminal sessions, receive live output with up to 4 listeners per session, read recent output and query the shell environment. Closing AutoJs6 leaves the sessions running; invalid requests are rejected with a specific reason.
+- `Feature` Package management supports npm init, dependency and package installation, listing and running package.json scripts, Yarn / pnpm commands and npm search. Registry choices include npmjs, npmmirror and custom HTTPS URLs, with an option to ignore install scripts. Clearing terminal data closes all sessions before resetting home / usr and rebuilding the layout, preserving settings and external projects. Menus and settings UI will follow in later stages.
 - `Fix` A system restriction on background activity no longer crashes the plugin when a session starts. The session continues without foreground service protection.
+- `Fix` Long transcript reads keep their newest text within the cross-process reply size limit.
 - `Dependency` Added jackpal Android-Terminal-Emulator (term 1.0.70, emulatorview 1.0.42, libtermexec 1.0, Apache-2.0) as the terminal emulation and pty native libraries, hash-locked in `locks/vendored-aars.lock`
 - `Dependency` Added `common-plugin-api.aar` and `nodejs-api.aar` (AutoJs6 modules `plugin-api/common-plugin-api` and `plugin-api/nodejs-api`, host build 6.8.0 / 5303, MPL 2.0) as the shared plugin contract and the Node.js manifest contract, hash-locked in `locks/host-api-aars.lock`
 - `Dependency` Added `terminal-api.aar` (AutoJs6 module `plugin-api/terminal-api`, host build 6.8.0 / 5304, MPL 2.0) as the terminal contract V1 (`ITerminalPlugin` / `ITerminalCallback`, identity, ceilings and error codes); the plugin identity constants now come from it, hash-locked in `locks/host-api-aars.lock`

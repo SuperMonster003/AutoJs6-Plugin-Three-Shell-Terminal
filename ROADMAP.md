@@ -289,7 +289,7 @@ runtime/api/augment/terminal/           Terminal.kt (AugmentableKey("terminal"))
 
 建议会话切分: P0 一次 (骨架 + spike); P1 两次 (契约 + 客户端 + 入口改造 + 注册为一次; 删除旧终端 + 数据清理 + changelog + 文档为一次, 维护者已接受短期无终端 (D34 Q7), 两次可连续执行); P2 两到三次 (会话 / 服务 / 存储; Binder 与上限; Node CLI 与包管理); P3 一到两次; P4 两次 (第一 / 二档 + 错误; 第三档会话对象 + 输出管道 + 示例); P5 一到两次; P6 一到两次; P7 一次; P8 按需.
 
-当前进度 (2026-10-01): 调研与决策完成, 本 Roadmap, `AGENTS.md` 与图标源图入库; 未写 Gradle / 源码 (P0.1), 未改宿主.
+当前进度 (2026-10-02): P0 与 P2.1-P2.5 已完成并有构建 / JVM / 设备证据; P1 契约, 客户端与旧终端迁出已完成, 宿主可用态入口与抽屉计数待 P3 界面落地后复验. 下次起点 P3.1 (终端 Activity / 快捷键栏 / 选择 / 菜单). 插件 build 17, 仅本地提交, D9 推送与发布门控继续生效.
 
 ---
 
@@ -392,8 +392,8 @@ runtime/api/augment/terminal/           Terminal.kt (AugmentableKey("terminal"))
 
 ### P2.5 包管理与设置项逻辑
 
-- [ ] (插件) 迁入 `TerminalNpmActions` 的非 UI 部分 (npm init / install / 安装包 / 运行脚本 / 其它包管理器说明 / 搜索 URL), `NpmProjectScripts` 读取 `package.json`; 镜像源 (`https` 限制, `sanitizeRegistry`), 忽略安装脚本, 清除数据 (关闭全部会话 -> 删除 `home` / `usr` -> 重建布局) 作为纯逻辑类供 P3 / P5 的 UI 调用.
-- [ ] (测试) JVM: 镜像源规范化与拒绝 `http://`, 清除数据的目录集合; DEVICE: 在含 `package.json` 的目录中 `npm run` 列表正确, `npm install` 在 npmmirror 下完成 (需网络).
+- [x] (插件) 迁入 `TerminalNpmActions` 的非 UI 部分 (npm init / install / 安装包 / 运行脚本 / 其它包管理器说明 / 搜索 URL), `NpmProjectScripts` 读取 `package.json`; 镜像源 (`https` 限制, `sanitizeRegistry`), 忽略安装脚本, 清除数据 (关闭全部会话 -> 删除 `home` / `usr` -> 重建布局) 作为纯逻辑类供 P3 / P5 的 UI 调用. (SOURCE 2026-10-02: `core/TerminalNpmActions`, `TerminalSettingsActions`, `TerminalDataCleaner`, `TerminalDataLifecycle`; 沿用 P2.1 的 `NpmProjectScripts`; 镜像源解析完整 HTTPS URI 后原子保存; 清理先关闭 live / pending 会话并等待 shell 回收, 与 Node 安装共用 I/O 锁, 使旧计划失效, 只删除 home / usr 并重建布局, 不跟随符号链接且保留设置与外部工程. 对话框与已有译文留供 P3 / P5 接入. 详见 `docs/dev/p2-package-management-evidence.md`.)
+- [x] (测试) JVM: 镜像源规范化与拒绝 `http://`, 清除数据的目录集合; DEVICE: 在含 `package.json` 的目录中 `npm run` 列表正确, `npm install` 在 npmmirror 下完成 (需网络). (JVM 2026-10-02: 125/125; DEVICE / NETWORK: Xiaomi 23046RP50C / API 35 / arm64-v8a, 全新 npm 缓存经 npmmirror 安装 `is-number@7.0.0`, 按文件顺序得到 verify / postinstall 列表, `npm run verify` exit 0, ignore-scripts 阻止 postinstall; 清理成功 / 失败回调, live / pending 取消与已关闭会话的 shell 回收在 API 24 x86 AVD 和 Pad 通过. 最终回归含 33 个不同用例: Pad 33 通过, API 24 32 通过 + 在线 npm 1 跳过 (无 Node.js Runtime); 含 60 万字符的真实 Binder 转录读取. ANDROID_BUILD: debug / androidTest / release / R8 / lintDebug / lintRelease / 16 KB 校验通过; DOCS: 10 语言 JSON 与 Markdown, 图标检查通过.)
 
 验收条件: 两台设备 (API 24 AVD + API 35 真机) 上 Binder 契约测试全绿; Node CLI 三命令可用且卸载后退化正确; 前台服务通知在离开界面后持续显示并可 "关闭全部"; 全部 JVM 测试通过.
 
@@ -854,3 +854,5 @@ t.on('exit', code => console.log('done', code));
 ### 2026-10-02
 
 - P2.4: 继续已有未提交 Binder 草稿并完成插件 build 16. `ITerminalPlugin.Stub` 全路由, 同宿主 uid / 包名 / 版本 / 签名 + PLUGIN 权限校验, 冻结能力表, 严格 JSON 与 D22 上限, 工作线程 pending 装配与有界输入队列, 1 MiB 输出环形缓冲 / 管道 / 溢出回调 / 宿主死亡回收, 服务重绑保留 pending 会话. JVM 116/116; API 24 x86 AVD 与 Xiaomi Pad API 35 arm64 各 26/26 (Binder 16 + 会话 4 + 插件契约 6), 包括通知的关闭全部. 修复真机后台活动受限时前台提升被系统静默拒绝引发的异步崩溃, 以及 API 24 写满管道后关闭 FD 不能唤醒阻塞写线程的问题; 证据与限制见 `docs/dev/p2-binder-evidence.md`. 10 语言状态 / changelog 已同步. P2.4 关闭, 继续 P2.5 (包管理动作, 镜像源与清除数据逻辑).
+
+- P2.5: 插件 build 17: npm 非 UI 动作与搜索, HTTPS 镜像源完整校验 / 原子保存, ignore-scripts, 异步清除 home / usr 并重建布局. 清理覆盖 pending 会话, 等待 shell 回收, 与 Node 装配串行, generation 拒绝旧计划, 符号链接不跨出清理目录. JVM 125/125, Pad API 35 真机 npmmirror 安装及脚本 exit 0, postinstall 被忽略; 最终 33 个不同 instrumentation 用例在 Pad 全通过, API 24 AVD 32 通过 / 1 因无 Node.js Runtime 跳过. 审阅另补转录 UTF-16 Parcel 大小限制, 60 万字符真实跨进程测试两台通过. debug / androidTest / release / R8 / 两种 lint (0 error) / 16 KB 与文档 / 图标检查通过. 10 语言 README 修正 npx 限制, changelog 与迁移映射同步; 证据见 `docs/dev/p2-package-management-evidence.md`. P2 关闭, 下次起点 P3.1; 宿主可用态入口复验继续待 P3, 推送与发布继续按 D9 暂停.

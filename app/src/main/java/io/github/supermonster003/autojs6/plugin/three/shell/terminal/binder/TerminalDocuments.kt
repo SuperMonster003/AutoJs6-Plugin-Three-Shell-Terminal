@@ -144,9 +144,12 @@ internal object TerminalDocuments {
      * zh-CN: 保留最新的 [maxBytes] 字节 UTF-8 文本并在字符边界截断; 标志表示是否有丢弃.
      */
     @JvmStatic
-    fun trimTranscript(text: String, maxBytes: Int): Pair<String, Boolean> {
-        val bytes = text.toByteArray(Charsets.UTF_8)
-        if (bytes.size <= maxBytes) return text to false
+    fun trimTranscript(text: String, maxBytes: Int, maxChars: Int = Int.MAX_VALUE): Pair<String, Boolean> {
+        var charStart = (text.length - maxChars).coerceAtLeast(0)
+        if (charStart > 0 && text[charStart].isLowSurrogate() && text[charStart - 1].isHighSurrogate()) charStart++
+        val tail = text.substring(charStart)
+        val bytes = tail.toByteArray(Charsets.UTF_8)
+        if (bytes.size <= maxBytes) return tail to (charStart > 0)
         if (maxBytes <= 0) return "" to true
         var start = bytes.size - maxBytes
         while (start < bytes.size && (bytes[start].toInt() and 0xC0) == 0x80) start++

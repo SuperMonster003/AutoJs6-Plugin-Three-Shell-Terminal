@@ -243,9 +243,9 @@ class TerminalBinderContractTest {
     @Test
     fun aSlowToolchainPlanYieldsAPendingSessionThatCompletesAndFlushesQueuedWork() {
         val release = CountDownLatch(1)
-        val slow = TerminalPluginBinder(context, PermissiveGuard) { ctx, cwd, preferences ->
+        val slow = TerminalPluginBinder(context, PermissiveGuard) { ctx, cwd, preferences, generation ->
             check(release.await(10, TimeUnit.SECONDS))
-            SessionAssembly.plan(ctx, cwd, preferences)
+            SessionAssembly.plan(ctx, cwd, preferences, dataGeneration = generation)
         }
         val slowEvents = RecordingCallback()
         try {
@@ -324,9 +324,9 @@ class TerminalBinderContractTest {
     @Test
     fun pendingInputIsBoundedAndCancellationDoesNotStartTheShell() {
         val release = CountDownLatch(1)
-        val slow = TerminalPluginBinder(context, PermissiveGuard) { ctx, cwd, preferences ->
+        val slow = TerminalPluginBinder(context, PermissiveGuard) { ctx, cwd, preferences, generation ->
             check(release.await(10, TimeUnit.SECONDS))
-            SessionAssembly.plan(ctx, cwd, preferences)
+            SessionAssembly.plan(ctx, cwd, preferences, dataGeneration = generation)
         }
         try {
             val started = SystemClock.elapsedRealtime()
@@ -456,6 +456,25 @@ class TerminalBinderContractTest {
         notification.actions.last().actionIntent.send()
         waitUntil("the notification action closes all sessions") { sessionIds(binder.listSessions()).isEmpty() }
         waitUntil("the notification is removed") { manager.activeNotifications.none { it.id == SessionNotifications.NOTIFICATION_ID } }
+    }
+
+    @Test
+    fun aLargeTranscriptFitsInARemoteBinderReply(): Unit = bind(ComponentName(context, TerminalBinderTestService::class.java)).use { endpoint ->
+        val plugin = ITerminalPlugin.Stub.asInterface(endpoint.binder)
+        val opened = json(plugin.openSession("""{"cwd":"$home"}"""))
+        awaitRunning(plugin, opened)
+        val id = opened["id"].asString
+        try {
+            val reader = PipeReader(descriptorOf(plugin.subscribeOutput(id, "{}")))
+            plugin.writeInput(id, "printf '%0600000d' 0; printf '\\n__%s__\\n' BIG_DONE\n".toByteArray())
+            reader.awaitText("the large output has arrived") { it.contains("__BIG_DONE__") }
+            val reply = plugin.readTranscript(id, TerminalContract.MAX_TRANSCRIPT_BYTES)
+            assertNull(reply.getString(TerminalContract.KEY_ERROR_JSON))
+            assertTrue(reply.getBoolean(TerminalContract.KEY_TRUNCATED))
+            assertTrue(reply.getString(TerminalContract.KEY_TEXT)!!.contains("__BIG_DONE__"))
+        } finally {
+            plugin.closeAllSessions()
+        }
     }
 
     // ---- helpers ----------------------------------------------------------------------------

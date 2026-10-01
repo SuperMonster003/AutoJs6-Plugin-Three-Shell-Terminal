@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="notification_channel_description">顯示在背景持續執行的終端工作階段, 並可將其關閉</string>
+    <string name="notification_channel_name">終端工作階段</string>
+    <string name="notification_close_sessions">關閉工作階段</string>
+    <string name="notification_title">終端工作階段執行中</string>
+    <string
+        name="notification_title_multiple"
+        tools:ignore="PluralsCandidate">%1$d 個終端工作階段執行中</string>
     <string name="plugin_description">多工作階段終端機, 在 pty 中執行系統 shell, 支援背景執行, 快捷按鍵及 Node.js 命令</string>
 </resources>

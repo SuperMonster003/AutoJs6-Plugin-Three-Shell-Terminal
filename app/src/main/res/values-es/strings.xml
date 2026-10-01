@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="notification_channel_description">Muestra las sesiones de terminal que siguen ejecutándose en segundo plano y permite cerrarlas</string>
+    <string name="notification_channel_name">Sesiones de terminal</string>
+    <string name="notification_close_sessions">Cerrar sesiones</string>
+    <string name="notification_title">Sesión de terminal en ejecución</string>
+    <string
+        name="notification_title_multiple"
+        tools:ignore="PluralsCandidate">%1$d sesiones de terminal en ejecución</string>
     <string name="plugin_description">Terminal multisesión que ejecuta el shell del sistema en un pty, con sesiones en segundo plano, barra de teclas y comandos Node.js</string>
 </resources>

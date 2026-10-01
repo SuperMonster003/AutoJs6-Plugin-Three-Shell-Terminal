@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="notification_channel_description">Shows terminal sessions that keep running in the background and lets you close them</string>
+    <string name="notification_channel_name">Terminal sessions</string>
+    <string name="notification_close_sessions">Close sessions</string>
+    <string name="notification_title">Terminal session is running</string>
+    <string
+        name="notification_title_multiple"
+        tools:ignore="PluralsCandidate">%1$d terminal sessions are running</string>
     <string name="plugin_description">A multi-session terminal running the system shell in a pty, with background sessions, a key bar and Node.js commands</string>
 </resources>

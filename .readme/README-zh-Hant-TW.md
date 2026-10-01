@@ -200,6 +200,7 @@ _2026/10/01_
 - `新增` 外掛識別碼 `three-shell-terminal` (engine `terminal`), 含 INFO 服務, Wake Activity 以及供主程式發現的 `org.autojs.plugin.TERMINAL` 服務骨架
 - `新增` 按 ABI 拆分的 APK (arm64-v8a, armeabi-v7a, x86_64, x86) 與 universal APK, 原生程式庫按 16 KB 分頁對齊
 - `新增` 10 種語言的 README, 外掛中心說明與更新日誌
+- `新增` 自主程式終端機遷入工作階段核心: 基於 pty 的 shell 工作階段與處理程序級註冊表 (記錄標題與結束代碼供 Binder 使用), 外掛自有檔案目錄下的工作階段環境與目錄佈局, Node.js 啟動器發現與 npm / corepack 安裝器, 以及保持工作階段執行並提供 "關閉工作階段" 通知的前景服務 (頻道 `three.shell.terminal.sessions`)
 - `相依性` 附加 jackpal Android-Terminal-Emulator (term 1.0.70, emulatorview 1.0.42, libtermexec 1.0, Apache-2.0) 作為終端機模擬與 pty 原生程式庫, 並在 `locks/vendored-aars.lock` 中鎖定雜湊
 - `相依性` 附加 `common-plugin-api.aar` 與 `nodejs-api.aar` (AutoJs6 模組 `plugin-api/common-plugin-api` 與 `plugin-api/nodejs-api`, 主程式建置 6.8.0 / 5303, MPL 2.0) 作為共用外掛契約與 Node.js 清單契約, 並在 `locks/host-api-aars.lock` 中鎖定雜湊
 - `相依性` 附加 `terminal-api.aar` (AutoJs6 模組 `plugin-api/terminal-api`, 主程式建置 6.8.0 / 5304, MPL 2.0) 作為終端機契約 V1 (`ITerminalPlugin` / `ITerminalCallback`, 身份, 上限與錯誤碼), 外掛身份常數改由它提供, 並在 `locks/host-api-aars.lock` 中鎖定雜湊

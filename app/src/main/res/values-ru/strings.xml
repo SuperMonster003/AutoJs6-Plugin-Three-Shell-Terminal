@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="notification_channel_description">Показывает сеансы терминала, продолжающие работать в фоне, и позволяет их закрыть</string>
+    <string name="notification_channel_name">Сеансы терминала</string>
+    <string name="notification_close_sessions">Закрыть сеансы</string>
+    <string name="notification_title">Сеанс терминала выполняется</string>
+    <string
+        name="notification_title_multiple"
+        tools:ignore="PluralsCandidate">Выполняется сеансов терминала: %1$d</string>
     <string name="plugin_description">Многосеансовый терминал, запускающий системную оболочку в pty, с фоновыми сеансами, панелью клавиш и командами Node.js</string>
 </resources>

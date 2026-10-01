@@ -18,3 +18,6 @@
 -keep class jackpal.androidterm.libtermexec.v1.** { *; }
 -keep class jackpal.androidterm.compat.FileCompat$Api8OrEarlier { *; }
 -dontwarn jackpal.androidterm.**
+
+# NodeCliInstaller writes and reads its install stamp through Gson field reflection (roadmap P2.1).
+-keep class io.github.supermonster003.autojs6.plugin.three.shell.terminal.node.NodeCliInstaller$Stamp { *; }

@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="notification_channel_description">显示在后台持续运行的终端会话, 并可将其关闭</string>
+    <string name="notification_channel_name">终端会话</string>
+    <string name="notification_close_sessions">关闭会话</string>
+    <string name="notification_title">终端会话运行中</string>
+    <string
+        name="notification_title_multiple"
+        tools:ignore="PluralsCandidate">%1$d 个终端会话运行中</string>
     <string name="plugin_description">多会话终端, 在 pty 中运行系统 shell, 支持后台运行, 快捷按键及 Node.js 命令</string>
 </resources>

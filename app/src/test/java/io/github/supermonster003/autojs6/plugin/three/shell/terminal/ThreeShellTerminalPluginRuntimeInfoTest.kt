@@ -2,6 +2,10 @@ package io.github.supermonster003.autojs6.plugin.three.shell.terminal
 
 import org.autojs.plugin.common.api.PluginActions
 import org.autojs.plugin.nodejs.api.NodeJsPluginActions
+import org.autojs.plugin.terminal.api.ITerminalPlugin
+import org.autojs.plugin.terminal.api.TerminalActions
+import org.autojs.plugin.terminal.api.TerminalContract
+import org.autojs.plugin.terminal.api.TerminalIds
 import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -35,7 +39,8 @@ class ThreeShellTerminalPluginRuntimeInfoTest {
         assertEquals(3L, info.versionCode)
         assertEquals("Oct 1, 2026", info.versionDate)
         assertArrayEquals(arrayOf("arm64-v8a"), info.supportedAbis)
-        assertEquals(5303L, info.requiresHostVersion)
+        assertEquals(5304L, info.requiresHostVersion)
+        assertEquals(TerminalIds.REQUIRED_HOST_VERSION_CODE, info.requiresHostVersion)
         assertEquals(ThreeShellTerminalPlugin.REQUIRED_HOST_VERSION, info.requiresHostVersion)
     }
 
@@ -64,6 +69,19 @@ class ThreeShellTerminalPluginRuntimeInfoTest {
         assertEquals("org.autojs.plugin.INFO", ThreeShellTerminalPlugin.INFO_ACTION)
         assertEquals(PluginActions.INFO, ThreeShellTerminalPlugin.INFO_ACTION)
         assertEquals("org.autojs.plugin.terminal.api.ITerminalPlugin", ThreeShellTerminalPlugin.SERVICE_DESCRIPTOR)
+        assertEquals(ITerminalPlugin.DESCRIPTOR, ThreeShellTerminalPlugin.SERVICE_DESCRIPTOR)
+        // Identity is provided by the host terminal-api contract since roadmap P1.1.
+        assertEquals(TerminalIds.PLUGIN_ID, ThreeShellTerminalPlugin.ID)
+        assertEquals(TerminalIds.ENGINE, ThreeShellTerminalPlugin.ENGINE)
+        assertEquals(TerminalIds.VARIANT_DEFAULT, ThreeShellTerminalPlugin.VARIANT)
+        assertEquals(TerminalIds.DEFAULT_PACKAGE_NAME, ThreeShellTerminalPlugin.PACKAGE_NAME)
+        assertEquals(TerminalActions.SERVICE_ACTION, ThreeShellTerminalPlugin.SERVICE_ACTION)
+        assertEquals(TerminalActions.SERVICE_CATEGORY, ThreeShellTerminalPlugin.SERVICE_CATEGORY)
+        assertEquals(TerminalActions.PLUGIN_PERMISSION, ThreeShellTerminalPlugin.PLUGIN_PERMISSION)
+        assertEquals("org.autojs.plugin.TERMINAL_OPEN", ThreeShellTerminalPlugin.OPEN_TERMINAL_ACTION)
+        assertEquals("org.autojs.plugin.TERMINAL_SETTINGS", ThreeShellTerminalPlugin.OPEN_SETTINGS_ACTION)
+        assertEquals(TerminalContract.CONTRACT_VERSION, ThreeShellTerminalPlugin.CONTRACT_VERSION)
+        assertEquals(1, ThreeShellTerminalPlugin.CONTRACT_VERSION)
         assertEquals(16384, ThreeShellTerminalPlugin.NATIVE_PAGE_ALIGNMENT)
     }
 

@@ -9,6 +9,7 @@
 # Host contract AARs: parcelables and AIDL stubs are resolved reflectively across processes.
 -keep class org.autojs.plugin.common.api.** { *; }
 -keep class org.autojs.plugin.nodejs.api.** { *; }
+-keep class org.autojs.plugin.terminal.api.** { *; }
 
 # jackpal Android-Terminal-Emulator: JNI_OnLoad of libjackpal-androidterm5.so registers Exec natives by name,
 # and libjackpal-termexec2.so exports Java_jackpal_androidterm_TermExec_* symbols (roadmap D13 / AGENTS.md 9).

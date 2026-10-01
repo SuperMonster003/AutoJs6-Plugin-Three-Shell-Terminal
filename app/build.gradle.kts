@@ -94,8 +94,8 @@ fun lockedAars(lockFile: File, ids: List<String>, directory: String, forbidDebug
     }
 }
 
-// Roadmap P1.1 appends "terminal-api" once the host contract module is delivered.
-val hostApiIds = listOf("common-plugin-api", "nodejs-api")
+// Host contract AARs (roadmap P1.1): common-plugin-api + nodejs-api from host build 5303, terminal-api from host commit b8f4d6c939 (build 5304).
+val hostApiIds = listOf("common-plugin-api", "nodejs-api", "terminal-api")
 val hostApiAars = lockedAars(rootProject.file("locks/host-api-aars.lock"), hostApiIds, "libs", forbidDebug = true)
 
 // The term AAR is the upstream "term-debug.aar" distribution (its only release form, Java only); the

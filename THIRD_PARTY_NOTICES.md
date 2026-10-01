@@ -10,9 +10,7 @@ license, reproduced in full in the distribution of the respective project.
 | --- | --- | --- | --- | --- |
 | `common-plugin-api.aar` | AutoJs6 module `plugin-api/common-plugin-api` (https://github.com/SuperMonster003/AutoJs6) | host build 6.8.0 / 5303, commit `9545a7f4aa` (module unchanged since `9c3ba2e520`) | MPL 2.0 | `ee7eb7879a53506c4cca5e2d19d3058e28df2168fb33351a52302a3b9e532e15` |
 | `nodejs-api.aar` | AutoJs6 module `plugin-api/nodejs-api` (`NodeJsPluginActions`, `NodeJsPluginCapabilityKeys`, the `NODE_CLI_*` manifest contract) | host build 6.8.0 / 5303, commit `9545a7f4aa` | MPL 2.0 | `4334b94a6f86e8ef8ff2912b6ace817dbf9bca1e887be7d615918f990f57ab71` |
-
-Roadmap P1.2 adds `terminal-api.aar` (host module `plugin-api/terminal-api`, the terminal contract V1) from the
-same host contract line.
+| `terminal-api.aar` | AutoJs6 module `plugin-api/terminal-api` (`ITerminalPlugin` / `ITerminalCallback` AIDL, `TerminalActions`, `TerminalIds`, `TerminalContract`, `TerminalCapabilityKeys`, `TerminalErrorCodes`: the terminal contract V1) | host build 6.8.0 / 5304, commit `b8f4d6c939` | MPL 2.0 | `98b43a9deb236d642f0d3b18696a4da9a9c4b399374d6e398d80d3abf0c86bc6` |
 
 ## Vendored terminal libraries (staged in `libs/jackpal/`, hash-locked in `locks/vendored-aars.lock`)
 

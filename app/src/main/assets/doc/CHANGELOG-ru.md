@@ -14,3 +14,4 @@
 * `Функция` README, описание для центра плагинов и журнал изменений на 10 языках
 * `Зависимость` Добавлен jackpal Android-Terminal-Emulator (term 1.0.70, emulatorview 1.0.42, libtermexec 1.0, Apache-2.0) как эмуляция терминала и нативные библиотеки pty, хэш зафиксирован в `locks/vendored-aars.lock`
 * `Зависимость` Добавлены `common-plugin-api.aar` и `nodejs-api.aar` (модули AutoJs6 `plugin-api/common-plugin-api` и `plugin-api/nodejs-api`, сборка хоста 6.8.0 / 5303, MPL 2.0) как общий контракт плагинов и контракт манифеста Node.js, хэши зафиксированы в `locks/host-api-aars.lock`
+* `Зависимость` Добавлен `terminal-api.aar` (модуль AutoJs6 `plugin-api/terminal-api`, сборка хоста 6.8.0 / 5304, MPL 2.0) как контракт терминала V1 (`ITerminalPlugin` / `ITerminalCallback`, идентичность, пределы и коды ошибок); константы идентичности плагина теперь берутся из него, хэш зафиксирован в `locks/host-api-aars.lock`

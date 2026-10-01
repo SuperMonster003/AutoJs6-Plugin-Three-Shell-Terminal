@@ -52,7 +52,7 @@ AutoJs6 透過 Binder 服務發現外掛, 以顯式 Intent 開啟終端機介面
 
 ******
 
-版本 1.0.0 為 P0 開發預覽: 儲存庫骨架, 可被 AutoJs6 外掛中心識別的外掛身份, 以及 pty / 儲存 / Node.js 啟動器 spike. Binder 契約, 工作階段核心, 終端機介面, 指令碼 API 與設定頁按 [ROADMAP.md](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/blob/master/ROADMAP.md) 的階段推進. 需要 AutoJs6 6.8.0 (build 5303) 或更高版本.
+版本 1.0.0 為 P0 開發預覽: 儲存庫骨架, 可被 AutoJs6 外掛中心識別的外掛身份, 以及 pty / 儲存 / Node.js 啟動器 spike. Binder 契約, 工作階段核心, 終端機介面, 指令碼 API 與設定頁按 [ROADMAP.md](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/blob/master/ROADMAP.md) 的階段推進. 需要 AutoJs6 6.8.0 (build 5304) 或更高版本.
 
 ******
 
@@ -75,7 +75,7 @@ AutoJs6 透過 Binder 服務發現外掛, 以顯式 Intent 開啟終端機介面
 
 ******
 
-1. 在安裝了 AutoJs6 建置 5303 (6.8.0) 或更高版本的裝置上, 從 [Releases](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/releases) 安裝與裝置 ABI 對應的外掛 APK (或 universal).
+1. 在安裝了 AutoJs6 建置 5304 (6.8.0) 或更高版本的裝置上, 從 [Releases](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/releases) 安裝與裝置 ABI 對應的外掛 APK (或 universal).
 2. 開啟 AutoJs6 外掛中心, 確認 `3-Shell Terminal` 已被識別並啟用它.
 3. 在 AutoJs6 主頁抽屜開啟 "終端機", 在檔案管理員中對目錄選擇 "在終端機中開啟", 或在指令碼中呼叫 `terminal.open(...)`. 需要進入共用儲存空間 (如 `/sdcard`) 下的目錄時, 按外掛提示授予 "所有檔案存取權限".
 
@@ -171,7 +171,7 @@ service action: org.autojs.plugin.TERMINAL
 service category: terminal
 info action: org.autojs.plugin.INFO
 aidl interface: org.autojs.plugin.terminal.api.ITerminalPlugin
-minimum host build: 5303 (6.8.0)
+minimum host build: 5304 (6.8.0)
 ```
 
 `ThreeShellTerminalPluginService` 回應 `org.autojs.plugin.TERMINAL` (category `terminal`), 自路線圖 P2 起實作主程式 terminal-api 契約 `org.autojs.plugin.terminal.api.ITerminalPlugin`. `ThreeShellTerminalPluginInfoService` 以 PluginInfo 回應 `org.autojs.plugin.INFO`. `WakeActivity` 供主程式啟用外掛; 終端機介面經 `org.autojs.plugin.TERMINAL_OPEN` 開啟.
@@ -202,6 +202,7 @@ _2026/10/01_
 - `新增` 10 種語言的 README, 外掛中心說明與更新日誌
 - `依賴` 附加 jackpal Android-Terminal-Emulator (term 1.0.70, emulatorview 1.0.42, libtermexec 1.0, Apache-2.0) 作為終端機模擬與 pty 原生程式庫, 並在 `locks/vendored-aars.lock` 中鎖定雜湊
 - `依賴` 附加 `common-plugin-api.aar` 與 `nodejs-api.aar` (AutoJs6 模組 `plugin-api/common-plugin-api` 與 `plugin-api/nodejs-api`, 主程式建置 6.8.0 / 5303, MPL 2.0) 作為共用外掛契約與 Node.js 清單契約, 並在 `locks/host-api-aars.lock` 中鎖定雜湊
+- `依賴` 附加 `terminal-api.aar` (AutoJs6 模組 `plugin-api/terminal-api`, 主程式建置 6.8.0 / 5304, MPL 2.0) 作為終端機契約 V1 (`ITerminalPlugin` / `ITerminalCallback`, 身份, 上限與錯誤碼), 外掛身份常數改由它提供, 並在 `locks/host-api-aars.lock` 中鎖定雜湊
 
 ##### 更多發行歷史
 

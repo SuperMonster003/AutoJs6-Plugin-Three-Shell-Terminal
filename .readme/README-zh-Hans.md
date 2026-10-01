@@ -52,7 +52,7 @@ AutoJs6 通过 Binder 服务发现插件, 以显式 Intent 打开终端界面, �
 
 ******
 
-版本 1.0.0 为 P0 开发预览: 仓库骨架, 可被 AutoJs6 插件中心识别的插件身份, 以及 pty / 存储 / Node.js 启动器 spike. Binder 契约, 会话核心, 终端界面, 脚本 API 与设置页按 [ROADMAP.md](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/blob/master/ROADMAP.md) 的阶段推进. 需要 AutoJs6 6.8.0 (build 5303) 或更高版本.
+版本 1.0.0 为 P0 开发预览: 仓库骨架, 可被 AutoJs6 插件中心识别的插件身份, 以及 pty / 存储 / Node.js 启动器 spike. Binder 契约, 会话核心, 终端界面, 脚本 API 与设置页按 [ROADMAP.md](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/blob/master/ROADMAP.md) 的阶段推进. 需要 AutoJs6 6.8.0 (build 5304) 或更高版本.
 
 ******
 
@@ -75,7 +75,7 @@ AutoJs6 通过 Binder 服务发现插件, 以显式 Intent 打开终端界面, �
 
 ******
 
-1. 在安装了 AutoJs6 构建 5303 (6.8.0) 或更高版本的设备上, 从 [Releases](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/releases) 安装与设备 ABI 对应的插件 APK (或 universal).
+1. 在安装了 AutoJs6 构建 5304 (6.8.0) 或更高版本的设备上, 从 [Releases](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/releases) 安装与设备 ABI 对应的插件 APK (或 universal).
 2. 打开 AutoJs6 插件中心, 确认 `3-Shell Terminal` 已被识别并启用它.
 3. 在 AutoJs6 主页抽屉打开 "终端", 在文件管理器中对目录选择 "在终端中打开", 或在脚本中调用 `terminal.open(...)`. 需要进入共享存储 (如 `/sdcard`) 下的目录时, 按插件提示授予 "所有文件访问权限".
 
@@ -171,7 +171,7 @@ service action: org.autojs.plugin.TERMINAL
 service category: terminal
 info action: org.autojs.plugin.INFO
 aidl interface: org.autojs.plugin.terminal.api.ITerminalPlugin
-minimum host build: 5303 (6.8.0)
+minimum host build: 5304 (6.8.0)
 ```
 
 `ThreeShellTerminalPluginService` 响应 `org.autojs.plugin.TERMINAL` (category `terminal`), 自路线图 P2 起实现宿主 terminal-api 契约 `org.autojs.plugin.terminal.api.ITerminalPlugin`. `ThreeShellTerminalPluginInfoService` 以 PluginInfo 响应 `org.autojs.plugin.INFO`. `WakeActivity` 供宿主激活插件; 终端界面经 `org.autojs.plugin.TERMINAL_OPEN` 打开.
@@ -202,6 +202,7 @@ _2026/10/01_
 - `新增` 10 种语言的 README, 插件中心说明与更新日志
 - `依赖` 附加 jackpal Android-Terminal-Emulator (term 1.0.70, emulatorview 1.0.42, libtermexec 1.0, Apache-2.0) 作为终端仿真与 pty 原生库, 并在 `locks/vendored-aars.lock` 中锁定哈希
 - `依赖` 附加 `common-plugin-api.aar` 与 `nodejs-api.aar` (AutoJs6 模块 `plugin-api/common-plugin-api` 与 `plugin-api/nodejs-api`, 宿主构建 6.8.0 / 5303, MPL 2.0) 作为共享插件契约与 Node.js 清单契约, 并在 `locks/host-api-aars.lock` 中锁定哈希
+- `依赖` 附加 `terminal-api.aar` (AutoJs6 模块 `plugin-api/terminal-api`, 宿主构建 6.8.0 / 5304, MPL 2.0) 作为终端契约 V1 (`ITerminalPlugin` / `ITerminalCallback`, 身份, 上限与错误码), 插件身份常量改由它提供, 并在 `locks/host-api-aars.lock` 中锁定哈希
 
 ##### 更多发行历史
 

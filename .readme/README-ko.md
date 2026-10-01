@@ -52,7 +52,7 @@ AutoJs6 는 Binder 서비스로 플러그인을 발견하고, 명시적 Intent �
 
 ******
 
-버전 1.0.0 은 P0 개발 미리보기입니다: 저장소 뼈대, AutoJs6 플러그인 센터가 인식하는 플러그인 신원, 그리고 pty / 저장소 / Node.js 런처 스파이크. Binder 계약, 세션 코어, 터미널 화면, 스크립트 API, 설정 페이지는 [ROADMAP.md](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/blob/master/ROADMAP.md) 의 단계에 따라 진행됩니다. AutoJs6 6.8.0 (build 5303) 이상이 필요합니다.
+버전 1.0.0 은 P0 개발 미리보기입니다: 저장소 뼈대, AutoJs6 플러그인 센터가 인식하는 플러그인 신원, 그리고 pty / 저장소 / Node.js 런처 스파이크. Binder 계약, 세션 코어, 터미널 화면, 스크립트 API, 설정 페이지는 [ROADMAP.md](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/blob/master/ROADMAP.md) 의 단계에 따라 진행됩니다. AutoJs6 6.8.0 (build 5304) 이상이 필요합니다.
 
 ******
 
@@ -75,7 +75,7 @@ AutoJs6 는 Binder 서비스로 플러그인을 발견하고, 명시적 Intent �
 
 ******
 
-1. AutoJs6 build 5303 (6.8.0) 이상이 설치된 기기에 [Releases](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/releases) 에서 기기 ABI 에 맞는 플러그인 APK (또는 universal APK) 를 설치합니다.
+1. AutoJs6 build 5304 (6.8.0) 이상이 설치된 기기에 [Releases](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/releases) 에서 기기 ABI 에 맞는 플러그인 APK (또는 universal APK) 를 설치합니다.
 2. AutoJs6 플러그인 센터를 열어 `3-Shell Terminal` 이 인식되는지 확인하고 활성화합니다.
 3. AutoJs6 홈 드로어에서 "터미널" 을 켜거나, 파일 관리자에서 디렉터리의 "터미널에서 열기" 를 선택하거나, 스크립트에서 `terminal.open(...)` 을 호출합니다. `/sdcard` 같은 공유 저장소의 디렉터리에 들어가려면 플러그인의 안내에 따라 "모든 파일 접근" 을 허용하세요.
 
@@ -171,7 +171,7 @@ service action: org.autojs.plugin.TERMINAL
 service category: terminal
 info action: org.autojs.plugin.INFO
 aidl interface: org.autojs.plugin.terminal.api.ITerminalPlugin
-minimum host build: 5303 (6.8.0)
+minimum host build: 5304 (6.8.0)
 ```
 
 `ThreeShellTerminalPluginService` 는 `org.autojs.plugin.TERMINAL` (category `terminal`) 에 응답하며 로드맵 P2 부터 호스트 terminal-api 계약 `org.autojs.plugin.terminal.api.ITerminalPlugin` 를 구현합니다. `ThreeShellTerminalPluginInfoService` 는 `org.autojs.plugin.INFO` 에 PluginInfo 로 응답합니다. `WakeActivity` 는 호스트가 플러그인을 활성화하는 데 쓰이며, 터미널 화면은 `org.autojs.plugin.TERMINAL_OPEN` 으로 열립니다.
@@ -202,6 +202,7 @@ _2026/10/01_
 - `기능` 10 개 언어의 README, 플러그인 센터 안내, 변경 기록
 - `의존성` 터미널 에뮬레이션과 pty 네이티브 라이브러리로 jackpal Android-Terminal-Emulator (term 1.0.70, emulatorview 1.0.42, libtermexec 1.0, Apache-2.0) 추가, `locks/vendored-aars.lock` 에 해시 고정
 - `의존성` 공유 플러그인 계약과 Node.js 매니페스트 계약으로 `common-plugin-api.aar` 와 `nodejs-api.aar` (AutoJs6 모듈 `plugin-api/common-plugin-api` 와 `plugin-api/nodejs-api`, 호스트 빌드 6.8.0 / 5303, MPL 2.0) 추가, `locks/host-api-aars.lock` 에 해시 고정
+- `의존성` 터미널 계약 V1 (`ITerminalPlugin` / `ITerminalCallback`, 신원, 상한, 오류 코드) 로 `terminal-api.aar` (AutoJs6 모듈 `plugin-api/terminal-api`, 호스트 빌드 6.8.0 / 5304, MPL 2.0) 추가. 플러그인 신원 상수는 이제 여기서 가져오며 `locks/host-api-aars.lock` 에 해시 고정
 
 ##### 더 많은 릴리스 기록
 

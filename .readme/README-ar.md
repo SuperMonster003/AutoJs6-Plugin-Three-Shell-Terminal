@@ -52,7 +52,7 @@
 
 ******
 
-الإصدار 1.0.0 هو معاينة تطوير المرحلة P0: هيكل المستودع, وهوية المكون الإضافي التي يتعرف عليها مركز المكونات الإضافية في AutoJs6, وتجربة pty / التخزين / مشغل Node.js. يتبع عقد Binder ونواة الجلسات وشاشة الطرفية وواجهة البرمجة النصية وصفحة الإعدادات مراحل [ROADMAP.md](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/blob/master/ROADMAP.md). يتطلب AutoJs6 6.8.0 (البنية 5303) أو أحدث.
+الإصدار 1.0.0 هو معاينة تطوير المرحلة P0: هيكل المستودع, وهوية المكون الإضافي التي يتعرف عليها مركز المكونات الإضافية في AutoJs6, وتجربة pty / التخزين / مشغل Node.js. يتبع عقد Binder ونواة الجلسات وشاشة الطرفية وواجهة البرمجة النصية وصفحة الإعدادات مراحل [ROADMAP.md](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/blob/master/ROADMAP.md). يتطلب AutoJs6 6.8.0 (البنية 5304) أو أحدث.
 
 ******
 
@@ -75,7 +75,7 @@
 
 ******
 
-1. ثبت APK المكون الإضافي المطابق لـ ABI الجهاز (أو APK الشامل) من [Releases](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/releases) على جهاز به AutoJs6 بالبنية 5303 (6.8.0) أو أحدث.
+1. ثبت APK المكون الإضافي المطابق لـ ABI الجهاز (أو APK الشامل) من [Releases](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/releases) على جهاز به AutoJs6 بالبنية 5304 (6.8.0) أو أحدث.
 2. افتح مركز المكونات الإضافية في AutoJs6, وتأكد من التعرف على `3-Shell Terminal`, ثم فعله.
 3. شغل "الطرفية" من الدرج الرئيسي في AutoJs6, أو اختر "فتح في الطرفية" لمجلد في مدير الملفات, أو استدع `terminal.open(...)` من برنامج نصي. امنح "الوصول إلى كل الملفات" عندما يطلبه المكون الإضافي للدخول إلى مجلدات التخزين المشترك مثل `/sdcard`.
 
@@ -171,7 +171,7 @@ service action: org.autojs.plugin.TERMINAL
 service category: terminal
 info action: org.autojs.plugin.INFO
 aidl interface: org.autojs.plugin.terminal.api.ITerminalPlugin
-minimum host build: 5303 (6.8.0)
+minimum host build: 5304 (6.8.0)
 ```
 
 تستجيب `ThreeShellTerminalPluginService` للإجراء `org.autojs.plugin.TERMINAL` (category `terminal`) وتنفذ عقد terminal-api الخاص بالمضيف `org.autojs.plugin.terminal.api.ITerminalPlugin` اعتبارا من المرحلة P2. تستجيب `ThreeShellTerminalPluginInfoService` للإجراء `org.autojs.plugin.INFO` بكائن PluginInfo. يتيح `WakeActivity` للمضيف تنشيط المكون الإضافي; وتفتح شاشة الطرفية عبر `org.autojs.plugin.TERMINAL_OPEN`.
@@ -202,6 +202,7 @@ _2026/10/01_
 - `ميزة` README وتعليمات مركز المكونات الإضافية وسجل التغييرات بـ 10 لغات
 - `تبعية` إضافة jackpal Android-Terminal-Emulator (term 1.0.70, emulatorview 1.0.42, libtermexec 1.0, Apache-2.0) لمحاكاة الطرفية ومكتبات pty الأصلية, مع قفل التجزئة في `locks/vendored-aars.lock`
 - `تبعية` إضافة `common-plugin-api.aar` و `nodejs-api.aar` (وحدتا AutoJs6 `plugin-api/common-plugin-api` و `plugin-api/nodejs-api`, بنية المضيف 6.8.0 / 5303, MPL 2.0) كعقد المكون الإضافي المشترك وعقد بيان Node.js, مع قفل التجزئة في `locks/host-api-aars.lock`
+- `تبعية` إضافة `terminal-api.aar` (وحدة AutoJs6 `plugin-api/terminal-api`, بنية المضيف 6.8.0 / 5304, MPL 2.0) كعقد الطرفية V1 (`ITerminalPlugin` / `ITerminalCallback`, الهوية, الحدود, رموز الأخطاء); ثوابت هوية المكون الإضافي تأتي منه الآن, مع قفل التجزئة في `locks/host-api-aars.lock`
 
 ##### لمزيد من سجل الإصدارات
 

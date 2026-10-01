@@ -14,7 +14,8 @@
         "플러그인 신원 `three-shell-terminal` (engine `terminal`), INFO 서비스, Wake Activity, 호스트 발견용 `org.autojs.plugin.TERMINAL` 서비스 뼈대",
         "ABI 별 APK (arm64-v8a, armeabi-v7a, x86_64, x86) 와 universal APK, 16 KB 페이지에 정렬된 네이티브 라이브러리",
         "10 개 언어의 README, 플러그인 센터 안내, 변경 기록",
-        "호스트 터미널에서 세션 코어 이식: pty 기반 셸 세션과 프로세스 전역 레지스트리 (Binder 용 제목과 종료 코드 기록), 플러그인 자체 파일 디렉터리 아래의 세션 환경과 디렉터리 구성, Node.js 런처 탐색과 npm / corepack 설치기, 세션을 유지하며 \"세션 닫기\" 알림을 제공하는 포그라운드 서비스 (채널 `three.shell.terminal.sessions`)"
+        "호스트 터미널에서 세션 코어 이식: pty 기반 셸 세션과 프로세스 전역 레지스트리 (Binder 용 제목과 종료 코드 기록), 플러그인 자체 파일 디렉터리 아래의 세션 환경과 디렉터리 구성, Node.js 런처 탐색과 npm / corepack 설치기, 세션을 유지하며 \"세션 닫기\" 알림을 제공하는 포그라운드 서비스 (채널 `three.shell.terminal.sessions`)",
+        "저장소 접근 판정 (`StorageAccess`): 플러그인 자체의 권한 상태로 판정 (API 30 미만은 기존 런타임 권한, API 30 부터는 \"모든 파일 접근\"), `/sdcard`, `/storage/...` 등 공유 저장소와 자체 `Android/{data,obb,media}` 폴더 식별, 시작 디렉터리의 `$HOME` 폴백과 `STORAGE_PERMISSION_REQUIRED` / `DIRECTORY_INACCESSIBLE` 사유, 모든 파일 접근 설정을 여는 Intent"
       ],
       "dependency": [
         "터미널 에뮬레이션과 pty 네이티브 라이브러리로 jackpal Android-Terminal-Emulator (term 1.0.70, emulatorview 1.0.42, libtermexec 1.0, Apache-2.0) 추가, `locks/vendored-aars.lock` 에 해시 고정",

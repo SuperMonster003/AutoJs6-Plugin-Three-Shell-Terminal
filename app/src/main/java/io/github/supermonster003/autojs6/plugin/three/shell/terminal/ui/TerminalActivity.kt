@@ -25,7 +25,6 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.children
 import com.google.android.material.appbar.MaterialToolbar
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.R
-import io.github.supermonster003.autojs6.plugin.three.shell.terminal.core.SessionAssembly
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.core.ShellQuoting
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.core.TerminalKeySequences
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.core.TerminalPaths
@@ -34,7 +33,6 @@ import io.github.supermonster003.autojs6.plugin.three.shell.terminal.core.Termin
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.core.TerminalSettingsActions
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.node.NodeCliLocator
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.node.NodeCliLocator.Resolution
-import io.github.supermonster003.autojs6.plugin.three.shell.terminal.node.TerminalNodeSetup
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.service.SessionNotifications
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.storage.StorageAccess
 import jackpal.androidterm.emulatorview.ColorScheme
@@ -198,33 +196,25 @@ class TerminalActivity : HostAppearanceActivity() {
     private fun startSession(requestedDirectory: String?, command: String?) {
         val generation = ++startGeneration
         requestNotificationPermissionOnce()
-        val app = applicationContext
-        val prefs = preferences
-        BackgroundWork.run({
-            val resolution = NodeCliLocator.resolve(app, integrationEnabled = prefs.nodeIntegrationEnabled)
-            TerminalNodeSetup.needsInstall(TerminalPaths.of(app), resolution)
-        }) { probe ->
-            if (generation != startGeneration || isFinishing || isDestroyed) return@run
-            if (probe.getOrDefault(false)) progressDialog = kit.progressDialog(getString(R.string.terminal_preparing_npm))
-            BackgroundWork.run({ SessionAssembly.plan(app, requestedDirectory, prefs) }) { planned ->
-                if (generation != startGeneration || isFinishing || isDestroyed) {
-                    dismissProgress()
-                    return@run
-                }
-                dismissProgress()
-                val started = planned.mapCatching { plan -> plan to SessionAssembly.start(this, plan, command = command) }
-                started.onFailure { error ->
-                    kit.toast(error.message ?: getString(R.string.terminal_error_occurred), long = true)
-                    if (session == null) finish()
-                }
-                started.onSuccess { (plan, created) ->
-                    nodeResolution = plan.nodeResolution
-                    attachSession(created)
-                    updateSubtitle(plan.directory.directory.path)
-                    nodeBanner.render(plan.nodeResolution)
-                    renderDirectoryFallback(plan.directory)
-                    invalidateOptionsMenu()
-                }
+        SessionStarter.start(
+            activity = this,
+            preferences = preferences,
+            requestedDirectory = requestedDirectory,
+            command = command,
+            stillWanted = { generation == startGeneration && !isFinishing && !isDestroyed },
+            onProgress = { dialog -> progressDialog = dialog },
+        ) { started ->
+            started.onFailure { error ->
+                kit.toast(error.message ?: getString(R.string.terminal_error_occurred), long = true)
+                if (session == null) finish()
+            }
+            started.onSuccess { (plan, created) ->
+                nodeResolution = plan.nodeResolution
+                attachSession(created)
+                updateSubtitle(plan.directory.directory.path)
+                nodeBanner.render(plan.nodeResolution)
+                renderDirectoryFallback(plan.directory)
+                invalidateOptionsMenu()
             }
         }
     }
@@ -538,6 +528,7 @@ class TerminalActivity : HostAppearanceActivity() {
             R.id.action_tips -> showTips()
             R.id.action_new_session -> openSession(intent(this).putExtra(TerminalContract.EXTRA_NEW_SESSION, true))
             R.id.action_close_session -> requestCloseSession()
+            R.id.action_manager -> TerminalManagerDialog.show(this, onTextSizeChanged = { terminalView.textSizeSp = it })
             else -> return super.onOptionsItemSelected(item)
         }
         return true

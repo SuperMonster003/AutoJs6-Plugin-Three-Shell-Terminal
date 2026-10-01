@@ -26,7 +26,7 @@ internal object TerminalSettingsDialogs {
         }
     }
 
-    fun showNpmRegistry(kit: UiKit, preferences: TerminalPreferences, actions: TerminalSettingsActions) {
+    fun showNpmRegistry(kit: UiKit, preferences: TerminalPreferences, actions: TerminalSettingsActions, onChanged: () -> Unit = {}) {
         val choices = TerminalPreferences.REGISTRY_CHOICES
         val labels = listOf(
             kit.string(R.string.terminal_npm_registry_npmjs),
@@ -37,14 +37,15 @@ internal object TerminalSettingsDialogs {
         kit.confirmedChoiceDialog(kit.string(R.string.terminal_npm_registry), labels, current) { index ->
             val choice = choices[index]
             if (choice == TerminalPreferences.REGISTRY_CUSTOM) {
-                promptCustomRegistry(kit, preferences, actions)
+                promptCustomRegistry(kit, preferences, actions, onChanged)
             } else {
                 actions.setRegistry(choice)
+                onChanged()
             }
         }
     }
 
-    private fun promptCustomRegistry(kit: UiKit, preferences: TerminalPreferences, actions: TerminalSettingsActions) {
+    private fun promptCustomRegistry(kit: UiKit, preferences: TerminalPreferences, actions: TerminalSettingsActions, onChanged: () -> Unit) {
         kit.inputDialog(
             title = kit.string(R.string.terminal_npm_registry_custom_url),
             hint = kit.string(R.string.terminal_npm_registry_custom_url_hint),
@@ -53,6 +54,7 @@ internal object TerminalSettingsDialogs {
             validate = { input -> if (TerminalNodeEnvironment.sanitizeRegistry(input) == null) kit.string(R.string.terminal_npm_registry_https_only) else null },
         ) { input ->
             actions.setRegistry(TerminalPreferences.REGISTRY_CUSTOM, input)
+            onChanged()
         }
     }
 

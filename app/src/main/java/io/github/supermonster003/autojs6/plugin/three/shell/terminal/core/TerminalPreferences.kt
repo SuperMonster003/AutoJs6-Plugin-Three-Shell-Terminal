@@ -71,6 +71,21 @@ class TerminalPreferences(private val preferences: SharedPreferences) {
         get() = preferences.getBoolean(KEY_NOTIFICATION_PERMISSION_REQUESTED, false)
         set(value) = preferences.edit().putBoolean(KEY_NOTIFICATION_PERMISSION_REQUESTED, value).apply()
 
+    /**
+     * Collapsed state of one session manager section (roadmap P3.2; the host kept per-group levels under
+     * its own keys), [key] being one of [MANAGER_SECTION_KEYS]; every section starts expanded.
+     * zh-CN: 会话管理器某一分组的收起状态 (P3.2), [key] 取自 [MANAGER_SECTION_KEYS]; 默认全部展开.
+     */
+    fun isManagerSectionCollapsed(key: String): Boolean {
+        require(key in MANAGER_SECTION_KEYS) { "Unknown manager section: $key" }
+        return preferences.getBoolean(key, false)
+    }
+
+    fun setManagerSectionCollapsed(key: String, collapsed: Boolean) {
+        require(key in MANAGER_SECTION_KEYS) { "Unknown manager section: $key" }
+        preferences.edit().putBoolean(key, collapsed).apply()
+    }
+
     fun nodeEnvironmentOptions() = TerminalNodeEnvironment.Options(
         registry = npmRegistry,
         ignoreScripts = npmIgnoreScripts,
@@ -86,6 +101,13 @@ class TerminalPreferences(private val preferences: SharedPreferences) {
         const val KEY_NPM_IGNORE_SCRIPTS = "npm_ignore_scripts"
         const val KEY_NODE_INTEGRATION_ENABLED = "node_integration_enabled"
         const val KEY_NOTIFICATION_PERMISSION_REQUESTED = "notification_permission_requested"
+        const val KEY_MANAGER_STATUS_COLLAPSED = "manager_status_collapsed"
+        const val KEY_MANAGER_CONTROLS_COLLAPSED = "manager_controls_collapsed"
+        const val KEY_MANAGER_SESSIONS_COLLAPSED = "manager_sessions_collapsed"
+        const val KEY_MANAGER_SETTINGS_COLLAPSED = "manager_settings_collapsed"
+        val MANAGER_SECTION_KEYS: List<String> = listOf(
+            KEY_MANAGER_STATUS_COLLAPSED, KEY_MANAGER_CONTROLS_COLLAPSED, KEY_MANAGER_SESSIONS_COLLAPSED, KEY_MANAGER_SETTINGS_COLLAPSED,
+        )
 
         const val REGISTRY_NPMJS = "npmjs"
         const val REGISTRY_NPMMIRROR = "npmmirror"

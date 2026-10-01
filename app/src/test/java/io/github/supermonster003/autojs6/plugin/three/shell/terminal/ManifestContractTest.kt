@@ -94,9 +94,9 @@ class ManifestContractTest {
     }
 
     @Test
-    fun `the terminal screen is the only other activity and stays private to the plugin`() {
+    fun `the terminal screen stays private to the plugin`() {
         val activities = manifest.child("application").children("activity").map { it.androidAttribute("name") }
-        assertEquals(listOf(".WakeActivity", ".ui.TerminalActivity"), activities)
+        assertEquals(listOf(".WakeActivity", ".ui.TerminalActivity", ".ui.TerminalManagerActivity"), activities)
         val terminal = manifest.child("application").children("activity").single { it.androidAttribute("name") == ".ui.TerminalActivity" }
         assertEquals("false", terminal.androidAttribute("exported"))
         assertNull("the terminal screen needs no caller permission because it is not exported", terminal.androidAttributeOrNull("permission"))
@@ -105,6 +105,18 @@ class ManifestContractTest {
         assertEquals("@style/Theme.ThreeShellTerminal.Terminal", terminal.androidAttribute("theme"))
         assertEquals("adjustResize|stateVisible", terminal.androidAttribute("windowSoftInputMode"))
         assertTrue("the terminal screen must not be reachable through an intent filter", terminal.children("intent-filter").isEmpty())
+    }
+
+    @Test
+    fun `the session manager activity is a private transparent dialog host`() {
+        val manager = manifest.child("application").children("activity").single { it.androidAttribute("name") == ".ui.TerminalManagerActivity" }
+        assertEquals("false", manager.androidAttribute("exported"))
+        assertNull(manager.androidAttributeOrNull("permission"))
+        assertEquals("true", manager.androidAttribute("excludeFromRecents"))
+        assertEquals("singleTop", manager.androidAttribute("launchMode"))
+        assertEquals("@style/Theme.ThreeShellTerminal.Transparent", manager.androidAttribute("theme"))
+        assertNull("the manager host keeps the package task affinity", manager.androidAttributeOrNull("taskAffinity"))
+        assertTrue(manager.children("intent-filter").isEmpty())
     }
 
     @Test

@@ -7,24 +7,30 @@
     <string name="notification_title_multiple" tools:ignore="PluralsCandidate">%1$d sessions de terminal en cours</string>
     <string name="plugin_description">Terminal multi-session exécutant le shell système dans un pty, avec sessions en arrière-plan, barre de touches et commandes Node.js</string>
     <string name="terminal_action_close">Fermer</string>
+    <string name="terminal_action_copy">Copier</string>
     <string name="terminal_action_details">Détails</string>
     <string name="terminal_action_enable">Activer</string>
     <string name="terminal_action_grant">Autoriser</string>
     <string name="terminal_action_install_node_runtime">Installer Node.js Runtime</string>
+    <string name="terminal_action_open">Ouvrir</string>
     <string name="terminal_action_reenter_directory">Rouvrir le répertoire</string>
     <string name="terminal_action_update_node_runtime">Mettre à jour Node.js Runtime</string>
     <string name="terminal_clear_screen">Effacer l\'écran</string>
+    <string name="terminal_close_all_sessions">Fermer toutes les sessions</string>
     <string name="terminal_close_session">Fermer la session</string>
     <string name="terminal_confirm_close_running">Un processus est encore en cours dans cette session. Fermer quand même ?</string>
+    <string name="terminal_controls">Commandes</string>
     <string name="terminal_copied_to_clipboard">Copié dans le presse-papiers</string>
     <string name="terminal_copy_transcript">Copier la transcription</string>
     <string name="terminal_directory_inaccessible">%1$s n\'est pas un répertoire accessible. La session a démarré dans le répertoire personnel.</string>
     <string name="terminal_error_occurred">Une erreur est survenue</string>
     <string name="terminal_help">Aide</string>
     <string name="terminal_input_tips">Saisissez directement dans le terminal. Appuyez longuement sur le texte, ajustez la sélection avec les poignées, puis choisissez Copier ou Tout sélectionner.\nBalayez la zone de touches gauche pour afficher plus de symboles. CTRL et ALT s\'appliquent à la touche suivante.</string>
+    <string name="terminal_manager">Gestion du terminal</string>
     <string name="terminal_new_session">Nouvelle session</string>
     <string name="terminal_no_npm_scripts">package.json ne déclare aucun script</string>
     <string name="terminal_no_package_json">Aucun package.json trouvé dans le répertoire courant</string>
+    <string name="terminal_no_sessions">Aucune session active</string>
     <string name="terminal_node_enabled_for_new_sessions">L\'intégration Node.js est activée et s\'applique aux nouvelles sessions</string>
     <string name="terminal_node_exec_denied">Cet appareil a refusé d\'exécuter le lanceur Node.js du plugin, seul le shell système est disponible</string>
     <string name="terminal_node_executable_missing">Le plugin Node.js Runtime n\'a pas de lanceur pour l\'ABI %1$s</string>
@@ -36,6 +42,7 @@
     <string name="terminal_node_probe_running" tools:ignore="TypographyEllipsis">Vérification du lanceur Node.js...</string>
     <string name="terminal_nodejs">Node.js</string>
     <string name="terminal_npm_ignore_scripts">Ignorer les scripts de cycle de vie npm</string>
+    <string name="terminal_npm_ignore_scripts_summary">Exécuter npm avec --ignore-scripts pour que les paquets ne puissent pas lancer de hooks d\'installation (les binaires natifs ne peuvent de toute façon pas s\'exécuter ici)</string>
     <string name="terminal_npm_init">Initialiser le projet (npm init)</string>
     <string name="terminal_npm_install">Installer les dépendances (npm install)</string>
     <string name="terminal_npm_install_package">Installer un paquet (npm install &lt;pkg&gt;)</string>
@@ -53,13 +60,18 @@
     <string name="terminal_package_management">Gestion des paquets</string>
     <string name="terminal_package_name_hint">Nom du paquet, par ex. is-odd</string>
     <string name="terminal_preparing_npm" tools:ignore="TypographyEllipsis">Préparation de npm et corepack depuis le plugin Node.js Runtime...</string>
+    <string name="terminal_running">En cours</string>
     <string name="terminal_search_npm">Rechercher des paquets npm</string>
     <string name="terminal_session_ended">Session terminée</string>
     <string name="terminal_session_kept_running">La session continue en arrière-plan ; utilisez \"Fermer la session\" pour y mettre fin</string>
+    <string name="terminal_session_title">Session %1$s</string>
     <string name="terminal_sessions">Sessions</string>
     <string name="terminal_settings">Paramètres</string>
     <string name="terminal_share_transcript">Partager la transcription</string>
     <string name="terminal_show_keyboard">Afficher le clavier</string>
+    <string name="terminal_state">État d\'exécution</string>
+    <string name="terminal_status">État</string>
+    <string name="terminal_stopped">Arrêté</string>
     <string name="terminal_storage_permission_required">L\'accès à %1$s nécessite l\'autorisation de stockage de 3-Shell Terminal. La session a démarré dans le répertoire personnel.</string>
     <string name="terminal_storage_settings_unavailable">Impossible d\'ouvrir la page système de l\'accès au stockage</string>
     <string name="terminal_text_actions">Texte</string>
@@ -67,4 +79,6 @@
     <string name="terminal_tips">Conseils du terminal</string>
     <string name="terminal_tips_content">Le shell s\'exécute en tant qu\'utilisateur de l\'application 3-Shell Terminal (et non AutoJs6) avec son propre répertoire personnel (%1$s). La barre de touches fournit Esc / Tab / Ctrl / Alt et les touches de curseur, un appui long sur l\'écran sélectionne du texte, et le menu copie ou partage la transcription. node et npm deviennent disponibles une fois qu\'un plugin Node.js Runtime prenant en charge le terminal est installé. Quitter le terminal laisse la session et ses processus tourner en arrière-plan (avec une notification) ; \"Fermer la session\" dans le menu y met fin.</string>
     <string name="terminal_title">Terminal</string>
+    <string name="terminal_uptime">Durée d\'exécution</string>
+    <string name="terminal_working_directory">Répertoire de travail</string>
 </resources>

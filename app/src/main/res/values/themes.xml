@@ -32,6 +32,16 @@
         <item name="android:windowBackground">@color/terminal_background</item>
     </style>
 
+    <!-- Invisible host of a standalone dialog (roadmap P3.2: the session manager opened from the notification or the
+         entry protocol): the Activity draws nothing itself, the Material dialog provides the scrim and the card. -->
+    <style name="Theme.ThreeShellTerminal.Transparent">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowAnimationStyle">@null</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+
     <style name="TextAppearance.ThreeShellTerminal.ToolbarTitle" parent="TextAppearance.Material3.TitleLarge">
         <item name="android:textSize">20sp</item>
         <item name="android:fontFamily">sans-serif-medium</item>

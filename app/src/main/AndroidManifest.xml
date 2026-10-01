@@ -84,6 +84,17 @@
             android:theme="@style/Theme.ThreeShellTerminal.Terminal"
             android:windowSoftInputMode="adjustResize|stateVisible" />
 
+        <!--
+            Session manager as a standalone dialog (roadmap P3.2): tap target of the session notification and, from
+            P3.3, the host's manager=true entry. Transparent, left out of recents, reused while it is on top.
+        -->
+        <activity
+            android:name=".ui.TerminalManagerActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.ThreeShellTerminal.Transparent" />
+
         <service
             android:name=".ThreeShellTerminalPluginInfoService"
             android:enabled="true"

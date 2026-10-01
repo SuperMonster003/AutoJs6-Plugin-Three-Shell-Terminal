@@ -7,24 +7,30 @@
     <string name="notification_title_multiple" tools:ignore="PluralsCandidate">Выполняется сеансов терминала: %1$d</string>
     <string name="plugin_description">Многосеансовый терминал, запускающий системную оболочку в pty, с фоновыми сеансами, панелью клавиш и командами Node.js</string>
     <string name="terminal_action_close">Закрыть</string>
+    <string name="terminal_action_copy">Копировать</string>
     <string name="terminal_action_details">Подробности</string>
     <string name="terminal_action_enable">Включить</string>
     <string name="terminal_action_grant">Разрешить</string>
     <string name="terminal_action_install_node_runtime">Установить Node.js Runtime</string>
+    <string name="terminal_action_open">Открыть</string>
     <string name="terminal_action_reenter_directory">Снова перейти в каталог</string>
     <string name="terminal_action_update_node_runtime">Обновить Node.js Runtime</string>
     <string name="terminal_clear_screen">Очистить экран</string>
+    <string name="terminal_close_all_sessions">Закрыть все сеансы</string>
     <string name="terminal_close_session">Закрыть сеанс</string>
     <string name="terminal_confirm_close_running">В этом сеансе все еще выполняется процесс. Все равно закрыть?</string>
+    <string name="terminal_controls">Управление</string>
     <string name="terminal_copied_to_clipboard">Скопировано в буфер обмена</string>
     <string name="terminal_copy_transcript">Копировать вывод</string>
     <string name="terminal_directory_inaccessible">%1$s не является доступным каталогом. Сеанс запущен в домашнем каталоге.</string>
     <string name="terminal_error_occurred">Произошла ошибка</string>
     <string name="terminal_help">Справка</string>
     <string name="terminal_input_tips">Вводите текст прямо в терминале. Нажмите и удерживайте текст, настройте выделение маркерами и выберите Копировать или Выделить все.\nПрокрутите левую область клавиш по горизонтали для доступа к другим символам. CTRL и ALT применяются к следующей клавише.</string>
+    <string name="terminal_manager">Диспетчер терминала</string>
     <string name="terminal_new_session">Новый сеанс</string>
     <string name="terminal_no_npm_scripts">В package.json нет раздела scripts</string>
     <string name="terminal_no_package_json">В текущем каталоге нет package.json</string>
+    <string name="terminal_no_sessions">Нет активных сеансов</string>
     <string name="terminal_node_enabled_for_new_sessions">Интеграция Node.js включена и применяется к новым сеансам</string>
     <string name="terminal_node_exec_denied">Устройство отказалось запускать загрузчик Node.js плагина, доступна только системная оболочка</string>
     <string name="terminal_node_executable_missing">У плагина Node.js Runtime нет загрузчика для ABI %1$s</string>
@@ -36,6 +42,7 @@
     <string name="terminal_node_probe_running" tools:ignore="TypographyEllipsis">Проверка загрузчика Node.js...</string>
     <string name="terminal_nodejs">Node.js</string>
     <string name="terminal_npm_ignore_scripts">Игнорировать скрипты жизненного цикла npm</string>
+    <string name="terminal_npm_ignore_scripts_summary">Запускать npm с --ignore-scripts, чтобы пакеты не выполняли хуки установки (нативные бинарники здесь все равно не запускаются)</string>
     <string name="terminal_npm_init">Инициализировать проект (npm init)</string>
     <string name="terminal_npm_install">Установить зависимости (npm install)</string>
     <string name="terminal_npm_install_package">Установить пакет (npm install &lt;pkg&gt;)</string>
@@ -53,13 +60,18 @@
     <string name="terminal_package_management">Управление пакетами</string>
     <string name="terminal_package_name_hint">Имя пакета, например is-odd</string>
     <string name="terminal_preparing_npm" tools:ignore="TypographyEllipsis">Подготовка npm и corepack из плагина Node.js Runtime...</string>
+    <string name="terminal_running">Работает</string>
     <string name="terminal_search_npm">Поиск пакетов npm</string>
     <string name="terminal_session_ended">Сеанс завершен</string>
     <string name="terminal_session_kept_running">Сеанс продолжает работать в фоне; чтобы завершить его, используйте \"Закрыть сеанс\"</string>
+    <string name="terminal_session_title">Сеанс %1$s</string>
     <string name="terminal_sessions">Сеансы</string>
     <string name="terminal_settings">Настройки</string>
     <string name="terminal_share_transcript">Поделиться выводом</string>
     <string name="terminal_show_keyboard">Показать клавиатуру</string>
+    <string name="terminal_state">Состояние выполнения</string>
+    <string name="terminal_status">Состояние</string>
+    <string name="terminal_stopped">Остановлен</string>
     <string name="terminal_storage_permission_required">Для перехода в %1$s нужно разрешение на хранилище для 3-Shell Terminal. Сеанс запущен в домашнем каталоге.</string>
     <string name="terminal_storage_settings_unavailable">Не удалось открыть системную страницу доступа к хранилищу</string>
     <string name="terminal_text_actions">Текст</string>
@@ -67,4 +79,6 @@
     <string name="terminal_tips">Подсказки по терминалу</string>
     <string name="terminal_tips_content">Оболочка работает от имени пользователя приложения 3-Shell Terminal (а не AutoJs6) и имеет собственный домашний каталог (%1$s). Панель клавиш содержит Esc / Tab / Ctrl / Alt и клавиши курсора, долгое нажатие на экран выделяет текст, а меню копирует или отправляет вывод. node и npm становятся доступны после установки плагина Node.js Runtime с поддержкой терминала. После выхода из терминала сеанс и его процессы продолжают работать в фоне (с уведомлением); пункт меню \"Закрыть сеанс\" завершает его.</string>
     <string name="terminal_title">Терминал</string>
+    <string name="terminal_uptime">Время работы</string>
+    <string name="terminal_working_directory">Рабочий каталог</string>
 </resources>

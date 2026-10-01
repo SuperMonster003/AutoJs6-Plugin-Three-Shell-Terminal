@@ -13,18 +13,19 @@ import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.R
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.core.TerminalSessionManager
+import io.github.supermonster003.autojs6.plugin.three.shell.terminal.ui.TerminalManagerActivity
 
 /**
  * Builds the running-sessions notification of [ThreeShellTerminalSessionService] (plugin roadmap D15).
  *
  * The notification names the newest session's working directory and the session count, offers a
- * "Close sessions" action and, once the launcher entry of roadmap P3.1 exists, opens the terminal on
+ * "Close sessions" action and opens the session manager ([TerminalManagerActivity], roadmap P3.2) on
  * tap. On API 33+ it is only visible after the user granted `POST_NOTIFICATIONS`; the request belongs
  * to the first session-creating Activity (P3.1), sessions started through Binder never prompt and
  * simply run without a visible notification when the permission is missing.
  *
  * zh-CN: 构建 [ThreeShellTerminalSessionService] 的运行中会话通知 (路线图 D15). 通知显示最新会话的工作目录与会话数,
- * 提供 "关闭会话" 操作, P3.1 的启动器入口落地后点击可打开终端. API 33+ 仅在用户授予通知权限后可见;
+ * 提供 "关闭会话" 操作, 点击打开会话管理器 ([TerminalManagerActivity], P3.2). API 33+ 仅在用户授予通知权限后可见;
  * 请求点在首次创建会话的 Activity (P3.1), Binder 发起的会话不弹权限, 缺少权限时静默运行.
  */
 object SessionNotifications {
@@ -79,12 +80,12 @@ object SessionNotifications {
             .setPriority(NotificationCompat.PRIORITY_LOW)
             .setShowWhen(false)
             .addAction(R.drawable.ic_close_24dp, context.getString(R.string.notification_close_sessions), closeIntent)
-        // The launcher entry (roadmap P3.1) resolves here once it exists; until then the notification has no tap target.
-        context.packageManager.getLaunchIntentForPackage(context.packageName)?.let { launch ->
-            builder.setContentIntent(
-                PendingIntent.getActivity(context, 0, launch, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE),
-            )
-        }
+        // Tapping the notification opens the session manager (roadmap P3.2) over whatever is in front.
+        // zh-CN: 点击通知在当前界面之上打开会话管理器 (P3.2).
+        val managerIntent = TerminalManagerActivity.intent(context).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        builder.setContentIntent(
+            PendingIntent.getActivity(context, 0, managerIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE),
+        )
         return builder.build()
     }
 

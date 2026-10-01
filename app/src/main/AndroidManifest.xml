@@ -72,9 +72,37 @@
         </activity>
 
         <!--
+            Host entry (roadmap D19 / P3.3): the only way the host opens the terminal UI. Exported behind the PLUGIN
+            signature permission, invisible, left out of recents; it checks the caller it can name, validates the
+            contract extras and forwards to the terminal screen (own task) or the session manager, then finishes.
+        -->
+        <activity
+            android:name=".ThreeShellTerminalEntryActivity"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:permission="org.autojs.permission.PLUGIN"
+            android:theme="@android:style/Theme.NoDisplay">
+            <intent-filter>
+                <action android:name="org.autojs.plugin.TERMINAL_OPEN" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <!--
+            Launcher target (roadmap D30 / P3.3): invisible forwarder to the terminal screen (most recent session or a
+            new one at home). Shares the terminal's task affinity so the task the home screen creates is the terminal
+            task. Not exported; the launcher icon aliases of P5.3 carry MAIN / LAUNCHER and point here.
+        -->
+        <activity
+            android:name=".ui.LauncherActivity"
+            android:exported="false"
+            android:taskAffinity="io.github.supermonster003.autojs6.plugin.three.shell.terminal.ui.TerminalActivity"
+            android:theme="@android:style/Theme.NoDisplay" />
+
+        <!--
             Terminal screen (roadmap P3.1 / D30): its own task affinity so it stacks neither on the host nor on the
             launcher; the keyboard resizes the layout and opens with the screen. Not exported: the host reaches it
-            through the guarded entry Activity of P3.3, the launcher alias of P5.3 through LauncherActivity.
+            through the guarded entry Activity above, the launcher alias of P5.3 through LauncherActivity.
         -->
         <activity
             android:name=".ui.TerminalActivity"
@@ -85,8 +113,8 @@
             android:windowSoftInputMode="adjustResize|stateVisible" />
 
         <!--
-            Session manager as a standalone dialog (roadmap P3.2): tap target of the session notification and, from
-            P3.3, the host's manager=true entry. Transparent, left out of recents, reused while it is on top.
+            Session manager as a standalone dialog (roadmap P3.2): tap target of the session notification and the
+            host's manager=true entry (P3.3). Transparent, left out of recents, reused while it is on top.
         -->
         <activity
             android:name=".ui.TerminalManagerActivity"

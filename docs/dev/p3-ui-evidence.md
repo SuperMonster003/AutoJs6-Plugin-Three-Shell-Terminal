@@ -83,3 +83,16 @@ explicit intents (tests) until P3.3 lands.
 - An instrumented process on HyperOS (API 35) is refused the foreground service start while no
   Activity is resumed ("Background activity is restricted"); sessions still run, the notification
   is simply absent. A screen opened by the user is foreground, so the real path is unaffected.
+
+## Manual parity checklist (P3.3 acceptance, added 2026-10-02)
+
+Items the roadmap asks to compare by hand against the host's former built-in terminal. Automation
+covers only part of each row; the maintainer's manual pass is still open.
+
+| Item | Automated evidence | Manual comparison |
+| --- | --- | --- |
+| Text selection | none (`TerminalTextSelection` ported as source) | open |
+| Copy | subtitle long-press copies the real directory (`ui/TerminalActivityInstrumentationTest`, API 24 / 35) | open for selection copy |
+| Share | none | open |
+| Text size | manager shows the current size (`ui/TerminalManagerInstrumentationTest`); dialog change not automated | open |
+| Keyboard | `adjustResize|stateVisible`: keyboard opens with the screen (Sony API 33 host-side run: first Back hid it) | open |

@@ -207,6 +207,7 @@ _2026/10/02_
 - `新增` 包管理支持 npm init, 安装依赖或指定包, 读取并运行 package.json 脚本, 查看 Yarn / pnpm 命令与搜索 npm. 支持 npmjs, npmmirror 与自定义 HTTPS 镜像源, 以及忽略安装脚本. 清除终端数据会先关闭所有会话, 再清空 home / usr 并重建目录, 保留设置和外部工程. 菜单与设置页将在后续阶段接入.
 - `新增` 终端界面 (`TerminalActivity`): 宿主终端界面迁入插件自有的 Material 3 主题, 含快捷键栏 (Esc / Tab / Ctrl / Alt / 方向 / 翻页), 双指缩放字号, 长按选择并复制文本, 会话 / 文本 / 包管理 / 设置 / 帮助菜单, 显示 shell 当前目录并可点按复制的工具栏副标题, 以及说明 Node.js 运行时缺失 / 不受信任 / 版本过旧 / 已停用并提供安装 / 更新 / 启用 / 详情动作的 Node.js 横幅; 无法进入共享存储目录时出现存储横幅并提供 "授予" 与 "重新进入目录"; 界面通过宿主设置提供者跟随 AutoJs6 的语言, 夜间模式与主题色, 无宿主时回退到系统值与共用的 `#FFDEAD` 颜色
 - `新增` 会话管理器: 含状态 / 控制 / 会话 / 设置四个可收起分组的对话框, 列出全部运行中的会话及其目录, PID 与运行时长, 可打开或关闭单个会话, 新建会话, 关闭全部, 查看会话详情并复制, 并提供字号, npm 镜像源与 ignore-scripts 设置; 它与宿主 `onSessionsChanged` 使用同一会话注册表, 可从终端菜单, 会话通知 (点击) 进入, 宿主的 `manager=true` 入口则经透明的 `TerminalManagerActivity` 承载, 关闭后不会留下终端界面
+- `新增` 宿主入口与启动器: 导出的 `TERMINAL_OPEN` 入口 Activity 受 `org.autojs.permission.PLUGIN` 签名权限保护, 对可识别的调用方校验权限持有与签名一致, 按契约上限校验 `directory` / `sessionId` / `newSession` / `command` / `manager` extras 并转发到自有任务中的终端界面或覆盖在调用方之上的会话管理器; `LauncherActivity` (图标 alias 的目标) 恢复最近会话或在主目录新建会话; 从宿主进入的终端按返回键回到宿主, 从启动器进入的回到桌面, 终端任务随之离开最近任务, 启动请求不会被重放
 - `修复` 系统限制后台活动时, 启动会话不再导致插件崩溃; 会话会在没有前台服务保护的情况下继续运行.
 - `修复` 读取较长转录时保留最新文本, 并控制回复大小, 避免跨进程消息超限.
 - `依赖` 附加 jackpal Android-Terminal-Emulator (term 1.0.70, emulatorview 1.0.42, libtermexec 1.0, Apache-2.0) 作为终端仿真与 pty 原生库, 并在 `locks/vendored-aars.lock` 中锁定哈希

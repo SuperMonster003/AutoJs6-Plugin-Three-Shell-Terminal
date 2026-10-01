@@ -94,13 +94,14 @@ AutoJs6-Plugin-Three-Shell-Terminal/
 |   |   |-- ThreeShellTerminalPlugin.kt                身份常量
 |   |   |-- ThreeShellTerminalPluginInfoService.kt     IPluginInfoProvider
 |   |   |-- ThreeShellTerminalPluginService.kt         org.autojs.plugin.TERMINAL (P2.4 起带宿主身份校验的 ITerminalPlugin.Stub)
-|   |   |-- ThreeShellTerminalEntryActivity.kt         org.autojs.plugin.TERMINAL_OPEN 转发器 (P3.3)
+|   |   |-- ThreeShellTerminalEntryActivity.kt         org.autojs.plugin.TERMINAL_OPEN 转发器 (P3.3: EntryRequest 解析 extras, EntryCaller / EntryCallerPolicy 校验可识别的调用方)
 |   |   |-- WakeActivity.kt
 |   |   |-- ui/                                        P3.1: HostAppearance (宿主外观快照 + Appearance 解析), HostAppearanceActivity (跟随语言 / 夜间 / 主题色的基类),
 |   |   |                                              TerminalPalette (中性色 + HCT 强调色 + 4.5:1 保证), UiKit (Material 3 对话框 / 控件着色 / 剪贴板 / 外部 Intent / 工作线程),
 |   |   |                                              TerminalActivity, TerminalEmulatorView, TerminalToolbarView, TerminalTextSelection, TerminalBanner + NodeBanner + StorageBanner,
 |   |   |                                              NodeProbeReport, TerminalNpmDialogs, TerminalSettingsDialogs, SessionStarter (Activity 与管理器共用的两步启动);
-|   |   |                                              P3.2: TerminalManagerDialog (四个可收起分组的会话管理器), TerminalManagerActivity (透明承载, 通知点击 / manager=true 入口), ElapsedTime
+|   |   |                                              P3.2: TerminalManagerDialog (四个可收起分组的会话管理器), TerminalManagerActivity (透明承载, 通知点击 / manager=true 入口), ElapsedTime;
+|   |   |                                              P3.3: LauncherActivity (启动器图标目标, 与终端同 taskAffinity 的不可见转发器)
 |   |   `-- (路线图 4.2 节: core/ service/ node/ storage/ binder/ ui/settings/ 随 P2 - P5 加入)
 |   |-- src/main/java/jackpal/androidterm/           PtyBridge.java, emulatorview/TerminalSelectionSnapshot.java (同包访问 AAR 包级 API, 包名不变)
 |   |-- src/main/res/           values*/ x 11 (strings, colors + values-night, themes, ids), mipmap*/ (生成), raw*/plugin_instruction.md (生成), layout/ (activity_terminal, include_terminal_banner), menu/ (menu_terminal), xml/
@@ -158,6 +159,8 @@ AutoJs6-Plugin-Three-Shell-Terminal/
 
 - `org.autojs.permission.PLUGIN`, `WAKE_ACTIVITY` meta-data, `WakeActivity` (exported, `Theme.NoDisplay`, PLUGIN 权限, WAKE action + DEFAULT category, 立即结束), `org.autojs.plugin.info.AUTHOR`, `NATIVE_PAGE_ALIGNMENT=16384`.
 - INFO 服务与 TERMINAL 服务均 exported, 受 PLUGIN 权限保护, 携带 `requiresHostVersion` meta-data.
+- `ThreeShellTerminalEntryActivity` (P3.3 / D19): exported, PLUGIN 权限, `Theme.NoDisplay`, `excludeFromRecents`, intent-filter `org.autojs.plugin.TERMINAL_OPEN` + DEFAULT; 宿主要求该 action 恰好解析到一个受 PLUGIN 权限保护的导出 Activity, 否则视插件为 "不兼容". 它不设 `taskAffinity` (留在调用方任务), 终端界面以 `FLAG_ACTIVITY_NEW_TASK` 进入自有任务, 管理器留在调用方任务之上. `LauncherActivity` 不导出, `Theme.NoDisplay`, 与 `TerminalActivity` 同 `taskAffinity`, 不设 `excludeFromRecents` (任务根排除会隐藏整个终端任务); P5.3 的 MAIN / LAUNCHER 只在 alias 上.
+- `TerminalActivity` 的离开统一走 `finishScreen()`: `isTaskRoot` 时 `finishAndRemoveTask()` (宿主入口 / 启动器进入; 最近任务不会重放带 `command` 的启动请求), 否则 `finish()` (管理器之上叠放的终端).
 - 权限清单与理由 (每次新增权限时更新本表, README 安全节与 `ManifestContractTest`):
 
 | 权限 | 理由 |
@@ -224,13 +227,14 @@ AutoJs6-Plugin-Three-Shell-Terminal/
 
 ### 13.1 JVM
 
-- `ManifestContractTest` (权限, queries, meta-data, 组件导出与权限, 服务发现契约, 入口 / 设置 action), `ThreeShellTerminalPluginRuntimeInfoTest` (PluginInfo 纯数据映射, `supportedAbis` 推导, 身份常量对齐 `common.json` / `build.gradle.kts` / `settings.gradle.kts`), `StringResourceParityTest`, `ApplicationTextPunctuationTest`, `VendoredAarLockTest`.
+- `ManifestContractTest` (权限, queries, meta-data, 组件导出与权限, 服务发现契约, 入口 / 设置 action), `ThreeShellTerminalPluginRuntimeInfoTest` (PluginInfo 纯数据映射, `supportedAbis` 推导, 身份常量对齐 `common.json` / `build.gradle.kts` / `settings.gradle.kts`), `StringResourceParityTest`, `ApplicationTextPunctuationTest`, `VendoredAarLockTest`; P3.3 起: `ThreeShellTerminalEntryRequestTest` (extras 校验: 空白视为缺省, UTF-8 字节上限, 互斥组合; 调用方策略: 无名调用方信任 Manifest 权限, 具名调用方需持权限且签名一致).
 - P2 起: 迁入的 10 个终端逻辑测试 (`TerminalPaths`, `TerminalEnvironment`, `TerminalSessionLauncher`, `TerminalKeySequences`, `ShellQuoting`, `NpmProjectScripts`, `TerminalNodeEnvironment`, `NodeCli*`), 存储路径判定, 信任判定, 上限与错误映射; P3 起: `ui/TerminalPaletteTest` (两种夜间模式 x 10 个种子色的强调色对每个承载表面 >= 4.5:1, 中性文字角色对比度, HCT 规则, 无宿主回退与宿主快照优先, 语言标签校验; 中性色直接解析 `colors.xml` / `values-night/colors.xml`), `ui/ElapsedTimeTest`; P5 起: 设置序列化, 版本比较.
 
 ### 13.2 Android instrumentation
 
 - `ThreeShellTerminalPluginContractTest`: Wake Activity 契约, INFO 服务 `getInfo()` 往返 (含 `supportedAbis` 与能力 Bundle), TERMINAL 服务 descriptor, 原生库可加载, P0 无启动器入口.
 - P2 起: `TerminalBinderContractTest` (happy path, 敌意输入, 上限, 无权限调用方, 宿主死亡后管道关闭), 会话 / 存储 / Node 用例; P3 起: `ui/TerminalActivityInstrumentationTest` (迁入的会话切换用例, 副标题 / 剪贴板, 离开界面保活并恢复, 存储横幅未授权出现 / 授权后 "重新进入目录"), `ui/TerminalManagerInstrumentationTest` (迁入的管理器跨新建 / 恢复会话 Activity 存活并恢复原终端, 独立管理器 Activity 无终端显示且 Back 不带出终端, 注册表外创建 / 关闭的会话即时进出列表), P3.3 入口用例; P5 起: 设置页与 alias.
+- P3.3 起: `ThreeShellTerminalEntryInstrumentationTest` (adb shell uid 2000 启动入口被 Android 以 PLUGIN 权限拒绝: `am` 的 SecurityException 只在 stderr, UiAutomation 拿不到, 用例改读 `logcat -s ActivityManager:W ActivityTaskManager:W` 的 "Permission Denial"; 插件自身 uid (与宿主同签名) 经入口进入指定目录的新会话且终端为任务根, Back 连同任务移除而会话存活; `manager=true` 只弹管理器; 互斥 extras 被忽略; `LauncherActivity` 无会话时在主目录新建, 否则恢复最近会话).
 - Activity 用例在 API 33+ 先 `uiAutomation.grantRuntimePermission(POST_NOTIFICATIONS)`: 终端界面首次建会话会请求该权限, 系统对话框会让 `startActivitySync` 等到 45 s 超时 (Xiaomi Pad API 35 实测). 比较 shell 目录用 canonical 路径或 (dev, inode), 因为 `/data/user/0` 在部分设备是 `/data/data` 的符号链接而 procfs 给出真实路径.
 - 设备池与证据等级见 `ROADMAP.md` 附录 E; 多台设备时用明确 serial, 每次会话重新读取 SDK / ABI 并安装对应 ABI 变体; 不卸载用户的已安装应用, 不清空启动器数据, 不删除用户的 `/sdcard` 内容 (测试目录放在 `/sdcard/Android/data/<pkg>/` 或临时目录).
 - 存储授权在 API 30+ 用 `appops set <pkg> MANAGE_EXTERNAL_STORAGE allow` 驱动并在用例结束时恢复 `default`.

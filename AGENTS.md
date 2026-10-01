@@ -30,7 +30,7 @@
 | 前台服务 / 通知渠道 | `ThreeShellTerminalSessionService` (`specialUse`) / `three.shell.terminal.sessions` |
 | 宿主契约标识 | AIDL 包 `org.autojs.plugin.terminal.api`, 契约类 `TerminalContract` / `TerminalIds` / `TerminalActions` / `TerminalCapabilityKeys` / `TerminalErrorCodes` / `ITerminal*` 由宿主 `terminal-api` AAR (路线图 P1.1) 决定; P0 阶段 `ThreeShellTerminalPlugin` 以字面量声明同一组值, P1.1 落地后改为引用契约常量 |
 | Node.js 契约 | 宿主 `nodejs-api` AAR 的 `NodeJsPluginCapabilityKeys.NODE_CLI_*` / `NodeJsPluginActions.RUNTIME` / `NodeJsRuntimeContract.NODE_CLI_SCHEMA_VERSION`; 目标包 `io.github.supermonster003.autojs6.plugin.nodejs` (1.5.0+) |
-| 最低宿主 versionCode | `ThreeShellTerminalPlugin.REQUIRED_HOST_VERSION` = `TerminalIds.REQUIRED_HOST_VERSION_CODE`, P1.4 回填 (交付 `terminal-api` 的宿主构建, >= 5303); P0 暂取 5302 |
+| 最低宿主 versionCode | `ThreeShellTerminalPlugin.REQUIRED_HOST_VERSION` = `TerminalIds.REQUIRED_HOST_VERSION_CODE`, = 5304 (P1.4 回填确认, 2026-10-01: 首个已提交 `version.properties` 含 `terminal-api` 与宿主客户端的 6.8.0 构建; 宿主协议文档 `docs/dev/terminal-plugin-protocol-v1.md`) |
 | 平台版本插件 | `io.github.supermonster003.autojs6-platform-versions` 1.8.3 与 `autojs6-native-alignment` 1.8.3 (与兄弟仓库统一升级时再更新) |
 | 原生库 / ABI | `libjackpal-androidterm5.so`, `libjackpal-termexec2.so`; `arm64-v8a`, `armeabi-v7a`, `x86_64`, `x86` + universal |
 | 发布文件名 | `autojs6-plugin-three-shell-terminal-v{VERSION_NAME}-{abi}-{CRC32}.apk` (5 个) |

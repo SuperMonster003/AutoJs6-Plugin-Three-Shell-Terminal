@@ -1,0 +1,12 @@
+# jackpal Android-Terminal-Emulator artifacts (Apache-2.0), copied on 2026-10-01 from the AutoJs6 host libs/ directory (roadmap D13).
+# term-1_0_70: host libs/jackpal-androidterm-1_0_70/term-debug.aar (jackpal.androidterm 1.0.70, Java only; only Exec's JNI declarations are used).
+# emulatorview-1_0_42: host libs/jackpal-androidterm-emulatorview-1_0_42/emulatorview-release.aar (TermSession, EmulatorView, renderers; Java only).
+# libtermexec-1_0: host libs/jackpal-androidterm-libtermexec-1_0/libtermexec-release.aar (TermExec JNI + 4 ABI x 2 .so, rebuilt by the host with
+#   NDK 28.2.13676358 for 16 KB pages; native/jackpal-termexec/provenance.json records the per-library SHA-256 and the same aarSha256).
+format=1
+term-1_0_70.file=term-1_0_70.aar
+term-1_0_70.sha256=75d47c8ca207ac8c3afb5820019e5203b361f5977b2631fd1c95ecd9f308dce1
+emulatorview-1_0_42.file=emulatorview-1_0_42.aar
+emulatorview-1_0_42.sha256=9be91343d611eacf1613583c11956fcd98baa637884ec0b6d41b53948346b991
+libtermexec-1_0.file=libtermexec-1_0.aar
+libtermexec-1_0.sha256=46c6aea86dc45908a3d2555635a6f31d2fcb74c7af01a9b1d80a9f3cb5522fc4

@@ -5,6 +5,7 @@
         <menu>
             <item android:id="@+id/action_new_session" android:title="@string/terminal_new_session" />
             <item android:id="@+id/action_close_session" android:title="@string/terminal_close_session" />
+            <item android:id="@+id/action_manager" android:title="@string/terminal_manager" />
         </menu>
     </item>
 

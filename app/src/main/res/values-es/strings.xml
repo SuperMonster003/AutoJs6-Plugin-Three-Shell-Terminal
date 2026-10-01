@@ -7,24 +7,30 @@
     <string name="notification_title_multiple" tools:ignore="PluralsCandidate">%1$d sesiones de terminal en ejecución</string>
     <string name="plugin_description">Terminal multisesión que ejecuta el shell del sistema en un pty, con sesiones en segundo plano, barra de teclas y comandos Node.js</string>
     <string name="terminal_action_close">Cerrar</string>
+    <string name="terminal_action_copy">Copiar</string>
     <string name="terminal_action_details">Detalles</string>
     <string name="terminal_action_enable">Habilitar</string>
     <string name="terminal_action_grant">Conceder</string>
     <string name="terminal_action_install_node_runtime">Instalar Node.js Runtime</string>
+    <string name="terminal_action_open">Abrir</string>
     <string name="terminal_action_reenter_directory">Volver a entrar en el directorio</string>
     <string name="terminal_action_update_node_runtime">Actualizar Node.js Runtime</string>
     <string name="terminal_clear_screen">Limpiar pantalla</string>
+    <string name="terminal_close_all_sessions">Cerrar todas las sesiones</string>
     <string name="terminal_close_session">Cerrar sesión</string>
     <string name="terminal_confirm_close_running">Todavía hay un proceso en ejecución en esta sesión. Cerrar de todos modos?</string>
+    <string name="terminal_controls">Controles</string>
     <string name="terminal_copied_to_clipboard">Copiado al portapapeles</string>
     <string name="terminal_copy_transcript">Copiar transcripción</string>
     <string name="terminal_directory_inaccessible">%1$s no es un directorio accesible. La sesión se inició en el directorio personal.</string>
     <string name="terminal_error_occurred">Se produjo un error</string>
     <string name="terminal_help">Ayuda</string>
     <string name="terminal_input_tips">Escriba directamente en el terminal. Mantenga pulsado el texto, arrastre los controles para ajustar la selección y elija Copiar o Seleccionar todo.\nDeslice la zona izquierda de teclas para ver más símbolos. CTRL y ALT se aplican a la siguiente tecla.</string>
+    <string name="terminal_manager">Gestor del terminal</string>
     <string name="terminal_new_session">Nueva sesión</string>
     <string name="terminal_no_npm_scripts">package.json no declara scripts</string>
     <string name="terminal_no_package_json">No se encontró package.json en el directorio actual</string>
+    <string name="terminal_no_sessions">No hay sesiones activas</string>
     <string name="terminal_node_enabled_for_new_sessions">La integración de Node.js está habilitada y se aplica a las sesiones nuevas</string>
     <string name="terminal_node_exec_denied">Este dispositivo rechazó ejecutar el lanzador de Node.js del plugin, solo está disponible el shell del sistema</string>
     <string name="terminal_node_executable_missing">El plugin Node.js Runtime no tiene lanzador para la ABI %1$s</string>
@@ -36,6 +42,7 @@
     <string name="terminal_node_probe_running" tools:ignore="TypographyEllipsis">Comprobando el lanzador de Node.js...</string>
     <string name="terminal_nodejs">Node.js</string>
     <string name="terminal_npm_ignore_scripts">Ignorar scripts de ciclo de vida de npm</string>
+    <string name="terminal_npm_ignore_scripts_summary">Ejecutar npm con --ignore-scripts para que los paquetes no puedan ejecutar hooks de instalación (los binarios nativos no pueden ejecutarse aquí de todos modos)</string>
     <string name="terminal_npm_init">Inicializar proyecto (npm init)</string>
     <string name="terminal_npm_install">Instalar dependencias (npm install)</string>
     <string name="terminal_npm_install_package">Instalar paquete (npm install &lt;pkg&gt;)</string>
@@ -53,13 +60,18 @@
     <string name="terminal_package_management">Gestión de paquetes</string>
     <string name="terminal_package_name_hint">Nombre del paquete, p. ej. is-odd</string>
     <string name="terminal_preparing_npm" tools:ignore="TypographyEllipsis">Preparando npm y corepack desde el plugin Node.js Runtime...</string>
+    <string name="terminal_running">En ejecución</string>
     <string name="terminal_search_npm">Buscar paquetes npm</string>
     <string name="terminal_session_ended">Sesión finalizada</string>
     <string name="terminal_session_kept_running">La sesión sigue ejecutándose en segundo plano; usa \"Cerrar sesión\" para terminarla</string>
+    <string name="terminal_session_title">Sesión %1$s</string>
     <string name="terminal_sessions">Sesiones</string>
     <string name="terminal_settings">Ajustes</string>
     <string name="terminal_share_transcript">Compartir transcripción</string>
     <string name="terminal_show_keyboard">Mostrar teclado</string>
+    <string name="terminal_state">Estado de ejecución</string>
+    <string name="terminal_status">Estado</string>
+    <string name="terminal_stopped">Detenido</string>
     <string name="terminal_storage_permission_required">Para entrar en %1$s se necesita el permiso de almacenamiento de 3-Shell Terminal. La sesión se inició en el directorio personal.</string>
     <string name="terminal_storage_settings_unavailable">No se pudo abrir la página del sistema para el acceso al almacenamiento</string>
     <string name="terminal_text_actions">Texto</string>
@@ -67,4 +79,6 @@
     <string name="terminal_tips">Consejos de la terminal</string>
     <string name="terminal_tips_content">El shell se ejecuta como el usuario de la app 3-Shell Terminal (no como AutoJs6) con su propio directorio personal (%1$s). La barra de teclas ofrece Esc / Tab / Ctrl / Alt y las teclas de cursor, una pulsación larga en la pantalla selecciona texto y el menú copia o comparte la transcripción. node y npm estarán disponibles cuando se instale un plugin Node.js Runtime compatible con la terminal. Al salir de la terminal, la sesión y sus procesos siguen ejecutándose en segundo plano (con una notificación); \"Cerrar sesión\" en el menú la termina.</string>
     <string name="terminal_title">Terminal</string>
+    <string name="terminal_uptime">Tiempo de actividad</string>
+    <string name="terminal_working_directory">Directorio de trabajo</string>
 </resources>

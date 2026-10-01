@@ -99,7 +99,8 @@ AutoJs6-Plugin-Three-Shell-Terminal/
 |   |   |-- ui/                                        P3.1: HostAppearance (宿主外观快照 + Appearance 解析), HostAppearanceActivity (跟随语言 / 夜间 / 主题色的基类),
 |   |   |                                              TerminalPalette (中性色 + HCT 强调色 + 4.5:1 保证), UiKit (Material 3 对话框 / 控件着色 / 剪贴板 / 外部 Intent / 工作线程),
 |   |   |                                              TerminalActivity, TerminalEmulatorView, TerminalToolbarView, TerminalTextSelection, TerminalBanner + NodeBanner + StorageBanner,
-|   |   |                                              NodeProbeReport, TerminalNpmDialogs, TerminalSettingsDialogs
+|   |   |                                              NodeProbeReport, TerminalNpmDialogs, TerminalSettingsDialogs, SessionStarter (Activity 与管理器共用的两步启动);
+|   |   |                                              P3.2: TerminalManagerDialog (四个可收起分组的会话管理器), TerminalManagerActivity (透明承载, 通知点击 / manager=true 入口), ElapsedTime
 |   |   `-- (路线图 4.2 节: core/ service/ node/ storage/ binder/ ui/settings/ 随 P2 - P5 加入)
 |   |-- src/main/java/jackpal/androidterm/           PtyBridge.java, emulatorview/TerminalSelectionSnapshot.java (同包访问 AAR 包级 API, 包名不变)
 |   |-- src/main/res/           values*/ x 11 (strings, colors + values-night, themes, ids), mipmap*/ (生成), raw*/plugin_instruction.md (生成), layout/ (activity_terminal, include_terminal_banner), menu/ (menu_terminal), xml/
@@ -224,12 +225,12 @@ AutoJs6-Plugin-Three-Shell-Terminal/
 ### 13.1 JVM
 
 - `ManifestContractTest` (权限, queries, meta-data, 组件导出与权限, 服务发现契约, 入口 / 设置 action), `ThreeShellTerminalPluginRuntimeInfoTest` (PluginInfo 纯数据映射, `supportedAbis` 推导, 身份常量对齐 `common.json` / `build.gradle.kts` / `settings.gradle.kts`), `StringResourceParityTest`, `ApplicationTextPunctuationTest`, `VendoredAarLockTest`.
-- P2 起: 迁入的 10 个终端逻辑测试 (`TerminalPaths`, `TerminalEnvironment`, `TerminalSessionLauncher`, `TerminalKeySequences`, `ShellQuoting`, `NpmProjectScripts`, `TerminalNodeEnvironment`, `NodeCli*`), 存储路径判定, 信任判定, 上限与错误映射; P3 起: `ui/TerminalPaletteTest` (两种夜间模式 x 10 个种子色的强调色对每个承载表面 >= 4.5:1, 中性文字角色对比度, HCT 规则, 无宿主回退与宿主快照优先, 语言标签校验; 中性色直接解析 `colors.xml` / `values-night/colors.xml`); P5 起: 设置序列化, 版本比较.
+- P2 起: 迁入的 10 个终端逻辑测试 (`TerminalPaths`, `TerminalEnvironment`, `TerminalSessionLauncher`, `TerminalKeySequences`, `ShellQuoting`, `NpmProjectScripts`, `TerminalNodeEnvironment`, `NodeCli*`), 存储路径判定, 信任判定, 上限与错误映射; P3 起: `ui/TerminalPaletteTest` (两种夜间模式 x 10 个种子色的强调色对每个承载表面 >= 4.5:1, 中性文字角色对比度, HCT 规则, 无宿主回退与宿主快照优先, 语言标签校验; 中性色直接解析 `colors.xml` / `values-night/colors.xml`), `ui/ElapsedTimeTest`; P5 起: 设置序列化, 版本比较.
 
 ### 13.2 Android instrumentation
 
 - `ThreeShellTerminalPluginContractTest`: Wake Activity 契约, INFO 服务 `getInfo()` 往返 (含 `supportedAbis` 与能力 Bundle), TERMINAL 服务 descriptor, 原生库可加载, P0 无启动器入口.
-- P2 起: `TerminalBinderContractTest` (happy path, 敌意输入, 上限, 无权限调用方, 宿主死亡后管道关闭), 会话 / 存储 / Node 用例; P3 起: `ui/TerminalActivityInstrumentationTest` (迁入的会话切换用例, 副标题 / 剪贴板, 离开界面保活并恢复, 存储横幅未授权出现 / 授权后 "重新进入目录"), P3.2 迁入管理器用例, P3.3 入口用例; P5 起: 设置页与 alias.
+- P2 起: `TerminalBinderContractTest` (happy path, 敌意输入, 上限, 无权限调用方, 宿主死亡后管道关闭), 会话 / 存储 / Node 用例; P3 起: `ui/TerminalActivityInstrumentationTest` (迁入的会话切换用例, 副标题 / 剪贴板, 离开界面保活并恢复, 存储横幅未授权出现 / 授权后 "重新进入目录"), `ui/TerminalManagerInstrumentationTest` (迁入的管理器跨新建 / 恢复会话 Activity 存活并恢复原终端, 独立管理器 Activity 无终端显示且 Back 不带出终端, 注册表外创建 / 关闭的会话即时进出列表), P3.3 入口用例; P5 起: 设置页与 alias.
 - Activity 用例在 API 33+ 先 `uiAutomation.grantRuntimePermission(POST_NOTIFICATIONS)`: 终端界面首次建会话会请求该权限, 系统对话框会让 `startActivitySync` 等到 45 s 超时 (Xiaomi Pad API 35 实测). 比较 shell 目录用 canonical 路径或 (dev, inode), 因为 `/data/user/0` 在部分设备是 `/data/data` 的符号链接而 procfs 给出真实路径.
 - 设备池与证据等级见 `ROADMAP.md` 附录 E; 多台设备时用明确 serial, 每次会话重新读取 SDK / ABI 并安装对应 ABI 变体; 不卸载用户的已安装应用, 不清空启动器数据, 不删除用户的 `/sdcard` 内容 (测试目录放在 `/sdcard/Android/data/<pkg>/` 或临时目录).
 - 存储授权在 API 30+ 用 `appops set <pkg> MANAGE_EXTERNAL_STORAGE allow` 驱动并在用例结束时恢复 `default`.

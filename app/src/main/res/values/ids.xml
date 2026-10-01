@@ -4,4 +4,22 @@
     <item name="terminal" type="id" />
     <!-- Frozen transcript shown while text is being selected (ui/TerminalTextSelection.kt). -->
     <item name="terminal_selection" type="id" />
+    <!-- Session manager dialog (roadmap P3.2); the instrumentation tests address rows through these. -->
+    <item name="manager_root" type="id" />
+    <item name="manager_status" type="id" />
+    <item name="manager_controls" type="id" />
+    <item name="manager_sessions" type="id" />
+    <item name="manager_settings" type="id" />
+    <item name="manager_new_session" type="id" />
+    <item name="manager_close_all" type="id" />
+    <item name="manager_session_list" type="id" />
+    <item name="manager_no_sessions" type="id" />
+    <item name="manager_session_row" type="id" />
+    <item name="manager_session_title" type="id" />
+    <item name="manager_session_summary" type="id" />
+    <item name="manager_session_open" type="id" />
+    <item name="manager_session_close" type="id" />
+    <item name="manager_text_size" type="id" />
+    <item name="manager_npm_registry" type="id" />
+    <item name="manager_npm_ignore_scripts" type="id" />
 </resources>

@@ -1,0 +1,16 @@
+******
+
+### Historial de versiones
+
+******
+
+# v1.0.0
+
+###### 2026/10/01
+
+* `Aviso` Vista previa de desarrollo P0: esqueleto del repositorio, identidad del plugin reconocida por el centro de plugins de AutoJs6 y spike de pty / almacenamiento / lanzador Node.js. El contrato Binder, el núcleo de sesiones, la pantalla del terminal, la API de script y la página de ajustes siguen las fases de ROADMAP.md.
+* `Función` Identidad del plugin `three-shell-terminal` (engine `terminal`) con el servicio INFO, la Wake Activity y el esqueleto del servicio `org.autojs.plugin.TERMINAL` para el descubrimiento por el host
+* `Función` APK separados por ABI (arm64-v8a, armeabi-v7a, x86_64, x86) más un APK universal, con bibliotecas nativas alineadas a páginas de 16 KB
+* `Función` README, instrucciones del centro de plugins y registro de cambios en 10 idiomas
+* `Dependencia` Se añade jackpal Android-Terminal-Emulator (term 1.0.70, emulatorview 1.0.42, libtermexec 1.0, Apache-2.0) como emulación de terminal y bibliotecas nativas pty, con hash bloqueado en `locks/vendored-aars.lock`
+* `Dependencia` Se añaden `common-plugin-api.aar` y `nodejs-api.aar` (módulos AutoJs6 `plugin-api/common-plugin-api` y `plugin-api/nodejs-api`, build del host 6.8.0 / 5303, MPL 2.0) como contrato de plugin compartido y contrato de manifiesto Node.js, con hash bloqueado en `locks/host-api-aars.lock`

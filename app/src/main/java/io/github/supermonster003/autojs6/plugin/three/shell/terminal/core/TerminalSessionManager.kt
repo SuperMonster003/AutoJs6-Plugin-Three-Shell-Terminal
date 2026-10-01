@@ -25,7 +25,6 @@ object TerminalSessionManager {
         title: String,
         val createdAt: Long = System.currentTimeMillis(),
     ) {
-
         /**
          * Short label for lists and notifications: the explicit title of the request, otherwise the
          * command that started the session, otherwise the directory name. Updated when a command is
@@ -41,9 +40,25 @@ object TerminalSessionManager {
         val isAlive: Boolean get() = pty.isProcessAlive
     }
 
+    /** Receives the exit code of a session's shell (main thread) right before the session leaves the registry. zh-CN: 会话 shell 的退出码 (主线程), 在会话移出注册表之前收到. */
+    fun interface ExitListener {
+        fun onExited(session: Session, exitCode: Int)
+    }
+
+    /**
+     * Whether [create] starts the foreground session service. The service component always runs in
+     * the main process, so a debug endpoint hosting sessions in another process turns this off; a
+     * service started for sessions it cannot see would stop at once, which some OEM builds punish
+     * with `ForegroundServiceDidNotStartInTimeException`.
+     * zh-CN: [create] 是否启动前台会话服务. 服务组件始终运行于主进程, 在其他进程托管会话的调试端点须关闭此开关.
+     */
+    @Volatile
+    var foregroundServiceEnabled: Boolean = true
+
     private val nextId = AtomicLong(1)
     private val sessions = LinkedHashMap<String, Session>()
     private val listeners = ArrayList<() -> Unit>()
+    private val exitListeners = ArrayList<ExitListener>()
 
     val activeSessions: List<Session>
         @Synchronized get() = sessions.values.filter { it.pty.isProcessAlive }
@@ -59,12 +74,21 @@ object TerminalSessionManager {
     fun get(id: String?): Session? = id?.let(sessions::get)
 
     /**
-     * Prepares the on-disk layout, builds the environment and starts an interactive shell in [directory].
+     * Allocates the id of a session that will be created later, so a caller can announce a pending
+     * session (Binder `openSession`) under the id the registry will use.
+     * zh-CN: 预先分配稍后创建的会话 id, 使调用方 (Binder `openSession`) 能以注册表将使用的 id 公布待命会话.
+     */
+    fun reserveId(): String = nextId.getAndIncrement().toString()
+
+    /**
+     * Prepares the on-disk layout, builds the environment and starts a shell in [directory].
      *
      * @param extraEnvironment variables laid over the session environment (Node.js integration, request overrides)
      * @param title            label of the session; defaults to [command], then the directory name
-     * @param command          command line the caller is about to type into the new shell, used for the default title
-     * zh-CN: 准备磁盘目录布局, 构建环境变量, 并在 [directory] 启动交互式 shell.
+     * @param command          command line the session runs or the caller is about to type, used for the default title
+     * @param id               an id from [reserveId], otherwise a fresh one
+     * @param argv             the child's argv; defaults to the interactive wrapper of [TerminalSessionLauncher]
+     * zh-CN: 准备磁盘目录布局, 构建环境变量, 并在 [directory] 启动 shell.
      */
     @JvmOverloads
     fun create(
@@ -73,17 +97,24 @@ object TerminalSessionManager {
         extraEnvironment: Map<String, String?> = emptyMap(),
         title: String? = null,
         command: String? = null,
+        id: String? = null,
+        argv: List<String>? = null,
     ): Session {
         val paths = TerminalPaths.of(context).ensureLayout()
         val environment = TerminalEnvironment.build(buildSpec(paths, extraEnvironment))
-        val argv = TerminalSessionLauncher.buildCommand(directory)
-        val pty = TerminalPtySession(argv, environment)
-        val session = Session(nextId.getAndIncrement().toString(), pty, directory, paths, defaultTitle(directory, title, command))
-        synchronized(this) { sessions[session.id] = session }
+        val pty = TerminalPtySession(argv ?: TerminalSessionLauncher.buildCommand(directory), environment)
+        val session = Session(id ?: reserveId(), pty, directory, paths, defaultTitle(directory, title, command))
+        synchronized(this) {
+            check(session.id !in sessions) { "Session ${session.id} already exists" }
+            sessions[session.id] = session
+        }
         pty.setFinishCallback { remove(session.id) }
-        pty.onProcessReaped = { remove(session.id) }
+        pty.onProcessReaped = { code ->
+            notifyExited(session, code)
+            remove(session.id)
+        }
         pty.start()
-        ThreeShellTerminalSessionService.ensureStarted(context)
+        if (foregroundServiceEnabled) ThreeShellTerminalSessionService.ensureStarted(context)
         notifyChanged()
         return session
     }
@@ -133,6 +164,16 @@ object TerminalSessionManager {
         listeners.remove(listener)
     }
 
+    @Synchronized
+    fun addExitListener(listener: ExitListener) {
+        exitListeners.add(listener)
+    }
+
+    @Synchronized
+    fun removeExitListener(listener: ExitListener) {
+        exitListeners.remove(listener)
+    }
+
     private fun remove(id: String) {
         val removed = synchronized(this) { sessions.remove(id) } ?: return
         removed.pty.onProcessExited = null
@@ -142,6 +183,11 @@ object TerminalSessionManager {
     private fun notifyChanged() {
         val snapshot = synchronized(this) { listeners.toList() }
         snapshot.forEach { runCatching { it() } }
+    }
+
+    private fun notifyExited(session: Session, exitCode: Int) {
+        val snapshot = synchronized(this) { exitListeners.toList() }
+        snapshot.forEach { runCatching { it.onExited(session, exitCode) } }
     }
 
 }

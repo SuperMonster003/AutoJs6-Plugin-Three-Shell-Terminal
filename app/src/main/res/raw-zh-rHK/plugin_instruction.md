@@ -1,6 +1,6 @@
 3-Shell Terminal 接管 AutoJs6 的內建終端機: 主頁抽屜的 "終端機" 開關, 檔案管理員目錄選單與專案工具列的 "在終端機中開啟", 以及指令碼側用於開啟, 驅動與監聽終端機工作階段的全域物件 `terminal`. 每個工作階段都是一個在 pty 中執行的系統 shell (`/system/bin/sh`), 離開介面後繼續在背景執行.
 
-版本 1.0.0 為 P0 開發預覽: 儲存庫骨架, 可被 AutoJs6 外掛中心識別的外掛身份, 以及 pty / 儲存 / Node.js 啟動器 spike. Binder 契約, 工作階段核心, 終端機介面, 指令碼 API 與設定頁按 [ROADMAP.md](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/blob/master/ROADMAP.md) 的階段推進. 需要 AutoJs6 6.8.0 (build 5304) 或更高版本.
+P2 開發預覽: 已實現 shell 工作階段, 儲存存取, 帶簽章信任的 Node.js 整合與宿主工作階段控制. 終端介面, 指令碼 API 與設定頁將繼續按 ROADMAP.md 的階段推進. AutoJs6 6.8.0 (build 5304+).
 
 ### 使用方法
 

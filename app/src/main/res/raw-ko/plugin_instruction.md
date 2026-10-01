@@ -1,6 +1,6 @@
 3-Shell Terminal 은 AutoJs6 의 내장 터미널을 이어받습니다: 홈 드로어의 "터미널" 스위치, 파일 관리자 디렉터리 메뉴와 프로젝트 도구 모음의 "터미널에서 열기", 그리고 세션을 열고 제어하고 관찰하는 스크립트 측 전역 객체 `terminal`. 각 세션은 pty 에서 실행되는 시스템 셸 (`/system/bin/sh`) 이며 화면을 떠나도 백그라운드에서 계속 실행됩니다.
 
-버전 1.0.0 은 P0 개발 미리보기입니다: 저장소 뼈대, AutoJs6 플러그인 센터가 인식하는 플러그인 신원, 그리고 pty / 저장소 / Node.js 런처 스파이크. Binder 계약, 세션 코어, 터미널 화면, 스크립트 API, 설정 페이지는 [ROADMAP.md](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/blob/master/ROADMAP.md) 의 단계에 따라 진행됩니다. AutoJs6 6.8.0 (build 5304) 이상이 필요합니다.
+P2 개발 미리보기: shell 세션, 저장소 접근, 서명을 검증하는 Node.js 통합, 호스트 세션 제어가 구현되었습니다. 터미널 화면, 스크립트 API, 설정 페이지는 ROADMAP.md의 단계에 따라 구현됩니다. AutoJs6 6.8.0 (build 5304+).
 
 ### 사용 방법
 

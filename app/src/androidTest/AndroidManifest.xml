@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <queries>
+        <package android:name="io.github.supermonster003.autojs6.plugin.three.shell.terminal" />
+    </queries>
+    <application>
+        <!-- Runs in the test APK's own uid, without requesting the PLUGIN permission. -->
+        <service
+            android:name="io.github.supermonster003.autojs6.plugin.three.shell.terminal.binder.UnprivilegedClientService"
+            android:exported="true" />
+    </application>
+</manifest>

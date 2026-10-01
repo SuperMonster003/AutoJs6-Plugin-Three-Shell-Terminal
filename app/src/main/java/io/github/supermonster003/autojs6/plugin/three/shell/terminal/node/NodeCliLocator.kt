@@ -172,31 +172,53 @@ object NodeCliLocator {
     fun invalidate() = synchronized(lock) { cache = null }
 
     /**
+     * Static half of [resolveUncached]: trust (D17), manifest contract and launcher file, without running the probe.
+     * zh-CN: [resolveUncached] 的静态部分: 信任 (D17), manifest 契约与启动器文件, 不执行探测.
+     */
+    sealed class Inspection {
+        data class Ready(val launcher: Launcher) : Inspection()
+        data class Unavailable(val resolution: Resolution.Unavailable) : Inspection()
+    }
+
+    /** The cached resolution of [candidate], or null when it was never probed (or the package changed since). zh-CN: [candidate] 的缓存结果, 从未探测 (或包已变化) 时为 null. */
+    fun cachedResolution(candidate: Candidate): Resolution? = synchronized(lock) { cache?.takeIf { it.key == candidate.cacheKey }?.resolution }
+
+    @JvmStatic
+    fun inspect(context: Context, candidate: Candidate): Inspection {
+        val packageName = candidate.packageName
+        val verdict = NodeCliTrust.verdict(context, packageName)
+        if (verdict is NodeCliTrust.Verdict.Untrusted) {
+            return Inspection.Unavailable(Resolution.Unavailable.PluginNotTrusted(packageName, verdict.signers))
+        }
+        val descriptor = when (val parsed = NodeCliMetadata.parse(candidate.serviceInfo.metaData?.toMap())) {
+            is NodeCliMetadata.ParseResult.Missing -> return Inspection.Unavailable(Resolution.Unavailable.PluginTooOld(packageName, parsed.reason))
+            is NodeCliMetadata.ParseResult.Valid -> parsed.descriptor
+        }
+        val nativeLibraryDir = candidate.serviceInfo.applicationInfo?.nativeLibraryDir
+        val executable = nativeLibraryDir?.let { File(it, descriptor.executableName) }
+        if (nativeLibraryDir == null || executable == null || !NodeCliMetadata.isElf(executable)) {
+            return Inspection.Unavailable(
+                Resolution.Unavailable.ExecutableMissing(
+                    packageName = packageName,
+                    abi = Build.SUPPORTED_ABIS.firstOrNull().orEmpty(),
+                    executableName = descriptor.executableName,
+                ),
+            )
+        }
+        return Inspection.Ready(Launcher(packageName, candidate.versionCode, nativeLibraryDir, executable, descriptor))
+    }
+
+    /**
      * Resolution of one candidate without the cache: trust (D17), manifest contract, launcher file, probe.
      * zh-CN: 不经缓存解析单个候选: 信任 (D17), manifest 契约, 启动器文件, 探测.
      */
     @JvmStatic
     fun resolveUncached(context: Context, candidate: Candidate): Resolution {
-        val packageName = candidate.packageName
-        val verdict = NodeCliTrust.verdict(context, packageName)
-        if (verdict is NodeCliTrust.Verdict.Untrusted) {
-            return Resolution.Unavailable.PluginNotTrusted(packageName, verdict.signers)
+        val launcher = when (val inspection = inspect(context, candidate)) {
+            is Inspection.Unavailable -> return inspection.resolution
+            is Inspection.Ready -> inspection.launcher
         }
-        val descriptor = when (val parsed = NodeCliMetadata.parse(candidate.serviceInfo.metaData?.toMap())) {
-            is NodeCliMetadata.ParseResult.Missing -> return Resolution.Unavailable.PluginTooOld(packageName, parsed.reason)
-            is NodeCliMetadata.ParseResult.Valid -> parsed.descriptor
-        }
-        val nativeLibraryDir = candidate.serviceInfo.applicationInfo?.nativeLibraryDir
-        val executable = nativeLibraryDir?.let { File(it, descriptor.executableName) }
-        if (executable == null || !NodeCliMetadata.isElf(executable)) {
-            return Resolution.Unavailable.ExecutableMissing(
-                packageName = packageName,
-                abi = Build.SUPPORTED_ABIS.firstOrNull().orEmpty(),
-                executableName = descriptor.executableName,
-            )
-        }
-        val launcher = Launcher(packageName, candidate.versionCode, nativeLibraryDir, executable, descriptor)
-        val probe = NodeCliProbe.run(executable)
+        val probe = NodeCliProbe.run(launcher.executable)
         return if (probe.succeeded) {
             Resolution.Available(launcher, probe)
         } else {

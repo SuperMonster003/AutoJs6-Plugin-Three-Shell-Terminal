@@ -6,9 +6,9 @@
   "changelog_label_dependency": "Dependencia",
   "$data": {
     "v1.0.0": {
-      "released_date": "2026/10/01",
+      "released_date": "2026/10/02",
       "hint": [
-        "Vista previa de desarrollo P0: esqueleto del repositorio, identidad del plugin reconocida por el centro de plugins de AutoJs6 y spike de pty / almacenamiento / lanzador Node.js. El contrato Binder, el núcleo de sesiones, la pantalla del terminal, la API de script y la página de ajustes siguen las fases de ROADMAP.md."
+        "Vista previa de desarrollo P2: sesiones shell, acceso al almacenamiento, integración de Node.js con verificación de firmas y control de sesiones desde el anfitrión implementados. La pantalla de terminal, la API de scripts y los ajustes seguirán las etapas de ROADMAP.md."
       ],
       "feature": [
         "Identidad del plugin `three-shell-terminal` (engine `terminal`) con el servicio INFO, la Wake Activity y el esqueleto del servicio `org.autojs.plugin.TERMINAL` para el descubrimiento por el host",
@@ -16,12 +16,16 @@
         "README, instrucciones del centro de plugins y registro de cambios en 10 idiomas",
         "Núcleo de sesiones portado desde el terminal del host: sesiones de shell sobre pty con un registro a nivel de proceso (título y código de salida registrados para el Binder), entorno de sesión y estructura de directorios bajo el directorio de archivos del plugin, detección del lanzador de Node.js con el instalador de npm / corepack, y servicio en primer plano que mantiene las sesiones con una notificación \"Cerrar sesiones\" (canal `three.shell.terminal.sessions`)",
         "Resolución del acceso al almacenamiento (`StorageAccess`): estado de permisos propio del plugin (permisos en tiempo de ejecución heredados por debajo de API 30, \"Acceso a todos los archivos\" desde API 30), detección del almacenamiento compartido para `/sdcard`, `/storage/...` y las carpetas `Android/{data,obb,media}` propias, retorno del directorio inicial a `$HOME` con `STORAGE_PERMISSION_REQUIRED` o `DIRECTORY_INACCESSIBLE`, y los Intents de ajustes que abren el acceso a todos los archivos",
-        "Integración de Node.js con confianza del firmante (`NodeCliTrust`, `NodeCliLocator`, `SessionAssembly`): el plugin Node.js Runtime solo se usa cuando está firmado por la clave oficial de plugins de AutoJs6 o por la clave propia de este plugin, el interruptor de ajustes cortocircuita antes de cualquier búsqueda, cada resultado se asigna a los estados `node-cli` del contrato (`available`, `disabled`, `plugin-missing`, `plugin-untrusted`, `plugin-too-old`, `executable-missing`, `exec-denied`, `setup-failed`), y cada inicio de sesión renueva los enlaces de comandos de `usr/bin`, extrae el archivo npm / corepack una sola vez por resumen y exporta el entorno npm / corepack"
+        "Integración de Node.js con confianza del firmante (`NodeCliTrust`, `NodeCliLocator`, `SessionAssembly`): el plugin Node.js Runtime solo se usa cuando está firmado por la clave oficial de plugins de AutoJs6 o por la clave propia de este plugin, el interruptor de ajustes cortocircuita antes de cualquier búsqueda, cada resultado se asigna a los estados `node-cli` del contrato (`available`, `disabled`, `plugin-missing`, `plugin-untrusted`, `plugin-too-old`, `executable-missing`, `exec-denied`, `setup-failed`), y cada inicio de sesión renueva los enlaces de comandos de `usr/bin`, extrae el archivo npm / corepack una sola vez por resumen y exporta el entorno npm / corepack",
+        "AutoJs6 puede crear y controlar hasta 16 sesiones de terminal, recibir salida en directo con hasta 4 oyentes por sesión, leer la salida reciente y consultar el entorno shell. Las sesiones continúan al cerrar AutoJs6; las solicitudes no válidas se rechazan con un motivo concreto."
       ],
       "dependency": [
         "Se añade jackpal Android-Terminal-Emulator (term 1.0.70, emulatorview 1.0.42, libtermexec 1.0, Apache-2.0) como emulación de terminal y bibliotecas nativas pty, con hash bloqueado en `locks/vendored-aars.lock`",
         "Se añaden `common-plugin-api.aar` y `nodejs-api.aar` (módulos AutoJs6 `plugin-api/common-plugin-api` y `plugin-api/nodejs-api`, build del host 6.8.0 / 5303, MPL 2.0) como contrato de plugin compartido y contrato de manifiesto Node.js, con hash bloqueado en `locks/host-api-aars.lock`",
         "Se añade `terminal-api.aar` (módulo AutoJs6 `plugin-api/terminal-api`, build del host 6.8.0 / 5304, MPL 2.0) como contrato de terminal V1 (`ITerminalPlugin` / `ITerminalCallback`, identidad, límites y códigos de error); las constantes de identidad del plugin provienen ahora de él, con hash bloqueado en `locks/host-api-aars.lock`"
+      ],
+      "fix": [
+        "Las restricciones del sistema sobre la actividad en segundo plano ya no provocan un cierre del complemento al iniciar una sesión. La sesión continúa sin la protección del servicio en primer plano."
       ]
     }
   }

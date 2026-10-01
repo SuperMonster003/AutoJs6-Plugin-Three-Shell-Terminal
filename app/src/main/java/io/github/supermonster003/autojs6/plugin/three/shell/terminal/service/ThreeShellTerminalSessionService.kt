@@ -1,6 +1,7 @@
 package io.github.supermonster003.autojs6.plugin.three.shell.terminal.service
 
 import android.app.Notification
+import android.app.ActivityManager
 import android.app.NotificationManager
 import android.app.Service
 import android.content.Context
@@ -119,6 +120,12 @@ class ThreeShellTerminalSessionService : Service() {
         @JvmStatic
         fun ensureStarted(context: Context) {
             val app = context.applicationContext
+            // Some OEMs accept startForegroundService but silently reject startForeground under
+            // this restriction. Stopping that service then crashes the process asynchronously.
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && app.getSystemService(ActivityManager::class.java)?.isBackgroundRestricted == true) {
+                Log.i(TAG, "Background activity is restricted; sessions run without foreground protection")
+                return
+            }
             val intent = Intent(app, ThreeShellTerminalSessionService::class.java)
             runCatching {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

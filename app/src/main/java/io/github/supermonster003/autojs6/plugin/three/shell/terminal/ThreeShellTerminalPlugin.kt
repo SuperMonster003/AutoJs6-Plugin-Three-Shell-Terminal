@@ -4,6 +4,7 @@ import org.autojs.plugin.common.api.PluginActions
 import org.autojs.plugin.nodejs.api.NodeJsPluginActions
 import org.autojs.plugin.terminal.api.ITerminalPlugin
 import org.autojs.plugin.terminal.api.TerminalActions
+import org.autojs.plugin.terminal.api.TerminalCapabilityKeys
 import org.autojs.plugin.terminal.api.TerminalContract
 import org.autojs.plugin.terminal.api.TerminalIds
 
@@ -51,6 +52,18 @@ object ThreeShellTerminalPlugin {
 
     /** Contract version implemented by this plugin (roadmap appendix B.6). */
     const val CONTRACT_VERSION = TerminalContract.CONTRACT_VERSION
+
+    /**
+     * Contract features this build implements (appendix B.1): Node CLI integration, output
+     * subscriptions and transcripts. `settings` is declared once roadmap P5.1 ships the settings
+     * page (AGENTS.md: never declare an unimplemented capability).
+     * zh-CN: 本构建实现的契约特性; `settings` 待 P5.1 设置页落地后再声明.
+     */
+    val FEATURES: List<String> = listOf(
+        TerminalCapabilityKeys.FEATURE_NODE_CLI,
+        TerminalCapabilityKeys.FEATURE_OUTPUT_SUBSCRIPTION,
+        TerminalCapabilityKeys.FEATURE_TRANSCRIPT,
+    )
 
     /**
      * Minimum AutoJs6 `versionCode`: the 6.8.0 host build that ships `terminal-api`

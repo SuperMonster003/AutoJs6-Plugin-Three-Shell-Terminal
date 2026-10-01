@@ -3,8 +3,11 @@ package io.github.supermonster003.autojs6.plugin.three.shell.terminal
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
+import io.github.supermonster003.autojs6.plugin.three.shell.terminal.node.NodeCliState
 import org.autojs.plugin.common.api.PluginCapabilityKeys
 import org.autojs.plugin.common.api.PluginInfo
+import org.autojs.plugin.terminal.api.TerminalCapabilityKeys
+import org.autojs.plugin.terminal.api.TerminalContract
 
 /** Collects the installed package version, the packaged ABIs and the localized metadata of this plugin. */
 internal fun Context.threeShellTerminalPluginRuntimeInfo(): ThreeShellTerminalPluginRuntimeInfo {
@@ -25,6 +28,7 @@ internal fun Context.threeShellTerminalPluginRuntimeInfo(): ThreeShellTerminalPl
         versionCode = versionCode,
         versionDate = getString(R.string.plugin_version_date),
         supportedAbis = NativeLibraryInventory.supportedAbis(this),
+        nodeCliState = NodeCliState.contractState(this),
     )
 }
 
@@ -49,9 +53,16 @@ internal fun ThreeShellTerminalPluginRuntimeInfo.toPluginInfo(): PluginInfo {
 }
 
 /**
- * Capability negotiation bundle. P0 only reports the minimum host build; roadmap P1.1 / P2.4 add
- * the terminal contract version, the feature set, the session limits and the Node CLI state.
+ * Capabilities negotiated with the host (appendix B.1): the host build, the contract version the
+ * host validates in `getInfo().capabilities`, the implemented features, the two ceilings a host
+ * must respect before calling, and the current Node CLI state.
+ * zh-CN: 与宿主协商的能力表: 宿主版本, 宿主在 `getInfo().capabilities` 中校验的契约版本, 已实现特性, 两项上限与当前 Node CLI 状态.
  */
 internal fun ThreeShellTerminalPluginRuntimeInfo.capabilitiesBundle(): Bundle = Bundle().apply {
     putLong(PluginCapabilityKeys.REQUIRES_HOST_VERSION, requiresHostVersion)
+    putInt(TerminalCapabilityKeys.CONTRACT_VERSION, ThreeShellTerminalPlugin.CONTRACT_VERSION)
+    putStringArray(TerminalCapabilityKeys.FEATURES_KEY, ThreeShellTerminalPlugin.FEATURES.toTypedArray())
+    putInt(TerminalCapabilityKeys.MAX_SESSIONS, TerminalContract.MAX_SESSIONS)
+    putInt(TerminalCapabilityKeys.MAX_SUBSCRIPTIONS, TerminalContract.MAX_SUBSCRIPTIONS_PER_SESSION)
+    putString(TerminalCapabilityKeys.NODE_CLI, nodeCliState)
 }

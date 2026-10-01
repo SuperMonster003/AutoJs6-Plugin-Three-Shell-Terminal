@@ -67,6 +67,61 @@ class TerminalPtySession(
 
     var onModifiersChanged: ((ctrl: Boolean, alt: Boolean) -> Unit)? = null
 
+    /**
+     * Observer of the raw pty output (plugin roadmap D21 output subscriptions). Invoked on the
+     * session's handler thread (the thread that created the session, normally the main thread)
+     * with the bytes exactly as the child wrote them, before they reach the screen; synthetic
+     * messages appended by this class are not delivered. Must return quickly and never block.
+     * zh-CN: 原始 pty 输出的观察者 (路线图 D21 输出订阅), 在会话的 handler 线程 (创建会话的线程, 通常为主线程)
+     * 以子进程写出的原样字节调用, 早于上屏; 本类追加的提示文本不会送达. 须快速返回且不得阻塞.
+     */
+    fun interface OutputTap {
+        fun onOutput(data: ByteArray, offset: Int, count: Int)
+    }
+
+    private val tapLock = Any()
+
+    @Volatile
+    private var outputTaps: List<OutputTap> = emptyList()
+
+    @Volatile
+    private var finishListeners: List<() -> Unit> = emptyList()
+
+    fun addOutputTap(tap: OutputTap) = synchronized(tapLock) { outputTaps = outputTaps + tap }
+
+    fun removeOutputTap(tap: OutputTap) = synchronized(tapLock) { outputTaps = outputTaps - tap }
+
+    /**
+     * Runs once after [finish] completed (explicit close, or end of output after the child
+     * exited), on the finishing thread; every byte the child wrote has passed the taps by then.
+     * zh-CN: 在 [finish] 完成后调用一次 (显式关闭, 或子进程退出后输出读尽), 在执行 finish 的线程上; 此时子进程写出的
+     * 全部字节都已经过观察者.
+     */
+    fun addFinishListener(listener: () -> Unit) = synchronized(tapLock) { finishListeners = finishListeners + listener }
+
+    fun removeFinishListener(listener: () -> Unit) = synchronized(tapLock) { finishListeners = finishListeners - listener }
+
+    override fun processInput(data: ByteArray, offset: Int, count: Int) {
+        val taps = outputTaps
+        if (taps.isNotEmpty()) {
+            taps.forEach { tap -> runCatching { tap.onOutput(data, offset, count) } }
+        }
+        super.processInput(data, offset, count)
+    }
+
+    /**
+     * Writes bytes to the pty exactly as given, bypassing the sticky Ctrl / Alt modifiers of the
+     * key bar (host input over Binder, plugin roadmap D20). Dropped, with `false`, after the child
+     * exited or before the emulator runs.
+     * zh-CN: 把字节原样写入 pty, 绕过快捷键栏的粘滞 Ctrl / Alt 修饰键 (宿主经 Binder 的输入, 路线图 D20); 子进程退出后
+     * 或模拟器尚未运行时丢弃并返回 false.
+     */
+    fun writeRaw(data: ByteArray, offset: Int, count: Int): Boolean {
+        if (finished || exitCode != null || !isRunning) return false
+        super.write(data, offset, count)
+        return true
+    }
+
     init {
         setTermOut(ParcelFileDescriptor.AutoCloseOutputStream(ptmx))
         setTermIn(ParcelFileDescriptor.AutoCloseInputStream(ptmx))
@@ -80,7 +135,8 @@ class TerminalPtySession(
     fun start() {
         check(!started) { "Session already started" }
         started = true
-        thread(name = "TerminalPtySession-$command") {
+        // Only the executable goes into the thread name: command lines are never logged or exposed (protocol V1, security boundary).
+        thread(name = "TerminalPtySession-${command.firstOrNull()}") {
             val childPid = try {
                 synchronized(processLock) {
                     if (finished) null else PtyBridge.createSubprocess(
@@ -219,12 +275,16 @@ class TerminalPtySession(
             if (finished) return
             finished = true
             hangup()
-            // A just-forked child may not have called setsid() yet, and can inherit ignored SIGHUP.
-            // Explicitly stopping a session must also terminate that child, before closing its pty.
-            // zh-CN: 刚 fork 的子进程可能尚未调用 setsid(), 也可能继承被忽略的 SIGHUP.
-            // 显式停止会话时, 还需在关闭 pty 前终止该子进程.
+            // Give SIGHUP a grace period, then also kill the child directly in case it had not
+            // called setsid() yet when the group signal was sent. Never wait on the main thread.
             if (pid > 0 && exitCode == null) {
-                runCatching { PtyBridge.sendSignal(pid, PtyBridge.SIGKILL) }
+                val childPid = pid
+                mainHandler.postDelayed({
+                    if (exitCode == null) {
+                        runCatching { PtyBridge.sendSignal(-childPid, PtyBridge.SIGKILL) }
+                        runCatching { PtyBridge.sendSignal(childPid, PtyBridge.SIGKILL) }
+                    }
+                }, CLOSE_GRACE_MILLIS)
             }
         }
         if (!emulatorInitialized) {
@@ -235,6 +295,7 @@ class TerminalPtySession(
             super.finish()
         }
         pendingMessages.clear()
+        finishListeners.forEach { listener -> runCatching(listener) }
     }
 
     private fun appendMessage(message: String) {
@@ -251,6 +312,7 @@ class TerminalPtySession(
     companion object {
         private const val TAG = "TerminalPtySession"
         const val START_FAILURE_CODE = -1
+        private const val CLOSE_GRACE_MILLIS = 500L
     }
 
 }

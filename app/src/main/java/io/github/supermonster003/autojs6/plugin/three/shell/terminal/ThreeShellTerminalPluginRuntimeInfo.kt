@@ -17,6 +17,8 @@ data class ThreeShellTerminalPluginRuntimeInfo(
     val versionDate: String,
     /** ABIs whose pty libraries are packaged in the installed APK set (roadmap D14), never null. */
     val supportedAbis: Array<String>,
+    /** Contract `node-cli` state at the time of the query (roadmap P2.4). zh-CN: 查询时刻的契约 `node-cli` 状态. */
+    val nodeCliState: String,
 ) {
     val author: String get() = ThreeShellTerminalPlugin.AUTHOR
     val id: String get() = ThreeShellTerminalPlugin.ID
@@ -28,8 +30,8 @@ data class ThreeShellTerminalPluginRuntimeInfo(
     override fun equals(other: Any?): Boolean = other is ThreeShellTerminalPluginRuntimeInfo &&
         name == other.name && description == other.description && instruction == other.instruction &&
         versionName == other.versionName && versionCode == other.versionCode && versionDate == other.versionDate &&
-        supportedAbis.contentEquals(other.supportedAbis)
+        nodeCliState == other.nodeCliState && supportedAbis.contentEquals(other.supportedAbis)
 
-    override fun hashCode(): Int = listOf(name, description, instruction, versionName, versionCode, versionDate).hashCode() * 31 +
+    override fun hashCode(): Int = listOf(name, description, instruction, versionName, versionCode, versionDate, nodeCliState).hashCode() * 31 +
         supportedAbis.contentHashCode()
 }

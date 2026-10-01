@@ -1,6 +1,6 @@
 3-Shell Terminal reprend le terminal intégré d'AutoJs6 : l'interrupteur "Terminal" du tiroir d'accueil, "Ouvrir dans le terminal" dans le menu des dossiers du gestionnaire de fichiers et la barre d'outils du projet, ainsi que l'objet global `terminal` côté script pour ouvrir, piloter et observer des sessions. Chaque session est un shell système (`/system/bin/sh`) exécuté dans un pty, qui continue en arrière-plan quand on quitte l'écran.
 
-La version 1.0.0 est l'aperçu de développement P0 : le squelette du dépôt, l'identité du plugin reconnue par le centre de plugins d'AutoJs6 et le spike pty / stockage / lanceur Node.js. Le contrat Binder, le noyau de sessions, l'écran du terminal, l'API de script et la page de réglages suivent les phases de [ROADMAP.md](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/blob/master/ROADMAP.md). Nécessite AutoJs6 6.8.0 (build 5304) ou plus récent.
+Aperçu de développement P2: sessions shell, accès au stockage, intégration Node.js avec vérification des signatures et contrôle des sessions depuis l'hôte sont implémentés. L'écran du terminal, l'API de scripts et les réglages suivront les étapes de ROADMAP.md. AutoJs6 6.8.0 (build 5304+).
 
 ### Utilisation
 

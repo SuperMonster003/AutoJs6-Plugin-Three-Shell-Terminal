@@ -38,16 +38,22 @@ object TerminalNodeSetup {
      * 让终端解释原因而不是暴露半可用的 `npm`.
      */
     @JvmStatic
-    fun prepare(context: Context, paths: TerminalPaths, resolution: Resolution, options: TerminalNodeEnvironment.Options): Prepared {
+    fun prepare(context: Context, paths: TerminalPaths, resolution: Resolution, options: TerminalNodeEnvironment.Options): Prepared = synchronized(installLock) {
         if (resolution !is Resolution.Available) {
             runCatching { NodeCliInstaller.unlinkCommands(paths, DEFAULT_COMMANDS) }
             return Prepared(resolution, emptyMap(), installedNow = false)
         }
         val launcher = resolution.launcher
         return try {
-            val installedBefore = NodeCliInstaller.isInstalled(paths, launcher)
-            NodeCliInstaller.ensureInstalled(context, paths, launcher)
-            NodeCliInstaller.linkCommands(paths, launcher)
+            // Two planners (the Binder worker and a UI session) may prepare at once; extraction and the
+            // link rebuild swap directories, so they run one at a time within the process.
+            // zh-CN: Binder 工作线程与界面会话可能同时准备; 解压与链接重建会交换目录, 进程内串行执行.
+            val installedBefore = synchronized(installLock) {
+                val before = NodeCliInstaller.isInstalled(paths, launcher)
+                NodeCliInstaller.ensureInstalled(context, paths, launcher)
+                NodeCliInstaller.linkCommands(paths, launcher)
+                before
+            }
             Prepared(resolution, TerminalNodeEnvironment.build(paths, options), installedNow = !installedBefore)
         } catch (e: IOException) {
             runCatching { NodeCliInstaller.unlinkCommands(paths, launcher.descriptor.commands) }
@@ -57,6 +63,8 @@ object TerminalNodeSetup {
             Prepared(Resolution.Unavailable.SetupFailed(launcher, e.toString()), emptyMap(), installedNow = false)
         }
     }
+
+    private val installLock = Any()
 
     /** Link names to clean up when no launcher is available. zh-CN: 无启动器时需要清理的链接名. */
     private val DEFAULT_COMMANDS = listOf("node", "npm", "npx", "corepack", "yarn", "yarnpkg", "pnpm", "pnpx")

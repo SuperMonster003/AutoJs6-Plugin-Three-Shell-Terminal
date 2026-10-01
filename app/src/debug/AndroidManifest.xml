@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Debug-only components backing the instrumentation tests (roadmap P2.4): a permissive terminal
+  Binder in its own process so the tests exercise real transactions, and a disposable client
+  process that subscribes as a host and then dies. Neither exists in release builds.
+  zh-CN: 仅调试构建的测试组件: 独立进程中的宽松终端 Binder (真实事务), 以及以宿主身份订阅后自杀的客户端进程.
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <application>
+        <service
+            android:name=".binder.TerminalBinderTestService"
+            android:exported="false"
+            android:process=":binder_test" />
+        <service
+            android:name=".binder.TerminalDeathProbeService"
+            android:exported="false"
+            android:process=":binder_death_client" />
+    </application>
+</manifest>

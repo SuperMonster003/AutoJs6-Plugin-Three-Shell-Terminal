@@ -26,6 +26,7 @@ class ThreeShellTerminalPluginRuntimeInfoTest {
             versionCode = 3L,
             versionDate = "Oct 1, 2026",
             supportedAbis = arrayOf("arm64-v8a"),
+            nodeCliState = "plugin-missing",
         )
 
         assertEquals("3-Shell Terminal", info.name)
@@ -46,7 +47,7 @@ class ThreeShellTerminalPluginRuntimeInfoTest {
 
     @Test
     fun `equality compares the packaged ABIs by content`() {
-        fun info(vararg abis: String) = ThreeShellTerminalPluginRuntimeInfo("n", "d", null, "1.0.0", 1L, "Oct 1, 2026", arrayOf(*abis))
+        fun info(vararg abis: String) = ThreeShellTerminalPluginRuntimeInfo("n", "d", null, "1.0.0", 1L, "Oct 1, 2026", arrayOf(*abis), "plugin-missing")
         assertEquals(info("x86_64", "x86"), info("x86_64", "x86"))
         assertEquals(info("x86_64", "x86").hashCode(), info("x86_64", "x86").hashCode())
         assertTrue(info("x86_64") != info("x86"))

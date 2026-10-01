@@ -6,9 +6,9 @@
   "changelog_label_dependency": "تبعية",
   "$data": {
     "v1.0.0": {
-      "released_date": "2026/10/01",
+      "released_date": "2026/10/02",
       "hint": [
-        "معاينة تطوير المرحلة P0: هيكل المستودع, وهوية المكون الإضافي التي يتعرف عليها مركز المكونات الإضافية في AutoJs6, وتجربة pty / التخزين / مشغل Node.js. يتبع عقد Binder ونواة الجلسات وشاشة الطرفية وواجهة البرمجة النصية وصفحة الإعدادات مراحل ROADMAP.md."
+        "معاينة التطوير P2: تم تنفيذ جلسات shell والوصول إلى التخزين وتكامل Node.js مع التحقق من التوقيعات والتحكم بالجلسات من المضيف. ستتبع شاشة الطرفية وواجهة برمجة النصوص وصفحة الإعدادات مراحل ROADMAP.md."
       ],
       "feature": [
         "هوية المكون الإضافي `three-shell-terminal` (engine `terminal`) مع خدمة INFO و Wake Activity وهيكل خدمة `org.autojs.plugin.TERMINAL` لاكتشاف المضيف",
@@ -16,12 +16,16 @@
         "README وتعليمات مركز المكونات الإضافية وسجل التغييرات بـ 10 لغات",
         "نقل نواة الجلسات من طرفية المضيف: جلسات shell على pty مع سجل على مستوى العملية (تسجيل العنوان ورمز الخروج لصالح Binder), بيئة الجلسة وتخطيط الدلائل داخل دليل ملفات المكون الإضافي, اكتشاف مشغل Node.js مع مثبت npm / corepack, وخدمة أمامية تبقي الجلسات قيد التشغيل مع إشعار \"إغلاق الجلسات\" (القناة `three.shell.terminal.sessions`)",
         "تحديد الوصول إلى التخزين (`StorageAccess`): حالة أذونات المكون الإضافي نفسه (أذونات وقت التشغيل القديمة دون API 30, \"الوصول إلى جميع الملفات\" بدءا من API 30), التعرف على التخزين المشترك مثل `/sdcard` و `/storage/...` ومجلدات `Android/{data,obb,media}` الخاصة, الرجوع بدليل البدء إلى `$HOME` مع `STORAGE_PERMISSION_REQUIRED` أو `DIRECTORY_INACCESSIBLE`, وإضافة Intent الإعدادات التي تفتح الوصول إلى جميع الملفات",
-        "تكامل Node.js مع الثقة بالموقع (`NodeCliTrust`, `NodeCliLocator`, `SessionAssembly`): لا يستخدم المكون الإضافي Node.js Runtime إلا إذا كان موقعا بمفتاح المكونات الإضافية الرسمي لـ AutoJs6 أو بمفتاح هذا المكون الإضافي نفسه, ومفتاح الإعدادات يختصر المسار قبل أي بحث, وكل نتيجة تقابل حالات `node-cli` في العقد (`available`, `disabled`, `plugin-missing`, `plugin-untrusted`, `plugin-too-old`, `executable-missing`, `exec-denied`, `setup-failed`), وكل بدء جلسة يجدد روابط الأوامر في `usr/bin` ويستخرج أرشيف npm / corepack مرة واحدة لكل ملخص ويصدر بيئة npm / corepack"
+        "تكامل Node.js مع الثقة بالموقع (`NodeCliTrust`, `NodeCliLocator`, `SessionAssembly`): لا يستخدم المكون الإضافي Node.js Runtime إلا إذا كان موقعا بمفتاح المكونات الإضافية الرسمي لـ AutoJs6 أو بمفتاح هذا المكون الإضافي نفسه, ومفتاح الإعدادات يختصر المسار قبل أي بحث, وكل نتيجة تقابل حالات `node-cli` في العقد (`available`, `disabled`, `plugin-missing`, `plugin-untrusted`, `plugin-too-old`, `executable-missing`, `exec-denied`, `setup-failed`), وكل بدء جلسة يجدد روابط الأوامر في `usr/bin` ويستخرج أرشيف npm / corepack مرة واحدة لكل ملخص ويصدر بيئة npm / corepack",
+        "يمكن لـ AutoJs6 إنشاء ما يصل إلى 16 جلسة طرفية والتحكم بها, وتلقي المخرجات المباشرة عبر 4 مستمعين لكل جلسة, وقراءة المخرجات الأخيرة والاستعلام عن بيئة shell. تستمر الجلسات بعد إغلاق AutoJs6, وترفض الطلبات غير الصالحة مع سبب محدد."
       ],
       "dependency": [
         "إضافة jackpal Android-Terminal-Emulator (term 1.0.70, emulatorview 1.0.42, libtermexec 1.0, Apache-2.0) لمحاكاة الطرفية ومكتبات pty الأصلية, مع قفل التجزئة في `locks/vendored-aars.lock`",
         "إضافة `common-plugin-api.aar` و `nodejs-api.aar` (وحدتا AutoJs6 `plugin-api/common-plugin-api` و `plugin-api/nodejs-api`, بنية المضيف 6.8.0 / 5303, MPL 2.0) كعقد المكون الإضافي المشترك وعقد بيان Node.js, مع قفل التجزئة في `locks/host-api-aars.lock`",
         "إضافة `terminal-api.aar` (وحدة AutoJs6 `plugin-api/terminal-api`, بنية المضيف 6.8.0 / 5304, MPL 2.0) كعقد الطرفية V1 (`ITerminalPlugin` / `ITerminalCallback`, الهوية, الحدود, رموز الأخطاء); ثوابت هوية المكون الإضافي تأتي منه الآن, مع قفل التجزئة في `locks/host-api-aars.lock`"
+      ],
+      "fix": [
+        "لم تعد قيود النظام على النشاط في الخلفية تتسبب في تعطل الإضافة عند بدء جلسة. تستمر الجلسة دون حماية خدمة المقدمة."
       ]
     }
   }

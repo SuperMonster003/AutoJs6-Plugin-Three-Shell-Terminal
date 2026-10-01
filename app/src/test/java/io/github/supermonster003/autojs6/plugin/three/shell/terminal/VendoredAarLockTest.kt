@@ -30,9 +30,9 @@ class VendoredAarLockTest {
     }
 
     @Test
-    fun `host api lock lists the two P0 contract artifacts and their digests match the files`() {
+    fun `host api lock lists the three host contract artifacts and their digests match the files`() {
         val lock = readLock(root.resolve("locks/host-api-aars.lock"))
-        assertEquals(setOf("common-plugin-api", "nodejs-api"), lock.keys)
+        assertEquals(setOf("common-plugin-api", "nodejs-api", "terminal-api"), lock.keys)
         lock.forEach { (id, entry) ->
             val file = root.resolve("libs").resolve(entry.file)
             assertTrue("$id: missing ${entry.file}", Files.isRegularFile(file))

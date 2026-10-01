@@ -14,3 +14,4 @@
 * `機能` 10 言語の README, プラグインセンターの説明, 変更履歴
 * `依存関係` 端末エミュレーションと pty ネイティブライブラリとして jackpal Android-Terminal-Emulator (term 1.0.70, emulatorview 1.0.42, libtermexec 1.0, Apache-2.0) を追加し, `locks/vendored-aars.lock` でハッシュを固定
 * `依存関係` 共有プラグイン契約と Node.js マニフェスト契約として `common-plugin-api.aar` と `nodejs-api.aar` (AutoJs6 モジュール `plugin-api/common-plugin-api` と `plugin-api/nodejs-api`, ホストビルド 6.8.0 / 5303, MPL 2.0) を追加し, `locks/host-api-aars.lock` でハッシュを固定
+* `依存関係` ターミナル契約 V1 (`ITerminalPlugin` / `ITerminalCallback`, ID, 上限, エラーコード) として `terminal-api.aar` (AutoJs6 モジュール `plugin-api/terminal-api`, ホストビルド 6.8.0 / 5304, MPL 2.0) を追加. プラグインの ID 定数はこれから取得し, `locks/host-api-aars.lock` でハッシュを固定

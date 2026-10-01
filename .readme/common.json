@@ -18,7 +18,7 @@
   "plugin_service_category": "terminal",
   "plugin_info_action": "org.autojs.plugin.INFO",
   "plugin_aidl_interface": "org.autojs.plugin.terminal.api.ITerminalPlugin",
-  "required_host_version_code": "5303",
+  "required_host_version_code": "5304",
   "required_host_version_name": "6.8.0",
   "android_min_sdk": "24",
   "min_android_version": "7.0"

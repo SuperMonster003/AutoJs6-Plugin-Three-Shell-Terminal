@@ -82,7 +82,7 @@
             </intent-filter>
             <meta-data
                 android:name="requiresHostVersion"
-                android:value="5303" />
+                android:value="5304" />
         </service>
 
         <!--
@@ -100,7 +100,7 @@
             </intent-filter>
             <meta-data
                 android:name="requiresHostVersion"
-                android:value="5303" />
+                android:value="5304" />
         </service>
 
     </application>

@@ -1,9 +1,12 @@
 # AutoJs6 6.8.0 host API release AARs, staged on 2026-10-01 from host commit 9545a7f4aa (build 5303).
 # common-plugin-api: module unchanged since host commit 9c3ba2e520, byte-identical to the artifact staged by 3-Setup Installer.
 # nodejs-api: module last changed in host commit 1db2d9b870 (2026-09-18); provides the NODE_CLI_* manifest contract constants (roadmap D17).
-# terminal-api: added by roadmap P1.1 together with the REQUIRED_HOST_VERSION backfill.
+# terminal-api: release AAR assembled from host commit b8f4d6c939 (build 5304, roadmap P1.1): terminal contract V1
+#   (ITerminalPlugin / ITerminalCallback, TerminalActions / TerminalIds / TerminalContract / TerminalCapabilityKeys / TerminalErrorCodes).
 format=1
 common-plugin-api.file=common-plugin-api.aar
 common-plugin-api.sha256=ee7eb7879a53506c4cca5e2d19d3058e28df2168fb33351a52302a3b9e532e15
 nodejs-api.file=nodejs-api.aar
 nodejs-api.sha256=4334b94a6f86e8ef8ff2912b6ace817dbf9bca1e887be7d615918f990f57ab71
+terminal-api.file=terminal-api.aar
+terminal-api.sha256=98b43a9deb236d642f0d3b18696a4da9a9c4b399374d6e398d80d3abf0c86bc6

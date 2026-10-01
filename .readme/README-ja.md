@@ -52,7 +52,7 @@ AutoJs6 は Binder サービスでプラグインを検出し, 明示的な Inte
 
 ******
 
-バージョン 1.0.0 は P0 開発プレビューです: リポジトリの骨組み, AutoJs6 プラグインセンターに認識されるプラグイン ID, および pty / ストレージ / Node.js ランチャーのスパイク. Binder 契約, セッションコア, ターミナル画面, スクリプト API, 設定ページは [ROADMAP.md](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/blob/master/ROADMAP.md) のフェーズに従って進みます. AutoJs6 6.8.0 (build 5303) 以降が必要です.
+バージョン 1.0.0 は P0 開発プレビューです: リポジトリの骨組み, AutoJs6 プラグインセンターに認識されるプラグイン ID, および pty / ストレージ / Node.js ランチャーのスパイク. Binder 契約, セッションコア, ターミナル画面, スクリプト API, 設定ページは [ROADMAP.md](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/blob/master/ROADMAP.md) のフェーズに従って進みます. AutoJs6 6.8.0 (build 5304) 以降が必要です.
 
 ******
 
@@ -75,7 +75,7 @@ AutoJs6 は Binder サービスでプラグインを検出し, 明示的な Inte
 
 ******
 
-1. AutoJs6 build 5303 (6.8.0) 以降がインストールされた端末に, [Releases](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/releases) から端末の ABI に合うプラグイン APK (または universal APK) をインストールします.
+1. AutoJs6 build 5304 (6.8.0) 以降がインストールされた端末に, [Releases](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/releases) から端末の ABI に合うプラグイン APK (または universal APK) をインストールします.
 2. AutoJs6 のプラグインセンターを開き, `3-Shell Terminal` が認識されていることを確認して有効にします.
 3. AutoJs6 のホームドロワーで "ターミナル" をオンにするか, ファイルマネージャーでディレクトリの "ターミナルで開く" を選ぶか, スクリプトから `terminal.open(...)` を呼び出します. `/sdcard` などの共有ストレージ内のディレクトリに入るには, プラグインの案内に従って "すべてのファイルへのアクセス" を許可してください.
 
@@ -171,7 +171,7 @@ service action: org.autojs.plugin.TERMINAL
 service category: terminal
 info action: org.autojs.plugin.INFO
 aidl interface: org.autojs.plugin.terminal.api.ITerminalPlugin
-minimum host build: 5303 (6.8.0)
+minimum host build: 5304 (6.8.0)
 ```
 
 `ThreeShellTerminalPluginService` は `org.autojs.plugin.TERMINAL` (category `terminal`) に応答し, ロードマップ P2 以降でホストの terminal-api 契約 `org.autojs.plugin.terminal.api.ITerminalPlugin` を実装します. `ThreeShellTerminalPluginInfoService` は `org.autojs.plugin.INFO` に PluginInfo で応答します. `WakeActivity` はホストがプラグインを起動するためのもので, ターミナル画面は `org.autojs.plugin.TERMINAL_OPEN` で開かれます.
@@ -202,6 +202,7 @@ _2026/10/01_
 - `機能` 10 言語の README, プラグインセンターの説明, 変更履歴
 - `依存関係` 端末エミュレーションと pty ネイティブライブラリとして jackpal Android-Terminal-Emulator (term 1.0.70, emulatorview 1.0.42, libtermexec 1.0, Apache-2.0) を追加し, `locks/vendored-aars.lock` でハッシュを固定
 - `依存関係` 共有プラグイン契約と Node.js マニフェスト契約として `common-plugin-api.aar` と `nodejs-api.aar` (AutoJs6 モジュール `plugin-api/common-plugin-api` と `plugin-api/nodejs-api`, ホストビルド 6.8.0 / 5303, MPL 2.0) を追加し, `locks/host-api-aars.lock` でハッシュを固定
+- `依存関係` ターミナル契約 V1 (`ITerminalPlugin` / `ITerminalCallback`, ID, 上限, エラーコード) として `terminal-api.aar` (AutoJs6 モジュール `plugin-api/terminal-api`, ホストビルド 6.8.0 / 5304, MPL 2.0) を追加. プラグインの ID 定数はこれから取得し, `locks/host-api-aars.lock` でハッシュを固定
 
 ##### さらに詳しいリリース履歴
 

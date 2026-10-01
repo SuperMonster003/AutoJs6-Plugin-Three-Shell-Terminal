@@ -52,7 +52,7 @@ AutoJs6 обнаруживает плагин через его Binder-серв�
 
 ******
 
-Версия 1.0.0 - предварительная сборка этапа P0: скелет репозитория, идентичность плагина, распознаваемая центром плагинов AutoJs6, и проверка pty / хранилища / загрузчика Node.js. Контракт Binder, ядро сеансов, экран терминала, API скриптов и страница настроек следуют этапам [ROADMAP.md](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/blob/master/ROADMAP.md). Требуется AutoJs6 6.8.0 (сборка 5303) или новее.
+Версия 1.0.0 - предварительная сборка этапа P0: скелет репозитория, идентичность плагина, распознаваемая центром плагинов AutoJs6, и проверка pty / хранилища / загрузчика Node.js. Контракт Binder, ядро сеансов, экран терминала, API скриптов и страница настроек следуют этапам [ROADMAP.md](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/blob/master/ROADMAP.md). Требуется AutoJs6 6.8.0 (сборка 5304) или новее.
 
 ******
 
@@ -75,7 +75,7 @@ AutoJs6 обнаруживает плагин через его Binder-серв�
 
 ******
 
-1. Установите APK плагина, соответствующий ABI устройства (или универсальный APK), из [Releases](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/releases) на устройство с AutoJs6 сборки 5303 (6.8.0) или новее.
+1. Установите APK плагина, соответствующий ABI устройства (или универсальный APK), из [Releases](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/releases) на устройство с AutoJs6 сборки 5304 (6.8.0) или новее.
 2. Откройте центр плагинов AutoJs6, убедитесь, что `3-Shell Terminal` распознан, и включите его.
 3. Включите "Терминал" в боковом меню AutoJs6, выберите "Открыть в терминале" для папки в файловом менеджере или вызовите `terminal.open(...)` из скрипта. Предоставьте "Доступ ко всем файлам", когда плагин попросит, чтобы входить в папки общего хранилища, например `/sdcard`.
 
@@ -171,7 +171,7 @@ service action: org.autojs.plugin.TERMINAL
 service category: terminal
 info action: org.autojs.plugin.INFO
 aidl interface: org.autojs.plugin.terminal.api.ITerminalPlugin
-minimum host build: 5303 (6.8.0)
+minimum host build: 5304 (6.8.0)
 ```
 
 `ThreeShellTerminalPluginService` отвечает на `org.autojs.plugin.TERMINAL` (category `terminal`) и с этапа P2 реализует контракт хоста terminal-api `org.autojs.plugin.terminal.api.ITerminalPlugin`. `ThreeShellTerminalPluginInfoService` отвечает на `org.autojs.plugin.INFO` объектом PluginInfo. `WakeActivity` позволяет хосту активировать плагин; экран терминала открывается через `org.autojs.plugin.TERMINAL_OPEN`.
@@ -202,6 +202,7 @@ _2026/10/01_
 - `Функция` README, описание для центра плагинов и журнал изменений на 10 языках
 - `Зависимость` Добавлен jackpal Android-Terminal-Emulator (term 1.0.70, emulatorview 1.0.42, libtermexec 1.0, Apache-2.0) как эмуляция терминала и нативные библиотеки pty, хэш зафиксирован в `locks/vendored-aars.lock`
 - `Зависимость` Добавлены `common-plugin-api.aar` и `nodejs-api.aar` (модули AutoJs6 `plugin-api/common-plugin-api` и `plugin-api/nodejs-api`, сборка хоста 6.8.0 / 5303, MPL 2.0) как общий контракт плагинов и контракт манифеста Node.js, хэши зафиксированы в `locks/host-api-aars.lock`
+- `Зависимость` Добавлен `terminal-api.aar` (модуль AutoJs6 `plugin-api/terminal-api`, сборка хоста 6.8.0 / 5304, MPL 2.0) как контракт терминала V1 (`ITerminalPlugin` / `ITerminalCallback`, идентичность, пределы и коды ошибок); константы идентичности плагина теперь берутся из него, хэш зафиксирован в `locks/host-api-aars.lock`
 
 ##### Полная история выпусков
 

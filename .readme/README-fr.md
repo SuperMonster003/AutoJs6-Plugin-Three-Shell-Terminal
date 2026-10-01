@@ -52,7 +52,7 @@ AutoJs6 découvre le plugin via son service Binder, ouvre l'écran du terminal p
 
 ******
 
-La version 1.0.0 est l'aperçu de développement P0 : le squelette du dépôt, l'identité du plugin reconnue par le centre de plugins d'AutoJs6 et le spike pty / stockage / lanceur Node.js. Le contrat Binder, le noyau de sessions, l'écran du terminal, l'API de script et la page de réglages suivent les phases de [ROADMAP.md](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/blob/master/ROADMAP.md). Nécessite AutoJs6 6.8.0 (build 5303) ou plus récent.
+La version 1.0.0 est l'aperçu de développement P0 : le squelette du dépôt, l'identité du plugin reconnue par le centre de plugins d'AutoJs6 et le spike pty / stockage / lanceur Node.js. Le contrat Binder, le noyau de sessions, l'écran du terminal, l'API de script et la page de réglages suivent les phases de [ROADMAP.md](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/blob/master/ROADMAP.md). Nécessite AutoJs6 6.8.0 (build 5304) ou plus récent.
 
 ******
 
@@ -75,7 +75,7 @@ Le plugin fournit les capacités suivantes:
 
 ******
 
-1. Installez l'APK du plugin correspondant à l'ABI de l'appareil (ou l'APK universel) depuis [Releases](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/releases) sur un appareil avec AutoJs6 build 5303 (6.8.0) ou plus récent.
+1. Installez l'APK du plugin correspondant à l'ABI de l'appareil (ou l'APK universel) depuis [Releases](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/releases) sur un appareil avec AutoJs6 build 5304 (6.8.0) ou plus récent.
 2. Ouvrez le centre de plugins d'AutoJs6, vérifiez que `3-Shell Terminal` est reconnu et activez-le.
 3. Activez "Terminal" dans le tiroir d'accueil d'AutoJs6, choisissez "Ouvrir dans le terminal" sur un dossier du gestionnaire de fichiers, ou appelez `terminal.open(...)` depuis un script. Accordez "Accès à tous les fichiers" quand le plugin le demande pour entrer dans les dossiers du stockage partagé comme `/sdcard`.
 
@@ -171,7 +171,7 @@ service action: org.autojs.plugin.TERMINAL
 service category: terminal
 info action: org.autojs.plugin.INFO
 aidl interface: org.autojs.plugin.terminal.api.ITerminalPlugin
-minimum host build: 5303 (6.8.0)
+minimum host build: 5304 (6.8.0)
 ```
 
 `ThreeShellTerminalPluginService` répond à `org.autojs.plugin.TERMINAL` (category `terminal`) et implémente le contrat terminal-api de l'hôte `org.autojs.plugin.terminal.api.ITerminalPlugin` à partir de la phase P2. `ThreeShellTerminalPluginInfoService` répond à `org.autojs.plugin.INFO` avec PluginInfo. `WakeActivity` permet à l'hôte d'activer le plugin ; l'écran du terminal s'ouvre via `org.autojs.plugin.TERMINAL_OPEN`.
@@ -202,6 +202,7 @@ _2026/10/01_
 - `Fonctionnalité` README, notice du centre de plugins et journal des modifications en 10 langues
 - `Dépendance` Ajout de jackpal Android-Terminal-Emulator (term 1.0.70, emulatorview 1.0.42, libtermexec 1.0, Apache-2.0) pour l'émulation de terminal et les bibliothèques natives pty, verrouillé par hachage dans `locks/vendored-aars.lock`
 - `Dépendance` Ajout de `common-plugin-api.aar` et `nodejs-api.aar` (modules AutoJs6 `plugin-api/common-plugin-api` et `plugin-api/nodejs-api`, build hôte 6.8.0 / 5303, MPL 2.0) comme contrat de plugin partagé et contrat de manifeste Node.js, verrouillés par hachage dans `locks/host-api-aars.lock`
+- `Dépendance` Ajout de `terminal-api.aar` (module AutoJs6 `plugin-api/terminal-api`, build hôte 6.8.0 / 5304, MPL 2.0) comme contrat de terminal V1 (`ITerminalPlugin` / `ITerminalCallback`, identité, plafonds et codes d'erreur) ; les constantes d'identité du plugin en proviennent désormais, verrouillé par hachage dans `locks/host-api-aars.lock`
 
 ##### Pour plus d'historique des versions
 

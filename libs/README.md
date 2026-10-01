@@ -9,13 +9,13 @@ Stage the audited **release** artifacts named exactly:
 
 - `common-plugin-api.aar` (host module `plugin-api/common-plugin-api`: `PluginInfo`, `IPluginInfoProvider`, shared plugin constants)
 - `nodejs-api.aar` (host module `plugin-api/nodejs-api`: `NodeJsPluginActions`, `NodeJsPluginCapabilityKeys`, the `NODE_CLI_*` manifest contract read from the Node.js Runtime plugin)
+- `terminal-api.aar` (host module `plugin-api/terminal-api`: `ITerminalPlugin` / `ITerminalCallback` AIDL and the `Terminal*` constants of the terminal contract V1; the plugin identity constants are read from it)
 
-Roadmap P1.2 adds `terminal-api.aar` (host module `plugin-api/terminal-api`, the terminal contract V1); it must
-come from the same host contract line as the two artifacts above.
-
-Current provenance: both AARs are the release AARs assembled from AutoJs6 6.8.0 / 5303 (host commit
-`9545a7f4aa`, 2026-10-01). `common-plugin-api.aar` is byte-identical to the artifact staged by the other official
-plugins (module unchanged since host commit `9c3ba2e520`).
+All three must come from the same host contract line. Current provenance: `common-plugin-api.aar` and
+`nodejs-api.aar` are the release AARs assembled from AutoJs6 6.8.0 / 5303 (host commit `9545a7f4aa`,
+2026-10-01); `terminal-api.aar` is the release AAR of host commit `b8f4d6c939` (6.8.0 / 5304, the commit that
+added the module, plugin roadmap P1.1). `common-plugin-api.aar` is byte-identical to the artifact staged by the
+other official plugins (module unchanged since host commit `9c3ba2e520`).
 
 `app/build.gradle.kts` rejects missing files, debug artifacts, placeholder hashes, extra lock entries and
 digest mismatches during configuration. Do not commit locally assembled debug AARs or rename debug outputs to

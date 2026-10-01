@@ -17,7 +17,7 @@
 
 ## 1. 固定决策
 
-以下决策 D1-D11 已由维护者于 2026-10-01 分三轮确认, 后续阶段不再重新讨论 (D2 含一处核实后的修正, 见附录 D 的 Q1); D12-D33 为据此派生的技术决策, 进入对应阶段前可推翻 (推翻点见附录 D), 之后视同固定.
+以下决策 D1-D11 已由维护者于 2026-10-01 分三轮确认, 后续阶段不再重新讨论 (D2 含一处核实后的修正, 见附录 D 的 Q1); D12-D33 为据此派生的技术决策, D34 为维护者于 2026-10-01 对附录 D 的拍板; 附录 D 全部问题已关闭, 后续视同固定.
 
 | 编号 | 决策 | 含义 |
 | --- | --- | --- |
@@ -53,7 +53,8 @@
 | D30 | 启动器形态 | 启动器 alias 直接打开终端 (有会话则恢复最近会话, 否则新建), 不设独立首页; 终端工具栏溢出菜单含 "设置" 与 "关于"; 终端 Activity 使用自有 `taskAffinity` (与宿主现状一致), 从宿主入口进入时 Back 返回宿主, 从启动器进入时 Back 回桌面 |
 | D31 | 许可证 | 插件 MPL-2.0 (与宿主及 Three 系列一致); jackpal Android-Terminal-Emulator (Apache-2.0) 的三份 AAR 与原生库重建配方记入 `THIRD_PARTY_NOTICES.md` 与关于页; 宿主 AAR (`common-plugin-api`, `nodejs-api`, `terminal-api`, MPL-2.0) 记录 SHA-256; 从宿主迁入的 MPL-2.0 源码保留原文件头 |
 | D32 | 兼容矩阵 | API 24 AVD x86, API 28 Sony G8441 (arm64), API 31 Sony XQ-AT72, API 33 Redmi 22120RN86C, API 35 Xiaomi 23046RP50C (HyperOS), API 37 AVD (16 KB 页); Node.js Runtime 已安装的设备上额外验证 node / npm / corepack; 每台设备记录 ABI 与实际安装的 APK 变体 |
-| D33 | Explorer Action v2 | 1.0.0 不使用, 文件管理器 "在终端中打开" 仍由宿主硬编码并经 `TerminalLauncher` (D25); 契约已有 `ExplorerActionValues.TARGET_DIRECTORY`, 1.1.0 评估改为插件声明的目录动作以去掉宿主硬编码 (附录 D Q6) |
+| D33 | Explorer Action v2 | 1.0.0 不使用, 文件管理器 "在终端中打开" 仍由宿主硬编码并经 `TerminalLauncher` (D25); 契约已有 `ExplorerActionValues.TARGET_DIRECTORY`, 1.1.0 改为插件声明的目录动作以去掉宿主硬编码 (附录 D Q6) |
+| D34 | 附录 D 拍板 (2026-10-01) | Q1 接受三份 AAR 全部保留, 放弃缩减收益; Q2 打包 x86; Q3 1.0.0 只信任官方 / 自身签名, 1.1.0 增加 "信任此签名" 确认流程 (P8); Q4 `command` 按推荐方式嵌入包装脚本; Q5 `terminal.show()` 行为与 `app.startActivity` 一致; Q6 1.1.0 迁移到 Explorer Action v2 目录动作; Q7 维护者接受短期无终端, P1.3 随 P1.2 一并执行, 不等待 P3 |
 
 ---
 
@@ -286,7 +287,7 @@ runtime/api/augment/terminal/           Terminal.kt (AugmentableKey("terminal"))
 | P7 | 文档, d.ts, Ace, 离线文档, README, changelog, 1.0.0 本地 gate (推送 / 索引 / Release 按 D9 门控) | 文档 + 发布 | P6 |
 | P8 | 1.1.0 候选: Explorer Action v2 目录动作, 配色 / 字体, 命令完成通知, 多标签页评估 | 插件 (+ 宿主小) | P7 |
 
-建议会话切分: P0 一次 (骨架 + spike); P1 两次 (契约 + 客户端 + 入口改造 + 注册为一次; 删除旧终端 + 数据清理 + changelog + 文档为一次, 建议在 P3 完成后执行以保持维护者本机终端可用, 6.8.0 未发布, 顺序由维护者定); P2 两到三次 (会话 / 服务 / 存储; Binder 与上限; Node CLI 与包管理); P3 一到两次; P4 两次 (第一 / 二档 + 错误; 第三档会话对象 + 输出管道 + 示例); P5 一到两次; P6 一到两次; P7 一次; P8 按需.
+建议会话切分: P0 一次 (骨架 + spike); P1 两次 (契约 + 客户端 + 入口改造 + 注册为一次; 删除旧终端 + 数据清理 + changelog + 文档为一次, 维护者已接受短期无终端 (D34 Q7), 两次可连续执行); P2 两到三次 (会话 / 服务 / 存储; Binder 与上限; Node CLI 与包管理); P3 一到两次; P4 两次 (第一 / 二档 + 错误; 第三档会话对象 + 输出管道 + 示例); P5 一到两次; P6 一到两次; P7 一次; P8 按需.
 
 当前进度 (2026-10-01): 调研与决策完成, 本 Roadmap, `AGENTS.md` 与图标源图入库; 未写 Gradle / 源码 (P0.1), 未改宿主.
 
@@ -524,6 +525,7 @@ runtime/api/augment/terminal/           Terminal.kt (AugmentableKey("terminal"))
 - [ ] (插件 + 宿主) Explorer Action v2 目录动作 (D33 / Q6): 插件声明 `TARGET_DIRECTORY` 动作 "在终端中打开", 宿主删除 `menu_dir_options.xml` 的硬编码项与 `ExplorerPageViewHolder` 的分支; 保留项目工具栏与抽屉的 `TerminalLauncher` 路径.
 - [ ] (插件) 配色方案 (至少 深 / 浅 / 跟随主题色 三套) 与等宽字体选择 (系统等宽 / 内置一款 OFL 字体); 字号与配色同步到设置页.
 - [ ] (插件) 命令完成通知: `exec` 的非交互会话退出时发通知 (可在设置关闭); 通知点击打开对应会话.
+- [ ] (插件) Node.js 插件签名的 "信任此签名" 确认流程 (D34 Q3): 探测详情页对非官方签名显示 SHA-256 与确认按钮, 确认后持久化到插件偏好, 设置页可撤销.
 - [ ] (插件) 多标签页 UI 评估 (当前为多 Activity 实例 + 管理器); 评估结论写入附录 D.
 - [ ] (插件) 共享存储外的 `content://` 目录 (SAF) 评估: 终端只能操作真实路径, 结论预计为不支持, 文档注明.
 
@@ -750,36 +752,43 @@ t.on('exit', code => console.log('done', code));
 
 - 现状: 维护者选 "仅移出 emulatorview"; 核实 `ShellTermSession -> GenericTermSession -> emulatorview.TermSession` 与 `Shell.java` 的直接 import 后, 该选项与 "三份全部保留" 等价.
 - 处理: D2 记为三份全部保留, 只删终端代码 / 资源 / 组件. 若维护者仍希望缩减, 可选项是把 emulatorview 中 `EmulatorView` 及渲染器类从宿主副本剔除 (重打包 AAR), 收益约几十 KB, 不推荐.
+- 拍板 (2026-10-01): 接受, 放弃缩减收益 (D34).
 
 ### Q2 (P0 前): x86 ABI 是否打包
 
 - 现状: AAR 含 x86 原生库 (2017 年上游构建, 非宿主重建); CI 用 API 24 x86 模拟器.
 - 推荐: 打包 x86 (D14), 使 CI 契约测试能加载原生库; 若 `verifyNativePageAlignment` 对 x86 旧库报错, 用 `native/jackpal-termexec/build.py` 重建 x86 并更新锁.
+- 拍板 (2026-10-01): 按推荐实施 (D34).
 
 ### Q3 (P2 前): Node.js 插件信任的手动覆盖
 
 - 现状: D17 只接受官方签名或自身签名.
 - 推荐: 1.0.0 不提供手动信任开关; 探测详情页显示被拒签名的 SHA-256 便于排查. 若维护者需要第三方构建的 Node.js 插件, 1.1.0 增加 "信任此签名" 确认流程.
+- 拍板 (2026-10-01): 按推荐实施; "信任此签名" 确认流程列入 P8 (D34).
 
 ### Q4 (P2 前): `openSession` 的 `command` 执行方式
 
 - 现状: 宿主只有交互 shell + 包装脚本.
 - 推荐: `command` 非空时命令为 `sh -c 'cd -- "$1" 2>/dev/null || cd "$HOME"; <command>; <keepOpen ? exec "$0" : exit $?>' sh <cwd>`, 命令按原文嵌入 (由脚本作者负责引号), 长度受 D22 限制.
+- 拍板 (2026-10-01): 按推荐实施 (D34).
 
 ### Q5 (P4 前): `terminal.show()` 在后台脚本中的行为
 
 - 现状: Android 10+ 禁止后台启动 Activity, 宿主通常持有悬浮窗权限 (系统允许例外).
 - 推荐: 不做特殊处理, 行为与 `app.startActivity` 一致, 失败时抛 `TerminalError` code `INTERNAL` 并附系统原因; 文档注明.
+- 拍板 (2026-10-01): 按推荐实施 (D34).
 
 ### Q6 (P8 前): Explorer Action v2 目录动作
 
 - 现状: D33; 契约已有 `TARGET_DIRECTORY`.
 - 推荐: 1.1.0 迁移, 迁移后宿主只剩抽屉与项目工具栏两处硬编码入口.
+- 拍板 (2026-10-01): 按推荐实施 (D34).
 
 ### Q7 (P1 前): 删除宿主终端的时机
 
 - 现状: 维护者本机依赖宿主终端做日常操作的可能性.
 - 推荐: P1.3 在 P3 完成后执行 (阶段总览已注明); 若维护者接受短期无终端, 可随 P1.2 一并执行以减少两套代码并存.
+- 拍板 (2026-10-01): 接受短期无终端, P1.3 随 P1.2 执行 (D34).
 
 ---
 
@@ -827,5 +836,5 @@ t.on('exit', code => console.log('done', code));
 
 - 完成: 宿主终端现状盘点 (核心 17 / 界面 7 / 设置 3 / 桥接 2 个文件共 3442 行, 测试 1068 行, 布局 / 菜单 168 行, 62 条字符串 x 10 语言, 偏好键 15 个, Manifest 两组件, 三处界面入口与两处设置入口); jackpal 依赖核实 (三份 AAR 均被脚本 `shell()` 链路使用, 宿主不能删除任何一份); Node.js Runtime `NODE_CLI` 契约核实 (schema 1, 文档 `TERMINAL.md`); 兄弟仓库范式盘点 (3-Setup Installer 骨架与路线图格式, 3-Stove Agent 图标与设置套件, Node.js Runtime ABI 拆分, 宿主 Screen Color Picker / MCP Server / EPUB 三种集成范式); 维护者三轮拍板 D1-D11 (其中 D2 按核实结果修正为三份全部保留); 派生 D12-D33; 图标源图入库并改名为 `three-shell-ic-launcher-{light,dark}.png` (1254 x 1254, alpha 一致, `#272727` / `#D8D8D8`, 包围盒 746 x 653); 本 Roadmap 与 `AGENTS.md`; `git init` 与首笔提交 `cd5136a` (build 1).
 - 未做: 仓库 Gradle / Manifest / 资源 / CI 骨架 (P0.1 其余条目), spike (P0.2), 任何宿主改动, 任何兄弟仓库改动.
-- 待维护者: 附录 D 的 Q1 (已按核实结果处理, 如不接受请指示) 与 Q7 (删除宿主终端的时机) 在 P1 前确认; Q2 在 P0 前; Q3 / Q4 在 P2 前; Q5 在 P4 前.
+- 维护者拍板 (同日稍后): 附录 D Q1-Q7 全部按推荐实施, Q7 接受短期无终端; 回填为 D34.
 - 下次会话建议起点: P0.1 全部条目 (Gradle 骨架, jackpal 三份 AAR 入库与锁, 4 ABI 拆分, Manifest, 资源与图标生成, 文案源, 测试, CI) + P0.2 spike (pty / 共享存储 / Node 启动器); spike 通过后同一会话可开始 P1.1 契约模块.

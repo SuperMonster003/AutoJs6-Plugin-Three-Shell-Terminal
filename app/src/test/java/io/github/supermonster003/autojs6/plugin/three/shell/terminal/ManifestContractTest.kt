@@ -96,7 +96,7 @@ class ManifestContractTest {
     @Test
     fun `the terminal screen stays private to the plugin`() {
         val activities = manifest.child("application").children("activity").map { it.androidAttribute("name") }
-        assertEquals(listOf(".WakeActivity", ".ui.TerminalActivity", ".ui.TerminalManagerActivity"), activities)
+        assertEquals(listOf(".WakeActivity", ".ThreeShellTerminalEntryActivity", ".ui.LauncherActivity", ".ui.TerminalActivity", ".ui.TerminalManagerActivity"), activities)
         val terminal = manifest.child("application").children("activity").single { it.androidAttribute("name") == ".ui.TerminalActivity" }
         assertEquals("false", terminal.androidAttribute("exported"))
         assertNull("the terminal screen needs no caller permission because it is not exported", terminal.androidAttributeOrNull("permission"))
@@ -105,6 +105,36 @@ class ManifestContractTest {
         assertEquals("@style/Theme.ThreeShellTerminal.Terminal", terminal.androidAttribute("theme"))
         assertEquals("adjustResize|stateVisible", terminal.androidAttribute("windowSoftInputMode"))
         assertTrue("the terminal screen must not be reachable through an intent filter", terminal.children("intent-filter").isEmpty())
+    }
+
+    @Test
+    fun `the terminal entry activity follows the host protocol`() {
+        val entry = manifest.child("application").children("activity").single { it.androidAttribute("name") == ".ThreeShellTerminalEntryActivity" }
+        assertEquals("true", entry.androidAttribute("exported"))
+        assertEquals(PLUGIN_PERMISSION, entry.androidAttribute("permission"))
+        assertEquals("true", entry.androidAttribute("excludeFromRecents"))
+        assertEquals("@android:style/Theme.NoDisplay", entry.androidAttribute("theme"))
+        assertNull("the entry joins the caller's task", entry.androidAttributeOrNull("taskAffinity"))
+        assertNull(entry.androidAttributeOrNull("launchMode"))
+        val filter = entry.child("intent-filter")
+        assertEquals(listOf(ThreeShellTerminalPlugin.OPEN_TERMINAL_ACTION), filter.children("action").map { it.androidAttribute("name") })
+        assertEquals(listOf("org.autojs.plugin.TERMINAL_OPEN"), filter.children("action").map { it.androidAttribute("name") })
+        assertEquals(listOf("android.intent.category.DEFAULT"), filter.children("category").map { it.androidAttribute("name") })
+        assertTrue("the host resolves exactly one TERMINAL_OPEN activity", manifest.child("application").children("activity").count { activity ->
+            activity.children("intent-filter").any { f -> f.children("action").any { it.androidAttribute("name") == ThreeShellTerminalPlugin.OPEN_TERMINAL_ACTION } }
+        } == 1)
+    }
+
+    @Test
+    fun `the launcher activity is a private forwarder in the terminal task`() {
+        val launcher = manifest.child("application").children("activity").single { it.androidAttribute("name") == ".ui.LauncherActivity" }
+        assertEquals("false", launcher.androidAttribute("exported"))
+        assertNull(launcher.androidAttributeOrNull("permission"))
+        assertEquals("@android:style/Theme.NoDisplay", launcher.androidAttribute("theme"))
+        val terminal = manifest.child("application").children("activity").single { it.androidAttribute("name") == ".ui.TerminalActivity" }
+        assertEquals("the home screen task must be the terminal task", terminal.androidAttribute("taskAffinity"), launcher.androidAttribute("taskAffinity"))
+        assertNull("excluding the task root would hide the whole terminal task from recents", launcher.androidAttributeOrNull("excludeFromRecents"))
+        assertTrue("MAIN / LAUNCHER arrive with the icon aliases of P5.3", launcher.children("intent-filter").isEmpty())
     }
 
     @Test
@@ -151,9 +181,10 @@ class ManifestContractTest {
     }
 
     @Test
-    fun `only discovery and activation components are exported`() {
+    fun `only discovery, activation and the host entry are exported`() {
         val expected = mapOf(
             ".WakeActivity" to PLUGIN_PERMISSION,
+            ".ThreeShellTerminalEntryActivity" to PLUGIN_PERMISSION,
             ".ThreeShellTerminalPluginInfoService" to PLUGIN_PERMISSION,
             ".ThreeShellTerminalPluginService" to PLUGIN_PERMISSION,
         )

@@ -6,7 +6,6 @@ import android.content.pm.PackageManager
 import android.os.Binder
 import android.os.Build
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.ThreeShellTerminalPlugin
-import java.security.MessageDigest
 
 /**
  * Decides who may call the `ITerminalPlugin` methods. [enforceHost] returns the calling uid or
@@ -67,24 +66,7 @@ class HostCallerGuard(context: Context) : CallerGuard {
         return uid
     }
 
-    @Suppress("DEPRECATION")
-    private fun packageInfo(name: String): PackageInfo? = try {
-        val flags = PackageManager.GET_SIGNATURES or if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) PackageManager.GET_SIGNING_CERTIFICATES else 0
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            packages.getPackageInfo(name, PackageManager.PackageInfoFlags.of(flags.toLong()))
-        } else {
-            packages.getPackageInfo(name, flags)
-        }
-    } catch (_: PackageManager.NameNotFoundException) {
-        null
-    }
+    private fun packageInfo(name: String): PackageInfo? = PackageSigners.packageInfo(packages, name)
 
-    @Suppress("DEPRECATION")
-    private fun signers(info: PackageInfo?): Set<String> {
-        val modern = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) info?.signingInfo?.apkContentsSigners?.takeIf { it.isNotEmpty() } else null
-        val signatures = modern ?: info?.signatures
-        return signatures.orEmpty().mapTo(hashSetOf()) { signature ->
-            MessageDigest.getInstance("SHA-256").digest(signature.toByteArray()).joinToString("") { "%02x".format(it.toInt() and 0xff) }
-        }
-    }
+    private fun signers(info: PackageInfo?): Set<String> = PackageSigners.digests(info)
 }

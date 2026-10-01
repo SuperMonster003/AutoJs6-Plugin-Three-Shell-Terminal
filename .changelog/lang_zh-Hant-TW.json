@@ -20,7 +20,8 @@
         "AutoJs6 可建立和控制最多 16 個終端工作階段, 每個工作階段支援最多 4 個即時輸出監聽, 並可讀取最近輸出和查詢 shell 環境. 關閉 AutoJs6 後工作階段繼續執行; 無效要求會傳回具體原因.",
         "套件管理支援 npm init, 安裝相依套件或指定套件, 讀取並執行 package.json 指令碼, 查看 Yarn / pnpm 命令與搜尋 npm. 支援 npmjs, npmmirror 與自訂 HTTPS 鏡像來源, 以及忽略安裝指令碼. 清除終端資料會先關閉所有工作階段, 再清空 home / usr 並重建目錄, 保留設定和外部專案. 選單與設定頁將於後續階段接入.",
         "終端介面 (`TerminalActivity`): 宿主終端介面遷入外掛程式自有的 Material 3 主題, 含快捷鍵列 (Esc / Tab / Ctrl / Alt / 方向 / 翻頁), 雙指縮放字級, 長按選取並複製文字, 工作階段 / 文字 / 套件管理 / 設定 / 說明選單, 顯示 shell 目前目錄並可點按複製的工具列副標題, 以及說明 Node.js 執行環境缺失 / 不受信任 / 版本過舊 / 已停用並提供安裝 / 更新 / 啟用 / 詳細資料動作的 Node.js 橫幅; 無法進入共用儲存空間目錄時出現儲存橫幅並提供 \"授予\" 與 \"重新進入目錄\"; 介面透過宿主設定提供者跟隨 AutoJs6 的語言, 夜間模式與主題色, 無宿主時回退至系統值與共用的 `#FFDEAD` 顏色",
-        "工作階段管理員: 含狀態 / 控制 / 工作階段 / 設定四個可收合分組的對話方塊, 列出全部執行中的工作階段及其目錄, PID 與執行時間, 可開啟或關閉單一工作階段, 新建工作階段, 關閉全部, 檢視詳細資料並複製, 並提供字級, npm 鏡像來源與 ignore-scripts 設定; 它與宿主 `onSessionsChanged` 使用同一工作階段登錄表, 可從終端選單, 工作階段通知 (點選) 進入, 宿主的 `manager=true` 入口則由透明的 `TerminalManagerActivity` 承載, 關閉後不會留下終端介面"
+        "工作階段管理員: 含狀態 / 控制 / 工作階段 / 設定四個可收合分組的對話方塊, 列出全部執行中的工作階段及其目錄, PID 與執行時間, 可開啟或關閉單一工作階段, 新建工作階段, 關閉全部, 檢視詳細資料並複製, 並提供字級, npm 鏡像來源與 ignore-scripts 設定; 它與宿主 `onSessionsChanged` 使用同一工作階段登錄表, 可從終端選單, 工作階段通知 (點選) 進入, 宿主的 `manager=true` 入口則由透明的 `TerminalManagerActivity` 承載, 關閉後不會留下終端介面",
+        "宿主入口與啟動器: 匯出的 `TERMINAL_OPEN` 入口 Activity 受 `org.autojs.permission.PLUGIN` 簽章權限保護, 對可識別的呼叫方檢驗權限持有與簽章一致, 依契約上限檢驗 `directory` / `sessionId` / `newSession` / `command` / `manager` extras 並轉送到自有工作中的終端介面或覆蓋在呼叫方之上的工作階段管理員; `LauncherActivity` (圖示 alias 的目標) 還原最近工作階段或在主目錄新建工作階段; 從宿主進入的終端按返回鍵回到宿主, 從啟動器進入的回到桌面, 終端工作隨之離開最近工作, 啟動要求不會被重放"
       ],
       "dependency": [
         "附加 jackpal Android-Terminal-Emulator (term 1.0.70, emulatorview 1.0.42, libtermexec 1.0, Apache-2.0) 作為終端機模擬與 pty 原生程式庫, 並在 `locks/vendored-aars.lock` 中鎖定雜湊",

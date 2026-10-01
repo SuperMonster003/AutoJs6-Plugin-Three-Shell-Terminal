@@ -45,11 +45,14 @@ import kotlin.math.max
  * by the jackpal emulator view, a key bar, npm helpers, and two banners that explain why `node` may
  * be unavailable (D17) or why the requested directory could not be entered (D18). Sessions live in
  * [TerminalSessionManager] and survive this screen; the start goes through [SessionAssembly] so the
- * screen and the host Binder resolve directories and the Node.js toolchain identically.
+ * screen and the host Binder resolve directories and the Node.js toolchain identically. The screen
+ * lives in its own task (D30): reached from the host's entry Activity or the launcher icon it is the
+ * task root and leaves together with the task; opened from the manager it stacks above it.
  *
  * zh-CN: 终端界面 (P3.1, 自宿主迁入): jackpal 模拟器视图渲染的 pty `/system/bin/sh`, 按键栏, npm 辅助动作,
  * 以及说明 `node` 为何不可用 (D17) 或目录为何无法进入 (D18) 的两条横幅. 会话常驻 [TerminalSessionManager],
- * 启动经 [SessionAssembly], 与宿主 Binder 以同一方式解析目录与 Node.js 工具链.
+ * 启动经 [SessionAssembly], 与宿主 Binder 以同一方式解析目录与 Node.js 工具链. 界面位于自有任务 (D30): 从宿主
+ * 入口 Activity 或启动器图标进入时是任务根, 连同任务一起离开; 从管理器打开时叠在其上.
  */
 class TerminalActivity : HostAppearanceActivity() {
 
@@ -172,7 +175,7 @@ class TerminalActivity : HostAppearanceActivity() {
             ?: if (explicitId == null && !wantsNew) TerminalSessionManager.activeSessions.lastOrNull() else null
         if (explicitId != null && restored == null) {
             kit.toast(R.string.terminal_session_ended)
-            if (session == null) finish()
+            if (session == null) finishScreen()
             return
         }
         if (restored == null) {
@@ -206,7 +209,7 @@ class TerminalActivity : HostAppearanceActivity() {
         ) { started ->
             started.onFailure { error ->
                 kit.toast(error.message ?: getString(R.string.terminal_error_occurred), long = true)
-                if (session == null) finish()
+                if (session == null) finishScreen()
             }
             started.onSuccess { (plan, created) ->
                 nodeResolution = plan.nodeResolution
@@ -352,7 +355,7 @@ class TerminalActivity : HostAppearanceActivity() {
             selection.show(x, y)
         }
         pty.onProcessExited = { onSessionEnded() }
-        pty.onInputAfterExit = { finish() }
+        pty.onInputAfterExit = { finishScreen() }
         pty.onModifiersChanged = { ctrl, alt -> keyBar.setModifiers(ctrl, alt) }
         keyBar.setModifiers(pty.ctrlArmed, pty.altArmed)
         if (pty.exitCode != null) {
@@ -419,7 +422,18 @@ class TerminalActivity : HostAppearanceActivity() {
         if (pty != null && pty.isProcessAlive && pty.hasLiveChildren()) {
             kit.toast(R.string.terminal_session_kept_running)
         }
-        finish()
+        finishScreen()
+    }
+
+    /**
+     * D30: as the root of its own task (host entry, launcher icon) the screen goes together with the
+     * task, so the caller's task or the home screen comes back and recents cannot replay the start
+     * request (a `command` extra must not run twice); stacked above a manager it simply pops.
+     * zh-CN: D30: 作为自有任务的根 (宿主入口, 启动器图标) 时连同任务一起结束, 回到调用方任务或桌面, 且最近任务
+     * 不会重放启动请求 (`command` extra 不能执行两次); 叠在管理器之上时只弹出自身.
+     */
+    private fun finishScreen() {
+        if (isTaskRoot) finishAndRemoveTask() else finish()
     }
 
     /** Menu "Close session": ends the shell (after confirmation while a child process runs) and leaves. zh-CN: 菜单 "关闭会话": 结束 shell (有子进程运行时先确认) 并离开. */
@@ -428,7 +442,7 @@ class TerminalActivity : HostAppearanceActivity() {
         val pty = current?.pty
         if (current == null || pty == null || !pty.isProcessAlive || !pty.hasLiveChildren()) {
             current?.let { TerminalSessionManager.close(it.id) }
-            finish()
+            finishScreen()
             return
         }
         kit.confirmDialog(
@@ -438,7 +452,7 @@ class TerminalActivity : HostAppearanceActivity() {
             destructive = true,
         ) {
             TerminalSessionManager.close(current.id)
-            finish()
+            finishScreen()
         }
     }
 

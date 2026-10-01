@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="plugin_description">A multi-session terminal running the system shell in a pty, with background sessions, a key bar and Node.js commands</string>
+</resources>

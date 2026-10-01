@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="plugin_description">pty でシステムシェルを実行するマルチセッション端末. バックグラウンド実行, キーバー, Node.js コマンドに対応</string>
+</resources>

@@ -1,6 +1,7 @@
 package io.github.supermonster003.autojs6.plugin.three.shell.terminal
 
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -96,7 +97,7 @@ class ManifestContractTest {
     @Test
     fun `info service and terminal service match the identity constants`() {
         val services = manifest.child("application").children("service").associateBy { it.androidAttribute("name") }
-        assertEquals(setOf(".ThreeShellTerminalPluginInfoService", ".ThreeShellTerminalPluginService"), services.keys)
+        assertEquals(setOf(".ThreeShellTerminalPluginInfoService", ".ThreeShellTerminalPluginService", SESSION_SERVICE), services.keys)
 
         val info = services.getValue(".ThreeShellTerminalPluginInfoService")
         assertDiscoveryContract(info, ThreeShellTerminalPlugin.INFO_ACTION)
@@ -105,6 +106,23 @@ class ManifestContractTest {
         val terminal = services.getValue(".ThreeShellTerminalPluginService")
         assertDiscoveryContract(terminal, ThreeShellTerminalPlugin.SERVICE_ACTION)
         assertNull(terminal.androidAttributeOrNull("process"))
+    }
+
+    @Test
+    fun `the session service is a private special-use foreground service`() {
+        val service = manifest.child("application").children("service").single { it.androidAttribute("name") == SESSION_SERVICE }
+        assertEquals("false", service.androidAttribute("exported"))
+        assertEquals("true", service.androidAttribute("enabled"))
+        assertEquals("specialUse", service.androidAttribute("foregroundServiceType"))
+        assertNull(service.androidAttributeOrNull("permission"))
+        assertNull(service.androidAttributeOrNull("process"))
+        assertTrue(service.children("intent-filter").isEmpty())
+        assertTrue(service.children("meta-data").isEmpty())
+        val property = service.child("property")
+        assertEquals("android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE", property.androidAttribute("name"))
+        val subtype = property.androidAttribute("value")
+        assertTrue("the special-use subtype must describe the plugin's terminal sessions", subtype.contains("3-Shell Terminal") && subtype.contains("shell"))
+        assertFalse("the special-use subtype must not describe the host", subtype.contains("AutoJs6"))
     }
 
     @Test
@@ -156,5 +174,6 @@ class ManifestContractTest {
         const val ANDROID_NAMESPACE = "http://schemas.android.com/apk/res/android"
         const val TOOLS_NAMESPACE = "http://schemas.android.com/tools"
         const val PLUGIN_PERMISSION = "org.autojs.permission.PLUGIN"
+        const val SESSION_SERVICE = ".service.ThreeShellTerminalSessionService"
     }
 }

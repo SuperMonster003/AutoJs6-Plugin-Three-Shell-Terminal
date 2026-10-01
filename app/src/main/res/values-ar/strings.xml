@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="notification_channel_description">يعرض جلسات الطرفية التي تستمر في العمل في الخلفية ويتيح إغلاقها</string>
+    <string name="notification_channel_name">جلسات الطرفية</string>
+    <string name="notification_close_sessions">إغلاق الجلسات</string>
+    <string name="notification_title">جلسة الطرفية قيد التشغيل</string>
+    <string
+        name="notification_title_multiple"
+        tools:ignore="PluralsCandidate">%1$d جلسات طرفية قيد التشغيل</string>
     <string name="plugin_description">طرفية متعددة الجلسات تشغل shell النظام في pty, مع جلسات في الخلفية وشريط مفاتيح وأوامر Node.js</string>
 </resources>

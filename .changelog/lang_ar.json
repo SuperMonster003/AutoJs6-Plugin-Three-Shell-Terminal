@@ -13,7 +13,8 @@
       "feature": [
         "هوية المكون الإضافي `three-shell-terminal` (engine `terminal`) مع خدمة INFO و Wake Activity وهيكل خدمة `org.autojs.plugin.TERMINAL` لاكتشاف المضيف",
         "ملفات APK مقسمة حسب ABI (arm64-v8a, armeabi-v7a, x86_64, x86) بالإضافة إلى APK شامل, مع مكتبات أصلية محاذاة لصفحات 16 كيلوبايت",
-        "README وتعليمات مركز المكونات الإضافية وسجل التغييرات بـ 10 لغات"
+        "README وتعليمات مركز المكونات الإضافية وسجل التغييرات بـ 10 لغات",
+        "نقل نواة الجلسات من طرفية المضيف: جلسات shell على pty مع سجل على مستوى العملية (تسجيل العنوان ورمز الخروج لصالح Binder), بيئة الجلسة وتخطيط الدلائل داخل دليل ملفات المكون الإضافي, اكتشاف مشغل Node.js مع مثبت npm / corepack, وخدمة أمامية تبقي الجلسات قيد التشغيل مع إشعار \"إغلاق الجلسات\" (القناة `three.shell.terminal.sessions`)"
       ],
       "dependency": [
         "إضافة jackpal Android-Terminal-Emulator (term 1.0.70, emulatorview 1.0.42, libtermexec 1.0, Apache-2.0) لمحاكاة الطرفية ومكتبات pty الأصلية, مع قفل التجزئة في `locks/vendored-aars.lock`",

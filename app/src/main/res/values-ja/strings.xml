@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="notification_channel_description">バックグラウンドで実行中のターミナルセッションを表示し, 終了できるようにします</string>
+    <string name="notification_channel_name">ターミナルセッション</string>
+    <string name="notification_close_sessions">セッションを終了</string>
+    <string name="notification_title">ターミナルセッションを実行中</string>
+    <string
+        name="notification_title_multiple"
+        tools:ignore="PluralsCandidate">%1$d 件のターミナルセッションを実行中</string>
     <string name="plugin_description">pty でシステムシェルを実行するマルチセッション端末. バックグラウンド実行, キーバー, Node.js コマンドに対応</string>
 </resources>

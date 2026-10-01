@@ -103,6 +103,21 @@
                 android:value="5304" />
         </service>
 
+        <!--
+            Foreground lifetime of running sessions (roadmap D15, P2.1): started by TerminalSessionManager while at
+            least one shell lives, stopped when the last one exits. Never exported, no intent filter; the specialUse
+            subtype explains the use case to the platform (API 34+).
+        -->
+        <service
+            android:name=".service.ThreeShellTerminalSessionService"
+            android:enabled="true"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Keeps the interactive terminal shells of 3-Shell Terminal and the processes they run (scripts, npm, node) alive while the user is away from the terminal screen" />
+        </service>
+
     </application>
 
 </manifest>

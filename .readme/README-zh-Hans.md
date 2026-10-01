@@ -205,6 +205,7 @@ _2026/10/02_
 - `新增` 带签名信任的 Node.js 集成 (`NodeCliTrust`, `NodeCliLocator`, `SessionAssembly`): 仅当 Node.js Runtime 插件由 AutoJs6 官方插件密钥或本插件自身密钥签名时才使用, 设置开关在任何查找之前短路, 每种结果映射到契约的 `node-cli` 状态 (`available`, `disabled`, `plugin-missing`, `plugin-untrusted`, `plugin-too-old`, `executable-missing`, `exec-denied`, `setup-failed`), 每次会话启动刷新 `usr/bin` 命令链接, 按摘要只解压一次 npm / corepack 归档并导出 npm / corepack 环境变量
 - `新增` AutoJs6 可创建和控制最多 16 个终端会话, 每个会话支持最多 4 个实时输出监听, 并可读取最近输出和查询 shell 环境. 关闭 AutoJs6 后会话继续运行; 无效请求会返回具体原因.
 - `新增` 包管理支持 npm init, 安装依赖或指定包, 读取并运行 package.json 脚本, 查看 Yarn / pnpm 命令与搜索 npm. 支持 npmjs, npmmirror 与自定义 HTTPS 镜像源, 以及忽略安装脚本. 清除终端数据会先关闭所有会话, 再清空 home / usr 并重建目录, 保留设置和外部工程. 菜单与设置页将在后续阶段接入.
+- `新增` 终端界面 (`TerminalActivity`): 宿主终端界面迁入插件自有的 Material 3 主题, 含快捷键栏 (Esc / Tab / Ctrl / Alt / 方向 / 翻页), 双指缩放字号, 长按选择并复制文本, 会话 / 文本 / 包管理 / 设置 / 帮助菜单, 显示 shell 当前目录并可点按复制的工具栏副标题, 以及说明 Node.js 运行时缺失 / 不受信任 / 版本过旧 / 已停用并提供安装 / 更新 / 启用 / 详情动作的 Node.js 横幅; 无法进入共享存储目录时出现存储横幅并提供 "授予" 与 "重新进入目录"; 界面通过宿主设置提供者跟随 AutoJs6 的语言, 夜间模式与主题色, 无宿主时回退到系统值与共用的 `#FFDEAD` 颜色
 - `修复` 系统限制后台活动时, 启动会话不再导致插件崩溃; 会话会在没有前台服务保护的情况下继续运行.
 - `修复` 读取较长转录时保留最新文本, 并控制回复大小, 避免跨进程消息超限.
 - `依赖` 附加 jackpal Android-Terminal-Emulator (term 1.0.70, emulatorview 1.0.42, libtermexec 1.0, Apache-2.0) 作为终端仿真与 pty 原生库, 并在 `locks/vendored-aars.lock` 中锁定哈希

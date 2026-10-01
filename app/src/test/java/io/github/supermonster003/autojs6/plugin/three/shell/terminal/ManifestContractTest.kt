@@ -78,9 +78,8 @@ class ManifestContractTest {
     }
 
     @Test
-    fun `the wake activity is the only activity and follows the activation contract`() {
-        val wake = manifest.child("application").children("activity").single()
-        assertEquals(".WakeActivity", wake.androidAttribute("name"))
+    fun `the wake activity follows the activation contract`() {
+        val wake = manifest.child("application").children("activity").single { it.androidAttribute("name") == ".WakeActivity" }
         assertEquals("true", wake.androidAttribute("exported"))
         assertEquals("true", wake.androidAttribute("excludeFromRecents"))
         assertEquals("true", wake.androidAttribute("finishOnTaskLaunch"))
@@ -92,6 +91,20 @@ class ManifestContractTest {
         assertTrue(manifest.child("application").children("activity-alias").isEmpty())
         assertTrue(manifest.child("application").children("receiver").isEmpty())
         assertTrue(manifest.child("application").children("provider").isEmpty())
+    }
+
+    @Test
+    fun `the terminal screen is the only other activity and stays private to the plugin`() {
+        val activities = manifest.child("application").children("activity").map { it.androidAttribute("name") }
+        assertEquals(listOf(".WakeActivity", ".ui.TerminalActivity"), activities)
+        val terminal = manifest.child("application").children("activity").single { it.androidAttribute("name") == ".ui.TerminalActivity" }
+        assertEquals("false", terminal.androidAttribute("exported"))
+        assertNull("the terminal screen needs no caller permission because it is not exported", terminal.androidAttributeOrNull("permission"))
+        assertEquals("standard", terminal.androidAttribute("launchMode"))
+        assertEquals("io.github.supermonster003.autojs6.plugin.three.shell.terminal.ui.TerminalActivity", terminal.androidAttribute("taskAffinity"))
+        assertEquals("@style/Theme.ThreeShellTerminal.Terminal", terminal.androidAttribute("theme"))
+        assertEquals("adjustResize|stateVisible", terminal.androidAttribute("windowSoftInputMode"))
+        assertTrue("the terminal screen must not be reachable through an intent filter", terminal.children("intent-filter").isEmpty())
     }
 
     @Test

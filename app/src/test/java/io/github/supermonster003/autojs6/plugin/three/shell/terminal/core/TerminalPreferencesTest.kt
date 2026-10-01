@@ -16,6 +16,7 @@ class TerminalPreferencesTest {
         assertEquals("npm_registry_custom_url", TerminalPreferences.KEY_NPM_REGISTRY_CUSTOM_URL)
         assertEquals("npm_ignore_scripts", TerminalPreferences.KEY_NPM_IGNORE_SCRIPTS)
         assertEquals("node_integration_enabled", TerminalPreferences.KEY_NODE_INTEGRATION_ENABLED)
+        assertEquals("notification_permission_requested", TerminalPreferences.KEY_NOTIFICATION_PERMISSION_REQUESTED)
         assertEquals(listOf("npmjs", "npmmirror", "custom"), TerminalPreferences.REGISTRY_CHOICES)
     }
 

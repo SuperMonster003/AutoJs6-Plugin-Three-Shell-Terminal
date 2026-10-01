@@ -1,0 +1,19 @@
+<!-- Host AndroidManifest.xml components removed in P1.3 -->
+        <activity
+            android:name="org.autojs.autojs.ui.terminal.TerminalActivity"
+            android:exported="false"
+            android:label="@string/text_terminal"
+            android:taskAffinity="org.autojs.autojs.ui.terminal.TerminalActivity"
+            android:launchMode="standard"
+            android:windowSoftInputMode="adjustResize|stateVisible"
+            android:theme="@style/AppTheme.FullScreen" />
+
+        <service
+            android:name="org.autojs.autojs.core.terminal.TerminalSessionService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Keeps user-started terminal sessions and their shell processes (for example npm install) running while the terminal screen is not in front, with a persistent close action" />
+        </service>

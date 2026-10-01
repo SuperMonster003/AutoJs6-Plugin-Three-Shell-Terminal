@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="plugin_description">طرفية متعددة الجلسات تشغل shell النظام في pty, مع جلسات في الخلفية وشريط مفاتيح وأوامر Node.js</string>
+</resources>

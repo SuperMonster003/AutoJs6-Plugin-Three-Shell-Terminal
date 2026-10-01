@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- The vendored jackpal AARs declare minSdk 4 / targetSdk 22; the plugin's own values apply. -->
+    <uses-sdk tools:overrideLibrary="jackpal.androidterm,jackpal.androidterm.emulatorview,jackpal.androidterm.libtermexec" />
+
+    <uses-permission android:name="org.autojs.permission.PLUGIN" />
+    <!-- The shell runs under this plugin's uid (not the host's), so it cannot inherit the host's
+         storage grants and has to declare storage access itself; mirrors the host and the Node.js
+         Runtime plugin manifests. MANAGE_EXTERNAL_STORAGE still needs the user to grant "All files
+         access" for this plugin in system settings (roadmap D6 / D18). -->
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="29" />
+    <uses-permission
+        android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
+    <!-- Sessions keep running after the terminal screen is left (roadmap D15); the service lands in P2.1. -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- Shell children (npm, corepack, curl ...) use the network under this uid; the manual release check does too. -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <queries>
+        <package android:name="org.autojs.autojs6" />
+        <!-- Node.js Runtime plugin: NODE_CLI_* meta-data, signing certificate and native library directory (roadmap D17). -->
+        <package android:name="io.github.supermonster003.autojs6.plugin.nodejs" />
+        <intent>
+            <action android:name="org.autojs.plugin.nodejs.RUNTIME" />
+        </intent>
+    </queries>
+
+    <application
+        android:allowBackup="false"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="false"
+        android:icon="@mipmap/ic_launcher_system"
+        android:roundIcon="@mipmap/ic_launcher_system"
+        android:label="@string/app_name"
+        android:localeConfig="@xml/locales_config"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.ThreeShellTerminal"
+        tools:targetApi="33">
+
+        <meta-data
+            android:name="org.autojs.plugin.contract.NATIVE_PAGE_ALIGNMENT"
+            android:value="16384" />
+
+        <meta-data
+            android:name="org.autojs.plugin.WAKE_ACTIVITY"
+            android:value=".WakeActivity" />
+        <meta-data
+            android:name="org.autojs.plugin.info.AUTHOR"
+            android:value="@string/plugin_author" />
+
+        <activity
+            android:name=".WakeActivity"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:finishOnTaskLaunch="true"
+            android:permission="org.autojs.permission.PLUGIN"
+            android:theme="@android:style/Theme.NoDisplay">
+            <intent-filter>
+                <action android:name="org.autojs.plugin.action.WAKE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <service
+            android:name=".ThreeShellTerminalPluginInfoService"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="org.autojs.permission.PLUGIN">
+            <intent-filter>
+                <action android:name="org.autojs.plugin.INFO" />
+                <category android:name="terminal" />
+            </intent-filter>
+            <meta-data
+                android:name="requiresHostVersion"
+                android:value="5303" />
+        </service>
+
+        <!--
+            Host-facing terminal service (roadmap D3 / D20). Until the host terminal-api contract lands
+            (roadmap P1.1 / P2.4) it answers a placeholder Binder carrying the contract descriptor.
+        -->
+        <service
+            android:name=".ThreeShellTerminalPluginService"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="org.autojs.permission.PLUGIN">
+            <intent-filter>
+                <action android:name="org.autojs.plugin.TERMINAL" />
+                <category android:name="terminal" />
+            </intent-filter>
+            <meta-data
+                android:name="requiresHostVersion"
+                android:value="5303" />
+        </service>
+
+    </application>
+
+</manifest>

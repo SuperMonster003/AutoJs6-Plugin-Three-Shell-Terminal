@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="plugin_description">Многосеансовый терминал, запускающий системную оболочку в pty, с фоновыми сеансами, панелью клавиш и командами Node.js</string>
+</resources>

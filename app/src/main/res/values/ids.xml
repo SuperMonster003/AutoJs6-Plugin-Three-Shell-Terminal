@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- The emulator view is replaced on every session attach; the id lets tests and the Activity find the current one. -->
+    <item name="terminal" type="id" />
+    <!-- Frozen transcript shown while text is being selected (ui/TerminalTextSelection.kt). -->
+    <item name="terminal_selection" type="id" />
+</resources>

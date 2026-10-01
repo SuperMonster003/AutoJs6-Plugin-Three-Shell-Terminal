@@ -1,6 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Material 3 base theme. Roadmap P3 / P5 add the full-screen terminal variant, the dialog variants
-         and the neutral palette of the standalone settings specification; P0 only needs a valid application theme. -->
-    <style name="Theme.ThreeShellTerminal" parent="Theme.Material3.DayNight.NoActionBar" />
+    <!-- Material 3 base theme with the neutral palette of the standalone settings specification. The runtime
+         palette (ui/TerminalPalette.kt) tints controls with the followed AutoJs6 theme color; HostAppearanceActivity
+         forces the night mode on the AppCompat delegate, so the -night resources apply through this one theme. -->
+    <style name="Base.Theme.ThreeShellTerminal" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/brand_primary</item>
+        <item name="colorSurface">@color/surface</item>
+        <item name="colorSurfaceContainerLowest">@color/surface</item>
+        <item name="colorSurfaceContainerLow">@color/surface</item>
+        <item name="colorSurfaceContainer">@color/surface</item>
+        <item name="colorSurfaceContainerHigh">@color/surface</item>
+        <item name="colorSurfaceContainerHighest">@color/surface_variant</item>
+        <item name="colorOnSurface">@color/text_color_primary</item>
+        <item name="colorOnSurfaceVariant">@color/text_color_secondary</item>
+        <item name="colorOutline">@color/outline</item>
+        <item name="colorOutlineVariant">@color/divider</item>
+        <item name="colorError">@color/status_danger</item>
+        <item name="android:colorBackground">@color/window_background</item>
+        <item name="android:windowBackground">@color/window_background</item>
+    </style>
+
+    <style name="Theme.ThreeShellTerminal" parent="Base.Theme.ThreeShellTerminal">
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+
+    <!-- Terminal screen (roadmap P3.1 / AGENTS.md 12): edge to edge behind transparent system bars; the Activity
+         applies the insets so the key bar sits above the keyboard and the navigation bar. -->
+    <style name="Theme.ThreeShellTerminal.Terminal">
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowBackground">@color/terminal_background</item>
+    </style>
+
+    <style name="TextAppearance.ThreeShellTerminal.ToolbarTitle" parent="TextAppearance.Material3.TitleLarge">
+        <item name="android:textSize">20sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="TextAppearance.ThreeShellTerminal.ToolbarSubtitle" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:textSize">13sp</item>
+    </style>
 </resources>

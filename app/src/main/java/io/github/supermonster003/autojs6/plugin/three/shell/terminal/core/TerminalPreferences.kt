@@ -62,6 +62,15 @@ class TerminalPreferences(private val preferences: SharedPreferences) {
         get() = preferences.getBoolean(KEY_NODE_INTEGRATION_ENABLED, true)
         set(value) = preferences.edit().putBoolean(KEY_NODE_INTEGRATION_ENABLED, value).apply()
 
+    /**
+     * Whether the terminal screen already asked for `POST_NOTIFICATIONS` (API 33+, roadmap D15); the
+     * request is made once, a refusal only hides the session notification.
+     * zh-CN: 终端界面是否已请求过通知权限 (API 33+, D15); 只请求一次, 拒绝仅隐藏会话通知.
+     */
+    var notificationPermissionRequested: Boolean
+        get() = preferences.getBoolean(KEY_NOTIFICATION_PERMISSION_REQUESTED, false)
+        set(value) = preferences.edit().putBoolean(KEY_NOTIFICATION_PERMISSION_REQUESTED, value).apply()
+
     fun nodeEnvironmentOptions() = TerminalNodeEnvironment.Options(
         registry = npmRegistry,
         ignoreScripts = npmIgnoreScripts,
@@ -76,6 +85,7 @@ class TerminalPreferences(private val preferences: SharedPreferences) {
         const val KEY_NPM_REGISTRY_CUSTOM_URL = "npm_registry_custom_url"
         const val KEY_NPM_IGNORE_SCRIPTS = "npm_ignore_scripts"
         const val KEY_NODE_INTEGRATION_ENABLED = "node_integration_enabled"
+        const val KEY_NOTIFICATION_PERMISSION_REQUESTED = "notification_permission_requested"
 
         const val REGISTRY_NPMJS = "npmjs"
         const val REGISTRY_NPMMIRROR = "npmmirror"

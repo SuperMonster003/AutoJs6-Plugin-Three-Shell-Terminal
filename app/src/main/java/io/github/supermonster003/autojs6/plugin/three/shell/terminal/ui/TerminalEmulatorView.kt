@@ -1,24 +1,28 @@
-package org.autojs.autojs.ui.terminal
+package io.github.supermonster003.autojs6.plugin.three.shell.terminal.ui
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
+import io.github.supermonster003.autojs6.plugin.three.shell.terminal.core.TerminalEnvironment
+import io.github.supermonster003.autojs6.plugin.three.shell.terminal.core.TerminalPreferences
 import jackpal.androidterm.emulatorview.EmulatorView
 import jackpal.androidterm.emulatorview.TermSession
-import org.autojs.autojs.core.terminal.TerminalEnvironment
-import org.autojs.autojs.core.terminal.TerminalPreferences
 
 /**
- * [EmulatorView] with pinch-to-zoom text size (persisted) and the host's terminal defaults.
- * zh-CN: 支持捏合缩放字号 (持久化) 并应用宿主终端默认设置的 [EmulatorView].
+ * [EmulatorView] with pinch-to-zoom text size (persisted in [TerminalPreferences]) and the terminal
+ * defaults of the plugin; ported from the host terminal (roadmap P3.1).
+ * zh-CN: 支持捏合缩放字号 (持久化到 [TerminalPreferences]) 并应用插件终端默认设置的 [EmulatorView]; 自宿主终端迁入.
  */
 class TerminalEmulatorView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
 ) : EmulatorView(context, attrs) {
 
-    var textSizeSp: Int = TerminalPreferences.textSizeSp
+    private val preferences = TerminalPreferences(context)
+
+    var textSizeSp: Int = preferences.textSizeSp
         set(value) {
             val clamped = value.coerceIn(TerminalPreferences.MIN_TEXT_SIZE_SP, TerminalPreferences.MAX_TEXT_SIZE_SP)
             if (field == clamped) return
@@ -26,11 +30,13 @@ class TerminalEmulatorView @JvmOverloads constructor(
             if (termSession != null) {
                 setTextSize(clamped)
             }
-            TerminalPreferences.textSizeSp = clamped
+            preferences.textSizeSp = clamped
             onTextSizeChanged?.invoke(clamped)
         }
 
     var onTextSizeChanged: ((Int) -> Unit)? = null
+
+    /** Long press at view coordinates; the Activity opens the frozen-transcript selection. zh-CN: 长按坐标, 由 Activity 打开冻结转录的选择层. */
     var onSelectionRequested: ((Float, Float) -> Unit)? = null
 
     val transcriptTopLine: Int get() = computeVerticalScrollOffset()
@@ -72,6 +78,10 @@ class TerminalEmulatorView @JvmOverloads constructor(
         setTextSize(textSizeSp)
     }
 
+    // Taps are dispatched by the base class's GestureDetector (onSingleTapUp shows the keyboard), long presses by
+    // onLongPress; only the pinch is intercepted here, so no synthetic performClick() is involved.
+    // zh-CN: 点按由基类的 GestureDetector 分发, 长按走 onLongPress; 这里只截获双指缩放, 不涉及 performClick().
+    @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
         scaleDetector.onTouchEvent(event)
         if (scaleDetector.isInProgress) {

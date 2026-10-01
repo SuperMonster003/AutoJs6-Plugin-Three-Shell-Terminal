@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Neutral surfaces of the standalone settings specification (section 6), shared by the Material theme and
+         ui/TerminalPalette.kt; accents come from the followed or chosen theme color, never from these values. -->
+    <color name="window_background">#F3F4F5</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="surface_variant">#EBEDEF</color>
+    <color name="outline">#C5C8CE</color>
+    <color name="divider">#E0E3E7</color>
+    <color name="text_color_primary">#1D1B20</color>
+    <color name="text_color_secondary">#5F6368</color>
+    <color name="status_danger">#B3261E</color>
+    <!-- Material 3 seed used before the runtime palette tints a control; equals the no-host fallback color. -->
+    <color name="brand_primary">#FFDEAD</color>
+    <!-- Terminal screen: the emulator draws its own foreground / background from these two. -->
+    <color name="terminal_background">#FAFAFA</color>
+    <color name="terminal_foreground">#1D1B20</color>
+</resources>

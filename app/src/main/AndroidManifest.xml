@@ -71,6 +71,19 @@
             </intent-filter>
         </activity>
 
+        <!--
+            Terminal screen (roadmap P3.1 / D30): its own task affinity so it stacks neither on the host nor on the
+            launcher; the keyboard resizes the layout and opens with the screen. Not exported: the host reaches it
+            through the guarded entry Activity of P3.3, the launcher alias of P5.3 through LauncherActivity.
+        -->
+        <activity
+            android:name=".ui.TerminalActivity"
+            android:exported="false"
+            android:launchMode="standard"
+            android:taskAffinity="io.github.supermonster003.autojs6.plugin.three.shell.terminal.ui.TerminalActivity"
+            android:theme="@style/Theme.ThreeShellTerminal.Terminal"
+            android:windowSoftInputMode="adjustResize|stateVisible" />
+
         <service
             android:name=".ThreeShellTerminalPluginInfoService"
             android:enabled="true"

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="window_background">#121212</color>
+    <color name="surface">#1E1E1E</color>
+    <color name="surface_variant">#292A2D</color>
+    <color name="outline">#777A82</color>
+    <color name="divider">#34363A</color>
+    <color name="text_color_primary">#E6E1E5</color>
+    <color name="text_color_secondary">#B9BAC0</color>
+    <color name="status_danger">#FFB4AB</color>
+    <color name="brand_primary">#FFDEAD</color>
+    <color name="terminal_background">#121212</color>
+    <color name="terminal_foreground">#E6E1E5</color>
+</resources>

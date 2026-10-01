@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/terminal_background"
+    android:orientation="vertical">
+
+    <!-- Status bar spacer; the Activity sizes it from the window insets (edge to edge). -->
+    <View
+        android:id="@+id/status_bar_spacer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/surface" />
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/surface"
+        app:subtitleTextAppearance="@style/TextAppearance.ThreeShellTerminal.ToolbarSubtitle"
+        app:titleTextAppearance="@style/TextAppearance.ThreeShellTerminal.ToolbarTitle" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/divider" />
+
+    <FrameLayout
+        android:id="@+id/terminal_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/terminal_background"
+        android:paddingStart="12dp"
+        android:paddingTop="8dp"
+        android:paddingEnd="10dp"
+        android:paddingBottom="8dp">
+
+        <io.github.supermonster003.autojs6.plugin.three.shell.terminal.ui.TerminalEmulatorView
+            android:id="@id/terminal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </FrameLayout>
+
+    <include
+        android:id="@+id/storage_banner"
+        layout="@layout/include_terminal_banner" />
+
+    <include
+        android:id="@+id/node_banner"
+        layout="@layout/include_terminal_banner" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/divider" />
+
+    <io.github.supermonster003.autojs6.plugin.three.shell.terminal.ui.TerminalToolbarView
+        android:id="@+id/key_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/surface" />
+
+</LinearLayout>

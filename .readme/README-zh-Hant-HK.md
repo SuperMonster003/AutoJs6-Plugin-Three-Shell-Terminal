@@ -205,6 +205,7 @@ _2026/10/02_
 - `新增` 帶簽署信任的 Node.js 整合 (`NodeCliTrust`, `NodeCliLocator`, `SessionAssembly`): 僅當 Node.js Runtime 外掛由 AutoJs6 官方外掛金鑰或本外掛自身金鑰簽署時才使用, 設定開關在任何查詢之前短路, 每種結果對應到契約的 `node-cli` 狀態 (`available`, `disabled`, `plugin-missing`, `plugin-untrusted`, `plugin-too-old`, `executable-missing`, `exec-denied`, `setup-failed`), 每次工作階段啟動時重新整理 `usr/bin` 命令連結, 按摘要只解壓一次 npm / corepack 封存並匯出 npm / corepack 環境變數
 - `新增` AutoJs6 可建立和控制最多 16 個終端工作階段, 每個工作階段支援最多 4 個即時輸出監聽, 並可讀取最近輸出和查詢 shell 環境. 關閉 AutoJs6 後工作階段繼續執行; 無效要求會傳回具體原因.
 - `新增` 套件管理支援 npm init, 安裝相依套件或指定套件, 讀取並執行 package.json 指令碼, 查看 Yarn / pnpm 命令與搜尋 npm. 支援 npmjs, npmmirror 與自訂 HTTPS 鏡像來源, 以及忽略安裝指令碼. 清除終端資料會先關閉所有工作階段, 再清空 home / usr 並重建目錄, 保留設定和外部專案. 選單與設定頁將於後續階段接入.
+- `新增` 終端介面 (`TerminalActivity`): 宿主終端介面遷入插件自有的 Material 3 主題, 含快捷鍵欄 (Esc / Tab / Ctrl / Alt / 方向 / 翻頁), 雙指縮放字號, 長按選取並複製文字, 工作階段 / 文字 / 套件管理 / 設定 / 說明選單, 顯示 shell 目前目錄並可點按複製的工具列副標題, 以及說明 Node.js 執行環境缺失 / 不受信任 / 版本過舊 / 已停用並提供安裝 / 更新 / 啟用 / 詳情動作的 Node.js 橫幅; 無法進入共用儲存目錄時出現儲存橫幅並提供 "授予" 與 "重新進入目錄"; 介面透過宿主設定提供者跟隨 AutoJs6 的語言, 夜間模式與主題色, 無宿主時回退至系統值與共用的 `#FFDEAD` 顏色
 - `修復` 系統限制背景活動時, 啟動工作階段不再導致外掛程式崩潰; 工作階段會在沒有前景服務保護的情況下繼續執行.
 - `修復` 讀取較長轉錄時保留最新文字, 並控制回覆大小, 避免跨程序訊息超限.
 - `依賴` 附加 jackpal Android-Terminal-Emulator (term 1.0.70, emulatorview 1.0.42, libtermexec 1.0, Apache-2.0) 作為終端機模擬與 pty 原生程式庫, 並在 `locks/vendored-aars.lock` 中鎖定雜湊

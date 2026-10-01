@@ -14,7 +14,8 @@ Stage the audited **release** artifacts named exactly:
 All three must come from the same host contract line. Current provenance: `common-plugin-api.aar` and
 `nodejs-api.aar` are the release AARs assembled from AutoJs6 6.8.0 / 5303 (host commit `9545a7f4aa`,
 2026-10-01); `terminal-api.aar` is the release AAR of host commit `b8f4d6c939` (6.8.0 / 5304, the commit that
-added the module, plugin roadmap P1.1). `common-plugin-api.aar` is byte-identical to the artifact staged by the
+added the module, plugin roadmap P1.1; the host build 5304 recorded as `requiresHostVersion` was confirmed in
+P1.4 together with the host protocol document `docs/dev/terminal-plugin-protocol-v1.md`). `common-plugin-api.aar` is byte-identical to the artifact staged by the
 other official plugins (module unchanged since host commit `9c3ba2e520`).
 
 `app/build.gradle.kts` rejects missing files, debug artifacts, placeholder hashes, extra lock entries and

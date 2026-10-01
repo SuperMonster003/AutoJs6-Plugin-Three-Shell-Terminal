@@ -58,8 +58,12 @@ object SessionAssembly {
     /**
      * Main thread: creates the session the plan describes.
      *
+     * @param command          command line run inside the directory before the interactive shell (appendix D wrapper), null for a plain shell
      * @param extraEnvironment request-level overrides laid over the plan's environment; null removes a variable
-     * zh-CN: 主线程, 按计划创建会话; [extraEnvironment] 为请求级覆盖, null 值删除变量.
+     * @param keepOpen         keep the interactive shell after [command] finishes; false exits with the command's status
+     * @param id               a reserved session id (Binder pending sessions), otherwise a fresh one
+     * zh-CN: 主线程, 按计划创建会话; [command] 在目录内先于交互式 shell 执行 (附录 D 包装), [extraEnvironment] 为请求级覆盖,
+     * null 值删除变量; [keepOpen] 为 false 时命令结束即以其状态退出; [id] 为预留的会话 id.
      */
     @JvmStatic
     @JvmOverloads
@@ -69,10 +73,14 @@ object SessionAssembly {
         title: String? = null,
         command: String? = null,
         extraEnvironment: Map<String, String?> = emptyMap(),
+        keepOpen: Boolean = true,
+        id: String? = null,
     ): TerminalSessionManager.Session {
         val environment = LinkedHashMap<String, String?>(plan.environment)
         environment.putAll(extraEnvironment)
-        return TerminalSessionManager.create(context, plan.directory.directory.path, environment, title, command)
+        val directory = plan.directory.directory.path
+        val argv = TerminalSessionLauncher.buildCommand(directory, command, keepOpen)
+        return TerminalSessionManager.create(context, directory, environment, title, command, id, argv)
     }
 
 }

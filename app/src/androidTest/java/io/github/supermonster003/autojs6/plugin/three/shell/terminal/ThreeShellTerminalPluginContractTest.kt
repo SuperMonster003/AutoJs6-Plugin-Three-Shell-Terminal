@@ -13,11 +13,14 @@ import android.os.IBinder
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import org.autojs.plugin.common.api.IPluginInfoProvider
+import io.github.supermonster003.autojs6.plugin.three.shell.terminal.binder.TerminalPluginBinder
 import org.autojs.plugin.common.api.PluginCapabilityKeys
+import org.autojs.plugin.terminal.api.ITerminalPlugin
+import org.autojs.plugin.terminal.api.TerminalCapabilityKeys
+import org.autojs.plugin.terminal.api.TerminalContract
 import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
-import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -121,7 +124,7 @@ class ThreeShellTerminalPluginContractTest {
     }
 
     @Test
-    fun terminalServiceAnswersThePlaceholderContractBinder() {
+    fun terminalServiceAnswersTheContractBinder() {
         val serviceInfo = discoverSingleService(
             ThreeShellTerminalPlugin.SERVICE_ACTION,
             ThreeShellTerminalPluginService::class.java.name,
@@ -132,8 +135,10 @@ class ThreeShellTerminalPluginContractTest {
             assertEquals(ThreeShellTerminalPlugin.SERVICE_DESCRIPTOR, binder.interfaceDescriptor)
             assertTrue(binder.isBinderAlive)
             assertTrue(binder.pingBinder())
-            // The placeholder owns no IInterface; roadmap P2.4 replaces it with ITerminalPlugin.Stub.
-            assertNull(binder.queryLocalInterface(ThreeShellTerminalPlugin.SERVICE_DESCRIPTOR))
+            // Since roadmap P2.4 the service hands out the ITerminalPlugin.Stub router; the guard itself is
+            // covered by TerminalBinderContractTest (the instrumentation runs under the plugin uid, not the host's).
+            assertTrue(binder.queryLocalInterface(ThreeShellTerminalPlugin.SERVICE_DESCRIPTOR) is TerminalPluginBinder)
+            assertTrue(ITerminalPlugin.Stub.asInterface(binder) is TerminalPluginBinder)
         }
     }
 
@@ -166,8 +171,23 @@ class ThreeShellTerminalPluginContractTest {
 
     private fun assertCapabilities(capabilities: Bundle) {
         assertEquals(ThreeShellTerminalPlugin.REQUIRED_HOST_VERSION, capabilities.getLong(PluginCapabilityKeys.REQUIRES_HOST_VERSION))
-        // P0 negotiates nothing but the host build; P2.4 adds the terminal contract version and features.
-        assertEquals(setOf(PluginCapabilityKeys.REQUIRES_HOST_VERSION), capabilities.keySet())
+        // Roadmap P2.4: the contract version the host validates, the implemented features, the ceilings and the Node CLI state.
+        assertEquals(
+            setOf(
+                PluginCapabilityKeys.REQUIRES_HOST_VERSION,
+                TerminalCapabilityKeys.CONTRACT_VERSION,
+                TerminalCapabilityKeys.FEATURES_KEY,
+                TerminalCapabilityKeys.MAX_SESSIONS,
+                TerminalCapabilityKeys.MAX_SUBSCRIPTIONS,
+                TerminalCapabilityKeys.NODE_CLI,
+            ),
+            capabilities.keySet(),
+        )
+        assertEquals(TerminalContract.CONTRACT_VERSION, capabilities.getInt(TerminalCapabilityKeys.CONTRACT_VERSION))
+        assertArrayEquals(ThreeShellTerminalPlugin.FEATURES.toTypedArray(), capabilities.getStringArray(TerminalCapabilityKeys.FEATURES_KEY))
+        assertEquals(TerminalContract.MAX_SESSIONS, capabilities.getInt(TerminalCapabilityKeys.MAX_SESSIONS))
+        assertEquals(TerminalContract.MAX_SUBSCRIPTIONS_PER_SESSION, capabilities.getInt(TerminalCapabilityKeys.MAX_SUBSCRIPTIONS))
+        assertTrue(TerminalContract.isNodeCliState(capabilities.getString(TerminalCapabilityKeys.NODE_CLI)))
     }
 
     private fun discoverSingleService(action: String, expectedClassName: String): ServiceInfo {

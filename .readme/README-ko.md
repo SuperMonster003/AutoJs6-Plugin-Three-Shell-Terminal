@@ -1,0 +1,289 @@
+<!--suppress HtmlDeprecatedAttribute, HttpUrlsUsage -->
+
+<div align="center">
+  <p>
+    <picture>
+      <source srcset="https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/blob/master/app/src/main/res/mipmap-night/ic_launcher.png?raw=true" media="(prefers-color-scheme: dark)" />
+      <img src="https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/blob/master/app/src/main/res/mipmap/ic_launcher.png?raw=true" alt="autojs6-plugin-three-shell-terminal-ic-launcher" border="0" width="128" />
+    </picture>
+  </p>
+
+  <p>AutoJs6 와 스크립트를 위한 다중 세션 터미널. pty 에서 시스템 셸을 실행하며 백그라운드 실행, 키 바, Node.js 명령을 지원</p>
+
+  <p>
+    <a href="https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/releases"><img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal?label=Release"/></a>
+    <a href="https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/issues"><img alt="GitHub closed issues" src="https://img.shields.io/github/issues/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal?color=A24232&label=Issues"/></a>
+    <a href="https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/blob/master/LICENSE"><img alt="GitHub License" src="https://img.shields.io/github/license/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal?color=534BAE&label=License"/></a>
+  </p>
+</div>
+
+******
+
+### 언어
+
+******
+
+현재 README.md는 다음 언어를 지원합니다:
+
+- [简体中文 [zh-Hans]](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/blob/master/.readme/README-zh-Hans.md)
+- [繁體中文 (香港) [zh-Hant-HK]](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/blob/master/.readme/README-zh-Hant-HK.md)
+- [繁體中文 (台灣) [zh-Hant-TW]](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/blob/master/.readme/README-zh-Hant-TW.md)
+- [English [en]](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/blob/master/.readme/README-en.md)
+- [Français [fr]](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/blob/master/.readme/README-fr.md)
+- [Español [es]](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/blob/master/.readme/README-es.md)
+- [日本語 [ja]](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/blob/master/.readme/README-ja.md)
+- 한국어 [ko] # 현재
+- [Русский [ru]](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/blob/master/.readme/README-ru.md)
+- [العربية [ar]](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/blob/master/.readme/README-ar.md)
+
+******
+
+### 소개
+
+******
+
+3-Shell Terminal 은 AutoJs6 의 내장 터미널을 이어받습니다: 홈 드로어의 "터미널" 스위치, 파일 관리자 디렉터리 메뉴와 프로젝트 도구 모음의 "터미널에서 열기", 그리고 세션을 열고 제어하고 관찰하는 스크립트 측 전역 객체 `terminal`. 각 세션은 pty 에서 실행되는 시스템 셸 (`/system/bin/sh`) 이며 화면을 떠나도 백그라운드에서 계속 실행됩니다.
+
+AutoJs6 는 Binder 서비스로 플러그인을 발견하고, 명시적 Intent 로 터미널 화면을 열며, Binder 를 통해 세션 수 조회, 전체 세션 종료, 스크립트 세션 제어를 수행합니다. 세션 출력은 파이프로 스크립트에 전달됩니다. Node.js Runtime 플러그인이 설치되어 있으면 터미널이 그 매니페스트 계약을 직접 읽고 서명과 런처를 검증한 뒤 node / npm / npx / corepack / yarn / pnpm 을 제공합니다.
+
+******
+
+### 현재 상태
+
+******
+
+버전 1.0.0 은 P0 개발 미리보기입니다: 저장소 뼈대, AutoJs6 플러그인 센터가 인식하는 플러그인 신원, 그리고 pty / 저장소 / Node.js 런처 스파이크. Binder 계약, 세션 코어, 터미널 화면, 스크립트 API, 설정 페이지는 [ROADMAP.md](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/blob/master/ROADMAP.md) 의 단계에 따라 진행됩니다. AutoJs6 6.8.0 (build 5303) 이상이 필요합니다.
+
+******
+
+### 기능
+
+******
+
+플러그인은 다음 기능을 제공합니다:
+
+- 다중 세션: 생성, 전환, 종료와 세션 관리자. 화면을 떠난 뒤에도 포그라운드 서비스가 세션을 유지하며, 알림에 현재 디렉터리와 세션 수, "세션 종료" 동작을 표시합니다.
+- 터미널 화면: 두 줄 키 바 (Esc / Tab / Ctrl / 방향키 / 자주 쓰는 기호), 네이티브 텍스트 선택과 복사 / 전체 선택, 기록 복사와 공유, 글자 크기, 붙여넣기와 지우기.
+- Node.js 도구 체인: Node.js Runtime 플러그인 (1.5.0+) 을 설치하면 node / npm / npx / corepack / yarn / pnpm 을 사용할 수 있고, npm 레지스트리와 "설치 스크립트 무시" 설정, 패키지 메뉴 (npm init / install / run script 등) 도 제공됩니다.
+- AutoJs6 진입점: 홈 드로어 스위치 (세션 수, 전체 종료), 파일 관리자 디렉터리 메뉴와 프로젝트 도구 모음의 "터미널에서 열기".
+- 스크립트 API `terminal` (별칭 `$terminal`): 세션 관리, 보이는 실행 (`exec`, `npm.run`), `output` / `exit` 이벤트와 `write`, `waitFor` 를 갖춘 세션 객체. 모든 실패는 안정적인 `code` 를 가진 `TerminalError` 입니다.
+- 독립 앱: 런처 아이콘이 바로 터미널을 열고, 설정 페이지 (AutoJs6 를 따르는 외관, 글자 크기, npm 레지스트리, Node.js 통합, 모든 파일 접근, 터미널 데이터 지우기), 정보와 릴리스 기록을 제공합니다.
+
+******
+
+### 사용 방법
+
+******
+
+1. AutoJs6 build 5303 (6.8.0) 이상이 설치된 기기에 [Releases](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/releases) 에서 기기 ABI 에 맞는 플러그인 APK (또는 universal APK) 를 설치합니다.
+2. AutoJs6 플러그인 센터를 열어 `3-Shell Terminal` 이 인식되는지 확인하고 활성화합니다.
+3. AutoJs6 홈 드로어에서 "터미널" 을 켜거나, 파일 관리자에서 디렉터리의 "터미널에서 열기" 를 선택하거나, 스크립트에서 `terminal.open(...)` 을 호출합니다. `/sdcard` 같은 공유 저장소의 디렉터리에 들어가려면 플러그인의 안내에 따라 "모든 파일 접근" 을 허용하세요.
+
+******
+
+### Node.js 명령
+
+******
+
+터미널이 node / npm 을 얻는 방법과 제한:
+
+- Node.js Runtime 플러그인 1.5.0 이상이 필요합니다. 플러그인은 그 매니페스트 계약을 읽고 서명, 런처, npm / corepack 아카이브를 검증한 뒤 세션이 시작될 때마다 명령을 `PATH` 에 연결합니다. 플러그인이 없거나 검증에 실패해도 이 명령들을 제외하고 터미널은 계속 사용할 수 있습니다.
+- Android 는 앱이 기록한 파일의 실행을 거부합니다: `node_modules/.bin/*` 와 npm 패키지에 포함된 네이티브 실행 파일은 `EACCES` 로 실패하므로 `node <진입 파일>` 또는 `npx` 를 사용하세요. 네이티브 애드온 (`.node`) 은 로드할 수 없습니다.
+- corepack 은 기본적으로 내장된 pnpm 11.x 와 Yarn 1.x 를 사용하며 (`COREPACK_DEFAULT_TO_LATEST=0`), 명시적으로 지정한 버전은 요청 시 내려받습니다. npm 레지스트리는 설정에서 npmmirror 또는 사용자 지정 https URL 로 바꿀 수 있습니다.
+
+******
+
+### 빠른 시작
+
+******
+
+스크립트 디렉터리를 열고, 의존성을 보이게 설치하며 결과를 기다리고, 대화형 명령을 제어하는 스크립트 (로드맵 P4 부터 사용 가능):
+
+```js
+// Open the script directory in the terminal; the screen comes to the front and the session keeps running in the background.
+let session = terminal.open(files.cwd());
+console.log(session.id, terminal.sessions().length);
+
+// Visible execution: install dependencies in a session the user can watch and wait for the exit code (0 = no timeout).
+let install = terminal.exec('npm install', { cwd: '/sdcard/Scripts/my-project', wait: true, timeout: 0 });
+toastLog('npm install exited with ' + install.exitCode);
+
+// Drive an interactive command: output / exit events, write and waitFor; every failure is a TerminalError with a stable code.
+let init = terminal.exec('npm init', { cwd: files.cwd(), show: true });
+init.on('output', line => { if (/package name/i.test(line)) init.write('\n'); });
+init.waitFor(/Is this OK\?/i, 60e3);
+init.write('yes\n');
+init.on('exit', code => console.log('npm init exited with ' + code));
+terminal.npm.run('build', files.cwd());
+```
+
+******
+
+### 호환성
+
+******
+
+플러그인의 능력을 결정하는 플랫폼 사실:
+
+- Android 7.0 (API 24) 이상. arm64-v8a, armeabi-v7a, x86_64, x86 용 APK 와 universal APK 를 제공하며 네이티브 라이브러리는 16 KB 페이지에 정렬되어 있습니다. 호스트 빌드와 플러그인은 [ROADMAP.md](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/blob/master/ROADMAP.md) 의 기기 매트릭스에서 함께 검증됩니다.
+- 터미널 프로세스는 플러그인 자체의 uid 와 권한으로 실행되며 AutoJs6 의 권한을 물려받지 않습니다. AutoJs6 권한이 필요한 명령에는 스크립트의 `shell()` API 를 사용하세요.
+- 세션은 플러그인 프로세스가 살아 있는 동안만 존재합니다. 시스템이 프로세스를 종료하면 복원할 수 없지만, 포그라운드 서비스와 알림이 그럴 가능성을 낮춥니다.
+
+******
+
+### 자주 묻는 질문
+
+******
+
+- **`cd /sdcard/Scripts` 가 왜 실패하나요?** 플러그인에는 자체 저장소 권한이 필요합니다. 플러그인 설정을 열거나 터미널 배너의 안내에 따라 "모든 파일 접근" (Android 11+) 또는 이전 시스템에서는 저장소 권한을 허용하세요.
+- **node 명령이 왜 없나요?** AutoJs6 플러그인 센터에서 Node.js Runtime 플러그인 (1.5.0+) 을 설치하세요. 플러그인 설정의 "환경 탐색" 이 정확한 이유 (미설치, 너무 오래됨, 신뢰할 수 없는 서명, 실행 불가 런처) 를 보여 줍니다.
+- **터미널을 떠나도 명령이 계속 실행되나요?** 예. 포그라운드 서비스가 세션을 유지하고 알림에 세션 수를 표시합니다. 알림의 "세션 종료", 드로어 스위치, 또는 세션 자체만이 셸을 종료합니다.
+
+******
+
+### 권한과 보안
+
+******
+
+플러그인은 명확한 경계를 따릅니다:
+
+- Binder 서비스와 화면 진입점은 서명 권한 `org.autojs.permission.PLUGIN` 으로 보호되고 호출자 서명을 검증하므로 AutoJs6 만 접근할 수 있습니다. 런처 진입점은 터미널을 열 뿐 외부 명령을 받지 않습니다.
+- 저장소 권한 (Android 11+ 에서는 "모든 파일 접근") 은 사용자가 선택한 디렉터리에 들어가는 데만 사용됩니다. 터미널은 파일을 검색하거나 업로드하지 않습니다.
+- `INTERNET` 권한은 셸에서 실행하는 명령 (예: `npm install`) 과 이 플러그인의 고정된 GitHub Releases API 에 대한 수동 업데이트 확인에 사용됩니다. 플러그인 자체는 백그라운드에서 네트워크에 접속하지 않습니다.
+- Node.js Runtime 플러그인의 런처는 그 서명이 공식 서명 (또는 이 플러그인과 동일) 일 때만 실행됩니다. 플러그인은 세션 입출력을 기록하지 않으며 개인 저장소를 백업에서 제외합니다.
+
+플러그인은 공식 [Releases](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/releases) 페이지 또는 AutoJs6 플러그인 센터에서만 받으세요. 출처를 알 수 없는 패키지는 버전 번호가 같아 보여도 호스트 검증에 실패하거나 위험을 동반할 수 있습니다.
+
+******
+
+### 플러그인 인터페이스
+
+******
+
+다음 정보는 AutoJs6 호스트와 플러그인 개발자를 위한 것입니다. 호스트는 이 식별자로 플러그인을 발견하고 호환성을 협상합니다:
+
+```text
+application id: io.github.supermonster003.autojs6.plugin.three.shell.terminal
+plugin id: three-shell-terminal
+engine: terminal
+variant: default
+service action: org.autojs.plugin.TERMINAL
+service category: terminal
+info action: org.autojs.plugin.INFO
+aidl interface: org.autojs.plugin.terminal.api.ITerminalPlugin
+minimum host build: 5303 (6.8.0)
+```
+
+`ThreeShellTerminalPluginService` 는 `org.autojs.plugin.TERMINAL` (category `terminal`) 에 응답하며 로드맵 P2 부터 호스트 terminal-api 계약 `org.autojs.plugin.terminal.api.ITerminalPlugin` 를 구현합니다. `ThreeShellTerminalPluginInfoService` 는 `org.autojs.plugin.INFO` 에 PluginInfo 로 응답합니다. `WakeActivity` 는 호스트가 플러그인을 활성화하는 데 쓰이며, 터미널 화면은 `org.autojs.plugin.TERMINAL_OPEN` 으로 열립니다.
+
+******
+
+### 로드맵
+
+******
+
+플러그인의 계획과 진행 상황은 ROADMAP.md에 체크 가능한 목록으로 관리되며, 단계별로 수락 기준과 증거 수준이 함께 기록됩니다. 체크되지 않은 항목은 현재 기능이 아니라 의도를 나타냅니다. Issues를 통한 논의를 환영합니다.
+
+- [ROADMAP.md 보기](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/blob/master/ROADMAP.md)
+
+******
+
+### 릴리스 기록
+
+******
+
+#### v1.0.0
+
+_2026/10/01_
+
+- `힌트` P0 개발 미리보기: 저장소 뼈대, AutoJs6 플러그인 센터가 인식하는 플러그인 신원, pty / 저장소 / Node.js 런처 스파이크. Binder 계약, 세션 코어, 터미널 화면, 스크립트 API, 설정 페이지는 ROADMAP.md 의 단계에 따라 진행됩니다.
+- `기능` 플러그인 신원 `three-shell-terminal` (engine `terminal`), INFO 서비스, Wake Activity, 호스트 발견용 `org.autojs.plugin.TERMINAL` 서비스 뼈대
+- `기능` ABI 별 APK (arm64-v8a, armeabi-v7a, x86_64, x86) 와 universal APK, 16 KB 페이지에 정렬된 네이티브 라이브러리
+- `기능` 10 개 언어의 README, 플러그인 센터 안내, 변경 기록
+- `의존성` 터미널 에뮬레이션과 pty 네이티브 라이브러리로 jackpal Android-Terminal-Emulator (term 1.0.70, emulatorview 1.0.42, libtermexec 1.0, Apache-2.0) 추가, `locks/vendored-aars.lock` 에 해시 고정
+- `의존성` 공유 플러그인 계약과 Node.js 매니페스트 계약으로 `common-plugin-api.aar` 와 `nodejs-api.aar` (AutoJs6 모듈 `plugin-api/common-plugin-api` 와 `plugin-api/nodejs-api`, 호스트 빌드 6.8.0 / 5303, MPL 2.0) 추가, `locks/host-api-aars.lock` 에 해시 고정
+
+##### 더 많은 릴리스 기록
+
+* [CHANGELOG.md](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/blob/master/app/src/main/assets/doc/CHANGELOG-ko.md)
+
+******
+
+### 빌드와 검증
+
+******
+
+이 섹션은 소스에서 플러그인을 빌드하려는 개발자를 위한 것입니다. 일반 사용자는 Releases 페이지의 미리 빌드된 APK를 설치하면 됩니다.
+
+디버그 APK 빌드:
+
+```powershell
+.\gradlew.bat :app:assembleDebug
+```
+
+JVM 단위 테스트 실행 및 계측 테스트 APK 빌드:
+
+```powershell
+.\gradlew.bat :app:testDebugUnitTest :app:assembleDebugAndroidTest
+```
+
+릴리스 APK 빌드:
+
+```powershell
+.\gradlew.bat :app:assembleRelease
+```
+
+릴리스 산출물을 수집하고 파일 이름에 버전과 CRC32 다이제스트를 추가:
+
+```powershell
+.\gradlew.bat :app:appendDigestToReleasedFiles
+```
+
+다국어 문서 소스와 생성된 산출물이 동기화되어 있는지 검증 (CI에서도 적용):
+
+```powershell
+py .python\generate_markdown.py --check
+```
+
+빌드에는 JDK 21 이상과 Android SDK 37이 필요합니다. Gradle과 플러그인 버전은 `version.properties`와 `io.github.supermonster003.autojs6-platform-versions`로 중앙에서 관리됩니다.
+
+******
+
+### 현지화와 문서 생성
+
+******
+
+```text
+.readme/common.json
+.readme/lang_*.json
+.readme/template_readme.md
+.readme/template_plugin_instruction.md
+.changelog/lang_*.json
+.changelog/template_changelog.md
+.python/generate_markdown.py
+app/src/main/assets/doc/CHANGELOG-*.md
+app/src/main/res/raw-*/plugin_instruction.md
+```
+
+`.readme/`와 `.changelog/`의 언어 JSON 파일이 README, 플러그인 센터 안내, 변경 기록의 유일한 소스입니다. 항상 이 JSON 소스를 편집하고 `py .python/generate_markdown.py`를 다시 실행하세요. 생성된 README, `plugin_instruction.md`, 변경 기록 산출물은 절대 손으로 편집하지 않습니다. `py .python/generate_markdown.py --check`를 실행하면 모든 생성 산출물을 검증할 수 있습니다.
+
+******
+
+### 라이선스
+
+******
+
+프로젝트 코드는 [Mozilla Public License 2.0](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/blob/master/LICENSE)에 따라 제공됩니다. 서드파티 구성 요소와 라이선스는 [서드파티 고지](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/blob/master/THIRD_PARTY_NOTICES.md)에 나열되어 있습니다.
+
+******
+
+### 링크
+
+******
+
+- AutoJs6 프로젝트: https://github.com/SuperMonster003/AutoJs6
+- AutoJs6 문서: https://docs.autojs6.com
+- 터미널 모듈 문서: https://docs.autojs6.com/#/terminal
+- Node.js Runtime 플러그인: https://github.com/SuperMonster003/AutoJs6-Plugin-NodeJs-Runtime
+- jackpal Android-Terminal-Emulator (터미널 에뮬레이션과 pty 네이티브 라이브러리, Apache-2.0): https://github.com/jackpal/Android-Terminal-Emulator
+- 서드파티 고지: https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/blob/master/THIRD_PARTY_NOTICES.md

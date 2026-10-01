@@ -1,0 +1,24 @@
+{
+  "changelog_label_hint": "Note",
+  "changelog_label_feature": "Fonctionnalité",
+  "changelog_label_fix": "Correctif",
+  "changelog_label_improvement": "Amélioration",
+  "changelog_label_dependency": "Dépendance",
+  "$data": {
+    "v1.0.0": {
+      "released_date": "2026/10/01",
+      "hint": [
+        "Aperçu de développement P0 : squelette du dépôt, identité du plugin reconnue par le centre de plugins d'AutoJs6 et spike pty / stockage / lanceur Node.js. Le contrat Binder, le noyau de sessions, l'écran du terminal, l'API de script et la page de réglages suivent les phases de ROADMAP.md."
+      ],
+      "feature": [
+        "Identité du plugin `three-shell-terminal` (engine `terminal`) avec le service INFO, la Wake Activity et le squelette du service `org.autojs.plugin.TERMINAL` pour la découverte par l'hôte",
+        "APK séparés par ABI (arm64-v8a, armeabi-v7a, x86_64, x86) plus un APK universel, bibliothèques natives alignées sur des pages de 16 Ko",
+        "README, notice du centre de plugins et journal des modifications en 10 langues"
+      ],
+      "dependency": [
+        "Ajout de jackpal Android-Terminal-Emulator (term 1.0.70, emulatorview 1.0.42, libtermexec 1.0, Apache-2.0) pour l'émulation de terminal et les bibliothèques natives pty, verrouillé par hachage dans `locks/vendored-aars.lock`",
+        "Ajout de `common-plugin-api.aar` et `nodejs-api.aar` (modules AutoJs6 `plugin-api/common-plugin-api` et `plugin-api/nodejs-api`, build hôte 6.8.0 / 5303, MPL 2.0) comme contrat de plugin partagé et contrat de manifeste Node.js, verrouillés par hachage dans `locks/host-api-aars.lock`"
+      ]
+    }
+  }
+}

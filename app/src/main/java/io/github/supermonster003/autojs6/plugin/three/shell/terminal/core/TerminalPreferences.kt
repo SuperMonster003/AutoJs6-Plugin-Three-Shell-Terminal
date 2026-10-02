@@ -101,6 +101,13 @@ class TerminalPreferences(private val preferences: SharedPreferences) {
         const val KEY_NPM_IGNORE_SCRIPTS = "npm_ignore_scripts"
         const val KEY_NODE_INTEGRATION_ENABLED = "node_integration_enabled"
         const val KEY_NOTIFICATION_PERMISSION_REQUESTED = "notification_permission_requested"
+
+        /** Appearance choices of the settings page (roadmap P5.1), read by `ui.AppearancePreferences`. */
+        const val KEY_APPEARANCE_LANGUAGE = "appearance_language"
+        const val KEY_APPEARANCE_DARK_MODE = "appearance_dark_mode"
+        const val KEY_APPEARANCE_COLOR = "appearance_color"
+        val APPEARANCE_KEYS: List<String> = listOf(KEY_APPEARANCE_LANGUAGE, KEY_APPEARANCE_DARK_MODE, KEY_APPEARANCE_COLOR)
+
         const val KEY_MANAGER_STATUS_COLLAPSED = "manager_status_collapsed"
         const val KEY_MANAGER_CONTROLS_COLLAPSED = "manager_controls_collapsed"
         const val KEY_MANAGER_SESSIONS_COLLAPSED = "manager_sessions_collapsed"

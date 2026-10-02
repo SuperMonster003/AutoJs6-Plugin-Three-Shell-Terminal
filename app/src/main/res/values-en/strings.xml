@@ -9,7 +9,25 @@
     <string name="about_title">About</string>
     <string name="about_version">Version</string>
     <string name="about_version_value">%1$s (build %2$d)\nBuilt: %3$s</string>
+    <string name="app_settings_always_dark">Always dark</string>
+    <string name="app_settings_always_light">Always light</string>
+    <string name="app_settings_appearance">Appearance</string>
+    <string name="app_settings_dark_mode">Dark mode</string>
+    <string name="app_settings_follow_autojs6">Follow AutoJs6</string>
+    <string name="app_settings_follow_autojs6_summary">Follow AutoJs6 · %1$s</string>
+    <string name="app_settings_follow_system">Follow system</string>
+    <string name="app_settings_language">Language</string>
+    <string name="app_settings_theme_color">Theme color</string>
     <string name="document_loading" tools:ignore="TypographyEllipsis">Loading...</string>
+    <string name="launcher_icon_applied_note">The launcher may take a few seconds to refresh. Some home-screen shortcuts may need to be added again.</string>
+    <string name="launcher_icon_auto">Adaptive icon (automatic)</string>
+    <string name="launcher_icon_auto_note">Tries to follow the system theme. Some launchers cache icons or use only one color scheme.</string>
+    <string name="launcher_icon_dark">Adaptive icon (dark)</string>
+    <string name="launcher_icon_failed">Unable to change the launcher icon. Please try again.</string>
+    <string name="launcher_icon_light">Adaptive icon (light)</string>
+    <string name="launcher_icon_title">Launcher icon</string>
+    <string name="launcher_icon_transparent">Transparent background icon</string>
+    <string name="launcher_icon_transparent_note">Some launchers add their own background or mask, so transparency may not be preserved.</string>
     <string name="notification_channel_description">Shows terminal sessions that keep running in the background and lets you close them</string>
     <string name="notification_channel_name">Terminal sessions</string>
     <string name="notification_close_sessions">Close sessions</string>
@@ -18,9 +36,24 @@
     <string name="plugin_description">A multi-session terminal running the system shell in a pty, with background sessions, a key bar and Node.js commands</string>
     <string name="release_history_error">Unable to read the bundled document.</string>
     <string name="release_history_title">Version history</string>
+    <string name="settings_all_files_access">All files access</string>
+    <string name="settings_all_files_access_denied">Not granted. Tap to grant it in the system settings</string>
+    <string name="settings_all_files_access_granted">Granted. Shared storage directories can be opened</string>
+    <string name="settings_all_files_access_not_applicable">Shared storage is not available on this device</string>
+    <string name="settings_clear_action">Delete</string>
+    <string name="settings_clear_data">Clear terminal data</string>
+    <string name="settings_clear_data_confirm">Delete all terminal data under %1$s? Running sessions will be closed.</string>
+    <string name="settings_clear_data_summary">Remove the terminal home, installed packages and npm caches</string>
+    <string name="settings_clearing" tools:ignore="TypographyEllipsis">Clearing terminal data...</string>
+    <string name="settings_data_cleared">Terminal data cleared</string>
     <string name="settings_license">License</string>
+    <string name="settings_node_integration">Node.js integration</string>
+    <string name="settings_node_integration_summary">Use node from the Node.js Runtime plugin in new sessions</string>
+    <string name="settings_node_probe_summary">Check whether the terminal can run node from the Node.js Runtime plugin</string>
     <string name="settings_notices">Third-party notices</string>
     <string name="settings_open_failed">No application could open this link.</string>
+    <string name="settings_probe_again">Check again</string>
+    <string name="settings_section_information">Information</string>
     <string name="settings_source">Source code</string>
     <string name="terminal_action_close">Close</string>
     <string name="terminal_action_copy">Copy</string>
@@ -97,6 +130,11 @@
     <string name="terminal_title">Terminal</string>
     <string name="terminal_uptime">Uptime</string>
     <string name="terminal_working_directory">Working directory</string>
+    <string name="theme_picker_custom">Custom color</string>
+    <string name="theme_picker_input">HEX / RGB</string>
+    <string name="theme_picker_invalid">Enter #RRGGBB, RRGGBB or rgb(r, g, b). RGB values must be 0..255.</string>
+    <string name="theme_picker_presets">Preset colors</string>
+    <string name="theme_picker_preview">Preview</string>
     <string name="update_available">Update available: %1$s</string>
     <string name="update_check">Check for updates</string>
     <string name="update_checking" tools:ignore="TypographyEllipsis">Checking for updates...</string>

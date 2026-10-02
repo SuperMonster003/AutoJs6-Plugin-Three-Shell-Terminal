@@ -111,10 +111,10 @@ internal class TerminalManagerDialog private constructor(
         }.view)
         content.addView(Section(R.id.manager_settings, R.string.terminal_settings, TerminalPreferences.KEY_MANAGER_SETTINGS_COLLAPSED).apply {
             body.addView(settingRow(R.id.manager_text_size, R.string.terminal_text_size, textSizeSummary) {
-                TerminalSettingsDialogs.showTextSize(kit, preferences) { size ->
+                TerminalSettingsDialogs.showTextSize(kit, preferences, onChanged = { size ->
                     onTextSizeChanged(size)
                     refresh()
-                }
+                })
             })
             body.addView(settingRow(R.id.manager_npm_registry, R.string.terminal_npm_registry, registrySummary) {
                 TerminalSettingsDialogs.showNpmRegistry(kit, preferences, settings) { refresh() }

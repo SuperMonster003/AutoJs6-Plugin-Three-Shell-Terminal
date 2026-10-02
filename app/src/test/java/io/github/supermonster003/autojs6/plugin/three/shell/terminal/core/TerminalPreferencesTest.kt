@@ -17,6 +17,7 @@ class TerminalPreferencesTest {
         assertEquals("npm_ignore_scripts", TerminalPreferences.KEY_NPM_IGNORE_SCRIPTS)
         assertEquals("node_integration_enabled", TerminalPreferences.KEY_NODE_INTEGRATION_ENABLED)
         assertEquals("notification_permission_requested", TerminalPreferences.KEY_NOTIFICATION_PERMISSION_REQUESTED)
+        assertEquals(listOf("appearance_language", "appearance_dark_mode", "appearance_color"), TerminalPreferences.APPEARANCE_KEYS)
         assertEquals(
             listOf("manager_status_collapsed", "manager_controls_collapsed", "manager_sessions_collapsed", "manager_settings_collapsed"),
             TerminalPreferences.MANAGER_SECTION_KEYS,

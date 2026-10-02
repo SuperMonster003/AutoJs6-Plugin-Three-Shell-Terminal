@@ -26,6 +26,7 @@ import androidx.core.view.children
 import com.google.android.material.appbar.MaterialToolbar
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.R
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.ui.settings.AboutActivity
+import io.github.supermonster003.autojs6.plugin.three.shell.terminal.ui.settings.SettingsActivity
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.core.ShellQuoting
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.core.TerminalKeySequences
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.core.TerminalPaths
@@ -281,6 +282,8 @@ class TerminalActivity : HostAppearanceActivity() {
         terminalView.onResume()
         refreshSubtitle()
         storageBanner.refresh()
+        // The settings page may have flipped the Node.js integration switch while this screen was away (P5.1).
+        if ((nodeResolution is Resolution.Unavailable.IntegrationDisabled) == preferences.nodeIntegrationEnabled) refreshNodeAvailability(refresh = false)
     }
 
     override fun onPause() {
@@ -512,11 +515,6 @@ class TerminalActivity : HostAppearanceActivity() {
         return true
     }
 
-    override fun onPrepareOptionsMenu(menu: Menu): Boolean {
-        menu.findItem(R.id.action_npm_ignore_scripts)?.isChecked = preferences.npmIgnoreScripts
-        return super.onPrepareOptionsMenu(menu)
-    }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId in NPM_MENU_ITEMS && !nodeBanner.ensureAvailable(nodeResolution)) {
             return true
@@ -531,12 +529,6 @@ class TerminalActivity : HostAppearanceActivity() {
             R.id.action_copy_transcript -> copyToClipboard(session?.pty?.transcriptText)
             R.id.action_paste -> paste()
             R.id.action_share_transcript -> ExternalIntents.shareText(this, session?.pty?.transcriptText.orEmpty())
-            R.id.action_text_size -> TerminalSettingsDialogs.showTextSize(kit, preferences) { terminalView.textSizeSp = it }
-            R.id.action_npm_registry -> TerminalSettingsDialogs.showNpmRegistry(kit, preferences, settingsActions)
-            R.id.action_npm_ignore_scripts -> {
-                settingsActions.setIgnoreScripts(!item.isChecked)
-                invalidateOptionsMenu()
-            }
             R.id.action_node_probe -> nodeBanner.showProbeDetails(nodeResolution ?: Resolution.Unavailable.PluginMissing)
             R.id.action_show_keyboard -> showSoftKeyboard()
             R.id.action_clear -> clearScreen()
@@ -544,6 +536,7 @@ class TerminalActivity : HostAppearanceActivity() {
             R.id.action_new_session -> openSession(intent(this).putExtra(TerminalContract.EXTRA_NEW_SESSION, true))
             R.id.action_close_session -> requestCloseSession()
             R.id.action_manager -> TerminalManagerDialog.show(this, onTextSizeChanged = { terminalView.textSizeSp = it })
+            R.id.action_settings -> startActivity(SettingsActivity.intent(this))
             R.id.action_about -> startActivity(Intent(this, AboutActivity::class.java))
             else -> return super.onOptionsItemSelected(item)
         }

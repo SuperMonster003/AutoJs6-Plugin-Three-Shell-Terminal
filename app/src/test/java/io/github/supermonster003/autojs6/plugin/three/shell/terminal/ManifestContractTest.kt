@@ -134,7 +134,7 @@ class ManifestContractTest {
         assertEquals(
             listOf(
                 ".WakeActivity", ".ThreeShellTerminalEntryActivity", ".ui.LauncherActivity", ".ui.TerminalActivity", ".ui.TerminalManagerActivity",
-                ".ui.settings.AboutActivity", ".ui.settings.ReleaseHistoryActivity",
+                ".ui.settings.AboutActivity", ".ui.settings.ReleaseHistoryActivity", ".ui.settings.SettingsActivity", ".ui.settings.NodeProbeActivity",
             ),
             activities,
         )
@@ -164,6 +164,23 @@ class ManifestContractTest {
         assertTrue("the host resolves exactly one TERMINAL_OPEN activity", manifest.child("application").children("activity").count { activity ->
             activity.children("intent-filter").any { f -> f.children("action").any { it.androidAttribute("name") == ThreeShellTerminalPlugin.OPEN_TERMINAL_ACTION } }
         } == 1)
+    }
+
+    @Test
+    fun `the settings activity answers TERMINAL_SETTINGS behind the plugin permission`() {
+        val settings = manifest.child("application").children("activity").single { it.androidAttribute("name") == ".ui.settings.SettingsActivity" }
+        assertEquals("true", settings.androidAttribute("exported"))
+        assertEquals(PLUGIN_PERMISSION, settings.androidAttribute("permission"))
+        val filter = settings.child("intent-filter")
+        assertEquals(listOf("org.autojs.plugin.TERMINAL_SETTINGS"), filter.children("action").map { it.androidAttribute("name") })
+        assertEquals(listOf("android.intent.category.DEFAULT"), filter.children("category").map { it.androidAttribute("name") })
+        // The host requires exactly one enabled, exported match for the action.
+        val matches = manifest.child("application").children("activity").filter { activity ->
+            activity.children("intent-filter").any { f -> f.children("action").any { it.androidAttribute("name") == "org.autojs.plugin.TERMINAL_SETTINGS" } }
+        }
+        assertEquals(1, matches.size)
+        val probe = manifest.child("application").children("activity").single { it.androidAttribute("name") == ".ui.settings.NodeProbeActivity" }
+        assertEquals("false", probe.androidAttribute("exported"))
     }
 
     @Test
@@ -222,10 +239,11 @@ class ManifestContractTest {
     }
 
     @Test
-    fun `only discovery, activation, the host entry and the launcher aliases are exported`() {
+    fun `only discovery, activation, the host entries and the launcher aliases are exported`() {
         val expected = mapOf(
             ".WakeActivity" to PLUGIN_PERMISSION,
             ".ThreeShellTerminalEntryActivity" to PLUGIN_PERMISSION,
+            ".ui.settings.SettingsActivity" to PLUGIN_PERMISSION,
             ".launcher.AdaptiveLightIconAlias" to null,
             ".launcher.AdaptiveDarkIconAlias" to null,
             ".launcher.AdaptiveAutoIconAlias" to null,

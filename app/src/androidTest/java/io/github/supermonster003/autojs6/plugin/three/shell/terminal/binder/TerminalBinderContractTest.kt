@@ -138,7 +138,10 @@ class TerminalBinderContractTest {
         assertEquals(ThreeShellTerminalPlugin.REQUIRED_HOST_VERSION, capabilities.getLong(PluginCapabilityKeys.REQUIRES_HOST_VERSION))
         assertEquals(TerminalContract.CONTRACT_VERSION, capabilities.getInt(TerminalCapabilityKeys.CONTRACT_VERSION))
         assertEquals(
-            listOf(TerminalCapabilityKeys.FEATURE_NODE_CLI, TerminalCapabilityKeys.FEATURE_OUTPUT_SUBSCRIPTION, TerminalCapabilityKeys.FEATURE_TRANSCRIPT),
+            listOf(
+                TerminalCapabilityKeys.FEATURE_NODE_CLI, TerminalCapabilityKeys.FEATURE_OUTPUT_SUBSCRIPTION,
+                TerminalCapabilityKeys.FEATURE_SETTINGS, TerminalCapabilityKeys.FEATURE_TRANSCRIPT,
+            ),
             capabilities.getStringArray(TerminalCapabilityKeys.FEATURES_KEY)?.toList(),
         )
         assertEquals(TerminalContract.MAX_SESSIONS, capabilities.getInt(TerminalCapabilityKeys.MAX_SESSIONS))

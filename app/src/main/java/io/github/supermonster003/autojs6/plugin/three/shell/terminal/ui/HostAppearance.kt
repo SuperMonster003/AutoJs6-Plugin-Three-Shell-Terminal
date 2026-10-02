@@ -62,12 +62,12 @@ internal data class HostAppearance(val language: String, val dark: Boolean, val 
 }
 
 /**
- * The appearance a screen actually uses: the host snapshot when available, otherwise the system
- * language and night mode with the agreed no-host theme color (`#FFDEAD`). Roadmap P5.1 layers the
- * plugin's own language / night / color preferences on top of this resolution.
+ * The appearance a screen actually uses: the plugin's own [AppearancePreferences] layered over the
+ * host snapshot when available, otherwise over the system language and night mode with the agreed
+ * no-host theme color (`#FFDEAD`). A fresh install follows AutoJs6 for all three (roadmap P5.1).
  *
- * zh-CN: 界面实际使用的外观: 有宿主快照时取宿主, 否则取系统语言与夜间模式及约定的无宿主主题色 (`#FFDEAD`);
- * P5.1 在此之上叠加插件自身的语言 / 夜间 / 主题色偏好.
+ * zh-CN: 界面实际使用的外观: 插件自身的 [AppearancePreferences] 叠加在宿主快照之上, 无宿主时叠加在系统语言,
+ * 夜间模式与约定的无宿主主题色 (`#FFDEAD`) 之上; 全新安装时三项均跟随 AutoJs6 (P5.1).
  */
 internal data class Appearance(val language: String, val dark: Boolean, val primarySeed: Int, val accentSeed: Int) {
 
@@ -91,18 +91,12 @@ internal data class Appearance(val language: String, val dark: Boolean, val prim
             val configuration = context.resources.configuration
             val systemLanguage = configuration.locales[0].toLanguageTag()
             val systemDark = configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
-            return resolve(host, systemLanguage, systemDark)
+            return AppearancePreferences.read(context).resolve(host, systemLanguage, systemDark)
         }
 
-        /** Pure resolution for tests: host values win, the system fills the gaps. */
-        fun resolve(host: HostAppearance?, systemLanguage: String, systemDark: Boolean): Appearance = Appearance(
-            language = host?.language ?: systemLanguage,
-            dark = host?.dark ?: systemDark,
-            primarySeed = (host?.primary ?: DEFAULT_COLOR) or OPAQUE,
-            accentSeed = (host?.accent ?: host?.primary ?: DEFAULT_COLOR) or OPAQUE,
-        )
-
-        private const val OPAQUE = 0xFF000000.toInt()
+        /** Pure resolution without plugin preferences (tests, defaults): host values win, the system fills the gaps. */
+        fun resolve(host: HostAppearance?, systemLanguage: String, systemDark: Boolean): Appearance =
+            AppearancePreferences().resolve(host, systemLanguage, systemDark)
 
     }
 

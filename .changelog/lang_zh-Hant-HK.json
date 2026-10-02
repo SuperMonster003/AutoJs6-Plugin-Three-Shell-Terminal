@@ -8,7 +8,7 @@
     "v1.0.0": {
       "released_date": "2026/10/02",
       "hint": [
-        "P4 本機開發預覽: 已實作終端介面, 多工作階段管理與指令碼 API, 包括輸出監聽, 互動輸入與結束代碼等待. 獨立設定頁按 ROADMAP.md 的 P5 推進. 指令碼 API 需使用包含 P4 實作的 AutoJs6 組建."
+        "P5 本機開發預覽: 已實作終端介面, 多工作階段管理, 指令碼 API (輸出監聽, 互動輸入與結束代碼等待), 獨立設定頁, 關於 / 版本歷史 / 檢查更新, 以及啟動器圖示. 指令碼 API 需使用包含 P4 實作的 AutoJs6 組建; 外掛中心的設定入口需支援 TERMINAL_SETTINGS 的組建."
       ],
       "feature": [
         "外掛識別碼 `three-shell-terminal` (engine `terminal`), 含 INFO 服務, Wake Activity 以及供主程式發現的 `org.autojs.plugin.TERMINAL` 服務骨架",
@@ -23,7 +23,8 @@
         "工作階段管理員: 含狀態 / 控制 / 工作階段 / 設定四個可收合分組的對話框, 列出全部執行中的工作階段及其目錄, PID 與執行時間, 可開啟或關閉單一工作階段, 新建工作階段, 關閉全部, 檢視詳情並複製, 並提供字號, npm 鏡像源與 ignore-scripts 設定; 它與宿主 `onSessionsChanged` 使用同一工作階段登錄表, 可從終端選單, 工作階段通知 (點按) 進入, 宿主的 `manager=true` 入口則由透明的 `TerminalManagerActivity` 承載, 關閉後不會留下終端介面",
         "宿主入口與啟動器: 匯出的 `TERMINAL_OPEN` 入口 Activity 受 `org.autojs.permission.PLUGIN` 簽名權限保護, 對可識別的呼叫方校驗權限持有與簽名一致, 按契約上限校驗 `directory` / `sessionId` / `newSession` / `command` / `manager` extras 並轉發到自有工作中的終端介面或覆蓋在呼叫方之上的工作階段管理員; `LauncherActivity` (圖示 alias 的目標) 恢復最近工作階段或在主目錄新建工作階段; 從宿主進入的終端按返回鍵回到宿主, 從啟動器進入的回到桌面, 終端工作隨之離開最近工作, 啟動請求不會被重放",
         "啓動器圖標選擇: 私有啓動器轉發器之上的四個 `MAIN / LAUNCHER` activity alias (自適應亮色, 自適應暗色, 自適應自動, 透明背景), 預設啓用自動圖標; 選擇由 PackageManager 以唯一啓用的 alias 持久化, 每次界面啓動與套件更新後自動修復, 固定或動態快捷方式隨之遷移到所選 alias",
-        "關於, 版本歷史與檢查更新: 關於頁顯示已安裝版本, 建置號與建置日期, 開發者, 外掛授權條款 (MPL 2.0), 並在第三方元件分組中離線開啟內置的 jackpal Android-Terminal-Emulator 授權條款與聲明 (Apache-2.0), AutoJs6 外掛 API 聲明 (MPL 2.0) 與依賴庫聲明; 文件頁不使用 WebView, 按目前語言渲染內置更新日誌 (回退英文); 手動 \"檢查更新\" 僅經 HTTPS 存取 GitHub Releases API, 可取消, 有逾時, 結果複用 12 小時, 可忽略指定版本, 並提供開啟發行頁或內置版本歷史. 終端溢出選單新增 \"關於\""
+        "關於, 版本歷史與檢查更新: 關於頁顯示已安裝版本, 建置號與建置日期, 開發者, 外掛授權條款 (MPL 2.0), 並在第三方元件分組中離線開啟內置的 jackpal Android-Terminal-Emulator 授權條款與聲明 (Apache-2.0), AutoJs6 外掛 API 聲明 (MPL 2.0) 與依賴庫聲明; 文件頁不使用 WebView, 按目前語言渲染內置更新日誌 (回退英文); 手動 \"檢查更新\" 僅經 HTTPS 存取 GitHub Releases API, 可取消, 有逾時, 結果複用 12 小時, 可忽略指定版本, 並提供開啟發行頁或內置版本歷史. 終端溢出選單新增 \"關於\"",
+        "獨立設定頁, 分外觀, 終端與資訊三組: 外觀含語言, 夜間模式, 主題色與啟動器圖示 (預設均跟隨 AutoJs6, 主題色提供 16 個預設與 HEX / rgb() 輸入); 終端含字號, npm 鏡像源, 忽略安裝指令碼, Node.js 整合開關, 環境偵測頁, 所有檔案存取與清除資料; 資訊含檢查更新, 版本歷史與關於. 選擇對話框先選後確定, 更改即時生效. 終端溢出選單的 \"設定\" 直接進入該頁 (原快捷設定子選單移除), AutoJs6 外掛中心的 \"設定\" 經 TERMINAL_SETTINGS 進入, 外掛能力宣告新增 settings"
       ],
       "dependency": [
         "附加 jackpal Android-Terminal-Emulator (term 1.0.70, emulatorview 1.0.42, libtermexec 1.0, Apache-2.0) 作為終端機模擬與 pty 原生程式庫, 並在 `locks/vendored-aars.lock` 中鎖定雜湊",

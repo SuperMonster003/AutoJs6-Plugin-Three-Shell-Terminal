@@ -188,6 +188,26 @@
             android:exported="false"
             android:theme="@style/Theme.ThreeShellTerminal" />
 
+        <!--
+            Standalone settings (roadmap D29 / P5.1): the host plugin center opens it through TERMINAL_SETTINGS behind the
+            plugin signature permission (exactly one exported, enabled match is required); the terminal menu starts it explicitly.
+        -->
+        <activity
+            android:name=".ui.settings.SettingsActivity"
+            android:exported="true"
+            android:permission="org.autojs.permission.PLUGIN"
+            android:theme="@style/Theme.ThreeShellTerminal">
+            <intent-filter>
+                <action android:name="org.autojs.plugin.TERMINAL_SETTINGS" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".ui.settings.NodeProbeActivity"
+            android:exported="false"
+            android:theme="@style/Theme.ThreeShellTerminal" />
+
         <service
             android:name=".ThreeShellTerminalPluginInfoService"
             android:enabled="true"

@@ -1,11 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="about_developer">開發者</string>
+    <string name="about_developer_page">開發者主頁</string>
+    <string name="about_jackpal_license">Android-Terminal-Emulator 授權條款</string>
+    <string name="about_jackpal_notice">Android-Terminal-Emulator 聲明</string>
+    <string name="about_summary">版本, 開發者與授權條款</string>
+    <string name="about_third_party">第三方元件</string>
+    <string name="about_title">關於</string>
+    <string name="about_version">版本</string>
+    <string name="about_version_value">%1$s (建置 %2$d)\n建置日期: %3$s</string>
+    <string name="document_loading" tools:ignore="TypographyEllipsis">正在載入...</string>
     <string name="notification_channel_description">顯示在背景持續執行的終端工作階段, 並可將其關閉</string>
     <string name="notification_channel_name">終端工作階段</string>
     <string name="notification_close_sessions">關閉工作階段</string>
     <string name="notification_title">終端工作階段執行中</string>
     <string name="notification_title_multiple" tools:ignore="PluralsCandidate">%1$d 個終端工作階段執行中</string>
     <string name="plugin_description">多工作階段終端機, 在 pty 中執行系統 shell, 支援背景執行, 快捷按鍵及 Node.js 命令</string>
+    <string name="release_history_error">無法讀取內置文件.</string>
+    <string name="release_history_title">版本歷史</string>
+    <string name="settings_license">授權條款</string>
+    <string name="settings_notices">第三方聲明</string>
+    <string name="settings_open_failed">沒有應用程式可以開啟此連結.</string>
+    <string name="settings_source">原始碼</string>
     <string name="terminal_action_close">關閉</string>
     <string name="terminal_action_copy">複製</string>
     <string name="terminal_action_details">詳情</string>
@@ -81,4 +97,14 @@
     <string name="terminal_title">終端</string>
     <string name="terminal_uptime">執行時間</string>
     <string name="terminal_working_directory">工作目錄</string>
+    <string name="update_available">有可用更新: %1$s</string>
+    <string name="update_check">檢查更新</string>
+    <string name="update_checking" tools:ignore="TypographyEllipsis">正在檢查更新...</string>
+    <string name="update_current">目前已是可取得的最新版本.</string>
+    <string name="update_failed">檢查更新失敗或逾時, 請稍後重試.</string>
+    <string name="update_ignore">忽略此版本</string>
+    <string name="update_installed">已安裝版本: %1$s</string>
+    <string name="update_no_release">暫無公開穩定版, 或儲存庫目前無法使用.</string>
+    <string name="update_open_release">開啟發行頁</string>
+    <string name="update_unignore">取消忽略此版本</string>
 </resources>

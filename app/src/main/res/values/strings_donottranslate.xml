@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="about_component_host_api" translatable="false">AutoJs6 plugin API</string>
+    <string name="about_component_host_api_summary" translatable="false">common-plugin-api, nodejs-api, terminal-api (Mozilla Public License 2.0)</string>
+    <string name="about_component_jackpal" translatable="false">jackpal Android-Terminal-Emulator</string>
+    <string name="about_component_jackpal_summary" translatable="false">term 1.0.70, emulatorview 1.0.42, libtermexec 1.0 (Apache License 2.0)</string>
+    <string name="about_component_libraries" translatable="false">AndroidX AppCompat, Material Components, Gson</string>
+    <string name="about_component_libraries_summary" translatable="false">Apache License 2.0</string>
+    <string name="about_license_name" translatable="false">Mozilla Public License 2.0</string>
     <string name="app_name" translatable="false">3-Shell Terminal</string>
 </resources>

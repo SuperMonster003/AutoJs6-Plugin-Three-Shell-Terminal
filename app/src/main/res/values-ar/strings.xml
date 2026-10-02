@@ -1,11 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="about_developer">المطور</string>
+    <string name="about_developer_page">صفحة المطور</string>
+    <string name="about_jackpal_license">ترخيص Android-Terminal-Emulator</string>
+    <string name="about_jackpal_notice">إشعار Android-Terminal-Emulator</string>
+    <string name="about_summary">الإصدار والمطور والتراخيص</string>
+    <string name="about_third_party">مكونات الجهات الخارجية</string>
+    <string name="about_title">حول</string>
+    <string name="about_version">الإصدار</string>
+    <string name="about_version_value">%1$s (البناء %2$d)\nتاريخ البناء: %3$s</string>
+    <string name="document_loading" tools:ignore="TypographyEllipsis">جار التحميل...</string>
     <string name="notification_channel_description">يعرض جلسات الطرفية التي تستمر في العمل في الخلفية ويتيح إغلاقها</string>
     <string name="notification_channel_name">جلسات الطرفية</string>
     <string name="notification_close_sessions">إغلاق الجلسات</string>
     <string name="notification_title">جلسة الطرفية قيد التشغيل</string>
     <string name="notification_title_multiple" tools:ignore="PluralsCandidate">%1$d جلسات طرفية قيد التشغيل</string>
     <string name="plugin_description">طرفية متعددة الجلسات تشغل shell النظام في pty, مع جلسات في الخلفية وشريط مفاتيح وأوامر Node.js</string>
+    <string name="release_history_error">تعذرت قراءة المستند المدمج.</string>
+    <string name="release_history_title">سجل الإصدارات</string>
+    <string name="settings_license">الترخيص</string>
+    <string name="settings_notices">إشعارات الجهات الخارجية</string>
+    <string name="settings_open_failed">لا يوجد تطبيق لفتح هذا الرابط.</string>
+    <string name="settings_source">الشيفرة المصدرية</string>
     <string name="terminal_action_close">إغلاق</string>
     <string name="terminal_action_copy">نسخ</string>
     <string name="terminal_action_details">التفاصيل</string>
@@ -81,4 +97,14 @@
     <string name="terminal_title">الطرفية</string>
     <string name="terminal_uptime">مدة التشغيل</string>
     <string name="terminal_working_directory">دليل العمل</string>
+    <string name="update_available">تحديث متاح: %1$s</string>
+    <string name="update_check">التحقق من التحديثات</string>
+    <string name="update_checking" tools:ignore="TypographyEllipsis">جار التحقق من التحديثات...</string>
+    <string name="update_current">لديك أحدث إصدار متاح.</string>
+    <string name="update_failed">فشل التحقق أو انتهت المهلة. حاول لاحقا.</string>
+    <string name="update_ignore">تجاهل هذا الإصدار</string>
+    <string name="update_installed">الإصدار المثبت: %1$s</string>
+    <string name="update_no_release">لا يوجد إصدار مستقر عام أو المستودع غير متاح.</string>
+    <string name="update_open_release">فتح صفحة الإصدار</string>
+    <string name="update_unignore">إلغاء تجاهل هذا الإصدار</string>
 </resources>

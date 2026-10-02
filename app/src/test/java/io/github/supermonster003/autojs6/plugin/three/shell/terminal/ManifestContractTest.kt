@@ -131,7 +131,13 @@ class ManifestContractTest {
     @Test
     fun `the terminal screen stays private to the plugin`() {
         val activities = manifest.child("application").children("activity").map { it.androidAttribute("name") }
-        assertEquals(listOf(".WakeActivity", ".ThreeShellTerminalEntryActivity", ".ui.LauncherActivity", ".ui.TerminalActivity", ".ui.TerminalManagerActivity"), activities)
+        assertEquals(
+            listOf(
+                ".WakeActivity", ".ThreeShellTerminalEntryActivity", ".ui.LauncherActivity", ".ui.TerminalActivity", ".ui.TerminalManagerActivity",
+                ".ui.settings.AboutActivity", ".ui.settings.ReleaseHistoryActivity",
+            ),
+            activities,
+        )
         val terminal = manifest.child("application").children("activity").single { it.androidAttribute("name") == ".ui.TerminalActivity" }
         assertEquals("false", terminal.androidAttribute("exported"))
         assertNull("the terminal screen needs no caller permission because it is not exported", terminal.androidAttributeOrNull("permission"))

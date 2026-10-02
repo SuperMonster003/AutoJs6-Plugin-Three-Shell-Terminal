@@ -177,6 +177,17 @@
             android:launchMode="singleTop"
             android:theme="@style/Theme.ThreeShellTerminal.Transparent" />
 
+        <!-- About and the bundled documents (roadmap P5.2, D31): private screens reached from the terminal menu and the settings page. -->
+        <activity
+            android:name=".ui.settings.AboutActivity"
+            android:exported="false"
+            android:theme="@style/Theme.ThreeShellTerminal" />
+
+        <activity
+            android:name=".ui.settings.ReleaseHistoryActivity"
+            android:exported="false"
+            android:theme="@style/Theme.ThreeShellTerminal" />
+
         <service
             android:name=".ThreeShellTerminalPluginInfoService"
             android:enabled="true"

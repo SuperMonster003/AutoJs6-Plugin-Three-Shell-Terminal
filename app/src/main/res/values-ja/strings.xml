@@ -1,11 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="about_developer">開発者</string>
+    <string name="about_developer_page">開発者のページ</string>
+    <string name="about_jackpal_license">Android-Terminal-Emulator ライセンス</string>
+    <string name="about_jackpal_notice">Android-Terminal-Emulator 通知</string>
+    <string name="about_summary">バージョン, 開発者, ライセンス</string>
+    <string name="about_third_party">サードパーティ コンポーネント</string>
+    <string name="about_title">アプリについて</string>
+    <string name="about_version">バージョン</string>
+    <string name="about_version_value">%1$s (ビルド %2$d)\nビルド日: %3$s</string>
+    <string name="document_loading" tools:ignore="TypographyEllipsis">読み込み中...</string>
     <string name="notification_channel_description">バックグラウンドで実行中のターミナルセッションを表示し, 終了できるようにします</string>
     <string name="notification_channel_name">ターミナルセッション</string>
     <string name="notification_close_sessions">セッションを終了</string>
     <string name="notification_title">ターミナルセッションを実行中</string>
     <string name="notification_title_multiple" tools:ignore="PluralsCandidate">%1$d 件のターミナルセッションを実行中</string>
     <string name="plugin_description">pty でシステムシェルを実行するマルチセッション端末. バックグラウンド実行, キーバー, Node.js コマンドに対応</string>
+    <string name="release_history_error">内蔵ドキュメントを読み込めません.</string>
+    <string name="release_history_title">バージョン履歴</string>
+    <string name="settings_license">ライセンス</string>
+    <string name="settings_notices">第三者に関する表示</string>
+    <string name="settings_open_failed">このリンクを開くアプリがありません.</string>
+    <string name="settings_source">ソースコード</string>
     <string name="terminal_action_close">閉じる</string>
     <string name="terminal_action_copy">コピー</string>
     <string name="terminal_action_details">詳細</string>
@@ -81,4 +97,14 @@
     <string name="terminal_title">ターミナル</string>
     <string name="terminal_uptime">稼働時間</string>
     <string name="terminal_working_directory">作業ディレクトリ</string>
+    <string name="update_available">更新があります: %1$s</string>
+    <string name="update_check">更新を確認</string>
+    <string name="update_checking" tools:ignore="TypographyEllipsis">更新を確認中...</string>
+    <string name="update_current">利用可能な最新バージョンです.</string>
+    <string name="update_failed">更新確認に失敗したかタイムアウトしました. 後で再試行してください.</string>
+    <string name="update_ignore">このバージョンを無視</string>
+    <string name="update_installed">インストール済み: %1$s</string>
+    <string name="update_no_release">公開の安定版がないか, リポジトリを利用できません.</string>
+    <string name="update_open_release">リリースページを開く</string>
+    <string name="update_unignore">このバージョンの無視を解除</string>
 </resources>

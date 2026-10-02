@@ -1,11 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="about_developer">Desarrollador</string>
+    <string name="about_developer_page">Página del desarrollador</string>
+    <string name="about_jackpal_license">Licencia de Android-Terminal-Emulator</string>
+    <string name="about_jackpal_notice">Aviso de Android-Terminal-Emulator</string>
+    <string name="about_summary">Versión, desarrollador y licencias</string>
+    <string name="about_third_party">Componentes de terceros</string>
+    <string name="about_title">Acerca de</string>
+    <string name="about_version">Versión</string>
+    <string name="about_version_value">%1$s (compilación %2$d)\nFecha: %3$s</string>
+    <string name="document_loading" tools:ignore="TypographyEllipsis">Cargando...</string>
     <string name="notification_channel_description">Muestra las sesiones de terminal que siguen ejecutándose en segundo plano y permite cerrarlas</string>
     <string name="notification_channel_name">Sesiones de terminal</string>
     <string name="notification_close_sessions">Cerrar sesiones</string>
     <string name="notification_title">Sesión de terminal en ejecución</string>
     <string name="notification_title_multiple" tools:ignore="PluralsCandidate">%1$d sesiones de terminal en ejecución</string>
     <string name="plugin_description">Terminal multisesión que ejecuta el shell del sistema en un pty, con sesiones en segundo plano, barra de teclas y comandos Node.js</string>
+    <string name="release_history_error">No se puede leer el documento integrado.</string>
+    <string name="release_history_title">Historial de versiones</string>
+    <string name="settings_license">Licencia</string>
+    <string name="settings_notices">Avisos de terceros</string>
+    <string name="settings_open_failed">Ninguna aplicación puede abrir este enlace.</string>
+    <string name="settings_source">Código fuente</string>
     <string name="terminal_action_close">Cerrar</string>
     <string name="terminal_action_copy">Copiar</string>
     <string name="terminal_action_details">Detalles</string>
@@ -81,4 +97,14 @@
     <string name="terminal_title">Terminal</string>
     <string name="terminal_uptime">Tiempo de actividad</string>
     <string name="terminal_working_directory">Directorio de trabajo</string>
+    <string name="update_available">Actualización disponible: %1$s</string>
+    <string name="update_check">Buscar actualizaciones</string>
+    <string name="update_checking" tools:ignore="TypographyEllipsis">Buscando actualizaciones...</string>
+    <string name="update_current">Tiene la última versión disponible.</string>
+    <string name="update_failed">La comprobación falló o agotó el tiempo. Inténtelo más tarde.</string>
+    <string name="update_ignore">Ignorar esta versión</string>
+    <string name="update_installed">Versión instalada: %1$s</string>
+    <string name="update_no_release">No hay una versión estable pública o el repositorio no está disponible.</string>
+    <string name="update_open_release">Abrir página de la versión</string>
+    <string name="update_unignore">Dejar de ignorar esta versión</string>
 </resources>

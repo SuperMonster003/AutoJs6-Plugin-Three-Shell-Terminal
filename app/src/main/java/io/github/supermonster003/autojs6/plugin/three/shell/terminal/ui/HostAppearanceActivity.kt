@@ -10,6 +10,7 @@ import android.view.WindowInsetsController
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import io.github.supermonster003.autojs6.plugin.three.shell.terminal.ui.settings.LauncherIcons
 
 /**
  * Base of every screen of the plugin: the night mode is fixed on the AppCompat delegate and the
@@ -55,6 +56,8 @@ abstract class HostAppearanceActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         applySystemBarAppearance()
+        // Idempotent repair of the launcher alias states (roadmap P5.3), off the main thread.
+        LauncherIcons.normalizeAsync(this)
     }
 
     /**

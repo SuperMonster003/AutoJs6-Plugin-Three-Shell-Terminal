@@ -91,13 +91,67 @@
         <!--
             Launcher target (roadmap D30 / P3.3): invisible forwarder to the terminal screen (most recent session or a
             new one at home). Shares the terminal's task affinity so the task the home screen creates is the terminal
-            task. Not exported; the launcher icon aliases of P5.3 carry MAIN / LAUNCHER and point here.
+            task. Not exported; the launcher icon aliases below carry MAIN / LAUNCHER and point here.
         -->
         <activity
             android:name=".ui.LauncherActivity"
             android:exported="false"
             android:taskAffinity="io.github.supermonster003.autojs6.plugin.three.shell.terminal.ui.TerminalActivity"
             android:theme="@android:style/Theme.NoDisplay" />
+
+        <!--
+            Launcher icon aliases (roadmap P5.3, icon specification): MAIN / LAUNCHER live only here, exactly one alias is
+            enabled at a time (ui/settings/LauncherIcons.kt switches them through PackageManager; the manifest default is
+            the automatic adaptive icon), and all four target the private LauncherActivity above.
+        -->
+        <activity-alias
+            android:name=".launcher.AdaptiveLightIconAlias"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher_system_light"
+            android:roundIcon="@mipmap/ic_launcher_system_light"
+            android:targetActivity=".ui.LauncherActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+        <activity-alias
+            android:name=".launcher.AdaptiveDarkIconAlias"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher_system"
+            android:roundIcon="@mipmap/ic_launcher_system"
+            android:targetActivity=".ui.LauncherActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+        <activity-alias
+            android:name=".launcher.AdaptiveAutoIconAlias"
+            android:enabled="true"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher_system_auto"
+            android:roundIcon="@mipmap/ic_launcher_system_auto"
+            android:targetActivity=".ui.LauncherActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+        <activity-alias
+            android:name=".launcher.TransparentIconAlias"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher"
+            android:roundIcon="@mipmap/ic_launcher"
+            android:targetActivity=".ui.LauncherActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
 
         <!--
             Terminal screen (roadmap P3.1 / D30): its own task affinity so it stacks neither on the host nor on the
@@ -169,6 +223,15 @@
                 android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
                 android:value="Keeps the interactive terminal shells of 3-Shell Terminal and the processes they run (scripts, npm, node) alive while the user is away from the terminal screen" />
         </service>
+
+        <!-- Package update only (roadmap P5.3): re-normalizes the launcher alias states so exactly one entry stays enabled. -->
+        <receiver
+            android:name=".ui.settings.LauncherIconUpdateReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
 
     </application>
 

@@ -68,12 +68,15 @@ class ThreeShellTerminalPluginContractTest {
     }
 
     @Test
-    fun noLauncherEntryExistsBeforeTheStandaloneUi() {
-        // Roadmap P5 adds the launcher aliases; until then the plugin must not appear in the app drawer.
+    fun exactlyOneLauncherAliasIsEnabled() {
+        // Roadmap P5.3: the app drawer shows exactly one of the four icon aliases, all pointing at the private LauncherActivity.
         val launcherIntent = Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER).setPackage(packageName)
         @Suppress("DEPRECATION")
         val matches = context.packageManager.queryIntentActivities(launcherIntent, 0)
-        assertTrue("No launcher activity is expected in P0", matches.isEmpty())
+        assertEquals("Exactly one launcher alias is expected: ${matches.map { it.activityInfo.name }}", 1, matches.size)
+        val entry = matches.single().activityInfo
+        assertTrue(entry.name, entry.name.startsWith("$packageName.launcher.") && entry.name.endsWith("IconAlias"))
+        assertEquals("$packageName.ui.LauncherActivity", entry.targetActivity)
     }
 
     @Test

@@ -88,9 +88,44 @@ class ManifestContractTest {
         val wakeFilter = wake.child("intent-filter")
         assertEquals(listOf("org.autojs.plugin.action.WAKE"), wakeFilter.children("action").map { it.androidAttribute("name") })
         assertEquals(listOf("android.intent.category.DEFAULT"), wakeFilter.children("category").map { it.androidAttribute("name") })
-        assertTrue(manifest.child("application").children("activity-alias").isEmpty())
-        assertTrue(manifest.child("application").children("receiver").isEmpty())
         assertTrue(manifest.child("application").children("provider").isEmpty())
+    }
+
+    @Test
+    fun `the launcher icon aliases carry MAIN LAUNCHER, default to automatic and target the forwarder`() {
+        val aliases = manifest.child("application").children("activity-alias")
+        assertEquals(
+            listOf(".launcher.AdaptiveLightIconAlias", ".launcher.AdaptiveDarkIconAlias", ".launcher.AdaptiveAutoIconAlias", ".launcher.TransparentIconAlias"),
+            aliases.map { it.androidAttribute("name") },
+        )
+        val icons = mapOf(
+            ".launcher.AdaptiveLightIconAlias" to "@mipmap/ic_launcher_system_light",
+            ".launcher.AdaptiveDarkIconAlias" to "@mipmap/ic_launcher_system",
+            ".launcher.AdaptiveAutoIconAlias" to "@mipmap/ic_launcher_system_auto",
+            ".launcher.TransparentIconAlias" to "@mipmap/ic_launcher",
+        )
+        aliases.forEach { alias ->
+            val name = alias.androidAttribute("name")
+            assertEquals("true", alias.androidAttribute("exported"))
+            assertNull("aliases need no caller permission", alias.androidAttributeOrNull("permission"))
+            assertEquals(".ui.LauncherActivity", alias.androidAttribute("targetActivity"))
+            assertEquals(icons.getValue(name), alias.androidAttribute("icon"))
+            assertEquals(icons.getValue(name), alias.androidAttribute("roundIcon"))
+            assertEquals("only the automatic icon is enabled by default", (name == ".launcher.AdaptiveAutoIconAlias").toString(), alias.androidAttribute("enabled"))
+            val filter = alias.child("intent-filter")
+            assertEquals(listOf("android.intent.action.MAIN"), filter.children("action").map { it.androidAttribute("name") })
+            assertEquals(listOf("android.intent.category.LAUNCHER"), filter.children("category").map { it.androidAttribute("name") })
+        }
+        // MAIN / LAUNCHER live only on the aliases.
+        manifest.child("application").children("activity").forEach { activity ->
+            activity.children("intent-filter").forEach { filter ->
+                assertTrue(activity.androidAttribute("name"), filter.children("category").none { it.androidAttribute("name") == "android.intent.category.LAUNCHER" })
+            }
+        }
+        val receiver = manifest.child("application").children("receiver").single()
+        assertEquals(".ui.settings.LauncherIconUpdateReceiver", receiver.androidAttribute("name"))
+        assertEquals("false", receiver.androidAttribute("exported"))
+        assertEquals(listOf("android.intent.action.MY_PACKAGE_REPLACED"), receiver.child("intent-filter").children("action").map { it.androidAttribute("name") })
     }
 
     @Test
@@ -181,10 +216,14 @@ class ManifestContractTest {
     }
 
     @Test
-    fun `only discovery, activation and the host entry are exported`() {
+    fun `only discovery, activation, the host entry and the launcher aliases are exported`() {
         val expected = mapOf(
             ".WakeActivity" to PLUGIN_PERMISSION,
             ".ThreeShellTerminalEntryActivity" to PLUGIN_PERMISSION,
+            ".launcher.AdaptiveLightIconAlias" to null,
+            ".launcher.AdaptiveDarkIconAlias" to null,
+            ".launcher.AdaptiveAutoIconAlias" to null,
+            ".launcher.TransparentIconAlias" to null,
             ".ThreeShellTerminalPluginInfoService" to PLUGIN_PERMISSION,
             ".ThreeShellTerminalPluginService" to PLUGIN_PERMISSION,
         )

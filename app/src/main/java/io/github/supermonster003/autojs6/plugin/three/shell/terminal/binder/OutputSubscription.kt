@@ -10,6 +10,7 @@ import android.system.OsConstants
 import android.system.StructPollfd
 import android.util.Log
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.core.TerminalPtySession
+import jackpal.androidterm.emulatorview.TerminalCursorPosition
 import org.autojs.plugin.terminal.api.TerminalContract
 import java.io.IOException
 import java.util.concurrent.locks.ReentrantLock
@@ -105,7 +106,11 @@ internal class OutputSubscription(
             if (finishing || isClosed) return
             attached = pty
             if (fromStart) {
-                runCatching { pty.transcriptText }.getOrNull()?.takeIf { it.isNotEmpty() }?.let { offer(it.toByteArray(Charsets.UTF_8)) }
+                // The screen pads the transcript with blank rows: replay only what was printed (B.2).
+                // zh-CN: 屏幕会用空行填充转录: 只回放已打印的内容 (B.2).
+                runCatching { TerminalDocuments.replayText(pty.transcriptText, TerminalCursorPosition.column(pty)) }.getOrNull()
+                    ?.takeIf { it.isNotEmpty() }
+                    ?.let { offer(it.toByteArray(Charsets.UTF_8)) }
             }
             pty.addOutputTap(this)
             pty.addFinishListener(finishListener)

@@ -8,7 +8,7 @@
 
 ###### 2026/10/02
 
-* `Aviso` Vista previa de desarrollo P2: sesiones shell, acceso al almacenamiento, integración de Node.js con verificación de firmas y control de sesiones desde el anfitrión implementados. La pantalla de terminal, la API de scripts y los ajustes seguirán las etapas de ROADMAP.md.
+* `Aviso` Vista previa local P4: interfaz de terminal, sesiones múltiples y API de scripts con eventos de salida, entrada interactiva y espera del código de salida. Los ajustes independientes siguen en P5 de ROADMAP.md. La API requiere una compilación de AutoJs6 que incluya P4.
 * `Función` Identidad del plugin `three-shell-terminal` (engine `terminal`) con el servicio INFO, la Wake Activity y el esqueleto del servicio `org.autojs.plugin.TERMINAL` para el descubrimiento por el host
 * `Función` APK separados por ABI (arm64-v8a, armeabi-v7a, x86_64, x86) más un APK universal, con bibliotecas nativas alineadas a páginas de 16 KB
 * `Función` README, instrucciones del centro de plugins y registro de cambios en 10 idiomas
@@ -22,6 +22,8 @@
 * `Función` Entrada del anfitrion y lanzador: la Activity de entrada exportada `TERMINAL_OPEN`, protegida por el permiso de firma `org.autojs.permission.PLUGIN`, comprueba al llamador que puede identificar (permiso concedido, firmado como el plugin), valida los extras `directory` / `sessionId` / `newSession` / `command` / `manager` segun los limites del contrato y los reenvia a la pantalla del terminal en su propia tarea o al gestor de sesiones sobre el llamador; `LauncherActivity` (destino de los alias de icono) restaura la sesion mas reciente o inicia una en el directorio personal; Atras desde un terminal abierto por el anfitrion vuelve al anfitrion, desde el lanzador a la pantalla de inicio, y la tarea del terminal sale de recientes para que una solicitud de inicio nunca se repita
 * `Corrección` Las restricciones del sistema sobre la actividad en segundo plano ya no provocan un cierre del complemento al iniciar una sesión. La sesión continúa sin la protección del servicio en primer plano.
 * `Corrección` La lectura de transcripciones largas conserva el texto más reciente sin superar el límite de tamaño de las respuestas entre procesos.
+* `Corrección` La lectura y reproducción de la salida omiten las líneas vacías de relleno de pantalla y conservan los espacios del indicador y la separación de la salida siguiente
+* `Corrección` Una sesión al iniciarse podía desaparecer brevemente de las consultas del anfitrión e impedir la apertura de su terminal
 * `Dependencia` Se añade jackpal Android-Terminal-Emulator (term 1.0.70, emulatorview 1.0.42, libtermexec 1.0, Apache-2.0) como emulación de terminal y bibliotecas nativas pty, con hash bloqueado en `locks/vendored-aars.lock`
 * `Dependencia` Se añaden `common-plugin-api.aar` y `nodejs-api.aar` (módulos AutoJs6 `plugin-api/common-plugin-api` y `plugin-api/nodejs-api`, build del host 6.8.0 / 5303, MPL 2.0) como contrato de plugin compartido y contrato de manifiesto Node.js, con hash bloqueado en `locks/host-api-aars.lock`
 * `Dependencia` Se añade `terminal-api.aar` (módulo AutoJs6 `plugin-api/terminal-api`, build del host 6.8.0 / 5304, MPL 2.0) como contrato de terminal V1 (`ITerminalPlugin` / `ITerminalCallback`, identidad, límites y códigos de error); las constantes de identidad del plugin provienen ahora de él, con hash bloqueado en `locks/host-api-aars.lock`

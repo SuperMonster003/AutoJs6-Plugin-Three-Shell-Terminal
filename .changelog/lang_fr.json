@@ -8,7 +8,7 @@
     "v1.0.0": {
       "released_date": "2026/10/02",
       "hint": [
-        "Aperçu de développement P2: sessions shell, accès au stockage, intégration Node.js avec vérification des signatures et contrôle des sessions depuis l'hôte sont implémentés. L'écran du terminal, l'API de scripts et les réglages suivront les étapes de ROADMAP.md."
+        "Aperçu local P4: interface du terminal, sessions multiples et API de script, avec événements de sortie, saisie interactive et attente du code de fin. Les réglages autonomes suivent en P5 de ROADMAP.md. L'API de script nécessite une version d'AutoJs6 contenant P4."
       ],
       "feature": [
         "Identité du plugin `three-shell-terminal` (engine `terminal`) avec le service INFO, la Wake Activity et le squelette du service `org.autojs.plugin.TERMINAL` pour la découverte par l'hôte",
@@ -30,7 +30,9 @@
       ],
       "fix": [
         "Les restrictions système sur l'activité en arrière-plan ne font plus planter le plugin au démarrage d'une session. La session continue sans la protection du service de premier plan.",
-        "La lecture de longs historiques conserve le texte le plus récent sans dépasser la limite de taille des réponses entre processus."
+        "La lecture de longs historiques conserve le texte le plus récent sans dépasser la limite de taille des réponses entre processus.",
+        "La lecture et la reprise de la sortie omettent les lignes vides de remplissage de l'écran, tout en préservant les espaces de l'invite et la séparation avec la sortie suivante",
+        "Une session en cours de démarrage pouvait disparaître brièvement des requêtes de l'hôte et empêcher l'ouverture de son terminal"
       ]
     }
   }

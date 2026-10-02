@@ -52,7 +52,7 @@ AutoJs6 découvre le plugin via son service Binder, ouvre l'écran du terminal p
 
 ******
 
-Aperçu de développement P2: sessions shell, accès au stockage, intégration Node.js avec vérification des signatures et contrôle des sessions depuis l'hôte sont implémentés. L'écran du terminal, l'API de scripts et les réglages suivront les étapes de [ROADMAP.md](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/blob/master/ROADMAP.md). AutoJs6 6.8.0 (build 5304+).
+Aperçu local P4: interface du terminal, sessions multiples et API de script, avec événements de sortie, saisie interactive et attente du code de fin. Les réglages autonomes suivent en P5 de [ROADMAP.md](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/blob/master/ROADMAP.md). L'API de script nécessite une version d'AutoJs6 contenant P4.
 
 ******
 
@@ -105,16 +105,16 @@ let session = terminal.open(files.cwd());
 console.log(session.id, terminal.sessions().length);
 
 // Visible execution: install dependencies in a session the user can watch and wait for the exit code (0 = no timeout).
-let install = terminal.exec('npm install', { cwd: '/sdcard/Scripts/my-project', wait: true, timeout: 0 });
+let install = terminal.exec('npm install', { cwd: '/sdcard/Scripts/my-project', keepOpen: false, wait: true, timeout: 0 });
 toastLog('npm install exited with ' + install.exitCode);
 
 // Drive an interactive command: output / exit events, write and waitFor; every failure is a TerminalError with a stable code.
-let init = terminal.exec('npm init', { cwd: files.cwd(), show: true });
-init.on('output', line => { if (/package name/i.test(line)) init.write('\n'); });
-init.waitFor(/Is this OK\?/i, 60e3);
-init.write('yes\n');
-init.on('exit', code => console.log('npm init exited with ' + code));
-terminal.npm.run('build', files.cwd());
+let driven = terminal.exec('sleep 1; printf "name? "; read name; echo "received:$name"; sleep 1', {
+    cwd: files.cwd(), show: true, keepOpen: false,
+});
+driven.on('output', line => { if (/name\?/.test(line)) driven.write('AutoJs6\n'); });
+driven.on('exit', code => console.log('Session exited with ' + code));
+console.log(driven.waitFor(/received:AutoJs6/, 15e3));
 ```
 
 ******
@@ -196,7 +196,7 @@ Les plans et l'avancement du plugin sont tenus sous forme de liste cochable dans
 
 _2026/10/02_
 
-- `Note` Aperçu de développement P2: sessions shell, accès au stockage, intégration Node.js avec vérification des signatures et contrôle des sessions depuis l'hôte sont implémentés. L'écran du terminal, l'API de scripts et les réglages suivront les étapes de ROADMAP.md.
+- `Note` Aperçu local P4: interface du terminal, sessions multiples et API de script, avec événements de sortie, saisie interactive et attente du code de fin. Les réglages autonomes suivent en P5 de ROADMAP.md. L'API de script nécessite une version d'AutoJs6 contenant P4.
 - `Fonctionnalité` Identité du plugin `three-shell-terminal` (engine `terminal`) avec le service INFO, la Wake Activity et le squelette du service `org.autojs.plugin.TERMINAL` pour la découverte par l'hôte
 - `Fonctionnalité` APK séparés par ABI (arm64-v8a, armeabi-v7a, x86_64, x86) plus un APK universel, bibliothèques natives alignées sur des pages de 16 Ko
 - `Fonctionnalité` README, notice du centre de plugins et journal des modifications en 10 langues
@@ -210,6 +210,8 @@ _2026/10/02_
 - `Fonctionnalité` Entree hote et lanceur : l'Activity d'entree exportee `TERMINAL_OPEN`, protegee par la permission de signature `org.autojs.permission.PLUGIN`, verifie l'appelant qu'elle peut nommer (permission detenue, signature identique au plugin), valide les extras `directory` / `sessionId` / `newSession` / `command` / `manager` selon les plafonds du contrat et les transmet a l'ecran du terminal dans sa propre tache ou au gestionnaire de sessions par-dessus l'appelant ; `LauncherActivity` (cible des alias d'icone) restaure la session la plus recente ou en demarre une dans le repertoire personnel ; Retour depuis un terminal ouvert par l'hote revient a l'hote, depuis le lanceur a l'ecran d'accueil, et la tache du terminal quitte les applications recentes afin qu'une demande de demarrage ne soit jamais rejouee
 - `Correctif` Les restrictions système sur l'activité en arrière-plan ne font plus planter le plugin au démarrage d'une session. La session continue sans la protection du service de premier plan.
 - `Correctif` La lecture de longs historiques conserve le texte le plus récent sans dépasser la limite de taille des réponses entre processus.
+- `Correctif` La lecture et la reprise de la sortie omettent les lignes vides de remplissage de l'écran, tout en préservant les espaces de l'invite et la séparation avec la sortie suivante
+- `Correctif` Une session en cours de démarrage pouvait disparaître brièvement des requêtes de l'hôte et empêcher l'ouverture de son terminal
 - `Dépendance` Ajout de jackpal Android-Terminal-Emulator (term 1.0.70, emulatorview 1.0.42, libtermexec 1.0, Apache-2.0) pour l'émulation de terminal et les bibliothèques natives pty, verrouillé par hachage dans `locks/vendored-aars.lock`
 - `Dépendance` Ajout de `common-plugin-api.aar` et `nodejs-api.aar` (modules AutoJs6 `plugin-api/common-plugin-api` et `plugin-api/nodejs-api`, build hôte 6.8.0 / 5303, MPL 2.0) comme contrat de plugin partagé et contrat de manifeste Node.js, verrouillés par hachage dans `locks/host-api-aars.lock`
 - `Dépendance` Ajout de `terminal-api.aar` (module AutoJs6 `plugin-api/terminal-api`, build hôte 6.8.0 / 5304, MPL 2.0) comme contrat de terminal V1 (`ITerminalPlugin` / `ITerminalCallback`, identité, plafonds et codes d'erreur) ; les constantes d'identité du plugin en proviennent désormais, verrouillé par hachage dans `locks/host-api-aars.lock`

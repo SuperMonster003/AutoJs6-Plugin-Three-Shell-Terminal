@@ -1,6 +1,6 @@
 3-Shell Terminal は AutoJs6 の内蔵ターミナルを引き継ぎます: ホームドロワーの "ターミナル" スイッチ, ファイルマネージャーのディレクトリメニューとプロジェクトツールバーの "ターミナルで開く", そしてセッションを開き, 操作し, 監視するためのスクリプト側グローバルオブジェクト `terminal`. 各セッションは pty 内で動くシステムシェル (`/system/bin/sh`) で, 画面を離れてもバックグラウンドで動き続けます.
 
-P2 開発プレビュー: shell セッション, ストレージアクセス, 署名を検証する Node.js 統合, ホストからのセッション操作を実装済みです. 端末画面, スクリプト API, 設定画面は [ROADMAP.md](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/blob/master/ROADMAP.md) の段階に従って実装します. AutoJs6 6.8.0 (build 5304+).
+P4 ローカル開発プレビュー: 端末画面, 複数セッションとスクリプト API を実装済み. 出力イベント, 対話入力と終了コードの待機に対応. 独立設定画面は [ROADMAP.md](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/blob/master/ROADMAP.md) の P5 で実装予定. API には P4 実装を含む AutoJs6 ビルドが必要.
 
 ### 使い方
 

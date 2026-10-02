@@ -47,6 +47,8 @@ import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicLong
+import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicReference
 import kotlin.concurrent.thread
 
 /**
@@ -83,6 +85,40 @@ class TerminalBinderContractTest {
         binder.closeAllSessions()
         binder.close()
         waitUntil("no sessions after the test") { TerminalSessionManager.allSessions.isEmpty() }
+    }
+
+    @Test
+    fun listingDoesNotLoseSessionsDuringThePendingToRunningTransfer() {
+        val active = AtomicReference<String?>(null)
+        val stopped = AtomicBoolean(false)
+        val failure = AtomicReference<String?>(null)
+        val observer = thread(name = "TerminalListingRegression") {
+            while (!stopped.get()) {
+                val id = active.get()
+                if (id != null) {
+                    val present = id in sessionIds(binder.listSessions())
+                    if (id == active.get() && !present) failure.compareAndSet(null, id)
+                }
+                Thread.yield()
+            }
+        }
+        try {
+            repeat(24) {
+                val opened = json(binder.openSession("""{"cwd":"$home"}"""))
+                val id = opened["id"].asString
+                active.set(id)
+                awaitRunning(binder, opened)
+                active.set(null)
+                binder.closeSession(id)
+                events.awaitExit(id)
+            }
+        } finally {
+            active.set(null)
+            stopped.set(true)
+            observer.join(5000)
+        }
+        assertFalse("listing observer did not stop", observer.isAlive)
+        assertNull("a starting session vanished from the list", failure.get())
     }
 
     @Test

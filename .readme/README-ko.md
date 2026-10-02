@@ -52,7 +52,7 @@ AutoJs6 는 Binder 서비스로 플러그인을 발견하고, 명시적 Intent �
 
 ******
 
-P2 개발 미리보기: shell 세션, 저장소 접근, 서명을 검증하는 Node.js 통합, 호스트 세션 제어가 구현되었습니다. 터미널 화면, 스크립트 API, 설정 페이지는 [ROADMAP.md](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/blob/master/ROADMAP.md)의 단계에 따라 구현됩니다. AutoJs6 6.8.0 (build 5304+).
+P4 로컬 개발 미리 보기: 터미널 화면, 다중 세션 및 스크립트 API 구현 완료. 출력 이벤트, 대화형 입력 및 종료 코드 대기를 지원. 독립 설정 화면은 [ROADMAP.md](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/blob/master/ROADMAP.md) 의 P5 에서 구현 예정. API 사용에는 P4 구현이 포함된 AutoJs6 빌드가 필요.
 
 ******
 
@@ -105,16 +105,16 @@ let session = terminal.open(files.cwd());
 console.log(session.id, terminal.sessions().length);
 
 // Visible execution: install dependencies in a session the user can watch and wait for the exit code (0 = no timeout).
-let install = terminal.exec('npm install', { cwd: '/sdcard/Scripts/my-project', wait: true, timeout: 0 });
+let install = terminal.exec('npm install', { cwd: '/sdcard/Scripts/my-project', keepOpen: false, wait: true, timeout: 0 });
 toastLog('npm install exited with ' + install.exitCode);
 
 // Drive an interactive command: output / exit events, write and waitFor; every failure is a TerminalError with a stable code.
-let init = terminal.exec('npm init', { cwd: files.cwd(), show: true });
-init.on('output', line => { if (/package name/i.test(line)) init.write('\n'); });
-init.waitFor(/Is this OK\?/i, 60e3);
-init.write('yes\n');
-init.on('exit', code => console.log('npm init exited with ' + code));
-terminal.npm.run('build', files.cwd());
+let driven = terminal.exec('sleep 1; printf "name? "; read name; echo "received:$name"; sleep 1', {
+    cwd: files.cwd(), show: true, keepOpen: false,
+});
+driven.on('output', line => { if (/name\?/.test(line)) driven.write('AutoJs6\n'); });
+driven.on('exit', code => console.log('Session exited with ' + code));
+console.log(driven.waitFor(/received:AutoJs6/, 15e3));
 ```
 
 ******
@@ -196,7 +196,7 @@ minimum host build: 5304 (6.8.0)
 
 _2026/10/02_
 
-- `힌트` P2 개발 미리보기: shell 세션, 저장소 접근, 서명을 검증하는 Node.js 통합, 호스트 세션 제어가 구현되었습니다. 터미널 화면, 스크립트 API, 설정 페이지는 ROADMAP.md의 단계에 따라 구현됩니다.
+- `힌트` P4 로컬 개발 미리 보기: 터미널 화면, 다중 세션 및 스크립트 API 구현 완료. 출력 이벤트, 대화형 입력 및 종료 코드 대기를 지원. 독립 설정 화면은 ROADMAP.md 의 P5 에서 구현 예정. API 사용에는 P4 구현이 포함된 AutoJs6 빌드가 필요.
 - `기능` 플러그인 신원 `three-shell-terminal` (engine `terminal`), INFO 서비스, Wake Activity, 호스트 발견용 `org.autojs.plugin.TERMINAL` 서비스 뼈대
 - `기능` ABI 별 APK (arm64-v8a, armeabi-v7a, x86_64, x86) 와 universal APK, 16 KB 페이지에 정렬된 네이티브 라이브러리
 - `기능` 10 개 언어의 README, 플러그인 센터 안내, 변경 기록
@@ -210,6 +210,8 @@ _2026/10/02_
 - `기능` 호스트 진입과 런처: `org.autojs.permission.PLUGIN` 서명 권한으로 보호되는 내보낸 `TERMINAL_OPEN` 진입 Activity 는 식별 가능한 호출자의 권한 보유와 플러그인과 같은 서명을 확인하고, `directory` / `sessionId` / `newSession` / `command` / `manager` extras 를 계약 상한에 맞춰 검증한 뒤 자체 태스크의 터미널 화면이나 호출자 위에 겹치는 세션 관리자로 전달합니다. `LauncherActivity` (아이콘 alias 의 대상) 는 최근 세션을 복원하거나 홈에서 새 세션을 시작합니다. 호스트에서 연 터미널에서 뒤로 가면 호스트로, 런처에서 연 경우 홈 화면으로 돌아가며 터미널 태스크는 최근 앱에서 사라져 시작 요청이 다시 실행되지 않습니다
 - `수정` 시스템이 백그라운드 활동을 제한해도 세션 시작 시 플러그인이 충돌하지 않습니다. 세션은 포그라운드 서비스 보호 없이 계속 실행됩니다.
 - `수정` 긴 출력 기록은 최신 텍스트를 유지하면서 프로세스 간 응답 크기 제한을 넘지 않도록 합니다.
+- `수정` 스크립트 출력 읽기 및 재생 시 화면을 채우는 끝부분의 빈 줄을 제거하고 프롬프트 공백과 후속 출력의 줄 경계를 유지
+- `수정` 시작 중인 세션이 호스트 조회에서 일시적으로 사라져 화면에 표시되는 실행에서 터미널을 열 수 없던 문제
 - `의존성` 터미널 에뮬레이션과 pty 네이티브 라이브러리로 jackpal Android-Terminal-Emulator (term 1.0.70, emulatorview 1.0.42, libtermexec 1.0, Apache-2.0) 추가, `locks/vendored-aars.lock` 에 해시 고정
 - `의존성` 공유 플러그인 계약과 Node.js 매니페스트 계약으로 `common-plugin-api.aar` 와 `nodejs-api.aar` (AutoJs6 모듈 `plugin-api/common-plugin-api` 와 `plugin-api/nodejs-api`, 호스트 빌드 6.8.0 / 5303, MPL 2.0) 추가, `locks/host-api-aars.lock` 에 해시 고정
 - `의존성` 터미널 계약 V1 (`ITerminalPlugin` / `ITerminalCallback`, 신원, 상한, 오류 코드) 로 `terminal-api.aar` (AutoJs6 모듈 `plugin-api/terminal-api`, 호스트 빌드 6.8.0 / 5304, MPL 2.0) 추가. 플러그인 신원 상수는 이제 여기서 가져오며 `locks/host-api-aars.lock` 에 해시 고정

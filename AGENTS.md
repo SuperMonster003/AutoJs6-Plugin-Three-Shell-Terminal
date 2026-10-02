@@ -103,7 +103,7 @@ AutoJs6-Plugin-Three-Shell-Terminal/
 |   |   |                                              P3.2: TerminalManagerDialog (四个可收起分组的会话管理器), TerminalManagerActivity (透明承载, 通知点击 / manager=true 入口), ElapsedTime;
 |   |   |                                              P3.3: LauncherActivity (启动器图标目标, 与终端同 taskAffinity 的不可见转发器)
 |   |   `-- (路线图 4.2 节: core/ service/ node/ storage/ binder/ ui/settings/ 随 P2 - P5 加入)
-|   |-- src/main/java/jackpal/androidterm/           PtyBridge.java, emulatorview/TerminalSelectionSnapshot.java (同包访问 AAR 包级 API, 包名不变)
+|   |-- src/main/java/jackpal/androidterm/           PtyBridge.java, emulatorview/{TerminalSelectionSnapshot,TerminalCursorPosition}.java (同包访问 AAR 包级 API, 包名不变)
 |   |-- src/main/res/           values*/ x 11 (strings, colors + values-night, themes, ids), mipmap*/ (生成), raw*/plugin_instruction.md (生成), layout/ (activity_terminal, include_terminal_banner), menu/ (menu_terminal), xml/
 |   |-- src/test/               JVM 契约, 资源守卫, 迁入的终端逻辑测试, 调色板 / 外观解析 (ui/TerminalPaletteTest)
 |   |-- src/androidTest/        Binder 契约, 会话 / 存储 / Node / 终端界面 (ui/TerminalActivityInstrumentationTest) instrumentation

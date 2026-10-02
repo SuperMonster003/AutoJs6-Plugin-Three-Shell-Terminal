@@ -55,13 +55,14 @@ object ThreeShellTerminalPlugin {
 
     /**
      * Contract features this build implements (appendix B.1): Node CLI integration, output
-     * subscriptions and transcripts. `settings` is declared once roadmap P5.1 ships the settings
-     * page (AGENTS.md: never declare an unimplemented capability).
-     * zh-CN: 本构建实现的契约特性; `settings` 待 P5.1 设置页落地后再声明.
+     * subscriptions, transcripts and, since roadmap P5.1, the standalone settings page reached
+     * through [TerminalActions.OPEN_SETTINGS] (AGENTS.md: never declare an unimplemented capability).
+     * zh-CN: 本构建实现的契约特性: Node CLI 集成, 输出订阅, 转录, 以及自 P5.1 起经 `TERMINAL_SETTINGS` 进入的独立设置页.
      */
     val FEATURES: List<String> = listOf(
         TerminalCapabilityKeys.FEATURE_NODE_CLI,
         TerminalCapabilityKeys.FEATURE_OUTPUT_SUBSCRIPTION,
+        TerminalCapabilityKeys.FEATURE_SETTINGS,
         TerminalCapabilityKeys.FEATURE_TRANSCRIPT,
     )
 

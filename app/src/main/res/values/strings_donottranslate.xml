@@ -7,5 +7,15 @@
     <string name="about_component_libraries" translatable="false">AndroidX AppCompat, Material Components, Gson</string>
     <string name="about_component_libraries_summary" translatable="false">Apache License 2.0</string>
     <string name="about_license_name" translatable="false">Mozilla Public License 2.0</string>
+    <string name="app_language_ar" translatable="false">العربية</string>
+    <string name="app_language_en" translatable="false">English</string>
+    <string name="app_language_es" translatable="false">Español</string>
+    <string name="app_language_fr" translatable="false">Français</string>
+    <string name="app_language_ja" translatable="false">日本語</string>
+    <string name="app_language_ko" translatable="false">한국어</string>
+    <string name="app_language_ru" translatable="false">Русский</string>
+    <string name="app_language_zh_hans" translatable="false">简体中文</string>
+    <string name="app_language_zh_hant_hk" translatable="false">繁體中文 (香港)</string>
+    <string name="app_language_zh_hant_tw" translatable="false">繁體中文 (台灣)</string>
     <string name="app_name" translatable="false">3-Shell Terminal</string>
 </resources>

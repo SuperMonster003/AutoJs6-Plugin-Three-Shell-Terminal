@@ -9,7 +9,25 @@
     <string name="about_title">حول</string>
     <string name="about_version">الإصدار</string>
     <string name="about_version_value">%1$s (البناء %2$d)\nتاريخ البناء: %3$s</string>
+    <string name="app_settings_always_dark">داكن دائما</string>
+    <string name="app_settings_always_light">فاتح دائما</string>
+    <string name="app_settings_appearance">المظهر</string>
+    <string name="app_settings_dark_mode">الوضع الداكن</string>
+    <string name="app_settings_follow_autojs6">اتباع AutoJs6</string>
+    <string name="app_settings_follow_autojs6_summary">اتباع AutoJs6 · %1$s</string>
+    <string name="app_settings_follow_system">اتباع النظام</string>
+    <string name="app_settings_language">اللغة</string>
+    <string name="app_settings_theme_color">لون السمة</string>
     <string name="document_loading" tools:ignore="TypographyEllipsis">جار التحميل...</string>
+    <string name="launcher_icon_applied_note">قد يستغرق تحديث المشغل بضع ثوان. قد تحتاج إلى إضافة بعض اختصارات الشاشة الرئيسية مرة أخرى.</string>
+    <string name="launcher_icon_auto">أيقونة تكيفية (تلقائية)</string>
+    <string name="launcher_icon_auto_note">يحاول اتباع سمة النظام. بعض المشغلات تخزن الرموز مؤقتا أو تستخدم نظام ألوان واحدا فقط.</string>
+    <string name="launcher_icon_dark">أيقونة تكيفية (داكنة)</string>
+    <string name="launcher_icon_failed">تعذر تغيير رمز المشغل. يرجى المحاولة مرة أخرى.</string>
+    <string name="launcher_icon_light">أيقونة تكيفية (فاتحة)</string>
+    <string name="launcher_icon_title">رمز المشغل</string>
+    <string name="launcher_icon_transparent">أيقونة بخلفية شفافة</string>
+    <string name="launcher_icon_transparent_note">قد تضيف بعض المشغلات خلفية أو قناعا, لذلك قد لا يتم الحفاظ على الشفافية.</string>
     <string name="notification_channel_description">يعرض جلسات الطرفية التي تستمر في العمل في الخلفية ويتيح إغلاقها</string>
     <string name="notification_channel_name">جلسات الطرفية</string>
     <string name="notification_close_sessions">إغلاق الجلسات</string>
@@ -18,9 +36,24 @@
     <string name="plugin_description">طرفية متعددة الجلسات تشغل shell النظام في pty, مع جلسات في الخلفية وشريط مفاتيح وأوامر Node.js</string>
     <string name="release_history_error">تعذرت قراءة المستند المدمج.</string>
     <string name="release_history_title">سجل الإصدارات</string>
+    <string name="settings_all_files_access">الوصول إلى جميع الملفات</string>
+    <string name="settings_all_files_access_denied">غير ممنوح. انقر لمنحه من إعدادات النظام</string>
+    <string name="settings_all_files_access_granted">ممنوح. يمكن فتح أدلة التخزين المشترك</string>
+    <string name="settings_all_files_access_not_applicable">التخزين المشترك غير متاح على هذا الجهاز</string>
+    <string name="settings_clear_action">حذف</string>
+    <string name="settings_clear_data">مسح بيانات الطرفية</string>
+    <string name="settings_clear_data_confirm">هل تريد حذف كل بيانات الطرفية ضمن %1$s? سيتم إغلاق الجلسات قيد التشغيل.</string>
+    <string name="settings_clear_data_summary">إزالة الدليل الرئيسي للطرفية والحزم المثبتة وذاكرة npm المؤقتة</string>
+    <string name="settings_clearing" tools:ignore="TypographyEllipsis">جار مسح بيانات الطرفية...</string>
+    <string name="settings_data_cleared">تم مسح بيانات الطرفية</string>
     <string name="settings_license">الترخيص</string>
+    <string name="settings_node_integration">تكامل Node.js</string>
+    <string name="settings_node_integration_summary">استخدام node من إضافة Node.js Runtime في الجلسات الجديدة</string>
+    <string name="settings_node_probe_summary">التحقق مما إذا كانت الطرفية تستطيع تشغيل node من إضافة Node.js Runtime</string>
     <string name="settings_notices">إشعارات الجهات الخارجية</string>
     <string name="settings_open_failed">لا يوجد تطبيق لفتح هذا الرابط.</string>
+    <string name="settings_probe_again">إعادة الفحص</string>
+    <string name="settings_section_information">معلومات</string>
     <string name="settings_source">الشيفرة المصدرية</string>
     <string name="terminal_action_close">إغلاق</string>
     <string name="terminal_action_copy">نسخ</string>
@@ -97,6 +130,11 @@
     <string name="terminal_title">الطرفية</string>
     <string name="terminal_uptime">مدة التشغيل</string>
     <string name="terminal_working_directory">دليل العمل</string>
+    <string name="theme_picker_custom">لون مخصص</string>
+    <string name="theme_picker_input">HEX / RGB</string>
+    <string name="theme_picker_invalid">أدخل #RRGGBB أو RRGGBB أو rgb(r, g, b). يجب أن تكون قيم RGB بين 0 و255.</string>
+    <string name="theme_picker_presets">ألوان جاهزة</string>
+    <string name="theme_picker_preview">معاينة</string>
     <string name="update_available">تحديث متاح: %1$s</string>
     <string name="update_check">التحقق من التحديثات</string>
     <string name="update_checking" tools:ignore="TypographyEllipsis">جار التحقق من التحديثات...</string>

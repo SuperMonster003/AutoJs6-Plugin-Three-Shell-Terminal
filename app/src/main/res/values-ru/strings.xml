@@ -9,7 +9,25 @@
     <string name="about_title">О приложении</string>
     <string name="about_version">Версия</string>
     <string name="about_version_value">%1$s (сборка %2$d)\nДата сборки: %3$s</string>
+    <string name="app_settings_always_dark">Всегда темная</string>
+    <string name="app_settings_always_light">Всегда светлая</string>
+    <string name="app_settings_appearance">Оформление</string>
+    <string name="app_settings_dark_mode">Темная тема</string>
+    <string name="app_settings_follow_autojs6">Следовать AutoJs6</string>
+    <string name="app_settings_follow_autojs6_summary">Следовать AutoJs6 · %1$s</string>
+    <string name="app_settings_follow_system">Следовать системе</string>
+    <string name="app_settings_language">Язык</string>
+    <string name="app_settings_theme_color">Цвет темы</string>
     <string name="document_loading" tools:ignore="TypographyEllipsis">Загрузка...</string>
+    <string name="launcher_icon_applied_note">Обновление значка может занять несколько секунд. Некоторые ярлыки на главном экране может потребоваться добавить заново.</string>
+    <string name="launcher_icon_auto">Адаптивный значок (автоматически)</string>
+    <string name="launcher_icon_auto_note">Пытается следовать системной теме. Некоторые лаунчеры кешируют значки или используют только одну цветовую схему.</string>
+    <string name="launcher_icon_dark">Адаптивный значок (тёмный)</string>
+    <string name="launcher_icon_failed">Не удалось изменить значок запуска. Повторите попытку.</string>
+    <string name="launcher_icon_light">Адаптивный значок (светлый)</string>
+    <string name="launcher_icon_title">Значок запуска</string>
+    <string name="launcher_icon_transparent">Значок с прозрачным фоном</string>
+    <string name="launcher_icon_transparent_note">Некоторые лаунчеры добавляют фон или маску, поэтому прозрачность может не сохраниться.</string>
     <string name="notification_channel_description">Показывает сеансы терминала, продолжающие работать в фоне, и позволяет их закрыть</string>
     <string name="notification_channel_name">Сеансы терминала</string>
     <string name="notification_close_sessions">Закрыть сеансы</string>
@@ -18,9 +36,24 @@
     <string name="plugin_description">Многосеансовый терминал, запускающий системную оболочку в pty, с фоновыми сеансами, панелью клавиш и командами Node.js</string>
     <string name="release_history_error">Не удалось прочитать встроенный документ.</string>
     <string name="release_history_title">История версий</string>
+    <string name="settings_all_files_access">Доступ ко всем файлам</string>
+    <string name="settings_all_files_access_denied">Не разрешён. Нажмите, чтобы разрешить в настройках системы</string>
+    <string name="settings_all_files_access_granted">Разрешён. Каталоги общего хранилища доступны</string>
+    <string name="settings_all_files_access_not_applicable">Общее хранилище недоступно на этом устройстве</string>
+    <string name="settings_clear_action">Удалить</string>
+    <string name="settings_clear_data">Очистить данные терминала</string>
+    <string name="settings_clear_data_confirm">Удалить все данные терминала в %1$s? Запущенные сеансы будут закрыты.</string>
+    <string name="settings_clear_data_summary">Удалить домашний каталог терминала, установленные пакеты и кэш npm</string>
+    <string name="settings_clearing" tools:ignore="TypographyEllipsis">Очистка данных терминала...</string>
+    <string name="settings_data_cleared">Данные терминала очищены</string>
     <string name="settings_license">Лицензия</string>
+    <string name="settings_node_integration">Интеграция Node.js</string>
+    <string name="settings_node_integration_summary">Использовать node из плагина Node.js Runtime в новых сеансах</string>
+    <string name="settings_node_probe_summary">Проверить, может ли терминал запускать node из плагина Node.js Runtime</string>
     <string name="settings_notices">Уведомления третьих сторон</string>
     <string name="settings_open_failed">Нет приложения для открытия ссылки.</string>
+    <string name="settings_probe_again">Проверить снова</string>
+    <string name="settings_section_information">Информация</string>
     <string name="settings_source">Исходный код</string>
     <string name="terminal_action_close">Закрыть</string>
     <string name="terminal_action_copy">Копировать</string>
@@ -97,6 +130,11 @@
     <string name="terminal_title">Терминал</string>
     <string name="terminal_uptime">Время работы</string>
     <string name="terminal_working_directory">Рабочий каталог</string>
+    <string name="theme_picker_custom">Свой цвет</string>
+    <string name="theme_picker_input">HEX / RGB</string>
+    <string name="theme_picker_invalid">Введите #RRGGBB, RRGGBB или rgb(r, g, b). Значения RGB должны быть от 0 до 255.</string>
+    <string name="theme_picker_presets">Готовые цвета</string>
+    <string name="theme_picker_preview">Предпросмотр</string>
     <string name="update_available">Доступно обновление: %1$s</string>
     <string name="update_check">Проверить обновления</string>
     <string name="update_checking" tools:ignore="TypographyEllipsis">Проверка обновлений...</string>

@@ -8,7 +8,7 @@
     "v1.0.0": {
       "released_date": "2026/10/02",
       "hint": [
-        "P4 本地开发预览: 已实现终端界面, 多会话管理与脚本 API, 包括输出监听, 交互输入和退出码等待. 独立设置页按 ROADMAP.md 的 P5 推进. 脚本 API 需使用包含 P4 实现的 AutoJs6 构建."
+        "P5 本地开发预览: 已实现终端界面, 多会话管理, 脚本 API (输出监听, 交互输入与退出码等待), 独立设置页, 关于 / 版本历史 / 检查更新, 以及启动器图标. 脚本 API 需使用包含 P4 实现的 AutoJs6 构建; 插件中心的设置入口需支持 TERMINAL_SETTINGS 的构建."
       ],
       "feature": [
         "插件标识 `three-shell-terminal` (engine `terminal`), 含 INFO 服务, Wake Activity 以及供宿主发现的 `org.autojs.plugin.TERMINAL` 服务骨架",
@@ -23,7 +23,8 @@
         "会话管理器: 含状态 / 控制 / 会话 / 设置四个可收起分组的对话框, 列出全部运行中的会话及其目录, PID 与运行时长, 可打开或关闭单个会话, 新建会话, 关闭全部, 查看会话详情并复制, 并提供字号, npm 镜像源与 ignore-scripts 设置; 它与宿主 `onSessionsChanged` 使用同一会话注册表, 可从终端菜单, 会话通知 (点击) 进入, 宿主的 `manager=true` 入口则经透明的 `TerminalManagerActivity` 承载, 关闭后不会留下终端界面",
         "宿主入口与启动器: 导出的 `TERMINAL_OPEN` 入口 Activity 受 `org.autojs.permission.PLUGIN` 签名权限保护, 对可识别的调用方校验权限持有与签名一致, 按契约上限校验 `directory` / `sessionId` / `newSession` / `command` / `manager` extras 并转发到自有任务中的终端界面或覆盖在调用方之上的会话管理器; `LauncherActivity` (图标 alias 的目标) 恢复最近会话或在主目录新建会话; 从宿主进入的终端按返回键回到宿主, 从启动器进入的回到桌面, 终端任务随之离开最近任务, 启动请求不会被重放",
         "启动器图标选择: 私有启动器转发器之上的四个 `MAIN / LAUNCHER` activity alias (自适应亮色, 自适应暗色, 自适应自动, 透明背景), 默认启用自动图标; 选择由 PackageManager 以唯一启用的 alias 持久化, 每次界面启动与包更新后自动修复, 固定或动态快捷方式随之迁移到所选 alias",
-        "关于, 版本历史与检查更新: 关于页显示已安装版本, 构建号与构建日期, 开发者, 插件许可证 (MPL 2.0), 并在第三方组件分组中离线打开内置的 jackpal Android-Terminal-Emulator 许可证与声明 (Apache-2.0), AutoJs6 插件 API 声明 (MPL 2.0) 与依赖库声明; 文档页不使用 WebView, 按当前语言渲染内置更新日志 (回退英文); 手动 \"检查更新\" 仅经 HTTPS 访问 GitHub Releases API, 可取消, 有超时, 结果复用 12 小时, 可忽略指定版本, 并提供打开发行页或内置版本历史. 终端溢出菜单新增 \"关于\""
+        "关于, 版本历史与检查更新: 关于页显示已安装版本, 构建号与构建日期, 开发者, 插件许可证 (MPL 2.0), 并在第三方组件分组中离线打开内置的 jackpal Android-Terminal-Emulator 许可证与声明 (Apache-2.0), AutoJs6 插件 API 声明 (MPL 2.0) 与依赖库声明; 文档页不使用 WebView, 按当前语言渲染内置更新日志 (回退英文); 手动 \"检查更新\" 仅经 HTTPS 访问 GitHub Releases API, 可取消, 有超时, 结果复用 12 小时, 可忽略指定版本, 并提供打开发行页或内置版本历史. 终端溢出菜单新增 \"关于\"",
+        "独立设置页, 分外观, 终端与信息三组: 外观含语言, 夜间模式, 主题色与启动器图标 (默认均跟随 AutoJs6, 主题色提供 16 个预设与 HEX / rgb() 输入); 终端含字号, npm 镜像源, 忽略安装脚本, Node.js 集成开关, 环境探测页, 全部文件访问与清除数据; 信息含检查更新, 版本历史与关于. 选择对话框先选后确定, 更改立即生效. 终端溢出菜单的 \"设置\" 直接进入该页 (原快捷设置子菜单移除), AutoJs6 插件中心的 \"设置\" 经 TERMINAL_SETTINGS 进入, 插件能力声明新增 settings"
       ],
       "dependency": [
         "附加 jackpal Android-Terminal-Emulator (term 1.0.70, emulatorview 1.0.42, libtermexec 1.0, Apache-2.0) 作为终端仿真与 pty 原生库, 并在 `locks/vendored-aars.lock` 中锁定哈希",

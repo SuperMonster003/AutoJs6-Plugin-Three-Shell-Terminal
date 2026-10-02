@@ -9,7 +9,25 @@
     <string name="about_title">Acerca de</string>
     <string name="about_version">Versión</string>
     <string name="about_version_value">%1$s (compilación %2$d)\nFecha: %3$s</string>
+    <string name="app_settings_always_dark">Siempre oscuro</string>
+    <string name="app_settings_always_light">Siempre claro</string>
+    <string name="app_settings_appearance">Apariencia</string>
+    <string name="app_settings_dark_mode">Modo oscuro</string>
+    <string name="app_settings_follow_autojs6">Seguir AutoJs6</string>
+    <string name="app_settings_follow_autojs6_summary">Seguir AutoJs6 · %1$s</string>
+    <string name="app_settings_follow_system">Seguir el sistema</string>
+    <string name="app_settings_language">Idioma</string>
+    <string name="app_settings_theme_color">Color del tema</string>
     <string name="document_loading" tools:ignore="TypographyEllipsis">Cargando...</string>
+    <string name="launcher_icon_applied_note">El lanzador puede tardar unos segundos en actualizarse. Puede ser necesario volver a agregar algunos accesos directos.</string>
+    <string name="launcher_icon_auto">Icono adaptable (automático)</string>
+    <string name="launcher_icon_auto_note">Intenta seguir el tema del sistema. Algunos lanzadores guardan los iconos en caché o usan una sola paleta.</string>
+    <string name="launcher_icon_dark">Icono adaptable (oscuro)</string>
+    <string name="launcher_icon_failed">No se pudo cambiar el icono del lanzador. Inténtalo de nuevo.</string>
+    <string name="launcher_icon_light">Icono adaptable (claro)</string>
+    <string name="launcher_icon_title">Icono del lanzador</string>
+    <string name="launcher_icon_transparent">Icono con fondo transparente</string>
+    <string name="launcher_icon_transparent_note">Algunos lanzadores agregan un fondo o una máscara. Puede que no se conserve la transparencia.</string>
     <string name="notification_channel_description">Muestra las sesiones de terminal que siguen ejecutándose en segundo plano y permite cerrarlas</string>
     <string name="notification_channel_name">Sesiones de terminal</string>
     <string name="notification_close_sessions">Cerrar sesiones</string>
@@ -18,9 +36,24 @@
     <string name="plugin_description">Terminal multisesión que ejecuta el shell del sistema en un pty, con sesiones en segundo plano, barra de teclas y comandos Node.js</string>
     <string name="release_history_error">No se puede leer el documento integrado.</string>
     <string name="release_history_title">Historial de versiones</string>
+    <string name="settings_all_files_access">Acceso a todos los archivos</string>
+    <string name="settings_all_files_access_denied">No concedido. Toca para concederlo en los ajustes del sistema</string>
+    <string name="settings_all_files_access_granted">Concedido. Se pueden abrir los directorios del almacenamiento compartido</string>
+    <string name="settings_all_files_access_not_applicable">El almacenamiento compartido no está disponible en este dispositivo</string>
+    <string name="settings_clear_action">Eliminar</string>
+    <string name="settings_clear_data">Borrar datos de la terminal</string>
+    <string name="settings_clear_data_confirm">Eliminar todos los datos de la terminal en %1$s? Las sesiones en ejecución se cerrarán.</string>
+    <string name="settings_clear_data_summary">Eliminar el directorio personal de la terminal, los paquetes instalados y las cachés de npm</string>
+    <string name="settings_clearing" tools:ignore="TypographyEllipsis">Borrando los datos de la terminal...</string>
+    <string name="settings_data_cleared">Datos de la terminal borrados</string>
     <string name="settings_license">Licencia</string>
+    <string name="settings_node_integration">Integración de Node.js</string>
+    <string name="settings_node_integration_summary">Usar node del plugin Node.js Runtime en las sesiones nuevas</string>
+    <string name="settings_node_probe_summary">Comprobar si la terminal puede ejecutar node desde el plugin Node.js Runtime</string>
     <string name="settings_notices">Avisos de terceros</string>
     <string name="settings_open_failed">Ninguna aplicación puede abrir este enlace.</string>
+    <string name="settings_probe_again">Comprobar de nuevo</string>
+    <string name="settings_section_information">Información</string>
     <string name="settings_source">Código fuente</string>
     <string name="terminal_action_close">Cerrar</string>
     <string name="terminal_action_copy">Copiar</string>
@@ -97,6 +130,11 @@
     <string name="terminal_title">Terminal</string>
     <string name="terminal_uptime">Tiempo de actividad</string>
     <string name="terminal_working_directory">Directorio de trabajo</string>
+    <string name="theme_picker_custom">Color personalizado</string>
+    <string name="theme_picker_input">HEX / RGB</string>
+    <string name="theme_picker_invalid">Introduce #RRGGBB, RRGGBB o rgb(r, g, b). Los valores RGB deben ser de 0 a 255.</string>
+    <string name="theme_picker_presets">Colores predefinidos</string>
+    <string name="theme_picker_preview">Vista previa</string>
     <string name="update_available">Actualización disponible: %1$s</string>
     <string name="update_check">Buscar actualizaciones</string>
     <string name="update_checking" tools:ignore="TypographyEllipsis">Buscando actualizaciones...</string>

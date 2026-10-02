@@ -1,6 +1,7 @@
 package io.github.supermonster003.autojs6.plugin.three.shell.terminal.ui
 
 import android.text.InputType
+import androidx.appcompat.app.AlertDialog
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.R
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.core.TerminalPreferences
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.core.TerminalSettingsActions
@@ -16,17 +17,19 @@ internal object TerminalSettingsDialogs {
 
     val TEXT_SIZES_SP: IntArray = intArrayOf(8, 9, 10, 11, 12, 13, 14, 16, 18, 20, 22, 24, 28, 32)
 
-    fun showTextSize(kit: UiKit, preferences: TerminalPreferences, onChanged: (Int) -> Unit) {
+    /** [onPrompt] receives each dialog shown (the settings page tracks it as its unconfirmed draft). */
+    fun showTextSize(kit: UiKit, preferences: TerminalPreferences, onChanged: (Int) -> Unit, onPrompt: (AlertDialog) -> Unit = {}) {
         val current = preferences.textSizeSp
         val selected = TEXT_SIZES_SP.indexOfFirst { it >= current }.takeIf { it >= 0 } ?: TEXT_SIZES_SP.lastIndex
-        kit.confirmedChoiceDialog(kit.string(R.string.terminal_text_size), TEXT_SIZES_SP.map { "$it sp" }, selected) { index ->
+        val dialog = kit.confirmedChoiceDialog(kit.string(R.string.terminal_text_size), TEXT_SIZES_SP.map { "$it sp" }, selected) { index ->
             val size = TEXT_SIZES_SP[index]
             preferences.textSizeSp = size
             onChanged(size)
         }
+        onPrompt(dialog)
     }
 
-    fun showNpmRegistry(kit: UiKit, preferences: TerminalPreferences, actions: TerminalSettingsActions, onChanged: () -> Unit = {}) {
+    fun showNpmRegistry(kit: UiKit, preferences: TerminalPreferences, actions: TerminalSettingsActions, onChanged: () -> Unit = {}, onPrompt: (AlertDialog) -> Unit = {}) {
         val choices = TerminalPreferences.REGISTRY_CHOICES
         val labels = listOf(
             kit.string(R.string.terminal_npm_registry_npmjs),
@@ -34,18 +37,19 @@ internal object TerminalSettingsDialogs {
             kit.string(R.string.terminal_npm_registry_custom),
         )
         val current = choices.indexOf(preferences.npmRegistryChoice).coerceAtLeast(0)
-        kit.confirmedChoiceDialog(kit.string(R.string.terminal_npm_registry), labels, current) { index ->
+        val dialog = kit.confirmedChoiceDialog(kit.string(R.string.terminal_npm_registry), labels, current) { index ->
             val choice = choices[index]
             if (choice == TerminalPreferences.REGISTRY_CUSTOM) {
-                promptCustomRegistry(kit, preferences, actions, onChanged)
+                onPrompt(promptCustomRegistry(kit, preferences, actions, onChanged))
             } else {
                 actions.setRegistry(choice)
                 onChanged()
             }
         }
+        onPrompt(dialog)
     }
 
-    private fun promptCustomRegistry(kit: UiKit, preferences: TerminalPreferences, actions: TerminalSettingsActions, onChanged: () -> Unit) {
+    private fun promptCustomRegistry(kit: UiKit, preferences: TerminalPreferences, actions: TerminalSettingsActions, onChanged: () -> Unit): AlertDialog =
         kit.inputDialog(
             title = kit.string(R.string.terminal_npm_registry_custom_url),
             hint = kit.string(R.string.terminal_npm_registry_custom_url_hint),
@@ -56,6 +60,5 @@ internal object TerminalSettingsDialogs {
             actions.setRegistry(TerminalPreferences.REGISTRY_CUSTOM, input)
             onChanged()
         }
-    }
 
 }

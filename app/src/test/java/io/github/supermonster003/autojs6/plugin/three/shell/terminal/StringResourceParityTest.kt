@@ -41,9 +41,11 @@ class StringResourceParityTest {
     @Test
     fun `the application title is not translatable and matches the plugin name`() {
         val document = parse(resourceRoot.resolve("values/strings_donottranslate.xml"))
-        val appName = document.elements("string").single()
-        assertEquals("app_name", appName.getAttribute("name"))
-        assertEquals("false", appName.getAttribute("translatable"))
+        val entries = document.elements("string")
+        // Since P5 the file also carries the About component names and the language labels; all of them stay untranslated.
+        entries.forEach { assertEquals("${it.getAttribute("name")} must not be translatable", "false", it.getAttribute("translatable")) }
+        assertEquals(entries.map { it.getAttribute("name") }, entries.map { it.getAttribute("name") }.sorted())
+        val appName = entries.single { it.getAttribute("name") == "app_name" }
         assertEquals("3-Shell Terminal", appName.textContent)
     }
 

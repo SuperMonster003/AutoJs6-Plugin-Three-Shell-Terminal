@@ -9,7 +9,25 @@
     <string name="about_title">アプリについて</string>
     <string name="about_version">バージョン</string>
     <string name="about_version_value">%1$s (ビルド %2$d)\nビルド日: %3$s</string>
+    <string name="app_settings_always_dark">常にダーク</string>
+    <string name="app_settings_always_light">常にライト</string>
+    <string name="app_settings_appearance">外観</string>
+    <string name="app_settings_dark_mode">ダークモード</string>
+    <string name="app_settings_follow_autojs6">AutoJs6 に従う</string>
+    <string name="app_settings_follow_autojs6_summary">AutoJs6 に従う · %1$s</string>
+    <string name="app_settings_follow_system">システムに従う</string>
+    <string name="app_settings_language">言語</string>
+    <string name="app_settings_theme_color">テーマ色</string>
     <string name="document_loading" tools:ignore="TypographyEllipsis">読み込み中...</string>
+    <string name="launcher_icon_applied_note">反映まで数秒かかる場合があります. ホーム画面のショートカットを再追加する必要がある場合があります.</string>
+    <string name="launcher_icon_auto">アダプティブ アイコン (自動)</string>
+    <string name="launcher_icon_auto_note">システムテーマへの追従を試みます. ランチャーによってはアイコンがキャッシュされ, 配色が固定されます.</string>
+    <string name="launcher_icon_dark">アダプティブ アイコン (ダーク)</string>
+    <string name="launcher_icon_failed">ランチャーアイコンを変更できませんでした. もう一度お試しください.</string>
+    <string name="launcher_icon_light">アダプティブ アイコン (ライト)</string>
+    <string name="launcher_icon_title">ランチャーアイコン</string>
+    <string name="launcher_icon_transparent">透明背景のアイコン</string>
+    <string name="launcher_icon_transparent_note">ランチャーが背景やマスクを追加する場合, 透明な背景は維持されないことがあります.</string>
     <string name="notification_channel_description">バックグラウンドで実行中のターミナルセッションを表示し, 終了できるようにします</string>
     <string name="notification_channel_name">ターミナルセッション</string>
     <string name="notification_close_sessions">セッションを終了</string>
@@ -18,9 +36,24 @@
     <string name="plugin_description">pty でシステムシェルを実行するマルチセッション端末. バックグラウンド実行, キーバー, Node.js コマンドに対応</string>
     <string name="release_history_error">内蔵ドキュメントを読み込めません.</string>
     <string name="release_history_title">バージョン履歴</string>
+    <string name="settings_all_files_access">すべてのファイルへのアクセス</string>
+    <string name="settings_all_files_access_denied">未許可. タップしてシステム設定で許可します</string>
+    <string name="settings_all_files_access_granted">許可済み. 共有ストレージのディレクトリを開けます</string>
+    <string name="settings_all_files_access_not_applicable">このデバイスでは共有ストレージを利用できません</string>
+    <string name="settings_clear_action">削除</string>
+    <string name="settings_clear_data">ターミナルデータを消去</string>
+    <string name="settings_clear_data_confirm">%1$s 以下のターミナルデータをすべて削除しますか? 実行中のセッションは閉じられます.</string>
+    <string name="settings_clear_data_summary">ターミナルのホーム, インストール済みパッケージ, npm キャッシュを削除します</string>
+    <string name="settings_clearing" tools:ignore="TypographyEllipsis">ターミナルデータを消去しています...</string>
+    <string name="settings_data_cleared">ターミナルデータを消去しました</string>
     <string name="settings_license">ライセンス</string>
+    <string name="settings_node_integration">Node.js 連携</string>
+    <string name="settings_node_integration_summary">新しいセッションで Node.js ランタイムプラグインの node を使用します</string>
+    <string name="settings_node_probe_summary">ターミナルが Node.js ランタイムプラグインの node を実行できるか確認します</string>
     <string name="settings_notices">第三者に関する表示</string>
     <string name="settings_open_failed">このリンクを開くアプリがありません.</string>
+    <string name="settings_probe_again">再確認</string>
+    <string name="settings_section_information">情報</string>
     <string name="settings_source">ソースコード</string>
     <string name="terminal_action_close">閉じる</string>
     <string name="terminal_action_copy">コピー</string>
@@ -97,6 +130,11 @@
     <string name="terminal_title">ターミナル</string>
     <string name="terminal_uptime">稼働時間</string>
     <string name="terminal_working_directory">作業ディレクトリ</string>
+    <string name="theme_picker_custom">カスタム色</string>
+    <string name="theme_picker_input">HEX / RGB</string>
+    <string name="theme_picker_invalid">#RRGGBB, RRGGBB または rgb(r, g, b) を入力してください. RGB の値は 0..255 です.</string>
+    <string name="theme_picker_presets">プリセット色</string>
+    <string name="theme_picker_preview">プレビュー</string>
     <string name="update_available">更新があります: %1$s</string>
     <string name="update_check">更新を確認</string>
     <string name="update_checking" tools:ignore="TypographyEllipsis">更新を確認中...</string>

@@ -52,7 +52,7 @@ AutoJs6 通过 Binder 服务发现插件, 以显式 Intent 打开终端界面, �
 
 ******
 
-P2 开发预览: 已实现 shell 会话, 存储访问, 带签名信任的 Node.js 集成与宿主会话控制. 终端界面, 脚本 API 与设置页将继续按 [ROADMAP.md](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/blob/master/ROADMAP.md) 的阶段推进. AutoJs6 6.8.0 (build 5304+).
+P4 本地开发预览: 已实现终端界面, 多会话管理与脚本 API, 包括输出监听, 交互输入和退出码等待. 独立设置页按 [ROADMAP.md](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/blob/master/ROADMAP.md) 的 P5 推进. 脚本 API 需使用包含 P4 实现的 AutoJs6 构建.
 
 ******
 
@@ -105,16 +105,16 @@ let session = terminal.open(files.cwd());
 console.log(session.id, terminal.sessions().length);
 
 // Visible execution: install dependencies in a session the user can watch and wait for the exit code (0 = no timeout).
-let install = terminal.exec('npm install', { cwd: '/sdcard/Scripts/my-project', wait: true, timeout: 0 });
+let install = terminal.exec('npm install', { cwd: '/sdcard/Scripts/my-project', keepOpen: false, wait: true, timeout: 0 });
 toastLog('npm install exited with ' + install.exitCode);
 
 // Drive an interactive command: output / exit events, write and waitFor; every failure is a TerminalError with a stable code.
-let init = terminal.exec('npm init', { cwd: files.cwd(), show: true });
-init.on('output', line => { if (/package name/i.test(line)) init.write('\n'); });
-init.waitFor(/Is this OK\?/i, 60e3);
-init.write('yes\n');
-init.on('exit', code => console.log('npm init exited with ' + code));
-terminal.npm.run('build', files.cwd());
+let driven = terminal.exec('sleep 1; printf "name? "; read name; echo "received:$name"; sleep 1', {
+    cwd: files.cwd(), show: true, keepOpen: false,
+});
+driven.on('output', line => { if (/name\?/.test(line)) driven.write('AutoJs6\n'); });
+driven.on('exit', code => console.log('Session exited with ' + code));
+console.log(driven.waitFor(/received:AutoJs6/, 15e3));
 ```
 
 ******
@@ -196,7 +196,7 @@ minimum host build: 5304 (6.8.0)
 
 _2026/10/02_
 
-- `提示` P2 开发预览: 已实现 shell 会话, 存储访问, 带签名信任的 Node.js 集成与宿主会话控制. 终端界面, 脚本 API 与设置页将继续按 ROADMAP.md 的阶段推进.
+- `提示` P4 本地开发预览: 已实现终端界面, 多会话管理与脚本 API, 包括输出监听, 交互输入和退出码等待. 独立设置页按 ROADMAP.md 的 P5 推进. 脚本 API 需使用包含 P4 实现的 AutoJs6 构建.
 - `新增` 插件标识 `three-shell-terminal` (engine `terminal`), 含 INFO 服务, Wake Activity 以及供宿主发现的 `org.autojs.plugin.TERMINAL` 服务骨架
 - `新增` 按 ABI 拆分的 APK (arm64-v8a, armeabi-v7a, x86_64, x86) 与 universal APK, 原生库按 16 KB 页对齐
 - `新增` 10 种语言的 README, 插件中心说明与更新日志
@@ -210,6 +210,8 @@ _2026/10/02_
 - `新增` 宿主入口与启动器: 导出的 `TERMINAL_OPEN` 入口 Activity 受 `org.autojs.permission.PLUGIN` 签名权限保护, 对可识别的调用方校验权限持有与签名一致, 按契约上限校验 `directory` / `sessionId` / `newSession` / `command` / `manager` extras 并转发到自有任务中的终端界面或覆盖在调用方之上的会话管理器; `LauncherActivity` (图标 alias 的目标) 恢复最近会话或在主目录新建会话; 从宿主进入的终端按返回键回到宿主, 从启动器进入的回到桌面, 终端任务随之离开最近任务, 启动请求不会被重放
 - `修复` 系统限制后台活动时, 启动会话不再导致插件崩溃; 会话会在没有前台服务保护的情况下继续运行.
 - `修复` 读取较长转录时保留最新文本, 并控制回复大小, 避免跨进程消息超限.
+- `修复` 脚本读取或回放终端输出时去除屏幕填充的尾部空行, 保留提示符空格和后续输出的行边界
+- `修复` 会话从准备中进入运行中时, 宿主查询偶尔找不到该会话, 导致可见执行无法打开终端的问题
 - `依赖` 附加 jackpal Android-Terminal-Emulator (term 1.0.70, emulatorview 1.0.42, libtermexec 1.0, Apache-2.0) 作为终端仿真与 pty 原生库, 并在 `locks/vendored-aars.lock` 中锁定哈希
 - `依赖` 附加 `common-plugin-api.aar` 与 `nodejs-api.aar` (AutoJs6 模块 `plugin-api/common-plugin-api` 与 `plugin-api/nodejs-api`, 宿主构建 6.8.0 / 5303, MPL 2.0) 作为共享插件契约与 Node.js 清单契约, 并在 `locks/host-api-aars.lock` 中锁定哈希
 - `依赖` 附加 `terminal-api.aar` (AutoJs6 模块 `plugin-api/terminal-api`, 宿主构建 6.8.0 / 5304, MPL 2.0) 作为终端契约 V1 (`ITerminalPlugin` / `ITerminalCallback`, 身份, 上限与错误码), 插件身份常量改由它提供, 并在 `locks/host-api-aars.lock` 中锁定哈希

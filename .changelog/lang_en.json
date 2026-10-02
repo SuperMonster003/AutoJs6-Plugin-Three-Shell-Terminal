@@ -8,7 +8,7 @@
     "v1.0.0": {
       "released_date": "2026/10/02",
       "hint": [
-        "P2 development preview: shell sessions, storage access, trusted Node.js integration and host session control are implemented. The terminal screen, script API and settings page will follow the stages in ROADMAP.md."
+        "P4 local development preview: terminal UI, multiple sessions and the script API are implemented, including output events, interactive input and exit-code waits. Standalone settings follow in P5 of ROADMAP.md. The script API requires an AutoJs6 build containing the P4 implementation."
       ],
       "feature": [
         "Plugin identity `three-shell-terminal` (engine `terminal`) with the INFO service, the Wake Activity and the `org.autojs.plugin.TERMINAL` service skeleton for host discovery",
@@ -30,7 +30,9 @@
       ],
       "fix": [
         "A system restriction on background activity no longer crashes the plugin when a session starts. The session continues without foreground service protection.",
-        "Long transcript reads keep their newest text within the cross-process reply size limit."
+        "Long transcript reads keep their newest text within the cross-process reply size limit.",
+        "Script transcript reads and output replay omit trailing screen padding while preserving prompt spaces and the boundary before live output",
+        "A starting session could briefly disappear from host queries and prevent visible execution from opening its terminal"
       ]
     }
   }

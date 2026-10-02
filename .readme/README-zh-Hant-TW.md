@@ -52,7 +52,7 @@ AutoJs6 透過 Binder 服務發現外掛, 以顯式 Intent 開啟終端機介面
 
 ******
 
-P2 開發預覽: 已實作 shell 工作階段, 儲存存取, 具簽章信任的 Node.js 整合與宿主工作階段控制. 終端介面, 指令碼 API 與設定頁將繼續按 [ROADMAP.md](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/blob/master/ROADMAP.md) 的階段推進. AutoJs6 6.8.0 (build 5304+).
+P4 本機開發預覽: 已實作終端介面, 多工作階段管理與指令碼 API, 包括輸出監聽, 互動輸入與結束代碼等待. 獨立設定頁按 [ROADMAP.md](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/blob/master/ROADMAP.md) 的 P5 推進. 指令碼 API 需使用包含 P4 實作的 AutoJs6 組建.
 
 ******
 
@@ -105,16 +105,16 @@ let session = terminal.open(files.cwd());
 console.log(session.id, terminal.sessions().length);
 
 // Visible execution: install dependencies in a session the user can watch and wait for the exit code (0 = no timeout).
-let install = terminal.exec('npm install', { cwd: '/sdcard/Scripts/my-project', wait: true, timeout: 0 });
+let install = terminal.exec('npm install', { cwd: '/sdcard/Scripts/my-project', keepOpen: false, wait: true, timeout: 0 });
 toastLog('npm install exited with ' + install.exitCode);
 
 // Drive an interactive command: output / exit events, write and waitFor; every failure is a TerminalError with a stable code.
-let init = terminal.exec('npm init', { cwd: files.cwd(), show: true });
-init.on('output', line => { if (/package name/i.test(line)) init.write('\n'); });
-init.waitFor(/Is this OK\?/i, 60e3);
-init.write('yes\n');
-init.on('exit', code => console.log('npm init exited with ' + code));
-terminal.npm.run('build', files.cwd());
+let driven = terminal.exec('sleep 1; printf "name? "; read name; echo "received:$name"; sleep 1', {
+    cwd: files.cwd(), show: true, keepOpen: false,
+});
+driven.on('output', line => { if (/name\?/.test(line)) driven.write('AutoJs6\n'); });
+driven.on('exit', code => console.log('Session exited with ' + code));
+console.log(driven.waitFor(/received:AutoJs6/, 15e3));
 ```
 
 ******
@@ -196,7 +196,7 @@ minimum host build: 5304 (6.8.0)
 
 _2026/10/02_
 
-- `提示` P2 開發預覽: 已實作 shell 工作階段, 儲存存取, 具簽章信任的 Node.js 整合與宿主工作階段控制. 終端介面, 指令碼 API 與設定頁將繼續按 ROADMAP.md 的階段推進.
+- `提示` P4 本機開發預覽: 已實作終端介面, 多工作階段管理與指令碼 API, 包括輸出監聽, 互動輸入與結束代碼等待. 獨立設定頁按 ROADMAP.md 的 P5 推進. 指令碼 API 需使用包含 P4 實作的 AutoJs6 組建.
 - `新增` 外掛識別碼 `three-shell-terminal` (engine `terminal`), 含 INFO 服務, Wake Activity 以及供主程式發現的 `org.autojs.plugin.TERMINAL` 服務骨架
 - `新增` 按 ABI 拆分的 APK (arm64-v8a, armeabi-v7a, x86_64, x86) 與 universal APK, 原生程式庫按 16 KB 分頁對齊
 - `新增` 10 種語言的 README, 外掛中心說明與更新日誌
@@ -210,6 +210,8 @@ _2026/10/02_
 - `新增` 宿主入口與啟動器: 匯出的 `TERMINAL_OPEN` 入口 Activity 受 `org.autojs.permission.PLUGIN` 簽章權限保護, 對可識別的呼叫方檢驗權限持有與簽章一致, 依契約上限檢驗 `directory` / `sessionId` / `newSession` / `command` / `manager` extras 並轉送到自有工作中的終端介面或覆蓋在呼叫方之上的工作階段管理員; `LauncherActivity` (圖示 alias 的目標) 還原最近工作階段或在主目錄新建工作階段; 從宿主進入的終端按返回鍵回到宿主, 從啟動器進入的回到桌面, 終端工作隨之離開最近工作, 啟動要求不會被重放
 - `修復` 系統限制背景活動時, 啟動工作階段不再導致外掛程式當機; 工作階段會在沒有前景服務保護的情況下繼續執行.
 - `修復` 讀取較長轉錄時保留最新文字, 並控制回覆大小, 避免跨程序訊息超限.
+- `修復` 指令碼讀取或重播終端輸出時移除畫面填充的尾部空行, 保留提示字元空格與後續輸出的行邊界
+- `修復` 工作階段從準備中進入執行中時, 宿主查詢偶爾找不到該工作階段, 導致可見執行無法開啟終端的問題
 - `相依性` 附加 jackpal Android-Terminal-Emulator (term 1.0.70, emulatorview 1.0.42, libtermexec 1.0, Apache-2.0) 作為終端機模擬與 pty 原生程式庫, 並在 `locks/vendored-aars.lock` 中鎖定雜湊
 - `相依性` 附加 `common-plugin-api.aar` 與 `nodejs-api.aar` (AutoJs6 模組 `plugin-api/common-plugin-api` 與 `plugin-api/nodejs-api`, 主程式建置 6.8.0 / 5303, MPL 2.0) 作為共用外掛契約與 Node.js 清單契約, 並在 `locks/host-api-aars.lock` 中鎖定雜湊
 - `相依性` 附加 `terminal-api.aar` (AutoJs6 模組 `plugin-api/terminal-api`, 主程式建置 6.8.0 / 5304, MPL 2.0) 作為終端機契約 V1 (`ITerminalPlugin` / `ITerminalCallback`, 身份, 上限與錯誤碼), 外掛身份常數改由它提供, 並在 `locks/host-api-aars.lock` 中鎖定雜湊

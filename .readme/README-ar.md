@@ -52,7 +52,7 @@
 
 ******
 
-معاينة التطوير P2: تم تنفيذ جلسات shell والوصول إلى التخزين وتكامل Node.js مع التحقق من التوقيعات والتحكم بالجلسات من المضيف. ستتبع شاشة الطرفية وواجهة برمجة النصوص وصفحة الإعدادات مراحل [ROADMAP.md](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/blob/master/ROADMAP.md). AutoJs6 6.8.0 (build 5304+).
+معاينة تطوير محلية P4: تم تنفيذ واجهة الطرفية والجلسات المتعددة وواجهة البرمجة النصية, بما يشمل أحداث المخرجات والإدخال التفاعلي وانتظار رمز الخروج. تأتي الإعدادات المستقلة في P5 من [ROADMAP.md](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/blob/master/ROADMAP.md). تتطلب الواجهة إصدار AutoJs6 يتضمن تنفيذ P4.
 
 ******
 
@@ -105,16 +105,16 @@ let session = terminal.open(files.cwd());
 console.log(session.id, terminal.sessions().length);
 
 // Visible execution: install dependencies in a session the user can watch and wait for the exit code (0 = no timeout).
-let install = terminal.exec('npm install', { cwd: '/sdcard/Scripts/my-project', wait: true, timeout: 0 });
+let install = terminal.exec('npm install', { cwd: '/sdcard/Scripts/my-project', keepOpen: false, wait: true, timeout: 0 });
 toastLog('npm install exited with ' + install.exitCode);
 
 // Drive an interactive command: output / exit events, write and waitFor; every failure is a TerminalError with a stable code.
-let init = terminal.exec('npm init', { cwd: files.cwd(), show: true });
-init.on('output', line => { if (/package name/i.test(line)) init.write('\n'); });
-init.waitFor(/Is this OK\?/i, 60e3);
-init.write('yes\n');
-init.on('exit', code => console.log('npm init exited with ' + code));
-terminal.npm.run('build', files.cwd());
+let driven = terminal.exec('sleep 1; printf "name? "; read name; echo "received:$name"; sleep 1', {
+    cwd: files.cwd(), show: true, keepOpen: false,
+});
+driven.on('output', line => { if (/name\?/.test(line)) driven.write('AutoJs6\n'); });
+driven.on('exit', code => console.log('Session exited with ' + code));
+console.log(driven.waitFor(/received:AutoJs6/, 15e3));
 ```
 
 ******
@@ -196,7 +196,7 @@ minimum host build: 5304 (6.8.0)
 
 _2026/10/02_
 
-- `تلميح` معاينة التطوير P2: تم تنفيذ جلسات shell والوصول إلى التخزين وتكامل Node.js مع التحقق من التوقيعات والتحكم بالجلسات من المضيف. ستتبع شاشة الطرفية وواجهة برمجة النصوص وصفحة الإعدادات مراحل ROADMAP.md.
+- `تلميح` معاينة تطوير محلية P4: تم تنفيذ واجهة الطرفية والجلسات المتعددة وواجهة البرمجة النصية, بما يشمل أحداث المخرجات والإدخال التفاعلي وانتظار رمز الخروج. تأتي الإعدادات المستقلة في P5 من ROADMAP.md. تتطلب الواجهة إصدار AutoJs6 يتضمن تنفيذ P4.
 - `ميزة` هوية المكون الإضافي `three-shell-terminal` (engine `terminal`) مع خدمة INFO و Wake Activity وهيكل خدمة `org.autojs.plugin.TERMINAL` لاكتشاف المضيف
 - `ميزة` ملفات APK مقسمة حسب ABI (arm64-v8a, armeabi-v7a, x86_64, x86) بالإضافة إلى APK شامل, مع مكتبات أصلية محاذاة لصفحات 16 كيلوبايت
 - `ميزة` README وتعليمات مركز المكونات الإضافية وسجل التغييرات بـ 10 لغات
@@ -210,6 +210,8 @@ _2026/10/02_
 - `ميزة` مدخل المضيف والمشغل: Activity المدخل المصدرة `TERMINAL_OPEN` المحمية بإذن التوقيع `org.autojs.permission.PLUGIN` تتحقق من المستدعي الذي يمكنها تحديده (يحمل الإذن وموقع مثل المكون الإضافي), وتتحقق من extras `directory` / `sessionId` / `newSession` / `command` / `manager` وفق حدود العقد ثم تمررها إلى شاشة الطرفية في مهمتها الخاصة أو إلى مدير الجلسات فوق المستدعي; `LauncherActivity` (هدف أسماء الأيقونة المستعارة) يستعيد أحدث جلسة أو يبدأ جلسة في الدليل الرئيسي; الرجوع من طرفية فتحها المضيف يعود إلى المضيف, ومن المشغل إلى الشاشة الرئيسية, وتغادر مهمة الطرفية قائمة التطبيقات الحديثة حتى لا يعاد تشغيل طلب البدء أبدا
 - `إصلاح` لم تعد قيود النظام على النشاط في الخلفية تتسبب في تعطل الإضافة عند بدء جلسة. تستمر الجلسة دون حماية خدمة المقدمة.
 - `إصلاح` تحتفظ قراءة المخرجات الطويلة بأحدث النصوص دون تجاوز الحد الأقصى لحجم الرد بين العمليات.
+- `إصلاح` قراءة المخرجات وإعادة عرضها تتجاوز الأسطر الفارغة المستخدمة لملء الشاشة مع الحفاظ على مسافات الموجه وحدود الأسطر قبل المخرجات التالية
+- `إصلاح` الجلسة أثناء بدء التشغيل كانت تختفي مؤقتا من استعلامات المضيف مما يمنع فتح الطرفية للتنفيذ المرئي
 - `تبعية` إضافة jackpal Android-Terminal-Emulator (term 1.0.70, emulatorview 1.0.42, libtermexec 1.0, Apache-2.0) لمحاكاة الطرفية ومكتبات pty الأصلية, مع قفل التجزئة في `locks/vendored-aars.lock`
 - `تبعية` إضافة `common-plugin-api.aar` و `nodejs-api.aar` (وحدتا AutoJs6 `plugin-api/common-plugin-api` و `plugin-api/nodejs-api`, بنية المضيف 6.8.0 / 5303, MPL 2.0) كعقد المكون الإضافي المشترك وعقد بيان Node.js, مع قفل التجزئة في `locks/host-api-aars.lock`
 - `تبعية` إضافة `terminal-api.aar` (وحدة AutoJs6 `plugin-api/terminal-api`, بنية المضيف 6.8.0 / 5304, MPL 2.0) كعقد الطرفية V1 (`ITerminalPlugin` / `ITerminalCallback`, الهوية, الحدود, رموز الأخطاء); ثوابت هوية المكون الإضافي تأتي منه الآن, مع قفل التجزئة في `locks/host-api-aars.lock`

@@ -8,7 +8,7 @@
 
 ###### 2026/10/02
 
-* `ヒント` P2 開発プレビュー: shell セッション, ストレージアクセス, 署名を検証する Node.js 統合, ホストからのセッション操作を実装済みです. 端末画面, スクリプト API, 設定画面は ROADMAP.md の段階に従って実装します.
+* `ヒント` P4 ローカル開発プレビュー: 端末画面, 複数セッションとスクリプト API を実装済み. 出力イベント, 対話入力と終了コードの待機に対応. 独立設定画面は ROADMAP.md の P5 で実装予定. API には P4 実装を含む AutoJs6 ビルドが必要.
 * `機能` プラグイン ID `three-shell-terminal` (engine `terminal`), INFO サービス, Wake Activity, ホスト検出用の `org.autojs.plugin.TERMINAL` サービスの骨組み
 * `機能` ABI 別 APK (arm64-v8a, armeabi-v7a, x86_64, x86) と universal APK, 16 KB ページに整列したネイティブライブラリ
 * `機能` 10 言語の README, プラグインセンターの説明, 変更履歴
@@ -22,6 +22,8 @@
 * `機能` ホストエントリとランチャー: `org.autojs.permission.PLUGIN` 署名パーミッションで保護されたエクスポート済み `TERMINAL_OPEN` エントリ Activity は, 特定できる呼び出し元についてパーミッション保持とプラグインと同じ署名を確認し, `directory` / `sessionId` / `newSession` / `command` / `manager` の extras を契約上限に照らして検証したうえで, 独自タスクのターミナル画面または呼び出し元の上に重なるセッションマネージャーへ転送します. `LauncherActivity` (アイコン alias の転送先) は直近のセッションを復元するかホームで新規セッションを開始します. ホストから開いたターミナルで戻るとホストへ, ランチャーから開いた場合はホーム画面へ戻り, ターミナルのタスクは最近のタスクから消えるため起動要求が再実行されることはありません
 * `修正` システムがバックグラウンド動作を制限していても, セッション開始時にプラグインがクラッシュしなくなりました. セッションはフォアグラウンドサービスの保護なしで継続します.
 * `修正` 長い出力履歴は最新のテキストを保持し, プロセス間応答のサイズ上限を超えないようにします.
+* `修正` スクリプトによる出力の読み取りと再生で画面末尾の空行を除去し, プロンプトの空白と後続出力との行境界を保持
+* `修正` 起動中のセッションがホストの照会から一時的に消え, 表示付き実行で端末を開けない問題
 * `依存関係` 端末エミュレーションと pty ネイティブライブラリとして jackpal Android-Terminal-Emulator (term 1.0.70, emulatorview 1.0.42, libtermexec 1.0, Apache-2.0) を追加し, `locks/vendored-aars.lock` でハッシュを固定
 * `依存関係` 共有プラグイン契約と Node.js マニフェスト契約として `common-plugin-api.aar` と `nodejs-api.aar` (AutoJs6 モジュール `plugin-api/common-plugin-api` と `plugin-api/nodejs-api`, ホストビルド 6.8.0 / 5303, MPL 2.0) を追加し, `locks/host-api-aars.lock` でハッシュを固定
 * `依存関係` ターミナル契約 V1 (`ITerminalPlugin` / `ITerminalCallback`, ID, 上限, エラーコード) として `terminal-api.aar` (AutoJs6 モジュール `plugin-api/terminal-api`, ホストビルド 6.8.0 / 5304, MPL 2.0) を追加. プラグインの ID 定数はこれから取得し, `locks/host-api-aars.lock` でハッシュを固定

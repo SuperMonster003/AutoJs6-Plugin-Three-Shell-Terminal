@@ -8,7 +8,7 @@
   "p_introduction_what": "3-Shell Terminal takes over the built-in terminal of AutoJs6: the \"Terminal\" switch of the home drawer, \"Open in terminal\" in the file manager directory menu and the project toolbar, and the script-side global object `terminal` for opening, driving and observing terminal sessions. Every session is a system shell (`/system/bin/sh`) running in a pty that keeps running in the background after the screen is left.",
   "p_introduction_how": "AutoJs6 discovers the plugin through its Binder service, opens the terminal screen with an explicit Intent, and uses the Binder to read the session count, close all sessions or drive script sessions; session output flows back to scripts through a pipe. When the Node.js Runtime plugin is installed, the terminal reads its manifest contract directly, verifies the signature and the launcher, and provides node / npm / npx / corepack / yarn / pnpm.",
   "h3_status": "Status",
-  "p_status": "P2 development preview: shell sessions, storage access, trusted Node.js integration and host session control are implemented. The terminal screen, script API and settings page will follow the stages in [ROADMAP.md]({{ roadmap_url }}). AutoJs6 {{ required_host_version_name }} (build {{ required_host_version_code }}+).",
+  "p_status": "P4 local development preview: terminal UI, multiple sessions and the script API are implemented, including output events, interactive input and exit-code waits. Standalone settings follow in P5 of [ROADMAP.md]({{ roadmap_url }}). The script API requires an AutoJs6 build containing the P4 implementation.",
   "h3_features": "Features",
   "p_features_intro": "The plugin provides the following capabilities",
   "features": [

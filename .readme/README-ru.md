@@ -52,7 +52,7 @@ AutoJs6 обнаруживает плагин через его Binder-серв�
 
 ******
 
-Предварительная версия P2: реализованы сеансы shell, доступ к хранилищу, интеграция Node.js с проверкой подписей и управление сеансами из хоста. Экран терминала, API скриптов и настройки будут добавлены по этапам [ROADMAP.md](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/blob/master/ROADMAP.md). AutoJs6 6.8.0 (build 5304+).
+Локальная предварительная версия P4: интерфейс терминала, несколько сеансов и API скриптов с событиями вывода, интерактивным вводом и ожиданием кода завершения. Отдельные настройки запланированы в P5 [ROADMAP.md](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/blob/master/ROADMAP.md). Для API нужна сборка AutoJs6 с реализацией P4.
 
 ******
 
@@ -105,16 +105,16 @@ let session = terminal.open(files.cwd());
 console.log(session.id, terminal.sessions().length);
 
 // Visible execution: install dependencies in a session the user can watch and wait for the exit code (0 = no timeout).
-let install = terminal.exec('npm install', { cwd: '/sdcard/Scripts/my-project', wait: true, timeout: 0 });
+let install = terminal.exec('npm install', { cwd: '/sdcard/Scripts/my-project', keepOpen: false, wait: true, timeout: 0 });
 toastLog('npm install exited with ' + install.exitCode);
 
 // Drive an interactive command: output / exit events, write and waitFor; every failure is a TerminalError with a stable code.
-let init = terminal.exec('npm init', { cwd: files.cwd(), show: true });
-init.on('output', line => { if (/package name/i.test(line)) init.write('\n'); });
-init.waitFor(/Is this OK\?/i, 60e3);
-init.write('yes\n');
-init.on('exit', code => console.log('npm init exited with ' + code));
-terminal.npm.run('build', files.cwd());
+let driven = terminal.exec('sleep 1; printf "name? "; read name; echo "received:$name"; sleep 1', {
+    cwd: files.cwd(), show: true, keepOpen: false,
+});
+driven.on('output', line => { if (/name\?/.test(line)) driven.write('AutoJs6\n'); });
+driven.on('exit', code => console.log('Session exited with ' + code));
+console.log(driven.waitFor(/received:AutoJs6/, 15e3));
 ```
 
 ******
@@ -196,7 +196,7 @@ minimum host build: 5304 (6.8.0)
 
 _2026/10/02_
 
-- `Подсказка` Предварительная версия P2: реализованы сеансы shell, доступ к хранилищу, интеграция Node.js с проверкой подписей и управление сеансами из хоста. Экран терминала, API скриптов и настройки будут добавлены по этапам ROADMAP.md.
+- `Подсказка` Локальная предварительная версия P4: интерфейс терминала, несколько сеансов и API скриптов с событиями вывода, интерактивным вводом и ожиданием кода завершения. Отдельные настройки запланированы в P5 ROADMAP.md. Для API нужна сборка AutoJs6 с реализацией P4.
 - `Функция` Идентичность плагина `three-shell-terminal` (engine `terminal`) с сервисом INFO, Wake Activity и скелетом сервиса `org.autojs.plugin.TERMINAL` для обнаружения хостом
 - `Функция` APK по ABI (arm64-v8a, armeabi-v7a, x86_64, x86) плюс универсальный APK, нативные библиотеки выровнены по страницам 16 КБ
 - `Функция` README, описание для центра плагинов и журнал изменений на 10 языках
@@ -210,6 +210,8 @@ _2026/10/02_
 - `Функция` Вход хоста и лаунчер: экспортируемая входная Activity `TERMINAL_OPEN`, защищенная разрешением подписи `org.autojs.permission.PLUGIN`, проверяет вызывающего, которого может назвать (разрешение получено, подпись совпадает с плагином), сверяет extras `directory` / `sessionId` / `newSession` / `command` / `manager` с ограничениями контракта и передает их экрану терминала в собственной задаче или диспетчеру сеансов поверх вызывающего; `LauncherActivity` (цель псевдонимов значка) восстанавливает последний сеанс или запускает новый в домашнем каталоге; Назад из терминала, открытого хостом, возвращает к хосту, из лаунчера на главный экран, а задача терминала покидает недавние, поэтому запрос запуска никогда не воспроизводится повторно
 - `Исправление` Системное ограничение фоновой активности больше не вызывает сбой плагина при запуске сеанса. Сеанс продолжает работу без защиты службы переднего плана.
 - `Исправление` Чтение длинного вывода сохраняет последний текст в пределах допустимого размера межпроцессного ответа.
+- `Исправление` Чтение и воспроизведение вывода пропускают пустые строки заполнения экрана, сохраняя пробелы приглашения и границу перед новым выводом
+- `Исправление` Запускающийся сеанс мог кратковременно исчезнуть из запросов хоста, мешая открыть его терминал при выполнении с отображением
 - `Зависимость` Добавлен jackpal Android-Terminal-Emulator (term 1.0.70, emulatorview 1.0.42, libtermexec 1.0, Apache-2.0) как эмуляция терминала и нативные библиотеки pty, хэш зафиксирован в `locks/vendored-aars.lock`
 - `Зависимость` Добавлены `common-plugin-api.aar` и `nodejs-api.aar` (модули AutoJs6 `plugin-api/common-plugin-api` и `plugin-api/nodejs-api`, сборка хоста 6.8.0 / 5303, MPL 2.0) как общий контракт плагинов и контракт манифеста Node.js, хэши зафиксированы в `locks/host-api-aars.lock`
 - `Зависимость` Добавлен `terminal-api.aar` (модуль AutoJs6 `plugin-api/terminal-api`, сборка хоста 6.8.0 / 5304, MPL 2.0) как контракт терминала V1 (`ITerminalPlugin` / `ITerminalCallback`, идентичность, пределы и коды ошибок); константы идентичности плагина теперь берутся из него, хэш зафиксирован в `locks/host-api-aars.lock`

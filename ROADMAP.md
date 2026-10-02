@@ -289,7 +289,7 @@ runtime/api/augment/terminal/           Terminal.kt (AugmentableKey("terminal"))
 
 建议会话切分: P0 一次 (骨架 + spike); P1 两次 (契约 + 客户端 + 入口改造 + 注册为一次; 删除旧终端 + 数据清理 + changelog + 文档为一次, 维护者已接受短期无终端 (D34 Q7), 两次可连续执行); P2 两到三次 (会话 / 服务 / 存储; Binder 与上限; Node CLI 与包管理); P3 一到两次; P4 两次 (第一 / 二档 + 错误; 第三档会话对象 + 输出管道 + 示例); P5 一到两次; P6 一到两次; P7 一次; P8 按需.
 
-当前进度 (2026-10-02): P0, P2.1-P2.5, P3.1-P3.3 与 P4.1 已完成并有构建 / JVM / 设备证据; P1 契约, 客户端与旧终端迁出已完成, 宿主可用态三入口, 管理器入口与抽屉会话计数已在 P3.3 复验; 宿主脚本 API `terminal` 第一 / 二档在宿主 build 5310 (本地提交) 可用. 下次起点 P4.2 (第三档: `TerminalSessionNativeObject` 升级为 EventEmitter, 输出管道与 `waitFor` / `exec({ wait })` 的回调实现), 随后 P4.3; P5 独立应用形态在其后. 插件 build 21, 仅本地提交, D9 推送与发布门控继续生效.
+当前进度 (2026-10-02): P0, P2.1-P2.5, P3.1-P3.3 与 P4.1-P4.2 已完成并有构建 / JVM / 设备证据; P1 契约, 客户端与旧终端迁出已完成. 宿主脚本 API 第三档已在本地提交 b1fcaebcf3 (build 5314) 落地: 会话事件, 输出管道, waitFor / transcript 与退出码等待. 下次起点 P4.3 (示例, 守卫与协议说明), 随后 P5 独立应用形态. 插件 build 22, 仅本地提交, D9 推送与发布门控继续生效.
 
 ---
 
@@ -438,9 +438,9 @@ runtime/api/augment/terminal/           Terminal.kt (AugmentableKey("terminal"))
 
 ### P4.2 第三档: 会话对象与输出管道
 
-- [ ] (宿主) `TerminalSessionNativeObject` (EventEmitter): `id` / `cwd` / `title` / `createdAt` / `isAlive()`, `write(text | bytes)`, `show()`, `close()`, `waitFor(pattern, timeout?)` (正则或字符串, 返回匹配行, 超时 `TIMEOUT`), `transcript(maxBytes?)`, 事件 `output(line | chunk)`, `exit(code)`, `overflow(droppedBytes)`; `TerminalOutputReader` 工作线程读管道 (`stripAnsi` 默认开, 按行切分, 行上限 64 KiB), 事件投递到脚本循环 (`Loopers`), 脚本结束时取消订阅; 首次 `on('output')` 时才 `subscribeOutput`, 最后一个监听器移除后 `unsubscribeOutput`.
-- [ ] (宿主) 同步等待语义: `waitFor` 与 `exec({ wait: true })` 在脚本线程阻塞并保持事件循环投递 (同 `epub` / `installer` 的同步形态实现), 默认超时 10 分钟, 可传 `0` 表示不限.
-- [ ] (测试) JVM: `TerminalOutputReaderTest` (ANSI 剥离, 行切分, 超长行, 溢出事件顺序); DEVICE: `exec('for i in 1 2 3; do echo line$i; sleep 1; done; exit 3', { show: false })` 收到 3 行 `output` 与 `exit(3)`; `waitFor(/line2/)` 返回 `line2`; 高吞吐 `yes | head -c 50m` 触发 `overflow` 且终端界面不冻结.
+- [x] (宿主) `TerminalSessionNativeObject` (EventEmitter): `id` / `cwd` / `title` / `createdAt` / `isAlive()`, `write(text | bytes)`, `show()`, `close()`, `waitFor(pattern, timeout?)` (正则或字符串, 返回匹配行, 超时 `TIMEOUT`), `transcript(maxBytes?)`, 事件 `output(line | chunk)`, `exit(code)`, `overflow(droppedBytes)`; `TerminalOutputReader` 工作线程读管道 (`stripAnsi` 默认开, 按行切分, 行上限 64 KiB), 事件投递到脚本循环 (`Loopers`), 脚本结束时取消订阅; 首次 `on('output')` 时才 `subscribeOutput`, 最后一个监听器移除后 `unsubscribeOutput`. (SOURCE 2026-10-02: 宿主 b1fcaebcf3, callback 绑定租约, 延迟订阅 / once 与 off 退订, 有界输出队列, 退出前排空; 插件 build 22 修正转录回放与 pending -> running 列表快照竞态, AIDL / AAR 不变; 详见 docs/dev/p4-output-and-samples-evidence.md)
+- [x] (宿主) 同步等待语义: `waitFor` 与 `exec({ wait: true })` 在脚本线程阻塞并保持事件循环投递 (同 `epub` / `installer` 的同步形态实现), 默认超时 10 分钟, 可传 `0` 表示不限. (JVM 2026-10-02: TerminalBlockingWaitTest 5/5; DEVICE API 35: 等待期间在原脚本线程收到 output 并 write 回答无换行提示符, 快速退出码 0-7 与 Async 退出码 11 均保留)
+- [x] (测试) JVM: `TerminalOutputReaderTest` (ANSI 剥离, 行切分, 超长行, 溢出事件顺序); DEVICE: `exec('for i in 1 2 3; do echo line$i; sleep 1; done; exit 3', { show: false })` 收到 3 行 `output` 与 `exit(3)`; `waitFor(/line2/)` 返回 `line2`; 高吞吐 `yes | head -c 50m` 触发 `overflow` 且终端界面不冻结. (JVM 2026-10-02: TerminalOutputReaderTest 9/9, 宿主全量 3334 项 / 0 失败 / 6 既有跳过; DEVICE Xiaomi Pad API 35: 脚本流 6/6, Binder 18/18, 50 MiB 压力中 442359 个输出事件 / droppedBytes 74580732 / exit(3), 66 次插件主线程探针最长 289 ms; API 24 x86 AVD: 交互 / 快速退出 / 停止清理 3/3)
 
 ### P4.3 示例, 守卫与 changelog
 
@@ -641,13 +641,13 @@ class TerminalError extends Error {
 terminal.open(files.cwd());
 
 // 可见地安装依赖, 等待结束
-let s = terminal.exec('npm install', { cwd: '/sdcard/脚本/my-project', wait: true, timeout: 0 });
+let s = terminal.exec('npm install', { cwd: '/sdcard/脚本/my-project', keepOpen: false, wait: true, timeout: 0 });
 toastLog(`npm install 退出码 ${s.exitCode}`);
 
 // 会话驱动: 自动回答提示
-let t = terminal.exec('npm init', { cwd: dir, show: true });
-t.on('output', line => { if (/package name/i.test(line)) t.write('\n'); });
-t.waitFor(/Is this OK\?/i, 60e3); t.write('yes\n');
+let t = terminal.exec('sleep 1; printf "name? "; read name; echo "received:$name"; sleep 1', { cwd: dir, show: true, keepOpen: false });
+t.on('output', line => { if (/name\?/.test(line)) t.write('AutoJs6\n'); });
+t.waitFor(/received:AutoJs6/, 15e3);
 t.on('exit', code => console.log('done', code));
 ```
 
@@ -862,3 +862,5 @@ t.on('exit', code => console.log('done', code));
 - P3.2 (2026-10-02 第十三段): 插件 build 19: 会话管理器 (`ui/TerminalManagerDialog` 四分组 + `TerminalManagerActivity` 透明承载 + `SessionStarter` 抽取 + `ElapsedTime`), 通知点击目标改为管理器, 菜单 "终端管理器", 11 目录各 +6 迁入 +8 新增字符串, 偏好四个收起键; JVM 137/137, `ui/TerminalManagerInstrumentationTest` 3 用例在 API 24 AVD 与 Pad API 35 各 3/3, debug / androidTest / lintDebug (0 error) / 文档检查通过, changelog 10 语言 feature 条目, `migration/host-terminal/` 再删 2 个文件 (剩 18: 设置偏好 3, 字符串 11, 数组 / donottranslate / xml, README). 发现: 注册表 `create` 的监听回调先于 fork 到达, 行内 PID 需随后刷新, 故对话框每秒刷新一次; `SetTextI18n` / 数字格式化 lint 用 `String.format(Locale)` 的辅助函数消除. P3.2 关闭, 下次会话起点 P3.3 (`ThreeShellTerminalEntryActivity` 校验调用方并转发 extras, `LauncherActivity`, `TerminalActivity` 按 `isTaskRoot` 的 Back 行为, Manifest 导出 + PLUGIN 权限 + `TERMINAL_OPEN` filter, 宿主可用态复验).
 - P3.3 (2026-10-02 第十四段): 插件 build 20: `ThreeShellTerminalEntryActivity` (D19: `EntryRequest` 契约校验 + `EntryCaller` / `EntryCallerPolicy` 调用方校验, 摘要逻辑抽为 `binder/PackageSigners`), `ui/LauncherActivity` (D30), `TerminalActivity.finishScreen()` 按 `isTaskRoot` 决定 `finishAndRemoveTask` / `finish`, Manifest 导出入口 (PLUGIN 权限 + `TERMINAL_OPEN` filter) 与不导出的启动器转发器; JVM 145/145 (+`ThreeShellTerminalEntryRequestTest` 6, `ManifestContractTest` +2), lint 0 error / 34 warning, `ThreeShellTerminalEntryInstrumentationTest` 5 用例在 API 24 AVD / Sony XQ-DQ72 API 33 / Xiaomi Pad API 35 各 5/5; 宿主侧真机 (Sony XQ-DQ72, 宿主 debug 5307, uiautomator 驱动) 抽屉 / 目录菜单 / 项目工具栏三入口 + 管理器入口 + 抽屉计数 + 开关关闭全部均通过, 记录于 `docs/dev/p3-entry-evidence.md`; changelog 10 语言 feature 条目; 手动对照清单写入 `docs/dev/p3-ui-evidence.md`. 发现: 宿主的普通 `startActivity` 不给 `callingPackage`, API 34 以下只有 referrer 可用, 无名调用方依赖 Manifest 权限; `am start` 的 SecurityException 只在 stderr, 用例改读 logcat; 终端以 `stateVisible` 打开输入法时首次 Back 先收起键盘. P3 关闭, 下次会话起点 P4.1 (宿主 `runtime/api/terminal/TerminalService` 与 `augment/terminal/Terminal`, 第一 / 二档 API).
 - P4.1 (2026-10-02 第十五段): 宿主 build 5310 (本地提交 `feat(terminal): add the terminal script API with its service layer, first and second tiers`, 仅暂存明确文件列表, 宿主工作树中维护者的布局分析搜索改动未触碰): `runtime/api/terminal/{TerminalService,TerminalScriptArguments}.kt`, `runtime/api/augment/terminal/{Terminal,TerminalCalls,TerminalPromises,TerminalJsErrors,TerminalSessionNativeObject}.kt`, `ScriptRuntime` 装配; JVM `TerminalScriptArgumentsTest` 8 + `TerminalJsErrorsTest` 4 通过, `assembleAppDebug` 通过; DEVICE Sony XQ-DQ72 API 33 (插件 build 19) 探针全程通过, Redmi 22120RN86C API 33 (无插件) 五态 not_installed 与 PLUGIN_UNAVAILABLE 通过; 插件仓库仅文档更新 (build 21). 发现: (1) 插件在 `keepOpen: false` 的命令结束时立即移除会话, `listSessions` 轮询取不到退出码, `exec({ wait: true })` 在 P4.1 返回 state exited 而 exitCode 为 null, 退出码须由 P4.2 消费 `onSessionExited` 回调; (2) 脚本目录位于共享存储时插件需 MANAGE_EXTERNAL_STORAGE, 否则 `open` 抛 STORAGE_PERMISSION_REQUIRED (契约内正确拒绝); (3) 命令已结束的会话文档 `cwd` 显示为 `/`, P4.2 核对插件 `TerminalDocuments` 对已退出进程的目录回退. 宿主 changelog feature 条目与示例按计划在 P4.3 落地. 随后的宿主提交 `refactor(terminal): spell the NUL guard of the terminal script arguments as a unicode escape` (build 5311) 把 `TerminalScriptArguments` 的 NUL 字符常量改写为 Unicode 转义 (源文件此前含字面 NUL 字节, 被 git 判为二进制). 下次会话起点 P4.2.
+
+- P4.2 (2026-10-02 第十六段): 宿主 b1fcaebcf3 (build 5314), 插件 build 22: 完成会话 EventEmitter, output / exit / overflow, waitFor / transcript 与 Async 形态, 专用回调租约和脚本结束清理. UTF-8 行上限按字节计算, 无换行提示符可交互, once / off 自动退订, exit 在输出排空后投递, 高吞吐末尾溢出计数不丢失. 插件修正转录填充 / 回放边界与 pending -> running 查询短暂丢会话. 宿主隔离检出基于 bb7aa5c48f + 本次终端文件验证, 全量 JVM 3334 项 / 0 失败 / 6 既有跳过; 插件 JVM 146/146, debug / androidTest / lint (0 error) / 16 KB / 文档和图标检查通过; API 35 真机脚本流 6/6, Binder 18/18; API 24 x86 3/3. 高吞吐主线程最长响应 289 ms. 证据见 docs/dev/p4-output-and-samples-evidence.md. 宿主其它会话的安装器与布局分析器工作均未纳入本次暂存. 下一项 P4.3.

@@ -156,6 +156,19 @@ class TerminalDocumentsTest {
     }
 
     @Test
+    fun transcriptPaddingIsDroppedAndReplaysEndClosedRows() {
+        assertEquals("line1\nline2", TerminalDocuments.trimTranscriptPadding("line1\nline2\n\n\n", 0))
+        assertEquals("", TerminalDocuments.trimTranscriptPadding("\n\n   \n", 0))
+        assertEquals("", TerminalDocuments.trimTranscriptPadding("", -1))
+        assertEquals("$ ", TerminalDocuments.trimTranscriptPadding("$ \n\n", 2))
+        assertEquals("$", TerminalDocuments.trimTranscriptPadding("$ \n\n", 0))
+        assertEquals("line1\n", TerminalDocuments.replayText("line1\n\n\n", 0))
+        assertEquals("line1\n", TerminalDocuments.replayText("line1", -1))
+        assertEquals("$ ", TerminalDocuments.replayText("$ \n\n\n", 2))
+        assertEquals("", TerminalDocuments.replayText("\n\n", 0))
+    }
+
+    @Test
     fun transcriptsAreTrimmedToTheNewestBytesOnACharacterBoundary() {
         assertEquals("abc" to false, TerminalDocuments.trimTranscript("abc", 3))
         assertEquals("bc" to true, TerminalDocuments.trimTranscript("abc", 2))

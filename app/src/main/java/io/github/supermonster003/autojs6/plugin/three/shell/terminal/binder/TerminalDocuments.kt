@@ -139,6 +139,34 @@ internal object TerminalDocuments {
     }.toString()
 
     /**
+     * The transcript without the blank rows the screen pads it with. A row the cursor still sits in
+     * (a prompt; [cursorColumn] > 0) keeps its trailing spaces; a negative [cursorColumn] means the
+     * emulator does not exist yet.
+     * zh-CN: 去掉屏幕填充的尾部空行的转录. 光标仍在其中的行 (提示符; [cursorColumn] > 0) 保留尾部空格; [cursorColumn] 为负表示模拟器尚不存在.
+     */
+    @JvmStatic
+    fun trimTranscriptPadding(transcript: String, cursorColumn: Int): String {
+        val end = transcript.trimEnd().length
+        if (end == 0 || cursorColumn <= 0) return transcript.substring(0, end)
+        var open = end
+        while (open < transcript.length && (transcript[open] == ' ' || transcript[open] == '\t')) open++
+        return transcript.substring(0, open)
+    }
+
+    /**
+     * What a `fromStart` subscription replays before the live stream (B.2): the transcript without
+     * its padding, ended by a line break when the cursor already sits at the start of a row, so the
+     * first live line does not join the last replayed one; an open row (a prompt) stays open.
+     * zh-CN: `fromStart` 订阅在实时流之前回放的内容 (B.2): 去掉填充的转录, 光标已在行首时以换行结尾, 使第一条实时行不与最后一条回放行粘连; 未结束的行
+     * (提示符) 保持打开.
+     */
+    @JvmStatic
+    fun replayText(transcript: String, cursorColumn: Int): String {
+        val visible = trimTranscriptPadding(transcript, cursorColumn)
+        return if (visible.isEmpty() || cursorColumn > 0) visible else visible + "\n"
+    }
+
+    /**
      * Keeps the newest [maxBytes] of UTF-8 text, cut on a character boundary; the flag says whether
      * anything was dropped.
      * zh-CN: 保留最新的 [maxBytes] 字节 UTF-8 文本并在字符边界截断; 标志表示是否有丢弃.

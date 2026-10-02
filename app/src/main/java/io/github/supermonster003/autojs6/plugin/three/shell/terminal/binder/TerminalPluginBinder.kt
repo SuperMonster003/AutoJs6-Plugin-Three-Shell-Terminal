@@ -23,6 +23,7 @@ import io.github.supermonster003.autojs6.plugin.three.shell.terminal.node.Termin
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.storage.StorageAccess
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.threeShellTerminalPluginRuntimeInfo
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.toPluginInfo
+import jackpal.androidterm.emulatorview.TerminalCursorPosition
 import org.autojs.plugin.common.api.PluginInfo
 import org.autojs.plugin.terminal.api.ITerminalCallback
 import org.autojs.plugin.terminal.api.ITerminalPlugin
@@ -257,7 +258,8 @@ internal class TerminalPluginBinder(
             ""
         } else {
             val session = TerminalSessionManager.get(id) ?: throw TerminalFailure(TerminalErrorCodes.SESSION_NOT_FOUND, "no session $id", id)
-            onMain { runCatching { session.pty.transcriptText }.getOrNull().orEmpty() }
+            val (raw, cursorColumn) = onMain { runCatching { session.pty.transcriptText to TerminalCursorPosition.column(session.pty) }.getOrDefault("" to -1) }
+            TerminalDocuments.trimTranscriptPadding(raw, cursorColumn)
         }
         // Parcel stores Strings as UTF-16: 1 MiB of ASCII would otherwise exceed Binder's 1 MiB
         // transaction buffer. Keep room for the Bundle header, as well as respecting the UTF-8 limit.
@@ -447,9 +449,13 @@ internal class TerminalPluginBinder(
     }
 
     private fun sessionViews(): List<TerminalDocuments.SessionView> {
-        val live = TerminalSessionManager.allSessions
-        val liveIds = live.mapTo(HashSet()) { it.id }
-        val waiting = synchronized(lock) { pending.values.filter { it.id !in liveIds }.map(::pendingView) }
+        // Take both halves under the startup lock: otherwise a pending -> live transfer can
+        // happen between the snapshots and make an existing session disappear from the list.
+        val (live, waiting) = synchronized(lock) {
+            val sessions = TerminalSessionManager.allSessions
+            val liveIds = sessions.mapTo(HashSet()) { it.id }
+            sessions to pending.values.filter { it.id !in liveIds }.map(::pendingView)
+        }
         return (live.map(::sessionView) + waiting).sortedWith(compareBy({ it.createdAt }, { it.id.toLongOrNull() ?: Long.MAX_VALUE }))
     }
 

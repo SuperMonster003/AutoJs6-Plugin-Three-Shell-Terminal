@@ -1,4 +1,4 @@
-# P4.2 session events and output pipes (2026-10-02)
+# P4.2 / P4.3 session events, output pipes and samples (2026-10-02)
 
 This continues the P4.1 evidence in `p4-script-api-evidence.md`. The existing uncommitted
 terminal changes in both repositories were retained and completed. The host was verified in
@@ -95,3 +95,49 @@ Output events remain a bounded, lossy observation stream. Replay cannot recover 
 session that was removed before subscription. `waitFor` searches subsequent output, including
 prompt fragments; it does not search old transcripts. A timeout leaves the shell running.
 Use `keepOpen: false` to wait for a command's exit instead of its trailing interactive shell.
+
+## P4.3 samples, guards and documentation
+
+Host commit `b1fcaebcf3` (build 5314) contains P4.2; `2a8d0a5595` (build 5315) contains
+the P4.3 examples and protocol chapter. Plugin commit `c0c4cb7` (build 22) contains the
+supporting fixes. Only terminal files were staged in the host; concurrent layout-inspector
+changes remain in their original working tree.
+
+The actual APK assets under `sample/终端/` were evaluated by the real Rhino runtime on the
+Xiaomi Pad API 35, arm64-v8a, with Node.js Runtime 1.5.6:
+
+| Example | Observed result |
+| --- | --- |
+| `在终端中打开脚本目录.js` | `open` followed by `show` opened the fixture directory and returned its session id |
+| `运行 npm 脚本并等待完成.js` | `npm.run('build', ..., { keepOpen: false, wait: true })` completed a real npm script with exit code 0 |
+| `会话驱动与输出监听.js` | Output handler answered `name? `, `waitFor` matched `received:AutoJs6`, and the exit listener reported code 3 |
+
+The npm fixture contained a package.json with a `node -e` build script, required no network
+or downloaded dependencies, and lived in a unique `p43-samples-<UUID>` child of plugin HOME.
+The fixture and test-created sessions were removed afterward; previously existing sessions
+were preserved. Reporting waits for script lifetime completion, including its exit callback,
+instead of taking a timer-based snapshot before pipe-drain completion.
+
+On API 35, each example also ran against an unavailable `terminal` object exposing only
+`isAvailable: false`: all three returned the friendly install/enable hint without making a
+later plugin call. The actual missing-package path was separately verified on Redmi
+22120RN86C `bek749scrwv4wo8h`, API 33, arm64-v8a, where the plugin was already absent:
+`terminal.state()` was `not_installed`, and all three unchanged examples displayed the same
+hint using the real terminal API. No installed plugin was removed to manufacture that state.
+
+Final device results: API 35 host stream suite 6 / 6 plus sample suite 2 / 2 (8 / 8 together,
+48.373 seconds); API 33 missing-plugin sample suite 1 / 1 (three examples, 3.520 seconds);
+API 24 compatibility subset 3 / 3 (5.474 seconds); API 35 plugin Binder suite 18 / 18
+(9.169 seconds). JVM totals remain 3334 for the host and 146 for the plugin.
+
+The host protocol document now covers all three script API tiers, options/defaults, synchronous
+and Async waits, callback threading, replay limits, overflow, cancellation, storage permissions
+and `keepOpen`. Ten host changelog sources and their generated release-history sections include
+the terminal feature and example location. Generation reused the existing host rendering
+functions only for release history, retaining unrelated README content and its existing date
+format. The plugin's ten README/changelog languages now describe the P4 development preview;
+quick-start snippets set `keepOpen: false` for exit waits and use a complete prompt example.
+
+P7.1 still owns public API pages, TypeScript declarations, Ace completion and offline-doc
+synchronization. P5 standalone settings and the D9 push/index/Release gate remain pending.
+No remote push, official index update or Release was performed.

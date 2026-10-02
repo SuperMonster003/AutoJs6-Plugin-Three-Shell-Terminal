@@ -289,7 +289,7 @@ runtime/api/augment/terminal/           Terminal.kt (AugmentableKey("terminal"))
 
 建议会话切分: P0 一次 (骨架 + spike); P1 两次 (契约 + 客户端 + 入口改造 + 注册为一次; 删除旧终端 + 数据清理 + changelog + 文档为一次, 维护者已接受短期无终端 (D34 Q7), 两次可连续执行); P2 两到三次 (会话 / 服务 / 存储; Binder 与上限; Node CLI 与包管理); P3 一到两次; P4 两次 (第一 / 二档 + 错误; 第三档会话对象 + 输出管道 + 示例); P5 一到两次; P6 一到两次; P7 一次; P8 按需.
 
-当前进度 (2026-10-02): P0, P2.1-P2.5, P3.1-P3.3 与 P4.1-P4.2 已完成并有构建 / JVM / 设备证据; P1 契约, 客户端与旧终端迁出已完成. 宿主脚本 API 第三档已在本地提交 b1fcaebcf3 (build 5314) 落地: 会话事件, 输出管道, waitFor / transcript 与退出码等待. 下次起点 P4.3 (示例, 守卫与协议说明), 随后 P5 独立应用形态. 插件 build 22, 仅本地提交, D9 推送与发布门控继续生效.
+当前进度 (2026-10-02): P0, P2.1-P2.5, P3.1-P3.3 与 P4.1-P4.3 已完成并有构建 / JVM / 设备证据; P1 契约, 客户端与旧终端迁出已完成. 宿主 b1fcaebcf3 / 2a8d0a5595 (build 5314 / 5315) 已本地提交完整脚本 API 三档, 输出管道, 三个示例和协议章节; API 35 真机 8/8, API 24 3/3, API 33 实际缺失插件时三个示例提示通过. 下次起点 P5.1 (独立设置页), 随后 P5.2 (关于 / 发行历史 / 更新检查) 与 P5.3 (启动器与图标). 插件 build 23, 仅本地提交, D9 推送与发布门控继续生效.
 
 ---
 
@@ -444,9 +444,9 @@ runtime/api/augment/terminal/           Terminal.kt (AugmentableKey("terminal"))
 
 ### P4.3 示例, 守卫与 changelog
 
-- [ ] (宿主) 示例脚本 `assets-app/sample/终端/` 三个: `在终端中打开脚本目录.js` (open + show), `运行 npm 脚本并等待完成.js` (npm.run + waitFor / exit), `会话驱动与输出监听.js` (exec + on('output') + write); 全部在插件缺失时给出友好提示 (`isAvailable` 守卫).
-- [ ] (宿主) 10 语言 changelog feature "脚本全局对象 terminal: 会话管理, 可见执行与输出监听 (需要 3-Shell Terminal 插件)"; `docs/dev/terminal-plugin-protocol-v1.md` 增加脚本 API 章节.
-- [ ] (测试) 三个示例在 API 35 真机运行通过 (含插件缺失态的提示); `:app:testAppDebugUnitTest` 全量通过.
+- [x] (宿主) 示例脚本 `assets-app/sample/终端/` 三个: `在终端中打开脚本目录.js` (open + show), `运行 npm 脚本并等待完成.js` (npm.run + waitFor / exit), `会话驱动与输出监听.js` (exec + on('output') + write); 全部在插件缺失时给出友好提示 (`isAvailable` 守卫). (SOURCE / DEVICE 2026-10-02: 宿主 2a8d0a5595, 三个实际打包示例分别验证 open + show, npm.run 的 exitCode 0, 无换行提示符的 output + write + waitFor + exitCode 3; npm 用插件 HOME 下独立临时工程, 不访问网络)
+- [x] (宿主) 10 语言 changelog feature "脚本全局对象 terminal: 会话管理, 可见执行与输出监听 (需要 3-Shell Terminal 插件)"; `docs/dev/terminal-plugin-protocol-v1.md` 增加脚本 API 章节. (SOURCE 2026-10-02: 宿主 10 语言 feature 与示例入口, 22 份生成的发行历史文件按既有渲染函数同步; 协议补齐 Script API / Session stream and lifecycle, 明确 keepOpen / timeout / 重放范围 / 线程与退出清理. 插件 README / changelog 10 语言状态改为 P4 开发预览; 文档 / d.ts / Ace / 离线文档仍按 P7.1 推进)
+- [x] (测试) 三个示例在 API 35 真机运行通过 (含插件缺失态的提示); `:app:testAppDebugUnitTest` 全量通过. (JVM / DEVICE 2026-10-02: 宿主全量 3334 项, 0 失败, 6 既有跳过; Xiaomi Pad API 35 实际三个示例及不可用守卫共 2/2, 连同 P4.2 为 8/8; Redmi API 33 未安装插件, 三个实际示例均显示安装启用提示, 1/1. 未卸载任何用户应用. 证据见 docs/dev/p4-output-and-samples-evidence.md)
 
 验收条件: 附录 A 的全部方法在真机可用; 第三档吞吐测试不冻结界面; 示例三个通过; 文档章节落地.
 
@@ -864,3 +864,5 @@ t.on('exit', code => console.log('done', code));
 - P4.1 (2026-10-02 第十五段): 宿主 build 5310 (本地提交 `feat(terminal): add the terminal script API with its service layer, first and second tiers`, 仅暂存明确文件列表, 宿主工作树中维护者的布局分析搜索改动未触碰): `runtime/api/terminal/{TerminalService,TerminalScriptArguments}.kt`, `runtime/api/augment/terminal/{Terminal,TerminalCalls,TerminalPromises,TerminalJsErrors,TerminalSessionNativeObject}.kt`, `ScriptRuntime` 装配; JVM `TerminalScriptArgumentsTest` 8 + `TerminalJsErrorsTest` 4 通过, `assembleAppDebug` 通过; DEVICE Sony XQ-DQ72 API 33 (插件 build 19) 探针全程通过, Redmi 22120RN86C API 33 (无插件) 五态 not_installed 与 PLUGIN_UNAVAILABLE 通过; 插件仓库仅文档更新 (build 21). 发现: (1) 插件在 `keepOpen: false` 的命令结束时立即移除会话, `listSessions` 轮询取不到退出码, `exec({ wait: true })` 在 P4.1 返回 state exited 而 exitCode 为 null, 退出码须由 P4.2 消费 `onSessionExited` 回调; (2) 脚本目录位于共享存储时插件需 MANAGE_EXTERNAL_STORAGE, 否则 `open` 抛 STORAGE_PERMISSION_REQUIRED (契约内正确拒绝); (3) 命令已结束的会话文档 `cwd` 显示为 `/`, P4.2 核对插件 `TerminalDocuments` 对已退出进程的目录回退. 宿主 changelog feature 条目与示例按计划在 P4.3 落地. 随后的宿主提交 `refactor(terminal): spell the NUL guard of the terminal script arguments as a unicode escape` (build 5311) 把 `TerminalScriptArguments` 的 NUL 字符常量改写为 Unicode 转义 (源文件此前含字面 NUL 字节, 被 git 判为二进制). 下次会话起点 P4.2.
 
 - P4.2 (2026-10-02 第十六段): 宿主 b1fcaebcf3 (build 5314), 插件 build 22: 完成会话 EventEmitter, output / exit / overflow, waitFor / transcript 与 Async 形态, 专用回调租约和脚本结束清理. UTF-8 行上限按字节计算, 无换行提示符可交互, once / off 自动退订, exit 在输出排空后投递, 高吞吐末尾溢出计数不丢失. 插件修正转录填充 / 回放边界与 pending -> running 查询短暂丢会话. 宿主隔离检出基于 bb7aa5c48f + 本次终端文件验证, 全量 JVM 3334 项 / 0 失败 / 6 既有跳过; 插件 JVM 146/146, debug / androidTest / lint (0 error) / 16 KB / 文档和图标检查通过; API 35 真机脚本流 6/6, Binder 18/18; API 24 x86 3/3. 高吞吐主线程最长响应 289 ms. 证据见 docs/dev/p4-output-and-samples-evidence.md. 宿主其它会话的安装器与布局分析器工作均未纳入本次暂存. 下一项 P4.3.
+
+- P4.3 (2026-10-02 第十七段): 宿主 2a8d0a5595 (build 5315): 三个终端示例, 可用性守卫, 10 语言 changelog 示例入口与生成物, terminal-plugin-protocol-v1.md 脚本 API / 会话流章节. API 35 真机实际示例 (打开目录 / npm build / 自动回答提示) 全部通过; API 35 不可用守卫和 API 33 实际缺失插件的提示均通过. 宿主 JVM 3334 项 / 0 失败 / 6 既有跳过, 设备证据见 docs/dev/p4-output-and-samples-evidence.md. 插件 build 23 为路线图与证据收尾, P4 完成; 下一项 P5.1, 公共文档 / d.ts 等保留在 P7.1. 两仓库本次范围按 P4.2 / P4.3 各自本地提交, 宿主其它会话的布局分析器工作保留未提交, 未推送 / 未登记索引 / 未发布 Release.

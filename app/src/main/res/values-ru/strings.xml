@@ -1,11 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="about_developer">Разработчик</string>
+    <string name="about_developer_page">Страница разработчика</string>
+    <string name="about_jackpal_license">Лицензия Android-Terminal-Emulator</string>
+    <string name="about_jackpal_notice">Уведомление Android-Terminal-Emulator</string>
+    <string name="about_summary">Версия, разработчик и лицензии</string>
+    <string name="about_third_party">Сторонние компоненты</string>
+    <string name="about_title">О приложении</string>
+    <string name="about_version">Версия</string>
+    <string name="about_version_value">%1$s (сборка %2$d)\nДата сборки: %3$s</string>
+    <string name="document_loading" tools:ignore="TypographyEllipsis">Загрузка...</string>
     <string name="notification_channel_description">Показывает сеансы терминала, продолжающие работать в фоне, и позволяет их закрыть</string>
     <string name="notification_channel_name">Сеансы терминала</string>
     <string name="notification_close_sessions">Закрыть сеансы</string>
     <string name="notification_title">Сеанс терминала выполняется</string>
     <string name="notification_title_multiple" tools:ignore="PluralsCandidate">Выполняется сеансов терминала: %1$d</string>
     <string name="plugin_description">Многосеансовый терминал, запускающий системную оболочку в pty, с фоновыми сеансами, панелью клавиш и командами Node.js</string>
+    <string name="release_history_error">Не удалось прочитать встроенный документ.</string>
+    <string name="release_history_title">История версий</string>
+    <string name="settings_license">Лицензия</string>
+    <string name="settings_notices">Уведомления третьих сторон</string>
+    <string name="settings_open_failed">Нет приложения для открытия ссылки.</string>
+    <string name="settings_source">Исходный код</string>
     <string name="terminal_action_close">Закрыть</string>
     <string name="terminal_action_copy">Копировать</string>
     <string name="terminal_action_details">Подробности</string>
@@ -81,4 +97,14 @@
     <string name="terminal_title">Терминал</string>
     <string name="terminal_uptime">Время работы</string>
     <string name="terminal_working_directory">Рабочий каталог</string>
+    <string name="update_available">Доступно обновление: %1$s</string>
+    <string name="update_check">Проверить обновления</string>
+    <string name="update_checking" tools:ignore="TypographyEllipsis">Проверка обновлений...</string>
+    <string name="update_current">Установлена последняя доступная версия.</string>
+    <string name="update_failed">Ошибка проверки или истекло время ожидания. Повторите позже.</string>
+    <string name="update_ignore">Игнорировать эту версию</string>
+    <string name="update_installed">Установленная версия: %1$s</string>
+    <string name="update_no_release">Нет публичного стабильного выпуска или репозиторий недоступен.</string>
+    <string name="update_open_release">Открыть страницу выпуска</string>
+    <string name="update_unignore">Перестать игнорировать эту версию</string>
 </resources>

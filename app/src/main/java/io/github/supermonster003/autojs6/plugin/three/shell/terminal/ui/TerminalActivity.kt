@@ -25,6 +25,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.children
 import com.google.android.material.appbar.MaterialToolbar
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.R
+import io.github.supermonster003.autojs6.plugin.three.shell.terminal.ui.settings.AboutActivity
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.core.ShellQuoting
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.core.TerminalKeySequences
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.core.TerminalPaths
@@ -543,6 +544,7 @@ class TerminalActivity : HostAppearanceActivity() {
             R.id.action_new_session -> openSession(intent(this).putExtra(TerminalContract.EXTRA_NEW_SESSION, true))
             R.id.action_close_session -> requestCloseSession()
             R.id.action_manager -> TerminalManagerDialog.show(this, onTextSizeChanged = { terminalView.textSizeSp = it })
+            R.id.action_about -> startActivity(Intent(this, AboutActivity::class.java))
             else -> return super.onOptionsItemSelected(item)
         }
         return true

@@ -1,11 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="about_developer">Développeur</string>
+    <string name="about_developer_page">Page du développeur</string>
+    <string name="about_jackpal_license">Licence Android-Terminal-Emulator</string>
+    <string name="about_jackpal_notice">Avis Android-Terminal-Emulator</string>
+    <string name="about_summary">Version, développeur et licences</string>
+    <string name="about_third_party">Composants tiers</string>
+    <string name="about_title">À propos</string>
+    <string name="about_version">Version</string>
+    <string name="about_version_value">%1$s (build %2$d)\nCompilé le: %3$s</string>
+    <string name="document_loading" tools:ignore="TypographyEllipsis">Chargement...</string>
     <string name="notification_channel_description">Affiche les sessions de terminal qui continuent en arrière-plan et permet de les fermer</string>
     <string name="notification_channel_name">Sessions de terminal</string>
     <string name="notification_close_sessions">Fermer les sessions</string>
     <string name="notification_title">Session de terminal en cours</string>
     <string name="notification_title_multiple" tools:ignore="PluralsCandidate">%1$d sessions de terminal en cours</string>
     <string name="plugin_description">Terminal multi-session exécutant le shell système dans un pty, avec sessions en arrière-plan, barre de touches et commandes Node.js</string>
+    <string name="release_history_error">Impossible de lire le document intégré.</string>
+    <string name="release_history_title">Historique des versions</string>
+    <string name="settings_license">Licence</string>
+    <string name="settings_notices">Mentions tierces</string>
+    <string name="settings_open_failed">Aucune application ne peut ouvrir ce lien.</string>
+    <string name="settings_source">Code source</string>
     <string name="terminal_action_close">Fermer</string>
     <string name="terminal_action_copy">Copier</string>
     <string name="terminal_action_details">Détails</string>
@@ -81,4 +97,14 @@
     <string name="terminal_title">Terminal</string>
     <string name="terminal_uptime">Durée d\'exécution</string>
     <string name="terminal_working_directory">Répertoire de travail</string>
+    <string name="update_available">Mise à jour disponible: %1$s</string>
+    <string name="update_check">Rechercher les mises à jour</string>
+    <string name="update_checking" tools:ignore="TypographyEllipsis">Recherche de mises à jour...</string>
+    <string name="update_current">Vous disposez de la dernière version disponible.</string>
+    <string name="update_failed">La vérification a échoué ou a expiré. Réessayez plus tard.</string>
+    <string name="update_ignore">Ignorer cette version</string>
+    <string name="update_installed">Version installée: %1$s</string>
+    <string name="update_no_release">Aucune version stable publique disponible, ou dépôt inaccessible.</string>
+    <string name="update_open_release">Ouvrir la page de publication</string>
+    <string name="update_unignore">Ne plus ignorer cette version</string>
 </resources>

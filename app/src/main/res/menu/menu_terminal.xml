@@ -49,4 +49,6 @@
 
     <item android:id="@+id/action_show_keyboard" android:title="@string/terminal_show_keyboard" />
 
+    <item android:id="@+id/action_about" android:title="@string/about_title" />
+
 </menu>

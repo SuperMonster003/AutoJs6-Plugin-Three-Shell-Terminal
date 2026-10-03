@@ -215,6 +215,7 @@ _2026/10/02_
 - `修复` 读取较长转录时保留最新文本, 并控制回复大小, 避免跨进程消息超限.
 - `修复` 脚本读取或回放终端输出时去除屏幕填充的尾部空行, 保留提示符空格和后续输出的行边界
 - `修复` 会话从准备中进入运行中时, 宿主查询偶尔找不到该会话, 导致可见执行无法打开终端的问题
+- `优化` 启动器与插件中心图标按统一视觉尺寸标准调整, 插件中心采用透明背景和黑白或中性灰阶图案
 - `依赖` 附加 jackpal Android-Terminal-Emulator (term 1.0.70, emulatorview 1.0.42, libtermexec 1.0, Apache-2.0) 作为终端仿真与 pty 原生库, 并在 `locks/vendored-aars.lock` 中锁定哈希
 - `依赖` 附加 `common-plugin-api.aar` 与 `nodejs-api.aar` (AutoJs6 模块 `plugin-api/common-plugin-api` 与 `plugin-api/nodejs-api`, 宿主构建 6.8.0 / 5303, MPL 2.0) 作为共享插件契约与 Node.js 清单契约, 并在 `locks/host-api-aars.lock` 中锁定哈希
 - `依赖` 附加 `terminal-api.aar` (AutoJs6 模块 `plugin-api/terminal-api`, 宿主构建 6.8.0 / 5304, MPL 2.0) 作为终端契约 V1 (`ITerminalPlugin` / `ITerminalCallback`, 身份, 上限与错误码), 插件身份常量改由它提供, 并在 `locks/host-api-aars.lock` 中锁定哈希

@@ -36,6 +36,9 @@
         "La lectura de transcripciones largas conserva el texto más reciente sin superar el límite de tamaño de las respuestas entre procesos.",
         "La lectura y reproducción de la salida omiten las líneas vacías de relleno de pantalla y conservan los espacios del indicador y la separación de la salida siguiente",
         "Una sesión al iniciarse podía desaparecer brevemente de las consultas del anfitrión e impedir la apertura de su terminal"
+      ],
+      "improvement": [
+        "Tamaño visual uniforme de los iconos del lanzador y del Centro de complementos, con fondos transparentes y diseños en blanco, negro o grises neutros"
       ]
     }
   }

@@ -36,6 +36,9 @@
         "Long transcript reads keep their newest text within the cross-process reply size limit.",
         "Script transcript reads and output replay omit trailing screen padding while preserving prompt spaces and the boundary before live output",
         "A starting session could briefly disappear from host queries and prevent visible execution from opening its terminal"
+      ],
+      "improvement": [
+        "Consistent visual sizing for launcher and Plugin Center icons, with transparent backgrounds and neutral black, white or grayscale artwork"
       ]
     }
   }

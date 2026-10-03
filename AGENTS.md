@@ -34,7 +34,7 @@
 | 平台版本插件 | `io.github.supermonster003.autojs6-platform-versions` 1.8.3 与 `autojs6-native-alignment` 1.8.3 (与兄弟仓库统一升级时再更新) |
 | 原生库 / ABI | `libjackpal-androidterm5.so`, `libjackpal-termexec2.so`; `arm64-v8a`, `armeabi-v7a`, `x86_64`, `x86` + universal |
 | 发布文件名 | `autojs6-plugin-three-shell-terminal-v{VERSION_NAME}-{abi}-{CRC32}.apk` (5 个) |
-| 图标源图 | `.python/icons/three-shell-ic-launcher-light.png` / `-dark.png` (1254 x 1254 RGBA, alpha 一致, 包围盒 746 x 653, 图案 `#272727` / `#D8D8D8`; light / dark 指使用它的模式); `ADAPTIVE_GLYPH = 0.45` |
+| 图标源图 | `.python/icons/three-shell-ic-launcher-light.png` / `-dark.png` (1254 x 1254 RGBA, alpha 一致, 包围盒 746 x 653, 图案 `#272727` / `#D8D8D8`; light / dark 指使用它的模式); `ADAPTIVE_GLYPH` 由 Optical geometry v1 派生 |
 
 ## 3. 工作区与提交
 
@@ -283,3 +283,12 @@ py .python/generate_launcher_icons.py --check
 - 上游 (只读, Apache-2.0): `https://github.com/jackpal/Android-Terminal-Emulator`
 
 参考时以这些仓库的当前代码为准; 复制骨架后必须替换身份字段, URL, 文案, 常量, 版本与测试数据.
+
+## Optical icon standard (2026-10-03)
+
+- Follow `../AUTOJS6_PLUGIN_BLACK_N_WHITE_ADAPTIVE_ICON_AGENTS.md` for every standalone plugin, including the Plugin Center. `.python/icon_geometry.py` v1 is a self-contained copy of the common geometry algorithm; keep its implementation identical across the standalone plugins. Never read sibling checkouts during a build.
+- Derive size from the equal-weight combination of visible bounding-box area (alpha >= 16) and alpha-weighted ink area. Target visible size is 0.52 of the canvas, with only documented optical corrections in 0.94-1.06. The adaptive ratio is always the UI ratio multiplied by 72/108. This supersedes older hardcoded UI/adaptive widths in historical notes. Preserve aspect ratio, optical placement and final nonzero-alpha safety checks.
+- Current derived widths: UI 0.6637, adaptive 0.4424 (rounded documentation values, not generation constants). Optical scale=1.00 and zero offsets.
+- Generate `mipmap/ic_plugin_center.png` and its night counterpart from the same geometry as the transparent UI/launcher mode. They are transparent neutral artwork for installed and catalog entries, independent of the active launcher alias. Keep them through `raw/keep_plugin_center_icon.xml`. Existing separate brand assets retain their original purpose.
+- The default glyph colors are #272727 / #D8D8D8. Stamp Mail is the maintainer-approved grayscale exception: preserve the envelope folds, use neutral R=G=B values, and retain identical day/night alpha. Do not introduce a filled background into the Plugin Center assets.
+- Run the icon generator and its read-only `--check`, `.python/tests/test_icon_geometry.py`, existing icon regressions, and review the full set at 36/48/64 px in both themes and in launcher masks. `.github/workflows/icons.yml` verifies Windows/Linux reproducibility. Synthetic previews do not replace actual launcher verification.

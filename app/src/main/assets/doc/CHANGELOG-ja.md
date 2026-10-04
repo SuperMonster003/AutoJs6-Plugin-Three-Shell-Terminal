@@ -6,7 +6,7 @@
 
 # v1.0.0
 
-###### 2026/10/02
+###### 2026/10/04
 
 * `ヒント` P5 ローカル開発プレビュー: 端末画面, 複数セッション, スクリプト API (出力イベント, 対話入力, 終了コードの待機), 独立設定画面, バージョン履歴と更新確認を備えた "アプリについて", ランチャーアイコンを実装済み. スクリプト API には P4 実装を含む AutoJs6 ビルドが必要. プラグイン センターの設定入口には TERMINAL_SETTINGS に対応したビルドが必要.
 * `機能` プラグイン ID `three-shell-terminal` (engine `terminal`), INFO サービス, Wake Activity, ホスト検出用の `org.autojs.plugin.TERMINAL` サービスの骨組み
@@ -28,6 +28,7 @@
 * `修正` スクリプトによる出力の読み取りと再生で画面末尾の空行を除去し, プロンプトの空白と後続出力との行境界を保持
 * `修正` 起動中のセッションがホストの照会から一時的に消え, 表示付き実行で端末を開けない問題
 * `改善` ランチャーとプラグインセンターのアイコンの見た目の大きさを統一し, 透明な背景と白黒または無彩色のグレースケールを使用
+* `改善` プラグインセンターのアイコンに Icon Studio で調整したサイズ, 位置, 明暗の図稿と円形背景を適用し, 再生成可能な原稿とパラメーターを保持
 * `依存関係` 端末エミュレーションと pty ネイティブライブラリとして jackpal Android-Terminal-Emulator (term 1.0.70, emulatorview 1.0.42, libtermexec 1.0, Apache-2.0) を追加し, `locks/vendored-aars.lock` でハッシュを固定
 * `依存関係` 共有プラグイン契約と Node.js マニフェスト契約として `common-plugin-api.aar` と `nodejs-api.aar` (AutoJs6 モジュール `plugin-api/common-plugin-api` と `plugin-api/nodejs-api`, ホストビルド 6.8.0 / 5303, MPL 2.0) を追加し, `locks/host-api-aars.lock` でハッシュを固定
 * `依存関係` ターミナル契約 V1 (`ITerminalPlugin` / `ITerminalCallback`, ID, 上限, エラーコード) として `terminal-api.aar` (AutoJs6 モジュール `plugin-api/terminal-api`, ホストビルド 6.8.0 / 5304, MPL 2.0) を追加. プラグインの ID 定数はこれから取得し, `locks/host-api-aars.lock` でハッシュを固定

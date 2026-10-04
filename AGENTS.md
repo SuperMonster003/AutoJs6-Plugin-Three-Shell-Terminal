@@ -57,7 +57,7 @@
 
 ### 3.3 提交
 
-- 维护者于 2026-10-01 指示: 本插件仓库与对应的宿主改动当前仅作本地提交, 暂时不推送到 GitHub 远端, 不登记官方索引, 不发 Release (路线图 D9). 后续会话继续遵守, 直至维护者明确恢复推送.
+- 维护者于 2026-10-04 明确授权本插件创建公开 GitHub 仓库并推送源码, 使用 GitHub noreply 邮箱; 此指示取代 D9 的插件源码暂不推送约束. 图稿可同步至官方索引资源库; 正式 APK 与可下载条目仍以真实 Release 和准入记录为准. 宿主仓库不在本次推送范围内.
 - 除非用户明确要求本次会话不要提交, 会话结束前 MUST 将本次范围内的全部文件按逻辑提交, 一个路线图子项一个提交.
 - 使用 Conventional Commits 风格: `feat:`, `fix:`, `docs:`, `build:`, `test:`, `ci:`, `chore:`, 可加作用域, 例如 `feat(node): ...`, `feat(binder): ...`.
 - 一个提交表达一个完整意图; 行为实现, 对应测试和对应 changelog 通常放在同一提交.
@@ -287,8 +287,14 @@ py .python/generate_launcher_icons.py --check
 ## Optical icon standard (2026-10-03)
 
 - Follow `../AUTOJS6_PLUGIN_BLACK_N_WHITE_ADAPTIVE_ICON_AGENTS.md` for every standalone plugin, including the Plugin Center. `.python/icon_geometry.py` v1 is a self-contained copy of the common geometry algorithm; keep its implementation identical across the standalone plugins. Never read sibling checkouts during a build.
-- Derive size from the equal-weight combination of visible bounding-box area (alpha >= 16) and alpha-weighted ink area. Target visible size is 0.52 of the canvas, with only documented optical corrections in 0.94-1.06. The adaptive ratio is always the UI ratio multiplied by 72/108. This supersedes older hardcoded UI/adaptive widths in historical notes. Preserve aspect ratio, optical placement and final nonzero-alpha safety checks.
+- Derive size from the equal-weight combination of visible bounding-box area (alpha >= 16) and alpha-weighted ink area. Target visible size is 0.52 of the canvas, with advisory optical corrections of 0.80-1.20. Values outside this range are allowed when canvas, transparency and safe-circle checks pass; verify shipped size against the saved recipe. The adaptive ratio is always the UI ratio multiplied by 72/108. This supersedes older hardcoded UI/adaptive widths in historical notes. Preserve aspect ratio, optical placement and final nonzero-alpha safety checks.
 - Current derived widths: UI 0.6637, adaptive 0.4424 (rounded documentation values, not generation constants). Optical scale=1.00 and zero offsets.
 - Generate `mipmap/ic_plugin_center.png` and its night counterpart from the same geometry as the transparent UI/launcher mode. They are transparent neutral artwork for installed and catalog entries, independent of the active launcher alias. Keep them through `raw/keep_plugin_center_icon.xml`. Existing separate brand assets retain their original purpose.
 - Black, white and neutral grayscale are allowed for every plugin without per-plugin approval. Pure silhouettes default to #272727 / #D8D8D8; shaded artwork may preserve meaningful tonal details with R=G=B and matching day/night alpha. Stamp Mail is one example, not an exception. Keep light-theme artwork dark enough and dark-theme artwork light enough to remain legible. Do not introduce a filled background into the Plugin Center assets.
 - Run the icon generator and its read-only `--check`, `.python/tests/test_icon_geometry.py`, existing icon regressions, and review the full set at 36/48/64 px in both themes and in launcher masks. `.github/workflows/icons.yml` verifies Windows/Linux reproducibility. Synthetic previews do not replace actual launcher verification.
+
+
+## Icon Studio publication snapshot (2026-10-04)
+
+- `.icons/recipe.json` and its content-addressed original assets own the current icon geometry, tone and backgrounds. Keep the portable renderer, generated resources, keep rules and icon CI in the same change.
+- Use `.python/generate_icon_studio.py --check` for read-only reproduction checks. Optical size bands are advisory; retain canvas, transparency and safe-circle checks. Three uses neutral foregrounds and fixed #FAFAFA / #212121 surfaces; other plugins may use colored artwork and custom or transparent surfaces.

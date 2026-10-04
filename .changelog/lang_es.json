@@ -6,7 +6,7 @@
   "changelog_label_dependency": "Dependencia",
   "$data": {
     "v1.0.0": {
-      "released_date": "2026/10/02",
+      "released_date": "2026/10/04",
       "hint": [
         "Vista previa local P5: interfaz de terminal, sesiones múltiples, API de scripts (eventos de salida, entrada interactiva y espera del código de salida), página de ajustes independiente, Acerca de con historial de versiones y búsqueda de actualizaciones, e iconos del lanzador implementados. La API de scripts requiere una compilación de AutoJs6 que incluya P4; la entrada de ajustes del centro de plugins requiere una compilación compatible con TERMINAL_SETTINGS."
       ],
@@ -38,7 +38,8 @@
         "Una sesión al iniciarse podía desaparecer brevemente de las consultas del anfitrión e impedir la apertura de su terminal"
       ],
       "improvement": [
-        "Tamaño visual uniforme de los iconos del lanzador y del Centro de complementos, con fondos transparentes y diseños en blanco, negro o grises neutros"
+        "Tamaño visual uniforme de los iconos del lanzador y del Centro de complementos, con fondos transparentes y diseños en blanco, negro o grises neutros",
+        "Los iconos del centro de plugins usan los tamaños, posiciones, imágenes claras y oscuras y fondos circulares ajustados en Icon Studio, conservando fuentes y parámetros reproducibles"
       ]
     }
   }

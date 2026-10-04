@@ -6,7 +6,7 @@
 
 # v1.0.0
 
-###### 2026/10/02
+###### 2026/10/04
 
 * `提示` P5 本機開發預覽: 已實作終端介面, 多工作階段管理, 指令碼 API (輸出監聽, 互動輸入與結束代碼等待), 獨立設定頁, 關於 / 版本歷史 / 檢查更新, 以及啟動器圖示. 指令碼 API 需使用包含 P4 實作的 AutoJs6 組建; 外掛中心的設定入口需支援 TERMINAL_SETTINGS 的組建.
 * `新增` 外掛識別碼 `three-shell-terminal` (engine `terminal`), 含 INFO 服務, Wake Activity 以及供主程式發現的 `org.autojs.plugin.TERMINAL` 服務骨架
@@ -28,6 +28,7 @@
 * `修復` 指令碼讀取或重播終端輸出時移除畫面填充的尾部空行, 保留提示字元空格與後續輸出的行邊界
 * `修復` 工作階段從準備中進入執行中時, 宿主查詢偶爾找不到該工作階段, 導致可見執行無法開啟終端的問題
 * `優化` 啟動器與插件中心圖示按統一視覺尺寸標準調整, 插件中心採用透明背景和黑白或中性灰階圖案
+* `優化` 外掛程式中心圖示採用統一工作台調整後的尺寸, 位置, 明暗圖稿與圓形底色, 保留可重建原稿和參數
 * `依賴` 附加 jackpal Android-Terminal-Emulator (term 1.0.70, emulatorview 1.0.42, libtermexec 1.0, Apache-2.0) 作為終端機模擬與 pty 原生程式庫, 並在 `locks/vendored-aars.lock` 中鎖定雜湊
 * `依賴` 附加 `common-plugin-api.aar` 與 `nodejs-api.aar` (AutoJs6 模組 `plugin-api/common-plugin-api` 與 `plugin-api/nodejs-api`, 主程式建置 6.8.0 / 5303, MPL 2.0) 作為共用外掛契約與 Node.js 清單契約, 並在 `locks/host-api-aars.lock` 中鎖定雜湊
 * `依賴` 附加 `terminal-api.aar` (AutoJs6 模組 `plugin-api/terminal-api`, 主程式建置 6.8.0 / 5304, MPL 2.0) 作為終端機契約 V1 (`ITerminalPlugin` / `ITerminalCallback`, 身份, 上限與錯誤碼), 外掛身份常數改由它提供, 並在 `locks/host-api-aars.lock` 中鎖定雜湊

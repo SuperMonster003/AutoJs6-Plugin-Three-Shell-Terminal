@@ -6,7 +6,7 @@
 
 # v1.0.0
 
-###### 2026/10/02
+###### 2026/10/04
 
 * `提示` P5 本地开发预览: 已实现终端界面, 多会话管理, 脚本 API (输出监听, 交互输入与退出码等待), 独立设置页, 关于 / 版本历史 / 检查更新, 以及启动器图标. 脚本 API 需使用包含 P4 实现的 AutoJs6 构建; 插件中心的设置入口需支持 TERMINAL_SETTINGS 的构建.
 * `新增` 插件标识 `three-shell-terminal` (engine `terminal`), 含 INFO 服务, Wake Activity 以及供宿主发现的 `org.autojs.plugin.TERMINAL` 服务骨架
@@ -28,6 +28,7 @@
 * `修复` 脚本读取或回放终端输出时去除屏幕填充的尾部空行, 保留提示符空格和后续输出的行边界
 * `修复` 会话从准备中进入运行中时, 宿主查询偶尔找不到该会话, 导致可见执行无法打开终端的问题
 * `优化` 启动器与插件中心图标按统一视觉尺寸标准调整, 插件中心采用透明背景和黑白或中性灰阶图案
+* `优化` 插件中心图标采用统一工作台调整后的尺寸, 位置, 亮暗图稿与圆形底色, 保留可重建原稿和参数
 * `依赖` 附加 jackpal Android-Terminal-Emulator (term 1.0.70, emulatorview 1.0.42, libtermexec 1.0, Apache-2.0) 作为终端仿真与 pty 原生库, 并在 `locks/vendored-aars.lock` 中锁定哈希
 * `依赖` 附加 `common-plugin-api.aar` 与 `nodejs-api.aar` (AutoJs6 模块 `plugin-api/common-plugin-api` 与 `plugin-api/nodejs-api`, 宿主构建 6.8.0 / 5303, MPL 2.0) 作为共享插件契约与 Node.js 清单契约, 并在 `locks/host-api-aars.lock` 中锁定哈希
 * `依赖` 附加 `terminal-api.aar` (AutoJs6 模块 `plugin-api/terminal-api`, 宿主构建 6.8.0 / 5304, MPL 2.0) 作为终端契约 V1 (`ITerminalPlugin` / `ITerminalCallback`, 身份, 上限与错误码), 插件身份常量改由它提供, 并在 `locks/host-api-aars.lock` 中锁定哈希

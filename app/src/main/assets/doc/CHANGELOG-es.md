@@ -6,7 +6,7 @@
 
 # v1.0.0
 
-###### 2026/10/04
+###### 2026/10/05
 
 * `Aviso` Vista previa local P5: interfaz de terminal, sesiones múltiples, API de scripts (eventos de salida, entrada interactiva y espera del código de salida), página de ajustes independiente, Acerca de con historial de versiones y búsqueda de actualizaciones, e iconos del lanzador implementados. La API de scripts requiere una compilación de AutoJs6 que incluya P4; la entrada de ajustes del centro de plugins requiere una compilación compatible con TERMINAL_SETTINGS.
 * `Función` Identidad del plugin `three-shell-terminal` (engine `terminal`) con el servicio INFO, la Wake Activity y el esqueleto del servicio `org.autojs.plugin.TERMINAL` para el descubrimiento por el host
@@ -29,6 +29,7 @@
 * `Corrección` Una sesión al iniciarse podía desaparecer brevemente de las consultas del anfitrión e impedir la apertura de su terminal
 * `Mejora` Tamaño visual uniforme de los iconos del lanzador y del Centro de complementos, con fondos transparentes y diseños en blanco, negro o grises neutros
 * `Mejora` Los iconos del centro de plugins usan los tamaños, posiciones, imágenes claras y oscuras y fondos circulares ajustados en Icon Studio, conservando fuentes y parámetros reproducibles
+* `Mejora` Los iconos de información de la aplicación de Android comparten las imágenes y los fondos claros y oscuros de Icon Studio, conservando las imágenes transparentes del centro de plugins y las opciones del lanzador
 * `Dependencia` Se añade jackpal Android-Terminal-Emulator (term 1.0.70, emulatorview 1.0.42, libtermexec 1.0, Apache-2.0) como emulación de terminal y bibliotecas nativas pty, con hash bloqueado en `locks/vendored-aars.lock`
 * `Dependencia` Se añaden `common-plugin-api.aar` y `nodejs-api.aar` (módulos AutoJs6 `plugin-api/common-plugin-api` y `plugin-api/nodejs-api`, build del host 6.8.0 / 5303, MPL 2.0) como contrato de plugin compartido y contrato de manifiesto Node.js, con hash bloqueado en `locks/host-api-aars.lock`
 * `Dependencia` Se añade `terminal-api.aar` (módulo AutoJs6 `plugin-api/terminal-api`, build del host 6.8.0 / 5304, MPL 2.0) como contrato de terminal V1 (`ITerminalPlugin` / `ITerminalCallback`, identidad, límites y códigos de error); las constantes de identidad del plugin provienen ahora de él, con hash bloqueado en `locks/host-api-aars.lock`

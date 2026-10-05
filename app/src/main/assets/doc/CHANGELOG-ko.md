@@ -6,7 +6,7 @@
 
 # v1.0.0
 
-###### 2026/10/04
+###### 2026/10/05
 
 * `힌트` P5 로컬 개발 미리 보기: 터미널 화면, 다중 세션, 스크립트 API (출력 이벤트, 대화형 입력, 종료 코드 대기), 독립 설정 화면, 버전 기록과 업데이트 확인을 갖춘 정보 화면, 런처 아이콘 구현 완료. 스크립트 API 사용에는 P4 구현이 포함된 AutoJs6 빌드가 필요. 플러그인 센터의 설정 진입에는 TERMINAL_SETTINGS 를 지원하는 빌드가 필요.
 * `기능` 플러그인 신원 `three-shell-terminal` (engine `terminal`), INFO 서비스, Wake Activity, 호스트 발견용 `org.autojs.plugin.TERMINAL` 서비스 뼈대
@@ -29,6 +29,7 @@
 * `수정` 시작 중인 세션이 호스트 조회에서 일시적으로 사라져 화면에 표시되는 실행에서 터미널을 열 수 없던 문제
 * `개선` 런처와 플러그인 센터 아이콘의 시각적 크기를 통일하고 투명 배경과 흑백 또는 중성 회색조 적용
 * `개선` 플러그인 센터 아이콘에 Icon Studio에서 조정한 크기, 위치, 밝은 이미지와 어두운 이미지 및 원형 배경을 적용하고 재생성 가능한 원본과 매개변수를 유지
+* `개선` Android 앱 정보 아이콘에 Icon Studio의 그림과 밝은 배경 및 어두운 배경을 사용하고 플러그인 센터의 투명 그림과 기존 런처 옵션을 유지
 * `의존성` 터미널 에뮬레이션과 pty 네이티브 라이브러리로 jackpal Android-Terminal-Emulator (term 1.0.70, emulatorview 1.0.42, libtermexec 1.0, Apache-2.0) 추가, `locks/vendored-aars.lock` 에 해시 고정
 * `의존성` 공유 플러그인 계약과 Node.js 매니페스트 계약으로 `common-plugin-api.aar` 와 `nodejs-api.aar` (AutoJs6 모듈 `plugin-api/common-plugin-api` 와 `plugin-api/nodejs-api`, 호스트 빌드 6.8.0 / 5303, MPL 2.0) 추가, `locks/host-api-aars.lock` 에 해시 고정
 * `의존성` 터미널 계약 V1 (`ITerminalPlugin` / `ITerminalCallback`, 신원, 상한, 오류 코드) 로 `terminal-api.aar` (AutoJs6 모듈 `plugin-api/terminal-api`, 호스트 빌드 6.8.0 / 5304, MPL 2.0) 추가. 플러그인 신원 상수는 이제 여기서 가져오며 `locks/host-api-aars.lock` 에 해시 고정

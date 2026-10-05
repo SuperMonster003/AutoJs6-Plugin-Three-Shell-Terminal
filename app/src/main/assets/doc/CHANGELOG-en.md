@@ -6,7 +6,7 @@
 
 # v1.0.0
 
-###### 2026/10/04
+###### 2026/10/05
 
 * `Hint` P5 local development preview: the terminal UI, multiple sessions, the script API (output events, interactive input and exit-code waits), the standalone settings page, About with version history and update check, and the launcher icons are implemented. The script API requires an AutoJs6 build containing the P4 implementation; the plugin center's settings entry requires a build that supports TERMINAL_SETTINGS.
 * `Feature` Plugin identity `three-shell-terminal` (engine `terminal`) with the INFO service, the Wake Activity and the `org.autojs.plugin.TERMINAL` service skeleton for host discovery
@@ -29,6 +29,7 @@
 * `Fix` A starting session could briefly disappear from host queries and prevent visible execution from opening its terminal
 * `Improvement` Consistent visual sizing for launcher and Plugin Center icons, with transparent backgrounds and neutral black, white or grayscale artwork
 * `Improvement` Plugin Center icons use the sizes, positions, light and dark artwork, and circular backgrounds adjusted in Icon Studio, retaining reproducible sources and parameters
+* `Improvement` Android App info icons share Icon Studio artwork and light/dark backgrounds while preserving transparent Plugin Center artwork and existing launcher choices
 * `Dependency` Added jackpal Android-Terminal-Emulator (term 1.0.70, emulatorview 1.0.42, libtermexec 1.0, Apache-2.0) as the terminal emulation and pty native libraries, hash-locked in `locks/vendored-aars.lock`
 * `Dependency` Added `common-plugin-api.aar` and `nodejs-api.aar` (AutoJs6 modules `plugin-api/common-plugin-api` and `plugin-api/nodejs-api`, host build 6.8.0 / 5303, MPL 2.0) as the shared plugin contract and the Node.js manifest contract, hash-locked in `locks/host-api-aars.lock`
 * `Dependency` Added `terminal-api.aar` (AutoJs6 module `plugin-api/terminal-api`, host build 6.8.0 / 5304, MPL 2.0) as the terminal contract V1 (`ITerminalPlugin` / `ITerminalCallback`, identity, ceilings and error codes); the plugin identity constants now come from it, hash-locked in `locks/host-api-aars.lock`

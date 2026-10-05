@@ -6,7 +6,7 @@
   "changelog_label_dependency": "Dependency",
   "$data": {
     "v1.0.0": {
-      "released_date": "2026/10/04",
+      "released_date": "2026/10/05",
       "hint": [
         "P5 local development preview: the terminal UI, multiple sessions, the script API (output events, interactive input and exit-code waits), the standalone settings page, About with version history and update check, and the launcher icons are implemented. The script API requires an AutoJs6 build containing the P4 implementation; the plugin center's settings entry requires a build that supports TERMINAL_SETTINGS."
       ],
@@ -39,7 +39,8 @@
       ],
       "improvement": [
         "Consistent visual sizing for launcher and Plugin Center icons, with transparent backgrounds and neutral black, white or grayscale artwork",
-        "Plugin Center icons use the sizes, positions, light and dark artwork, and circular backgrounds adjusted in Icon Studio, retaining reproducible sources and parameters"
+        "Plugin Center icons use the sizes, positions, light and dark artwork, and circular backgrounds adjusted in Icon Studio, retaining reproducible sources and parameters",
+        "Android App info icons share Icon Studio artwork and light/dark backgrounds while preserving transparent Plugin Center artwork and existing launcher choices"
       ]
     }
   }

@@ -194,7 +194,7 @@ Les plans et l'avancement du plugin sont tenus sous forme de liste cochable dans
 
 #### v1.0.0
 
-_2026/10/04_
+_2026/10/05_
 
 - `Note` Aperçu local P5: interface du terminal, sessions multiples, API de script (événements de sortie, saisie interactive, attente du code de fin), page de réglages autonome, À propos avec historique des versions et recherche de mises à jour, et icônes du lanceur sont implémentés. L'API de script nécessite une version d'AutoJs6 contenant P4; l'entrée des réglages du centre de plugins nécessite une version prenant en charge TERMINAL_SETTINGS.
 - `Fonctionnalité` Identité du plugin `three-shell-terminal` (engine `terminal`) avec le service INFO, la Wake Activity et le squelette du service `org.autojs.plugin.TERMINAL` pour la découverte par l'hôte
@@ -217,6 +217,7 @@ _2026/10/04_
 - `Correctif` Une session en cours de démarrage pouvait disparaître brièvement des requêtes de l'hôte et empêcher l'ouverture de son terminal
 - `Amélioration` Taille visuelle harmonisée des icônes du lanceur et du Centre de plugins, avec des fonds transparents et des motifs noirs, blancs ou gris neutres
 - `Amélioration` Les icônes du centre de plugins utilisent les tailles, positions, images claires et sombres et fonds circulaires réglés dans Icon Studio, avec les sources et paramètres permettant de les reproduire
+- `Amélioration` Les icônes des informations d'application Android utilisent les illustrations et les fonds clairs et sombres d'Icon Studio, en conservant les images transparentes du centre de plugins et les choix du lanceur
 - `Dépendance` Ajout de jackpal Android-Terminal-Emulator (term 1.0.70, emulatorview 1.0.42, libtermexec 1.0, Apache-2.0) pour l'émulation de terminal et les bibliothèques natives pty, verrouillé par hachage dans `locks/vendored-aars.lock`
 - `Dépendance` Ajout de `common-plugin-api.aar` et `nodejs-api.aar` (modules AutoJs6 `plugin-api/common-plugin-api` et `plugin-api/nodejs-api`, build hôte 6.8.0 / 5303, MPL 2.0) comme contrat de plugin partagé et contrat de manifeste Node.js, verrouillés par hachage dans `locks/host-api-aars.lock`
 - `Dépendance` Ajout de `terminal-api.aar` (module AutoJs6 `plugin-api/terminal-api`, build hôte 6.8.0 / 5304, MPL 2.0) comme contrat de terminal V1 (`ITerminalPlugin` / `ITerminalCallback`, identité, plafonds et codes d'erreur) ; les constantes d'identité du plugin en proviennent désormais, verrouillé par hachage dans `locks/host-api-aars.lock`

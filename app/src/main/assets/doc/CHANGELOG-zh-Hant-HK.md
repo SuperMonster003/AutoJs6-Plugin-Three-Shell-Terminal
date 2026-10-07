@@ -14,6 +14,7 @@
 * `新增` 檔案管理員目錄選單的 "在終端機中開啟" 改由外掛提供 (AutoJs6 6.8.0 組建 5320 或更新版本): AutoJs6 只傳遞所選目錄的路徑, 不授予額外權限; 最近的工作階段切換到該目錄, 沒有工作階段時在該目錄新建; 更早的 AutoJs6 組建繼續顯示自帶的選單項目
 * `修復` 在 Android 17 等較新系統上, 長按終端後重新顯示選取控點與 "複製 / 全選" 工具列, 文字可以再次選取和複製
 * `修復` 複製或分享很長的終端記錄不再使外掛崩潰 (Android 7.0 上崩潰會結束全部工作階段); 過長時只使用最近的 100000 個字元並給出提示
+* `修復` 設定, 關於, 版本歷史, 環境探測與指令輸出頁面左上角的返回按鈕重新生效, 例如從 AutoJs6 插件中心進入外掛設定後可以返回插件中心
 * `依賴` 升級 jackpal emulatorview 修補 1.0.42-p6.1 -> 1.0.42-p8.1: 渲染器字型可由外掛設定, 並以 `Math.ceil` 取代 API 23 起已移出 SDK 的 `android.util.FloatMath`; 其餘類別逐位元組不變, `locks/vendored-aars.lock` 已更新
 * `依賴` 附加 JetBrains Mono NL 2.304 (SIL Open Font License 1.1) 作為可選的終端字型, 原樣打包並在關於頁提供授權條款, 來源與 SHA-256 記錄於 `vendor/fonts/jetbrains-mono/`
 * `依賴` 附加 `explorer-action-api.aar` (AutoJs6 模組 `plugin-api/explorer-action-api`, 主程式組建 6.8.0 / 5320, MPL 2.0) 作為 Explorer Action 協定 v23 契約, 用於檔案管理員目錄動作, 並在 `locks/host-api-aars.lock` 中鎖定雜湊

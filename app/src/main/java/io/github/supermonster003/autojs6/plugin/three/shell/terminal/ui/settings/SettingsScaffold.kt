@@ -62,12 +62,16 @@ internal fun HostAppearanceActivity.buildScaffold(title: CharSequence, horizonta
         setContentInsetsRelative(kit.dp(16), kit.dp(8))
         navigationIcon = kit.tintedDrawable(R.drawable.ic_settings_back, kit.palette.text)
         setNavigationContentDescription(androidx.appcompat.R.string.abc_action_bar_up_description)
-        setNavigationOnClickListener { navigateBack() }
         overflowIcon = overflowIcon?.let { kit.tinted(it, kit.palette.text) }
     }
     root.addView(toolbar, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT))
     setSupportActionBar(toolbar)
     supportActionBar?.setDisplayShowTitleEnabled(true)
+    // After setSupportActionBar: AppCompat installs its own navigation listener there, which turns the
+    // click into android.R.id.home and would silently replace a listener set earlier.
+    // zh-CN: 必须在 setSupportActionBar 之后设置: AppCompat 会在其中换上自己的导航监听 (转为 android.R.id.home),
+    // 覆盖之前设置的监听.
+    toolbar.setNavigationOnClickListener { navigateBack() }
     val content = BoundedColumn(this).apply {
         setPaddingRelative(kit.dp(horizontalPaddingDp), kit.dp(8), kit.dp(horizontalPaddingDp), kit.dp(SettingsMetrics.SECTION_TOP))
     }

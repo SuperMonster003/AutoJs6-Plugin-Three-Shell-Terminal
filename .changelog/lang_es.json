@@ -15,7 +15,8 @@
       ],
       "fix": [
         "En versiones recientes de Android como Android 17, una pulsación larga en la terminal vuelve a mostrar los controles de selección y la barra Copiar / Seleccionar todo, de modo que el texto se puede seleccionar y copiar",
-        "Copiar o compartir una transcripción muy larga ya no bloquea el complemento (en Android 7.0 el bloqueo cerraba todas las sesiones); un texto demasiado largo conserva sus últimos 100000 caracteres y un aviso lo indica"
+        "Copiar o compartir una transcripción muy larga ya no bloquea el complemento (en Android 7.0 el bloqueo cerraba todas las sesiones); un texto demasiado largo conserva sus últimos 100000 caracteres y un aviso lo indica",
+        "El botón de volver de la esquina superior izquierda de las pantallas Ajustes, Acerca de, historial de versiones, diagnóstico del entorno y Salida del comando vuelve a funcionar, de modo que los ajustes abiertos desde el centro de complementos de AutoJs6 regresan a él"
       ],
       "dependency": [
         "Se actualiza el parche de jackpal emulatorview 1.0.42-p6.1 -> 1.0.42-p8.1: el complemento fija la fuente del renderizador y `Math.ceil` sustituye a `android.util.FloatMath`, retirado del SDK desde la API 23; las demás clases son idénticas byte a byte y `locks/vendored-aars.lock` se actualiza",

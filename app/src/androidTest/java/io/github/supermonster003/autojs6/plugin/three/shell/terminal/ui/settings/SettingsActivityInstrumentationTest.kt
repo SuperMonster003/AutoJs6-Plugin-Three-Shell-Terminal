@@ -311,6 +311,33 @@ class SettingsActivityInstrumentationTest {
         assertFalse(output.contains("Status: ok"))
     }
 
+    @Test
+    fun theToolbarUpButtonLeavesEveryScaffoldScreen() {
+        // setSupportActionBar replaces a navigation listener set before it; the Up button then did nothing (1.1.0 review).
+        listOf(
+            Intent(TerminalActions.OPEN_SETTINGS).setPackage(context.packageName),
+            Intent(context, AboutActivity::class.java),
+            Intent(context, NodeProbeActivity::class.java),
+        ).forEach { intent ->
+            val screen = launch(intent)
+            val toolbar = onMain {
+                when (screen) {
+                    is SettingsActivity -> screen.scaffold.toolbar
+                    is AboutActivity -> screen.scaffold.toolbar
+                    is NodeProbeActivity -> screen.scaffold.toolbar
+                    else -> error("unexpected ${screen.javaClass.simpleName}")
+                }
+            }
+            val up = onMain {
+                toolbar.descendants().filterIsInstance<android.widget.ImageButton>()
+                    .single { it.contentDescription == toolbar.navigationContentDescription }
+            }
+            onMain { assertTrue(up.performClick()) }
+            await { screen.isFinishing || screen.isDestroyed }
+            Log.i(TAG, "toolbar Up left ${screen.javaClass.simpleName}")
+        }
+    }
+
     private fun launchSettings(): SettingsActivity = launch(SettingsActivity.intent(context)) as SettingsActivity
 
     private fun launch(intent: Intent): Activity = instrumentation.startActivitySync(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))

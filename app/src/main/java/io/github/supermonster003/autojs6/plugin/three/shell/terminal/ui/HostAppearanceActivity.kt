@@ -5,6 +5,7 @@ import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
 import android.view.WindowInsetsController
 import android.view.WindowManager
@@ -112,6 +113,20 @@ abstract class HostAppearanceActivity : AppCompatActivity() {
     /** Toolbar navigation and the system back gesture both land here. */
     open fun navigateBack() {
         finish()
+    }
+
+    /**
+     * The support action bar reports its navigation button as `android.R.id.home`; route it to
+     * [navigateBack] so Up works even when a toolbar's own listener was replaced.
+     * zh-CN: 支持库操作栏把导航按钮报告为 `android.R.id.home`; 转到 [navigateBack], 即使工具栏自身的监听被替换,
+     * 向上按钮也能工作.
+     */
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            navigateBack()
+            return true
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     /** True when the attached base context is in night mode (for callers without a palette yet). */

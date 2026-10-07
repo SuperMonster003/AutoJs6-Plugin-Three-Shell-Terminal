@@ -945,3 +945,9 @@ t.on('exit', code => console.log('done', code));
 - 设备说明: 全套测试期间宿主停留在插件中心页, 某个用例注入的点击把插件中心里 3-Shell Terminal 的开关关闭 (宿主偏好 22:58:48 写入), 导致动作在之后的复测中消失; 已经宿主界面重新启用. 同一偏好中 Node.js Runtime 也为关闭, 日志在 22:57 被用例清空, 无法确认是否同一原因, 未改动, 留待维护者确认. 之后的设备运行前先回到桌面.
 - 观察 (宿主既有问题, 未改): 插件中心在带 ARM 转译的 x86_64 AVD 上启用 x86_64 插件时提示 "ABI 无交集", 原因是 `PluginAbiUtils.hasMismatchWithDevice` 按固定顺序把 arm64-v8a 视为设备主 ABI 并过滤掉 x86_64; 继续启用后功能正常.
 - 后续事项: 1.1.0 发布与 Node.js 仓库同步等待维护者通知.
+
+### 2026-10-08 1.1.0 发布前修复 (维护者反馈)
+
+- 插件: 设置, 关于, 版本历史, 环境探测与命令输出页左上角的返回按钮无效 (自 P5 起). 原因: 共用外壳 `buildScaffold` 在 `setSupportActionBar` 之前设置导航监听, AppCompat 在其中换上自己的监听, 点击变成未处理的 `android.R.id.home`. 修复: 监听移到 `setSupportActionBar` 之后, 基类 `HostAppearanceActivity` 另把 `android.R.id.home` 转到 `navigateBack()`; 新增 `SettingsActivityInstrumentationTest.theToolbarUpButtonLeavesEveryScaffoldScreen`. 证据: API 37 AVD 上宿主插件中心 -> 设置 -> 返回回到插件中心; `ui.settings` 包 13/13, `TerminalActivityInstrumentationTest` 4/4, 新用例在 Sony G8441 API 28 通过. 终端界面与兄弟仓库的同类外壳顺序正确, 不受影响.
+- 宿主 7990a40366 (插件中心详情对话框): 每发布一份插件列表就新建对话框并关闭旧的, 冷启动后立即打开详情会闪一次. 改为按内容比较: 未变化不动, 行内容变化原地更新, 只有中性按钮变化才重建; 内容比较补上 `installedAbis`. 证据: API 37 AVD 冷启动后立即打开详情, 修复前每次都替换一次对话框窗口, 修复后 4 次均只有一个窗口; 对话框打开期间重装插件, 同一窗口内 "最近更新" 由 00:30 变为 00:34.
+- 其它: 另一会话的 4b5ffb6 升级共享 Gradle 插件到 1.9.0 时未同步 `VERSION_BUILD`, 本次提交按计数规则一并校正; `AGENTS.md` 第 2 节的平台插件版本仍写 1.8.3, 留给该会话或维护者确认.

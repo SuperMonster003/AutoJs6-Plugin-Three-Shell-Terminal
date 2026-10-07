@@ -204,6 +204,7 @@ _2026/10/07_
 - `新增` 文件管理器目录菜单的 "在终端中打开" 改由插件提供 (AutoJs6 6.8.0 构建 5320 或更高版本): AutoJs6 只传递所选目录的路径, 不授予额外权限; 最近的会话切换到该目录, 没有会话时在该目录新建; 更早的 AutoJs6 构建继续显示自带的菜单项
 - `修复` 在 Android 17 等较新系统上, 长按终端后重新显示选择手柄与 "复制 / 全选" 工具栏, 文本可以再次选择和复制
 - `修复` 复制或分享很长的终端记录不再使插件崩溃 (Android 7.0 上崩溃会结束全部会话); 超长时只使用最近的 100000 个字符并给出提示
+- `修复` 设置, 关于, 版本历史, 环境探测与命令输出页面左上角的返回按钮重新生效, 例如从 AutoJs6 插件中心进入插件设置后可以返回插件中心
 - `依赖` 升级 jackpal emulatorview 补丁 1.0.42-p6.1 -> 1.0.42-p8.1: 渲染器字体可由插件设置, 并以 `Math.ceil` 取代 API 23 起已移出 SDK 的 `android.util.FloatMath`; 其余类逐字节不变, `locks/vendored-aars.lock` 已更新
 - `依赖` 附加 JetBrains Mono NL 2.304 (SIL Open Font License 1.1) 作为可选的终端字体, 原样打包并在关于页提供许可证, 来源与 SHA-256 记录于 `vendor/fonts/jetbrains-mono/`
 - `依赖` 附加 `explorer-action-api.aar` (AutoJs6 模块 `plugin-api/explorer-action-api`, 宿主构建 6.8.0 / 5320, MPL 2.0) 作为 Explorer Action 协议 v23 契约, 用于文件管理器目录动作, 并在 `locks/host-api-aars.lock` 中锁定哈希

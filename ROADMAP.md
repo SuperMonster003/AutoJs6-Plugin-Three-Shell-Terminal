@@ -29,7 +29,7 @@
 | D6 | 存储权限 | 插件声明 `MANAGE_EXTERNAL_STORAGE` (API 30+) 与 `READ_EXTERNAL_STORAGE` (maxSdk 32) / `WRITE_EXTERNAL_STORAGE` (maxSdk 29); 目标目录位于共享存储且未授权时显示横幅引导到系统设置, 未授权则回退到 `HOME` 并提示; 细节见 D18 |
 | D7 | 旧数据 | 不迁移宿主 `<filesDir>/terminal` (home / usr / 已解压 npm CLI / 全局包) 与终端偏好; 宿主升级后在后台一次性清理残留 (D28), changelog hint 说明 |
 | D8 | 宿主设置页 | 完全移除宿主设置页 "终端" 分类 (npm 镜像源 / 忽略安装脚本 / 清除终端数据) 与开发者选项的 "Node 环境探测" 项, 对应能力全部融入插件设置页 (D29); 宿主设置页不再保留任何终端条目, 插件设置经插件中心 "设置" 与插件自身到达 |
-| D9 | 版本与推送 | `VERSION_NAME` 从 1.0.0 起; 与 3-Setup Installer 一致, 本仓库与宿主改动均仅本地 Conventional Commits, 不推送 GitHub, 不登记官方索引, 不发 Release, 直至维护者明确恢复; 宿主 `PluginInstallWizardCatalog` 条目先落地 (索引可解析后自然生效) |
+| D9 | 版本与推送 | `VERSION_NAME` 从 1.0.0 起; 与 3-Setup Installer 一致, 本仓库与宿主改动均仅本地 Conventional Commits, 不推送 GitHub, 不登记官方索引, 不发 Release, 直至维护者明确恢复; 宿主 `PluginInstallWizardCatalog` 条目先落地 (索引可解析后自然生效) (更新: 维护者 2026-10-04 授权公开推送插件源码, 2026-10-07 授权 v1.0.0 tag / Release / 官方索引; 宿主推送仍按原门控, 见会话记录) |
 | D10 | 宿主 6.8.0 changelog | 改写为插件化条目: 删除描述宿主内置终端的 feature / fix / improvement 条目, 修改混合条目去掉终端部分, 新增 hint "终端改由 3-Shell Terminal 插件提供" 与 feature "集成 3-Shell Terminal 插件 (抽屉 / 文件管理器 / 项目工具栏 / 脚本 API `terminal`)", 与既有 hint "部分内置功能改由独立插件提供" 一致; 清单见 P1.4 |
 | D11 | 输出流传输 | 第三档的会话输出经 `ParcelFileDescriptor` 管道 (插件 `createPipe`, 返回读端给宿主), 不用 Binder 回调推送字节; 细节见 D21 |
 | D12 | 身份派生表 | 见第 4.4 节; 全部值在 Gradle, Manifest, 契约常量, 资源, 文档, 测试, 宿主注册与官方索引中 MUST 一致 |
@@ -266,7 +266,7 @@ runtime/api/augment/terminal/           Terminal.kt (AugmentableKey("terminal"))
 | 发布文件名 | `autojs6-plugin-three-shell-terminal-v{VERSION_NAME}-{abi}-{CRC32}.apk` (5 个) |
 | README `icon_alt` | `autojs6-plugin-three-shell-terminal-ic-launcher` |
 | CI artifact | `three-shell-terminal-debug-apks` |
-| 图标源图 | `.python/icons/three-shell-ic-launcher-light.png` / `-dark.png` (1254 x 1254 RGBA, alpha 包围盒 `(254, 300, 1000, 953)` 即 746 x 653, 高 / 宽 0.875, 图案 `#272727` / `#D8D8D8`, 两图 alpha 一致); `ADAPTIVE_GLYPH = 0.45` (几何上限 `66 / (108 * sqrt(1 + 0.875^2)) = 0.4599`, 取 0.45 使半对角线 32.3 dp < 33 dp), `OPTICAL_X` / `OPTICAL_Y` 初值 0 并在 P5.4 真机复核 |
+| 图标源图 | `.python/icons/three-shell-ic-launcher-light.png` / `-dark.png` (1254 x 1254 RGBA, alpha 包围盒 `(254, 300, 1000, 953)` 即 746 x 653, 图案 `#272727` / `#D8D8D8`, 两图 alpha 一致); 自 2026-10-04 起几何, 色调与背景由 `.icons/recipe.json` (Icon Studio) 决定, 当前派生宽度 UI 0.6637 / 自适应 0.4424, 光学偏移 0 (早期的 `ADAPTIVE_GLYPH = 0.45` 与 `OPTICAL_X` / `OPTICAL_Y` 已被取代); 2026-10-07 在 API 37 AVD 启动器中真实复核 |
 | 宿主向导条目 | `entry(official("three.shell.terminal"), "Three Shell Terminal", TOOLS)` |
 | 宿主透明图标 allowlist | `PluginInstalledIconResolver.transparentIconPackages` 加入本包名 |
 | 官方索引 | `official-repositories.json` 插入 `AutoJs6-Plugin-Three-Shell-Terminal` (D9 解锁后) |
@@ -470,7 +470,7 @@ runtime/api/augment/terminal/           Terminal.kt (AugmentableKey("terminal"))
 ### P5.3 启动器与图标
 
 - [x] (插件) 四个 alias (`AdaptiveLightIconAlias`, `AdaptiveDarkIconAlias`, `AdaptiveAutoIconAlias` 默认启用, `TransparentIconAlias`) 指向 `LauncherActivity`, `MAIN` / `LAUNCHER` 只在 alias 上; `LauncherIcons` 切换逻辑 (`PackageManager.setComponentEnabledSetting`, 同一时刻恰好一个启用); Three 的 `ic_launcher` 保持透明 BitmapDrawable, 不创建同名自适应 XML. (SOURCE 2026-10-02: 插件 build 24 (39db2e9): Manifest 四个 `activity-alias` 带 MAIN / LAUNCHER 指向 `.ui.LauncherActivity` (`LauncherActivity` 自身不再带 MAIN / LAUNCHER), `ui/settings/LauncherIcons` (`current` / `select` / `normalize` / `normalizeAsync`, 恰好一个启用, `DONT_KILL_APP`), `LauncherIconStatePolicy` (无启用或多启用时归一到存储选择, 默认 AUTO), `LauncherIconUpdateReceiver` 在 `MY_PACKAGE_REPLACED` 后归一化, `HostAppearanceActivity.onCreate` 在工作线程归一化; `ic_launcher` 仍为生成的透明位图, `generate_launcher_icons.py --check` 15 项通过)
-- [x] (测试) instrumentation: 四 alias 恰好一个启用, 切换后 `queryIntentActivities(MAIN/LAUNCHER)` 命中唯一组件; 真机截图 (API 35 HyperOS 与 API 24 AVD) 复核光学居中, 必要时调整 `OPTICAL_X` / `OPTICAL_Y` 并重新生成 (`--check` 通过), 结果回填第 4.4 节. (SOURCE 2026-10-02: JVM `ui/settings/LauncherIconStatePolicyTest`, `ManifestContractTest` 冻结四 alias 与导出表, `ThreeShellTerminalPluginContractTest` 启动器入口断言随 alias 更新; instrumentation `ui/settings/LauncherIconInstrumentationTest`: 恰好一个 alias 启用, 四种切换后 `queryIntentActivities(MAIN / LAUNCHER)` 唯一命中对应 alias, 结束恢复原状. DEVICE 2026-10-02: API 24 x86 AVD 与 Xiaomi Pad API 35 全部通过. 保留: 光学居中的真机截图复核与 `OPTICAL_X` / `OPTICAL_Y` 调整并入 P6.2 兼容矩阵, 本阶段未改动生成参数)
+- [x] (测试) instrumentation: 四 alias 恰好一个启用, 切换后 `queryIntentActivities(MAIN/LAUNCHER)` 命中唯一组件; 真机截图 (API 35 HyperOS 与 API 24 AVD) 复核光学居中, 必要时调整 `OPTICAL_X` / `OPTICAL_Y` 并重新生成 (`--check` 通过), 结果回填第 4.4 节. (SOURCE 2026-10-02: JVM `ui/settings/LauncherIconStatePolicyTest`, `ManifestContractTest` 冻结四 alias 与导出表, `ThreeShellTerminalPluginContractTest` 启动器入口断言随 alias 更新; instrumentation `ui/settings/LauncherIconInstrumentationTest`: 恰好一个 alias 启用, 四种切换后 `queryIntentActivities(MAIN / LAUNCHER)` 唯一命中对应 alias, 结束恢复原状. DEVICE 2026-10-02: API 24 x86 AVD 与 Xiaomi Pad API 35 全部通过. 保留: 光学居中的真机截图复核与 `OPTICAL_X` / `OPTICAL_Y` 调整并入 P6.2 兼容矩阵, 本阶段未改动生成参数) 2026-10-07 复审: 2026-10-03 起的 Icon Studio 规范取代了 `OPTICAL_X` / `OPTICAL_Y` 手调参数 (光学偏移为 0); API 37 x86_64 AVD 的 Pixel 启动器真实抽屉截图中, 浅色 / 深色 / 自动三个 alias 的图案居中且尺寸与 3-Setup Installer 一致, 自动 alias 在先设主题再切换时正确跟随浅色 / 深色; 透明 alias 被启动器包进白色圆底并缩小, 深色主题下浅色图案几乎不可见, 属于设置页已提示的 "启动器自加背景" 限制. HyperOS 真机未切换 alias (避免改动用户主屏幕快捷方式).
 
 验收条件: 设置页全部项可用且与宿主外观跟随一致; 插件中心 "设置" 入口可达; 四 alias 切换正确; 发行历史与更新检查可用 (更新检查在未推送前只验证失败 / 超时路径).
 
@@ -482,19 +482,19 @@ runtime/api/augment/terminal/           Terminal.kt (AugmentableKey("terminal"))
 
 ### P6.1 健壮性
 
-- [x] (插件) 插件进程被系统杀死 (有会话时前台服务保活; 无会话时正常退出) 与用户从最近任务划掉 (会话保留, 通知仍在); 宿主进程死亡时订阅写端与回调注册自动清理 (`linkToDeath`), 不影响会话; Node.js 插件在会话运行中更新 / 卸载: 已运行的 node 进程不受影响, 新会话刷新符号链接或退化为纯 shell.
-- [x] (插件) 大输出 (`cat` 100 MiB 文件, `yes`) 下界面保持可响应, 环形缓冲溢出只影响订阅者; 100 个会话快速创建 / 关闭无句柄泄漏 (`ls /proc/<pid>/fd | wc -l` 前后一致); 旋转 / 分屏 / 键盘弹出下 pty 尺寸同步.
-- [x] (测试) instrumentation 覆盖上述可自动化部分; 手动项写入 `docs/dev/p6-robustness-evidence.md`.
+- [x] (插件) 插件进程被系统杀死 (有会话时前台服务保活; 无会话时正常退出) 与用户从最近任务划掉 (会话保留, 通知仍在); 宿主进程死亡时订阅写端与回调注册自动清理 (`linkToDeath`), 不影响会话; Node.js 插件在会话运行中更新 / 卸载: 已运行的 node 进程不受影响, 新会话刷新符号链接或退化为纯 shell. (DEVICE 2026-10-07: API 24 AVD 对插件进程实际 SIGKILL 后由启动器得到新进程与新的 HOME shell, 私有标记保留, 不重放原命令 (app 14747 -> 14883, shell 14839 -> 14924; 签名 universal 包复验 16704 -> 16791); Xiaomi 23046RP50C API 35 移除任务后会话与前台通知保留; `TerminalBinderContractTest` 客户端进程死亡后其回调与订阅移除而会话保留; `NodeRuntimeLifecycleInstrumentationTest` 在一次性 API 35 AVD 替换 / 卸载 / 恢复 Node.js Runtime 时已运行的 node 继续输出, 新计划刷新链接或退化为纯 shell; commit e2a52ae / 7af6fc2, 见 `docs/dev/p6-robustness-evidence.md`)
+- [x] (插件) 大输出 (`cat` 100 MiB 文件, `yes`) 下界面保持可响应, 环形缓冲溢出只影响订阅者; 100 个会话快速创建 / 关闭无句柄泄漏 (`ls /proc/<pid>/fd | wc -l` 前后一致); 旋转 / 分屏 / 键盘弹出下 pty 尺寸同步. (DEVICE 2026-10-07: `TerminalRobustnessInstrumentationTest` 100 MiB 真实文件由快速订阅者完整收到, 停滞订阅者独立溢出, 主线程心跳最大间隔 API 24 62 ms / API 37.1 91 ms; 100 次创建 / 关闭后总 fd 48 / 48 与 117 / 117, 无残留终端线程; `TerminalLifecycleInstrumentationTest` 旋转 / 键盘 / API 24 真实分屏下视图与内核 pty 尺寸一致且 shell pid 不变)
+- [x] (测试) instrumentation 覆盖上述可自动化部分; 手动项写入 `docs/dev/p6-robustness-evidence.md`. (BINDER / DEVICE 2026-10-07: 完整套件 API 24 x86 AVD 71 通过 + 7 显式跳过, API 37.1 x86_64 16 KiB AVD 70 通过 + 8 显式跳过, 零失败; 手动项与 OEM 限制见 `docs/dev/p6-robustness-evidence.md`)
 
 ### P6.2 兼容矩阵
 
-- [x] (测试) D32 六台设备 / AVD 各执行: 安装对应 ABI 变体 + universal 各一次, 新建会话, `echo`, 共享存储授权与 `cd /sdcard`, Node.js 三命令 (已安装设备), 宿主三入口, 脚本示例一个, 前台服务通知; API 24 的 `startService` 分支与通知渠道缺失路径; API 37 AVD 的 16 KB 页 (`verifyNativePageAlignment` + 实机加载); HyperOS 的后台启动与通知限制记录.
-- [x] (文档) 矩阵表写入 `docs/dev/p6-compat-matrix.md` (设备 / API / ABI / APK 变体 / 结果 / 备注).
+- [x] (测试) D32 六台设备 / AVD 各执行: 安装对应 ABI 变体 + universal 各一次, 新建会话, `echo`, 共享存储授权与 `cd /sdcard`, Node.js 三命令 (已安装设备), 宿主三入口, 脚本示例一个, 前台服务通知; API 24 的 `startService` 分支与通知渠道缺失路径; API 37 AVD 的 16 KB 页 (`verifyNativePageAlignment` + 实机加载); HyperOS 的后台启动与通知限制记录. (DEVICE 2026-10-07: Xiaomi 23046RP50C API 35, Sony G8441 API 28 (另含 armeabi-v7a 进程), Sony XQ-AT72 API 31, Redmi 22120RN86C API 33, API 24 x86 AVD, API 37.1 x86_64 16 KiB AVD: 13 次签名包安装 (对应 ABI + universal) 与 26 项宿主检查全部通过, 发布后以 Release 原件逐一复验; API 24 无通知渠道的 `startService` 路径与 HyperOS / Redmi 后台拒绝前台服务及恢复已记录)
+- [x] (文档) 矩阵表写入 `docs/dev/p6-compat-matrix.md` (设备 / API / ABI / APK 变体 / 结果 / 备注). (DOCS 2026-10-07: `docs/dev/p6-compat-matrix.md`)
 
 ### P6.3 性能与体积
 
-- [x] (插件) 会话创建到首个提示符 < 500 ms (API 35 真机, 排除 Node 归档首次解压); 首次 Node 归档解压耗时与大小记录; universal APK 与各 ABI APK 大小记录 (预期 universal < 6 MiB: Material + 两库 x 4 ABI 共约 60 KB 原生); R8 开启 (`isMinifyEnabled = true`) 且 `jackpal.androidterm.**` 规则保留 JNI 类.
-- [x] (测试) 数值写入本节证据; 回归阈值写入 `AGENTS.md` 第 14 节.
+- [x] (插件) 会话创建到首个提示符 < 500 ms (API 35 真机, 排除 Node 归档首次解压); 首次 Node 归档解压耗时与大小记录; universal APK 与各 ABI APK 大小记录 (预期 universal < 6 MiB: Material + 两库 x 4 ABI 共约 60 KB 原生); R8 开启 (`isMinifyEnabled = true`) 且 `jackpal.androidterm.**` 规则保留 JNI 类. (DEVICE 2026-10-07: Xiaomi 23046RP50C API 35 预热后 10 次首个提示符中位数 79 ms, 最大 103 ms; Node 归档首次解压 420 ms / 1699 项 / 10068758 字节, 缓存 1 ms; 发布 APK universal 1882323 字节, 各 ABI 1780438-1783520 字节; R8 开启且 `jackpal.androidterm.**` 保留; 见 `docs/dev/p6-performance-evidence.md`)
+- [x] (测试) 数值写入本节证据; 回归阈值写入 `AGENTS.md` 第 14 节. (DOCS 2026-10-07: `docs/dev/p6-performance-evidence.md`, `AGENTS.md` 第 14 节)
 
 验收条件: 矩阵表无未解释的失败; 健壮性手动清单全部通过; 体积与耗时数值落档.
 
@@ -506,21 +506,21 @@ runtime/api/augment/terminal/           Terminal.kt (AugmentableKey("terminal"))
 
 ### P7.1 文档与声明
 
-- [x] (文档) `D:/webstorm-projects/AutoJs6-Documentation`: `api/terminal.md` (模块页, 结构参照 `api/epub.md` / `api/installer.md`: 插件依赖说明, `PLUGIN_UNAVAILABLE`, 同步 / Async / 会话三形态, `terminal` 与 `$terminal`, 与 `shell()` 的区别与各自适用场景互相提示), `api/terminalSessionType.md`, `api/terminalOpenOptionsType.md`, `api/terminalErrorType.md` (或合并进模块页, 按既有粒度); `api/shell.md` 增加指向 `terminal` 的提示; `api/sidebar.md` / `api/toc.md` 登记; 从 `generator/` 运行 `python auto-generate.py terminal shell` 只生成涉及页面, 提交文档仓库; 离线文档插件同步按既有策略另行决定.
-- [x] (文档) `D:/webstorm-projects/AutoJs6-TypeScript-Declarations`: `declarations/autojs6/aj6-int-terminal.d.ts` (`@Source` 指向宿主 `runtime/api/augment/terminal/*.kt` 与 `runtime/api/terminal/*.kt`, `Internal.Terminal` 命名空间, 重载与事件类型), `index.d.ts` 引用; `aj6dts.bat -Publish -DeclarationsOutput ... -ApiRoots ...`; Ace 插件同步 `aj6-int-terminal.d.ts` (LF), 两仓库版本号 +1 且版本名称按语义升级 (新增模块 -> y+1), Ace 执行 `:app:generateAutoJs6LspDeclarations`; 分别提交.
-- [x] (兄弟) `AutoJs6-Plugin-NodeJs-Runtime/docs/nodejs/TERMINAL.md` 与 `Roadmap.md` M21 注记: 消费者由 "AutoJs6 宿主 (宿主 uid)" 改为 "3-Shell Terminal 插件 (插件 uid)", 宿主侧布局段落改为插件侧; 不改契约; 本地提交.
-- [x] (宿主) `docs/dev/terminal-plugin-protocol-v1.md` 补齐脚本 API 与会话流章节; 宿主 changelog 核对 (P1.4 / P4.3 条目合并整理, 日期为当日).
+- [x] (文档) `D:/webstorm-projects/AutoJs6-Documentation`: `api/terminal.md` (模块页, 结构参照 `api/epub.md` / `api/installer.md`: 插件依赖说明, `PLUGIN_UNAVAILABLE`, 同步 / Async / 会话三形态, `terminal` 与 `$terminal`, 与 `shell()` 的区别与各自适用场景互相提示), `api/terminalSessionType.md`, `api/terminalOpenOptionsType.md`, `api/terminalErrorType.md` (或合并进模块页, 按既有粒度); `api/shell.md` 增加指向 `terminal` 的提示; `api/sidebar.md` / `api/toc.md` 登记; 从 `generator/` 运行 `python auto-generate.py terminal shell` 只生成涉及页面, 提交文档仓库; 离线文档插件同步按既有策略另行决定. (DOCS 2026-10-07: 文档仓库 614b49f, 156 个模块生成 / 新鲜度检查通过; 见 `docs/dev/p7-integration-evidence.md`)
+- [x] (文档) `D:/webstorm-projects/AutoJs6-TypeScript-Declarations`: `declarations/autojs6/aj6-int-terminal.d.ts` (`@Source` 指向宿主 `runtime/api/augment/terminal/*.kt` 与 `runtime/api/terminal/*.kt`, `Internal.Terminal` 命名空间, 重载与事件类型), `index.d.ts` 引用; `aj6dts.bat -Publish -DeclarationsOutput ... -ApiRoots ...`; Ace 插件同步 `aj6-int-terminal.d.ts` (LF), 两仓库版本号 +1 且版本名称按语义升级 (新增模块 -> y+1), Ace 执行 `:app:generateAutoJs6LspDeclarations`; 分别提交. (DOCS 2026-10-07: 声明仓库 24b44eb (4.32.0, TypeScript 5.1.3 与 6.0.3 严格语料通过), Ace 插件 c5d77a5 (1.25.0 开发线, `generateAutoJs6LspDeclarations` 与 `verifyAutoJs6LspRuntime` 通过), 离线文档插件 1167c9e 同步)
+- [x] (兄弟) `AutoJs6-Plugin-NodeJs-Runtime/docs/nodejs/TERMINAL.md` 与 `Roadmap.md` M21 注记: 消费者由 "AutoJs6 宿主 (宿主 uid)" 改为 "3-Shell Terminal 插件 (插件 uid)", 宿主侧布局段落改为插件侧; 不改契约; 本地提交. (DOCS 2026-10-07: 兄弟仓库 f56fc4ba, manifest schema 仍为 1)
+- [x] (宿主) `docs/dev/terminal-plugin-protocol-v1.md` 补齐脚本 API 与会话流章节; 宿主 changelog 核对 (P1.4 / P4.3 条目合并整理, 日期为当日). (SOURCE 2026-10-07: 宿主 11780d593e, 经合并 2e14309df7 进入主检出)
 
 ### P7.2 插件 README 与 changelog
 
-- [x] (插件) `.readme/lang_*.json` 10 语言: 简介, 功能 (多会话 / 后台运行 / 快捷键栏 / 文本选择 / Node.js 命令 / npm 镜像源 / 包管理菜单), 安装 (插件中心向导或 Release), Node.js 说明 (需要 Node.js Runtime 1.5.0+, W^X 限制, corepack 默认版本), 存储权限说明 (为什么需要全部文件访问, 不授权时的行为), 脚本示例 (`terminal.open`, `exec`, `npm.run`, `session.on('output')`), 兼容性 (Android 7.0+, 16 KB 页, ABI 变体选择), 常见问题 (进程以插件 uid 运行 / `EACCES` / 会话不可跨进程恢复 / HyperOS 后台限制), 发行历史, 许可证与第三方声明; 生成器 `--check` 通过.
-- [x] (插件) `.changelog` 10 语言 `v1.0.0` 定稿 (`feature` / `improvement` / `dependency`, 依赖用 `附加` 记录 common-plugin-api / nodejs-api / terminal-api / jackpal Android-Terminal-Emulator).
+- [x] (插件) `.readme/lang_*.json` 10 语言: 简介, 功能 (多会话 / 后台运行 / 快捷键栏 / 文本选择 / Node.js 命令 / npm 镜像源 / 包管理菜单), 安装 (插件中心向导或 Release), Node.js 说明 (需要 Node.js Runtime 1.5.0+, W^X 限制, corepack 默认版本), 存储权限说明 (为什么需要全部文件访问, 不授权时的行为), 脚本示例 (`terminal.open`, `exec`, `npm.run`, `session.on('output')`), 兼容性 (Android 7.0+, 16 KB 页, ABI 变体选择), 常见问题 (进程以插件 uid 运行 / `EACCES` / 会话不可跨进程恢复 / HyperOS 后台限制), 发行历史, 许可证与第三方声明; 生成器 `--check` 通过. (DOCS 2026-10-07: 10 语言 README 源定稿, `generate_markdown.py --check` 36 个产物)
+- [x] (插件) `.changelog` 10 语言 `v1.0.0` 定稿 (`feature` / `improvement` / `dependency`, 依赖用 `附加` 记录 common-plugin-api / nodejs-api / terminal-api / jackpal Android-Terminal-Emulator). (DOCS 2026-10-07: 10 语言 v1.0.0 条目定稿)
 
 ### P7.3 本地发布 gate
 
-- [x] (发布) 平台验收构建 (Temurin 参数) + `:app:testDebugUnitTest` + `:app:assembleDebugAndroidTest` + `:app:lintDebug` + `:app:verifyNativePageAlignment` + `:app:appendDigestToReleasedFiles` (5 个签名 APK, CRC32 文件名); `git diff --check`; `VERSION_BUILD == git rev-list --count HEAD`; 工作树干净; 本次涉及的宿主与兄弟仓库改动已提交; 其他会话的在途工作由其独立管理.
-- [x] (发布, D9 门控) GitHub 仓库 `SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal` (功能性描述, 例如 `Terminal plugin for AutoJs6 with multi-session pty shells and Node.js commands`), 推送, tag `v1.0.0`, Release 附 5 个 APK 与 SHA-256; 维护者明确恢复推送后执行.
-- [x] (索引, D9 门控) `official-repositories.json` 插入仓库名 (字母序, 计数同步), `release-manifests/io.github.supermonster003.autojs6.plugin.three.shell.terminal/<versionCode>.json` (多产物 `artifacts`), 本地运行生成器验证后提交推送 `main`.
+- [x] (发布) 平台验收构建 (Temurin 参数) + `:app:testDebugUnitTest` + `:app:assembleDebugAndroidTest` + `:app:lintDebug` + `:app:verifyNativePageAlignment` + `:app:appendDigestToReleasedFiles` (5 个签名 APK, CRC32 文件名); `git diff --check`; `VERSION_BUILD == git rev-list --count HEAD`; 工作树干净; 本次涉及的宿主与兄弟仓库改动已提交; 其他会话的在途工作由其独立管理. (RELEASE 2026-10-07: 176 个 JVM 测试, Temurin 平台选择, debug / androidTest / 签名 release, debug / release lint, 16 KB 对齐, 36 个文档与 22 个 Icon Studio 资源检查通过; 5 个签名 APK 带 CRC32 文件名)
+- [x] (发布, D9 门控) GitHub 仓库 `SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal` (功能性描述, 例如 `Terminal plugin for AutoJs6 with multi-session pty shells and Node.js commands`), 推送, tag `v1.0.0`, Release 附 5 个 APK 与 SHA-256; 维护者明确恢复推送后执行. (RELEASE 2026-10-07: tag v1.0.0 = 7af6fc2, Release 附 5 个 APK 与 SHA256SUMS, 上传摘要与本地验收产物一致; 发布源 CI 与 tag CI 通过)
+- [x] (索引, D9 门控) `official-repositories.json` 插入仓库名 (字母序, 计数同步), `release-manifests/io.github.supermonster003.autojs6.plugin.three.shell.terminal/<versionCode>.json` (多产物 `artifacts`), 本地运行生成器验证后提交推送 `main`. (RELEASE 2026-10-07: 官方索引 5de2fcd9, 46 个项目, `release-manifests/.../35.json` 绑定 tag / 签名 / 5 个产物摘要, 索引 CI 通过)
 - [ ] (宿主, D9 门控) 宿主提交 (`feat(terminal): ...` 系列) 推送按维护者指示. 本轮明确不含宿主推送, 此项保留门控, 不阻塞插件发行.
 
 验收条件: 四个关联仓库已本地提交; 本地 gate 全部通过; 门控条目在解锁前保持未勾选并注明原因.
@@ -899,3 +899,12 @@ t.on('exit', code => console.log('done', code));
 - 最终签名包完整复验 13 次安装 / 26 项宿主检查通过; QV770340J7 已安装 universal. 签名包进程终止复验通过, 原进程与子进程回收, 私有文件保留, 新会话可用.
 - 发布提交的构建, API 24 / API 35 完整测试和文档检查通过. API 24 首次运行停滞后已取消并保留日志, 同一提交完整重跑通过, 未缩减测试范围.
 - 官方索引提交 5de2fcd91bc47fce938d90e27d955468df0ba7ed 与生成/CI 验证通过, 库清单 46 项, build 35 的准入记录包含全部产物. 插件与目录图稿一致, Icon Studio 扫描为已发布. P7 本轮发布范围关闭, 宿主推送保留独立门控.
+
+
+### 2026-10-07 已勾选项复审
+
+- 基线: JVM 176/176, debug / androidTest / lintDebug (0 error) / 16 KB 对齐, 36 个文档与 22 个 Icon Studio 资源复现检查全部通过.
+- P3 手动对照清单改为 `ui/TerminalParityInstrumentationTest` 自动化, 发现并修复两处自 P3.1 迁入的缺陷 (076babd, build 37, 版本名进入 1.1.0): API 37 长按只选中单词而不显示手柄与 "复制 / 全选" 工具栏 (合成触摸缺少触屏来源; 探针构建证实 API 28 / 33 不受影响); API 24 复制完整转录 (1539892 字节 parcel) 在主线程抛出 `TransactionTooLargeException` 并结束进程与全部会话, 复制与分享改为保留最近 100000 个字符并提示.
+- P5.3 推迟到 P6.2 的启动器光学复核此前没有记录, 本次在 API 37 AVD 的 Pixel 启动器完成 (见 P5.3 条目); P6.1-P6.3 与 P7.1-P7.3 已勾选条目补充行内证据摘要; 第 4.4 节图标行, D9 行, `AGENTS.md` 的仓库结构 (`.icons/`, `vendor/emulatorview/`, 图标工作流) 与 CI 说明按现状更新.
+- 保留事项: 宿主插件中心 Activity 仍未导出, Node.js 横幅的 "安装 Node.js Runtime" 继续打开 GitHub Releases (P3.1 遗留, 需宿主先导出 Intent); P1 记录的 "插件中心禁用态" 路由由宿主 JVM 决策表覆盖, 本次未在设备上复跑.
+- 设备说明: emulator-5586 (API 35) 正被宿主另一个 Compose 测试任务使用, 本次误装的插件包已卸载, 之后未再使用; adb 守护进程曾被外部重启; API 37 AVD 在内存耗尽 (交换约 80%, 负载 25) 时出现 Activity 启动超时, 维护者重启后复测通过.

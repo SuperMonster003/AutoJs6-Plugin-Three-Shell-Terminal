@@ -104,8 +104,8 @@ jobs:
           avd-name: Three_Shell_Terminal_Conformance_CI_${{ matrix.api-level }}
           script: |
             chmod +x gradlew
-            # Shell / pty / Node.js behaviour is exercised on the device matrix of ROADMAP.md, not on the
-            # disposable CI emulator; the contract suite covers discovery, binding and native library loading.
+            # Run the entire device suite, including P6 output pressure and session cleanup.
+            # Node.js integration cases skip when the optional runtime is not installed.
             ./gradlew :app:connectedDebugAndroidTest --console=plain --stacktrace
 
       - name: Upload instrumentation reports after failure

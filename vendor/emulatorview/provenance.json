@@ -1,0 +1,11 @@
+{
+  "upstreamCommit": "35188f8a8b57989a4a4ec9485e11187b46be26d9",
+  "originalAarSha256": "9be91343d611eacf1613583c11956fcd98baa637884ec0b6d41b53948346b991",
+  "patchVersion": "1.0.42-p6.1",
+  "compiler": "javac 21.0.12.1",
+  "androidJarSha256": "bf1b4387cc7ca94fc6ef684f040d9d16fbf16248e181819f020736ea2053f177",
+  "sources": {
+    "src/jackpal/androidterm/emulatorview/TermSession.java": "fb7b783d93d9e888e7396d282ba5341593ffa75f7b7b19334b44b4869aa2ca60"
+  },
+  "aarSha256": "ec7be1e7b717e06801e5c1765b99fc3a9f2d68d9e7e208726f1db8febeabad91"
+}

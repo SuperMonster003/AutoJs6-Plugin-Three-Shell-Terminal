@@ -52,7 +52,7 @@ AutoJs6 discovers the plugin through its Binder service, opens the terminal scre
 
 ******
 
-P4 local development preview: terminal UI, multiple sessions and the script API are implemented, including output events, interactive input and exit-code waits. Standalone settings follow in P5 of [ROADMAP.md](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/blob/master/ROADMAP.md). The script API requires an AutoJs6 build containing the P4 implementation.
+Version 1.0.0 provides the standalone terminal, background sessions, interactive script APIs and settings. Complete script APIs require AutoJs6 6.8.0 build 5315 or later; build 5304 is the base plugin-protocol requirement. Android 7.0 or later is supported.
 
 ******
 
@@ -137,7 +137,7 @@ Platform facts that shape what the plugin can do:
 
 - **Why does `cd /sdcard/Scripts` fail?** The plugin needs its own storage grant. Open the plugin settings or follow the terminal banner to grant "All files access" (Android 11+), or the storage permission on older systems.
 - **Why is there no node command?** Install the Node.js Runtime plugin (1.5.0+) from the AutoJs6 plugin center; the "environment probe" in the plugin settings shows the exact reason (missing, too old, untrusted signature or launcher not executable).
-- **Does a command keep running after I leave the terminal?** Yes. A foreground service keeps the session and its notification shows the session count; only "Close sessions" in the notification, the drawer switch or the session itself ends the shell.
+- **Can the system stop background sessions?** Yes. Sessions cannot be restored after the plugin process is terminated. On HyperOS, MIUI and other restricted systems, allow notifications and background activity in Android settings; opening the terminal retries foreground protection when permitted. Leaving the screen normally keeps sessions running, but a foreground service cannot override system restrictions.
 
 ******
 
@@ -194,17 +194,17 @@ The plugin's plans and progress are maintained as a checkable list in ROADMAP.md
 
 #### v1.0.0
 
-_2026/10/05_
+_2026/10/07_
 
-- `Hint` P5 local development preview: the terminal UI, multiple sessions, the script API (output events, interactive input and exit-code waits), the standalone settings page, About with version history and update check, and the launcher icons are implemented. The script API requires an AutoJs6 build containing the P4 implementation; the plugin center's settings entry requires a build that supports TERMINAL_SETTINGS.
-- `Feature` Plugin identity `three-shell-terminal` (engine `terminal`) with the INFO service, the Wake Activity and the `org.autojs.plugin.TERMINAL` service skeleton for host discovery
+- `Hint` Version 1.0.0 provides the standalone terminal, background sessions, interactive script APIs and settings. Complete script APIs require AutoJs6 6.8.0 build 5315 or later; build 5304 is the base plugin-protocol requirement. Android 7.0 or later is supported
+- `Feature` Standalone 3-Shell Terminal plugin with host discovery, terminal control and protected UI/settings entry points
 - `Feature` APKs split by ABI (arm64-v8a, armeabi-v7a, x86_64, x86) plus a universal APK, with native libraries aligned to 16 KB pages
 - `Feature` README, plugin center instruction and changelog in 10 languages
 - `Feature` Session core ported from the host terminal: pty-backed shell sessions with a process-wide registry (title and exit code recorded for the Binder), the session environment and directory layout under the plugin's own files directory, Node.js launcher discovery with the npm / corepack installer, and the foreground service that keeps sessions running with a "Close sessions" notification (channel `three.shell.terminal.sessions`)
 - `Feature` Storage access resolution (`StorageAccess`): the plugin's own permission state (legacy runtime permissions below API 30, "All files access" from API 30), shared-storage detection for `/sdcard`, `/storage/...` and the own `Android/{data,obb,media}` folders, start-directory fallback to `$HOME` with `STORAGE_PERMISSION_REQUIRED` or `DIRECTORY_INACCESSIBLE`, and the settings intents that open the all-files-access switch
 - `Feature` Node.js integration with signer trust (`NodeCliTrust`, `NodeCliLocator`, `SessionAssembly`): the Node.js Runtime plugin is used only when it is signed by the official AutoJs6 plugin key or by this plugin's own key, the settings switch short-circuits before any lookup, every outcome maps onto the contract's `node-cli` states (`available`, `disabled`, `plugin-missing`, `plugin-untrusted`, `plugin-too-old`, `executable-missing`, `exec-denied`, `setup-failed`), and each session start refreshes the `usr/bin` command links, extracts the npm / corepack archive once per digest and exports the npm / corepack environment
 - `Feature` AutoJs6 can create and control up to 16 terminal sessions, receive live output with up to 4 listeners per session, read recent output and query the shell environment. Closing AutoJs6 leaves the sessions running; invalid requests are rejected with a specific reason.
-- `Feature` Package management supports npm init, dependency and package installation, listing and running package.json scripts, Yarn / pnpm commands and npm search. Registry choices include npmjs, npmmirror and custom HTTPS URLs, with an option to ignore install scripts. Clearing terminal data closes all sessions before resetting home / usr and rebuilding the layout, preserving settings and external projects. Menus and settings UI will follow in later stages.
+- `Feature` npm init, dependency/package installation, package.json script discovery/execution and npm search; npmjs, npmmirror, custom HTTPS registries and ignore-scripts settings. Clearing terminal data closes sessions and rebuilds the private home/usr layout while preserving settings and external projects
 - `Feature` Terminal screen (`TerminalActivity`): the host's terminal UI ported onto the plugin's own Material 3 theme, with the key bar (Esc / Tab / Ctrl / Alt / arrows / paging), pinch-to-zoom text size, long-press text selection with copy, the session / text / package-management / settings / help menus, a toolbar subtitle that shows the shell's directory and copies it on tap, and a Node.js banner that explains a missing, untrusted, outdated or disabled Node.js Runtime with install / update / enable / details actions; a storage banner appears when a shared-storage directory cannot be entered and offers "Grant" and "Re-enter directory"; the screen follows the host's language, night mode and theme color through the host settings provider and falls back to the system values with the shared `#FFDEAD` color
 - `Feature` Session manager: a dialog with collapsible status / controls / sessions / settings sections that lists every running session with its directory, PID and uptime, opens or closes a single session, starts a new one, closes all, shows session details with a copy action, and offers the text size, npm registry and ignore-scripts settings; it follows the same session registry the host's `onSessionsChanged` uses, is reachable from the terminal menu, from the session notification (tap) and, for the host's `manager=true` entry, through a transparent `TerminalManagerActivity` that leaves no terminal behind when closed
 - `Feature` Host entry and launcher: the exported `TERMINAL_OPEN` entry Activity behind the `org.autojs.permission.PLUGIN` signature permission checks the caller it can name (permission held, signed like the plugin), validates the `directory` / `sessionId` / `newSession` / `command` / `manager` extras against the contract ceilings and forwards them to the terminal screen in its own task or to the session manager over the caller; `LauncherActivity` (target of the icon aliases) restores the most recent session or starts one at home; Back from a terminal reached through the host returns to the host, from the launcher to the home screen, and the terminal task leaves recents so a start request is never replayed
@@ -215,10 +215,12 @@ _2026/10/05_
 - `Fix` Long transcript reads keep their newest text within the cross-process reply size limit.
 - `Fix` Script transcript reads and output replay omit trailing screen padding while preserving prompt spaces and the boundary before live output
 - `Fix` A starting session could briefly disappear from host queries and prevent visible execution from opening its terminal
+- `Fix` Continuous output no longer blocks the terminal message queue; closing sessions during startup and natural process exits release their ptys and I/O workers
+- `Fix` Opening an existing terminal retries foreground-service protection when background restrictions prevented it from starting
 - `Improvement` Consistent visual sizing for launcher and Plugin Center icons, with transparent backgrounds and neutral black, white or grayscale artwork
 - `Improvement` Plugin Center icons use the sizes, positions, light and dark artwork, and circular backgrounds adjusted in Icon Studio, retaining reproducible sources and parameters
 - `Improvement` Android App info icons share Icon Studio artwork and light/dark backgrounds while preserving transparent Plugin Center artwork and existing launcher choices
-- `Dependency` Added jackpal Android-Terminal-Emulator (term 1.0.70, emulatorview 1.0.42, libtermexec 1.0, Apache-2.0) as the terminal emulation and pty native libraries, hash-locked in `locks/vendored-aars.lock`
+- `Dependency` Added jackpal Android-Terminal-Emulator (term 1.0.70, emulatorview 1.0.42-p6.1, libtermexec 1.0, Apache-2.0) as the terminal emulation and pty native libraries, hash-locked in `locks/vendored-aars.lock`
 - `Dependency` Added `common-plugin-api.aar` and `nodejs-api.aar` (AutoJs6 modules `plugin-api/common-plugin-api` and `plugin-api/nodejs-api`, host build 6.8.0 / 5303, MPL 2.0) as the shared plugin contract and the Node.js manifest contract, hash-locked in `locks/host-api-aars.lock`
 - `Dependency` Added `terminal-api.aar` (AutoJs6 module `plugin-api/terminal-api`, host build 6.8.0 / 5304, MPL 2.0) as the terminal contract V1 (`ITerminalPlugin` / `ITerminalCallback`, identity, ceilings and error codes); the plugin identity constants now come from it, hash-locked in `locks/host-api-aars.lock`
 

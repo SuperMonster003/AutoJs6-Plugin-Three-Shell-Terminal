@@ -8,7 +8,7 @@
   "p_introduction_what": "3-Shell Terminal reprend le terminal intégré d'AutoJs6 : l'interrupteur \"Terminal\" du tiroir d'accueil, \"Ouvrir dans le terminal\" dans le menu des dossiers du gestionnaire de fichiers et la barre d'outils du projet, ainsi que l'objet global `terminal` côté script pour ouvrir, piloter et observer des sessions. Chaque session est un shell système (`/system/bin/sh`) exécuté dans un pty, qui continue en arrière-plan quand on quitte l'écran.",
   "p_introduction_how": "AutoJs6 découvre le plugin via son service Binder, ouvre l'écran du terminal par un Intent explicite et utilise le Binder pour lire le nombre de sessions, fermer toutes les sessions ou piloter les sessions de script ; la sortie revient aux scripts par un tube. Quand le plugin Node.js Runtime est installé, le terminal lit directement son contrat de manifeste, vérifie la signature et le lanceur, puis fournit node / npm / npx / corepack / yarn / pnpm.",
   "h3_status": "État",
-  "p_status": "Aperçu local P4: interface du terminal, sessions multiples et API de script, avec événements de sortie, saisie interactive et attente du code de fin. Les réglages autonomes suivent en P5 de [ROADMAP.md]({{ roadmap_url }}). L'API de script nécessite une version d'AutoJs6 contenant P4.",
+  "p_status": "La version 1.0.0 fournit un terminal autonome, des sessions en arrière-plan, des API de script interactives et les réglages. Les API complètes exigent AutoJs6 6.8.0 build 5315 ou ultérieur; le protocole de base exige le build 5304. Android 7.0 ou ultérieur est pris en charge.",
   "h3_features": "Fonctionnalités",
   "p_features_intro": "Le plugin fournit les capacités suivantes",
   "features": [
@@ -45,7 +45,7 @@
   "faq_items": [
     "**Pourquoi `cd /sdcard/Scripts` échoue-t-il ?** Le plugin a besoin de sa propre autorisation de stockage. Ouvrez les réglages du plugin ou suivez la bannière du terminal pour accorder \"Accès à tous les fichiers\" (Android 11+), ou la permission de stockage sur les systèmes plus anciens.",
     "**Pourquoi n'y a-t-il pas de commande node ?** Installez le plugin Node.js Runtime (1.5.0+) depuis le centre de plugins d'AutoJs6 ; la \"sonde d'environnement\" des réglages du plugin indique la raison exacte (absent, trop ancien, signature non approuvée ou lanceur non exécutable).",
-    "**Une commande continue-t-elle après avoir quitté le terminal ?** Oui. Un service au premier plan conserve la session et sa notification affiche le nombre de sessions ; seuls \"Fermer les sessions\" dans la notification, l'interrupteur du tiroir ou la session elle-même terminent le shell."
+    "**Le système peut-il arrêter les sessions en arrière-plan?** Oui. Une session ne peut pas être restaurée après la fin du processus du plugin. Sur HyperOS, MIUI et les systèmes restrictifs, autorisez les notifications et l'activité en arrière-plan dans Android. Ouvrir le terminal retente la protection lorsque cela est permis. Quitter l'écran conserve normalement les sessions, mais le service ne contourne pas les restrictions du système."
   ],
   "h3_security": "Permissions et sécurité",
   "p_security_intro": "Le plugin respecte des limites explicites :",

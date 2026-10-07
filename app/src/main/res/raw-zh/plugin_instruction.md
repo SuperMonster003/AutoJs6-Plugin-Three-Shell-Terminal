@@ -1,6 +1,6 @@
 3-Shell Terminal 接管 AutoJs6 的内置终端: 主页抽屉的 "终端" 开关, 文件管理器目录菜单与项目工具栏的 "在终端中打开", 以及脚本侧用于打开, 驱动与监听终端会话的全局对象 `terminal`. 每个会话都是一个在 pty 中运行的系统 shell (`/system/bin/sh`), 离开界面后继续在后台运行.
 
-P4 本地开发预览: 已实现终端界面, 多会话管理与脚本 API, 包括输出监听, 交互输入和退出码等待. 独立设置页按 [ROADMAP.md](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/blob/master/ROADMAP.md) 的 P5 推进. 脚本 API 需使用包含 P4 实现的 AutoJs6 构建.
+1.0.0 提供独立终端, 后台会话, 交互式脚本 API 和设置页面. 完整脚本 API 需要 AutoJs6 6.8.0 构建 5315 或更高版本; 基础插件协议要求构建 5304. 支持 Android 7.0 及以上版本.
 
 ### 使用方法
 

@@ -289,7 +289,7 @@ runtime/api/augment/terminal/           Terminal.kt (AugmentableKey("terminal"))
 
 建议会话切分: P0 一次 (骨架 + spike); P1 两次 (契约 + 客户端 + 入口改造 + 注册为一次; 删除旧终端 + 数据清理 + changelog + 文档为一次, 维护者已接受短期无终端 (D34 Q7), 两次可连续执行); P2 两到三次 (会话 / 服务 / 存储; Binder 与上限; Node CLI 与包管理); P3 一到两次; P4 两次 (第一 / 二档 + 错误; 第三档会话对象 + 输出管道 + 示例); P5 一到两次; P6 一到两次; P7 一次; P8 按需.
 
-当前进度 (2026-10-02): P0, P2.1-P2.5, P3.1-P3.3, P4.1-P4.3 与 P5.1-P5.3 已完成并有构建 / JVM / 设备证据; P1 契约, 客户端与旧终端迁出已完成. 宿主 b1fcaebcf3 / 2a8d0a5595 (build 5314 / 5315) 已本地提交完整脚本 API 三档, 输出管道, 三个示例和协议章节; API 35 真机 8/8, API 24 3/3, API 33 实际缺失插件时三个示例提示通过. P5 (启动器图标 build 24, 关于 / 发行历史 / 更新检查 build 25, 独立设置页 build 26) 在 API 24 AVD 与 Pad API 35 (宿主 5312) 验证通过, `migration/host-terminal/` 已删除. 下次起点 P6.1 (健壮性), 随后 P6.2 (兼容矩阵, 含启动器图标光学居中截图复核) 与 P6.3 (性能与体积). 插件 build 26, 仅本地提交, D9 推送与发布门控继续生效.
+当前进度 (2026-10-07): P0-P6, P7.1 与 P7.2 已完成. P6 签名候选包在四台真机与 API 24 / API 37.1 AVD 的 13 次安装中通过 26 项宿主检查, 包含真机 armv7 与 16 KiB 页. 受控进程终止揭示的旧任务恢复问题已修复并复验; API 35 真机首个提示符中位数 79 ms, 最大值 103 ms. 详细证据见 docs/dev/p6-*.md. 当前进行 P7.3: 构建最终签名包, 验证对应提交的 CI, 发布 v1.0.0 并更新官方索引. 维护者已解除插件发布门控; 宿主推送仍不在本任务范围内.
 
 ---
 
@@ -482,19 +482,19 @@ runtime/api/augment/terminal/           Terminal.kt (AugmentableKey("terminal"))
 
 ### P6.1 健壮性
 
-- [ ] (插件) 插件进程被系统杀死 (有会话时前台服务保活; 无会话时正常退出) 与用户从最近任务划掉 (会话保留, 通知仍在); 宿主进程死亡时订阅写端与回调注册自动清理 (`linkToDeath`), 不影响会话; Node.js 插件在会话运行中更新 / 卸载: 已运行的 node 进程不受影响, 新会话刷新符号链接或退化为纯 shell.
-- [ ] (插件) 大输出 (`cat` 100 MiB 文件, `yes`) 下界面保持可响应, 环形缓冲溢出只影响订阅者; 100 个会话快速创建 / 关闭无句柄泄漏 (`ls /proc/<pid>/fd | wc -l` 前后一致); 旋转 / 分屏 / 键盘弹出下 pty 尺寸同步.
-- [ ] (测试) instrumentation 覆盖上述可自动化部分; 手动项写入 `docs/dev/p6-robustness-evidence.md`.
+- [x] (插件) 插件进程被系统杀死 (有会话时前台服务保活; 无会话时正常退出) 与用户从最近任务划掉 (会话保留, 通知仍在); 宿主进程死亡时订阅写端与回调注册自动清理 (`linkToDeath`), 不影响会话; Node.js 插件在会话运行中更新 / 卸载: 已运行的 node 进程不受影响, 新会话刷新符号链接或退化为纯 shell.
+- [x] (插件) 大输出 (`cat` 100 MiB 文件, `yes`) 下界面保持可响应, 环形缓冲溢出只影响订阅者; 100 个会话快速创建 / 关闭无句柄泄漏 (`ls /proc/<pid>/fd | wc -l` 前后一致); 旋转 / 分屏 / 键盘弹出下 pty 尺寸同步.
+- [x] (测试) instrumentation 覆盖上述可自动化部分; 手动项写入 `docs/dev/p6-robustness-evidence.md`.
 
 ### P6.2 兼容矩阵
 
-- [ ] (测试) D32 六台设备 / AVD 各执行: 安装对应 ABI 变体 + universal 各一次, 新建会话, `echo`, 共享存储授权与 `cd /sdcard`, Node.js 三命令 (已安装设备), 宿主三入口, 脚本示例一个, 前台服务通知; API 24 的 `startService` 分支与通知渠道缺失路径; API 37 AVD 的 16 KB 页 (`verifyNativePageAlignment` + 实机加载); HyperOS 的后台启动与通知限制记录.
-- [ ] (文档) 矩阵表写入 `docs/dev/p6-compat-matrix.md` (设备 / API / ABI / APK 变体 / 结果 / 备注).
+- [x] (测试) D32 六台设备 / AVD 各执行: 安装对应 ABI 变体 + universal 各一次, 新建会话, `echo`, 共享存储授权与 `cd /sdcard`, Node.js 三命令 (已安装设备), 宿主三入口, 脚本示例一个, 前台服务通知; API 24 的 `startService` 分支与通知渠道缺失路径; API 37 AVD 的 16 KB 页 (`verifyNativePageAlignment` + 实机加载); HyperOS 的后台启动与通知限制记录.
+- [x] (文档) 矩阵表写入 `docs/dev/p6-compat-matrix.md` (设备 / API / ABI / APK 变体 / 结果 / 备注).
 
 ### P6.3 性能与体积
 
-- [ ] (插件) 会话创建到首个提示符 < 500 ms (API 35 真机, 排除 Node 归档首次解压); 首次 Node 归档解压耗时与大小记录; universal APK 与各 ABI APK 大小记录 (预期 universal < 6 MiB: Material + 两库 x 4 ABI 共约 60 KB 原生); R8 开启 (`isMinifyEnabled = true`) 且 `jackpal.androidterm.**` 规则保留 JNI 类.
-- [ ] (测试) 数值写入本节证据; 回归阈值写入 `AGENTS.md` 第 14 节.
+- [x] (插件) 会话创建到首个提示符 < 500 ms (API 35 真机, 排除 Node 归档首次解压); 首次 Node 归档解压耗时与大小记录; universal APK 与各 ABI APK 大小记录 (预期 universal < 6 MiB: Material + 两库 x 4 ABI 共约 60 KB 原生); R8 开启 (`isMinifyEnabled = true`) 且 `jackpal.androidterm.**` 规则保留 JNI 类.
+- [x] (测试) 数值写入本节证据; 回归阈值写入 `AGENTS.md` 第 14 节.
 
 验收条件: 矩阵表无未解释的失败; 健壮性手动清单全部通过; 体积与耗时数值落档.
 
@@ -884,3 +884,10 @@ t.on('exit', code => console.log('done', code));
 - P6 代码与压力覆盖在 e2a52ae (build 32): emulatorview 有界输入与关闭修复, 共享 pty 描述符的可取消 I/O, 前台恢复时重试服务保护, 100 MiB / 100 次会话 / 分屏 / Node 生命周期回归. API 24 本地 71 通过 + 7 跳过, API 37.1 / 16 KiB 本地 70 通过 + 8 跳过, 均零失败. 首轮 GitHub API 35 捕获旋转尚未结束时读取尺寸的测试时序问题, ec83424 改为等待配置并比较稳定视图与 pty 尺寸; 持续不匹配仍失败.
 - P7.1/P7.2 的相关仓库内容与提交已核对, 文档, 声明, Ace 补全与离线文档检查通过; 证据见 docs/dev/p7-integration-evidence.md.
 - 维护者随后要求在其他任务仍使用设备时优先推进其余工作. 最终签名 ABI/universal 矩阵, API 35 最终性能抽查和受控进程终止验收保留未完成, 未创建 tag / Release, 未将候选包写入官方可下载索引. 具体已测与待测范围见 docs/dev/p6-robustness-evidence.md, docs/dev/p6-compat-matrix.md 和 docs/dev/p6-performance-evidence.md.
+
+
+### 2026-10-07 P6 device acceptance resumed
+
+- 维护者要求继续设备验收和正式发布. 已完成四台 D32 真机与两台 AVD 的对应 ABI + universal 安装, 并在 Sony G8441 额外验证 armeabi-v7a, 共 13 次签名候选包安装与 26 项宿主检查全部通过. Redmi 修正后的 npx 用例补验通过 1/1.
+- API 24 实际 SIGKILL 进程验收发现 Android 恢复旧任务时沿用失效 session ID. 现以保存的进程实例标识区分旋转与进程重建, 后者新建 HOME shell, 不重放原命令. 旧进程与 shell 已回收, 私有标记保留, 新 shell 正常退出后前台服务停止. API 37.1 生命周期与入口回归通过.
+- 最终共享 pty 描述符实现的 API 35 真机提示符 10 次均 < 500 ms (中位数 79 ms, 最大 103 ms), Node 首次解压 420 ms / 1699 项 / 10068758 字节, 缓存启动 1 ms. P6 全部关闭, P7.3 的正式发布与索引更新继续推进.

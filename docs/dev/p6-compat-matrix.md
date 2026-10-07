@@ -2,21 +2,22 @@
 
 Updated 2026-10-07. D32 requires the four physical devices below, API 24 x86 and an API 37
 16 KiB AVD. Development checks are recorded separately from final signed release acceptance.
-Source/build numbers are development evidence, not proof that the future Release assets were installed.
+Candidate build 34 uses the official signer and release shrinking. Its complete installation
+matrix passed on 2026-10-07; final Release assets are rechecked after the last source commit.
 
-| Device | API / ABI | Completed development evidence | Final signed ABI + universal acceptance |
+| Device | API / ABI | Completed development evidence | Signed candidate 34 ABI + universal acceptance |
 | --- | --- | --- | --- |
-| Xiaomi 23046RP50C | 35 / arm64-v8a | Pressure/cleanup, prompt timings, Node CLI, isolated extraction, rotation/keyboard/task removal; host route/storage/sample checks 2/2 | Pending |
-| Sony G8441 | 28 / arm64-v8a, supports armv7 | Original 71-case run had only the old npx-cache test failure; corrected npx case passed; lifecycle, natural exits and Node extraction passed | Pending, include armv7 native execution |
-| Sony XQ-AT72 | 31 / arm64-v8a | Original 71-case run had only the old npx-cache test failure; corrected npx case passed; lifecycle and Node 1.5.0 command checks passed | Pending |
-| Redmi 22120RN86C | 33 / arm64-v8a | Pressure/cleanup, lifecycle after foreground-retry fix, host script suite 7/7 | Pending, including corrected npx case |
-| Disposable API 24 AVD | 24 / x86 | Latest complete suite: 71 passed, 7 optional skips; real split screen, foreground-service path without channels, native loading | Pending |
-| Disposable API 37.1 AVD | 37 / x86_64, 16384-byte pages | Latest complete suite: 70 passed, 8 optional skips; native loading and pressure/cleanup | Pending |
+| Xiaomi 23046RP50C | 35 / arm64-v8a | Pressure/cleanup, final shared-descriptor prompt timings, Node CLI, isolated extraction, rotation/keyboard/task removal | arm64-v8a and universal: 2/2 each |
+| Sony G8441 | 28 / arm64-v8a and armeabi-v7a | Corrected npx case, lifecycle, natural exits and Node extraction passed | arm64-v8a, armeabi-v7a and universal: 2/2 each; 32-bit process confirmed by primaryCpuAbi=armeabi-v7a |
+| Sony XQ-AT72 | 31 / arm64-v8a | Corrected npx case, lifecycle and Node 1.5.0 command checks passed | arm64-v8a and universal: 2/2 each |
+| Redmi 22120RN86C | 33 / arm64-v8a | Pressure/cleanup, lifecycle after foreground-retry fix, host script suite 7/7; corrected npx case passed 1/1 on recovery source | arm64-v8a and universal: 2/2 each |
+| Disposable API 24 AVD | 24 / x86 | Complete suite: 71 passed, 7 optional skips; real split screen, foreground-service path without channels, native loading; actual process termination/relaunch passed | x86 and universal: 2/2 each |
+| Disposable API 37.1 AVD | 37 / x86_64, 16384-byte pages | Complete suite: 70 passed, 8 optional skips; native loading and pressure/cleanup; lifecycle/entry regression after recovery fix passed | x86_64 and universal: 2/2 each |
 
 The two original 71-case physical runs and the Redmi run failed an incorrect test assumption:
 `npx` may reuse a dependency already installed in the current project without populating its
 own cache. The corrected case runs from a separate directory with an explicit package version.
-The corrected case passed on both Sony devices and in the complete API 35 AVD suite. It retains
+The corrected case passed on both Sony devices, Redmi and in the complete API 35 AVD suite. It retains
 the expected Android bin-shim limitation (exit 127); the test does not reinterpret it as success.
 
 ## Host acceptance harness
@@ -45,10 +46,12 @@ are not intentionally cleared by this harness.
   background activity still remain subject to Android/OEM settings.
 - API 24 has no `stty` utility in the tested image; mksh's SIGWINCH-updated dimensions are
   used there. Newer images use `stty size` when available.
-- Native ELF and APK alignment checks cover all four ABIs at 16384 bytes. The final release
-  still needs the installation rows above, including a real armv7 process, not only static checks.
+- Native ELF and APK alignment checks cover all four ABIs at 16384 bytes. The matrix includes
+  native execution in a real armv7 process and on the 16384-byte-page AVD.
 - ADB reconnections interrupted some local attempts. Interrupted runs and invalid test-selector
   invocations are not counted as product test passes.
 
-Shared-device acceptance was deferred at the maintainer's request on 2026-10-07. The Release
-and official index publication remain gated on completing the pending rows.
+The maintainer resumed device acceptance on 2026-10-07. All 13 candidate installations and
+their 26 host acceptance tests passed. The final source also fixes restoration of a task after
+process death; its separate lifecycle and process checks are in `p6-robustness-evidence.md`.
+Final Release APK hashes and reinstallation results are recorded with the publication receipt.

@@ -211,6 +211,7 @@ _2026/10/07_
 - `Correctif` Une session en cours de démarrage pouvait disparaître brièvement des requêtes de l'hôte et empêcher l'ouverture de son terminal
 - `Correctif` Les sorties continues ne bloquent plus la file de messages du terminal; les fermetures pendant le démarrage et les fins naturelles libèrent les pty et les threads d'entrée-sortie
 - `Correctif` Ouvrir un terminal existant retente la protection du service de premier plan si les restrictions en arrière-plan ont empêché son démarrage
+- `Correctif` La réouverture d'une tâche après la fin du processus du plugin crée un nouveau shell sans réexécuter l'ancienne commande
 - `Amélioration` Taille visuelle harmonisée des icônes du lanceur et du Centre de plugins, avec des fonds transparents et des motifs noirs, blancs ou gris neutres
 - `Amélioration` Les icônes du centre de plugins utilisent les tailles, positions, images claires et sombres et fonds circulaires réglés dans Icon Studio, avec les sources et paramètres permettant de les reproduire
 - `Amélioration` Les icônes des informations d'application Android utilisent les illustrations et les fonds clairs et sombres d'Icon Studio, en conservant les images transparentes du centre de plugins et les choix du lanceur

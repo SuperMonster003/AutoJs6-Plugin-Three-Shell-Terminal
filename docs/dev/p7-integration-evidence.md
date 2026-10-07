@@ -1,8 +1,8 @@
 # P7 documentation and publication preparation
 
 Updated 2026-10-07. Publication of the plugin, its tag and official index entry is authorized
-by the maintainer. It remains ordered after P6 acceptance; the remaining shared-device checks
-are listed in `p6-compat-matrix.md`.
+by the maintainer. P6 device acceptance is complete; the signed candidate matrix and final
+process-restoration checks are recorded in the three P6 evidence documents.
 
 ## Related repositories
 
@@ -36,12 +36,11 @@ packaged ABI, CRC32 filenames and SHA-256. This candidate is preparation, not a 
 
 ## Remaining publication sequence
 
-1. Complete the remaining P6 device rows and the controlled process-termination check.
-2. Record final measurements, commit the acceptance evidence and match VERSION_BUILD to HEAD.
-3. Rebuild/verify the final signed APK set and complete checks on the exact release commit.
-4. Push the release source, wait for all GitHub workflows, create `v1.0.0` and the stable Release
+1. Commit the recovery refinement and acceptance evidence, matching VERSION_BUILD to HEAD.
+2. Rebuild/verify the final signed APK set and complete checks on the exact release commit.
+3. Push the release source, wait for all GitHub workflows, create `v1.0.0` and the stable Release
    with five APKs plus SHA-256 sums.
-5. Add the repository and exact tagged-source/artifact admission record to the official index,
+4. Add the repository and exact tagged-source/artifact admission record to the official index,
    generate/validate it, push it, wait for index CI and rescan Icon Studio.
 
 The index must not advertise a downloadable stable entry before its real Release exists.

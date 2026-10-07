@@ -1,6 +1,6 @@
 3-Shell Terminal 接管 AutoJs6 的內建終端機: 主頁抽屜的 "終端機" 開關, 檔案管理員目錄選單與專案工具列的 "在終端機中開啟", 以及指令碼側用於開啟, 驅動與監聽終端機工作階段的全域物件 `terminal`. 每個工作階段都是一個在 pty 中執行的系統 shell (`/system/bin/sh`), 離開介面後繼續在背景執行.
 
-P4 本機開發預覽: 已實作終端介面, 多工作階段管理與指令碼 API, 包括輸出監聽, 互動輸入與結束代碼等待. 獨立設定頁按 [ROADMAP.md](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/blob/master/ROADMAP.md) 的 P5 推進. 指令碼 API 需使用包含 P4 實作的 AutoJs6 組建.
+1.0.0 提供獨立終端, 背景工作階段, 互動式指令碼 API 和設定頁面. 完整指令碼 API 需要 AutoJs6 6.8.0 組建 5315 或更新版本; 基礎外掛協定要求組建 5304. 支援 Android 7.0 及以上版本.
 
 ### 使用方法
 

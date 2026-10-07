@@ -36,6 +36,7 @@ import io.github.supermonster003.autojs6.plugin.three.shell.terminal.core.Termin
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.node.NodeCliLocator
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.node.NodeCliLocator.Resolution
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.service.SessionNotifications
+import io.github.supermonster003.autojs6.plugin.three.shell.terminal.service.ThreeShellTerminalSessionService
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.storage.StorageAccess
 import jackpal.androidterm.emulatorview.ColorScheme
 import org.autojs.plugin.terminal.api.TerminalContract
@@ -278,6 +279,11 @@ class TerminalActivity : HostAppearanceActivity() {
         super.onResume()
         if (isFinishing) return
         session?.let(::attachSession)
+        // A session opened from the background may have been denied foreground protection.
+        // Retry once its visible screen lifts the OEM background restriction.
+        if (TerminalSessionManager.hasSessions) {
+            ThreeShellTerminalSessionService.ensureStarted(this)
+        }
         terminalView.textSizeSp = preferences.textSizeSp
         terminalView.onResume()
         refreshSubtitle()

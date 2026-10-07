@@ -24,7 +24,7 @@ import kotlin.concurrent.thread
 class TerminalPtySession(
     private val command: List<String>,
     private val environment: Map<String, String>,
-) : TermSession(false) {
+) : TermSession(true) {
 
     private val ptmx: ParcelFileDescriptor = ParcelFileDescriptor.open(File("/dev/ptmx"), ParcelFileDescriptor.MODE_READ_WRITE)
     private val mainHandler = Handler(Looper.getMainLooper())
@@ -123,8 +123,9 @@ class TerminalPtySession(
     }
 
     init {
-        setTermOut(ParcelFileDescriptor.AutoCloseOutputStream(ptmx))
-        setTermIn(ParcelFileDescriptor.AutoCloseInputStream(ptmx))
+        val io = PtyIo(ptmx)
+        setTermIn(io.input)
+        setTermOut(io.output)
         setDefaultUTF8Mode(true)
     }
 
@@ -153,6 +154,7 @@ class TerminalPtySession(
                     appendMessage("\r\n[Failed to start shell: ${e.message}]\r\n")
                     onProcessExited?.invoke(START_FAILURE_CODE)
                     onProcessReaped?.invoke(START_FAILURE_CODE)
+                    finish()
                 }
                 return@thread
             }
@@ -162,11 +164,14 @@ class TerminalPtySession(
                 appendMessage("\r\n[Process completed (code $code)]\r\n")
                 onProcessExited?.invoke(code)
                 onProcessReaped?.invoke(code)
+                // An unattached session has no reader to observe EOF and release the pty.
+                if (!emulatorInitialized) finish()
             }
         }
     }
 
     override fun initializeEmulator(columns: Int, rows: Int) {
+        if (finished) return
         super.initializeEmulator(columns, rows)
         emulatorInitialized = true
         runCatching { PtyBridge.setUtf8Mode(ptmx.fd, true) }
@@ -177,6 +182,7 @@ class TerminalPtySession(
     }
 
     override fun updateSize(columns: Int, rows: Int) {
+        if (finished) return
         super.updateSize(columns, rows)
         applyWindowSize(columns, rows)
     }
@@ -287,13 +293,8 @@ class TerminalPtySession(
                 }, CLOSE_GRACE_MILLIS)
             }
         }
-        if (!emulatorInitialized) {
-            // The library's finish() assumes initializeEmulator() has already run.
-            // Before a view is attached, only the pty descriptor needs closing.
-            runCatching { ptmx.close() }
-        } else {
-            super.finish()
-        }
+        // The P6-patched TermSession also closes safely before emulator/writer initialization.
+        super.finish()
         pendingMessages.clear()
         finishListeners.forEach { listener -> runCatching(listener) }
     }

@@ -42,6 +42,27 @@ class NodeCliInstrumentationTest {
     private val runtimeInstalled: Boolean get() = NodeCliLocator.discover(context) != null
 
     @Test
+    fun firstExtractionAndCachedSetupAreMeasuredInAnIsolatedDirectory() {
+        assumeTrue("Node.js Runtime plugin not installed on this device", runtimeInstalled)
+        val resolution = NodeCliLocator.resolve(context, refresh = true, integrationEnabled = true)
+        assertTrue("expected trusted runtime", resolution is Resolution.Available)
+        val root = File.createTempFile("p6-node-", "", context.cacheDir).apply { check(delete()); check(mkdir()) }
+        val paths = TerminalPaths(root).ensureLayout()
+        try {
+            val started = SystemClock.elapsedRealtime()
+            val prepared = TerminalNodeSetup.prepare(context, paths, resolution, preferences.nodeEnvironmentOptions())
+            val elapsed = SystemClock.elapsedRealtime() - started
+            assertTrue("first setup must extract the archive", prepared.installedNow)
+            assertTrue(prepared.resolution is Resolution.Available)
+            val stamp = NodeCliInstaller.readStamp(paths)!!
+            val cachedAt = SystemClock.elapsedRealtime()
+            val cached = TerminalNodeSetup.prepare(context, paths, resolution, preferences.nodeEnvironmentOptions())
+            assertFalse("same archive is reused", cached.installedNow)
+            Log.i("ThreeShellP6", "nodeFirstExtractMs=$elapsed entries=${stamp.entries} bytes=${stamp.bytes} cachedSetupMs=${SystemClock.elapsedRealtime() - cachedAt} runtimeBuild=${stamp.pluginVersionCode}")
+        } finally { check(paths.clearAll()) }
+    }
+
+    @Test
     fun theInstalledRuntimeIsTrustedAndResolvable() {
         assumeTrue("Node.js Runtime plugin not installed on this device", runtimeInstalled)
         val candidate = NodeCliLocator.discover(context)!!
@@ -142,7 +163,9 @@ class NodeCliInstrumentationTest {
             assertEquals("node must run the installed package: ${tail(session)}", 0, runExit)
             assertTrue("cowsay output missing: ${tail(session)}", cow)
 
-            onMain { session.pty.write("npx --yes cowsay hi; printf '__%s_%s__\\n' NPX_EXIT \"\$?\"\r") }
+            // Run outside the installed project: npm can otherwise reuse its local dependency
+            // without populating _npx, which does not test the advertised cache round trip.
+            onMain { session.pty.write("cd '${plan.paths.tmp.path}' && npx --yes --package cowsay@1.6.0 cowsay hi; printf '__%s_%s__\\n' NPX_EXIT \"\$?\"\r") }
             await(300_000) { onMain { Regex("__NPX_EXIT_\\d+__").containsMatchIn(session.pty.transcriptText) } }
             val npxExit = exitStatus(session, "NPX_EXIT")
             val npxCache = File(plan.paths.npmCache, "_npx")

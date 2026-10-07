@@ -1,4 +1,4 @@
-# P7 documentation and publication preparation
+# P7 integration and v1.0.0 publication
 
 Updated 2026-10-07. Publication of the plugin, its tag and official index entry is authorized
 by the maintainer. P6 device acceptance is complete; the signed candidate matrix and final
@@ -32,15 +32,32 @@ the rebuild check passes with those recorded inputs.
 
 Signed candidate collection produces four ABI APKs and a universal APK. The local verifier
 checks official signer, package identity, version code/name, exactly two native libraries per
-packaged ABI, CRC32 filenames and SHA-256. This candidate is preparation, not a published Release.
+packaged ABI, CRC32 filenames and SHA-256. The final build 35 set was published after the complete acceptance matrix passed.
 
-## Remaining publication sequence
+## Published release and official index
 
-1. Commit the recovery refinement and acceptance evidence, matching VERSION_BUILD to HEAD.
-2. Rebuild/verify the final signed APK set and complete checks on the exact release commit.
-3. Push the release source, wait for all GitHub workflows, create `v1.0.0` and the stable Release
-   with five APKs plus SHA-256 sums.
-4. Add the repository and exact tagged-source/artifact admission record to the official index,
-   generate/validate it, push it, wait for index CI and rescan Icon Studio.
+- [v1.0.0 stable Release](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/releases/tag/v1.0.0): build 35, tag/source
+  `7af6fc27984546f0b8032af03c5254a77558c769`, five signed APKs plus `SHA256SUMS`.
+  GitHub upload digests and byte counts match the exact files installed in the final device matrix.
+- [Release-source CI](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/actions/runs/37589278646)
+  passed JVM/build/lint/alignment and complete API 24/API 35 suites. Its first API 24 attempt
+  stopped making progress after 65/78 tests (7 skipped, no reported assertion failure), was
+  cancelled and retained for diagnosis. A full rerun of the same commit passed; no tests were
+  removed or reclassified. [Markdown CI](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/actions/runs/37589278620)
+  also passed. The tag-triggered [Build integrity](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/actions/runs/37592693346), Markdown, Icon geometry and Icon Studio workflows all passed as well.
+- Official index publication: commit `5de2fcd91bc47fce938d90e27d955468df0ba7ed`,
+  [index CI](https://github.com/SuperMonster003/AutoJs6-Official-Plugins-Index/actions/runs/37595512640) passed. Inventory contains 46 official projects.
+  `release-manifests/io.github.supermonster003.autojs6.plugin.three.shell.terminal/35.json`
+  binds the tag, signer and all five artifact hashes. The live entry exposes stable 1.0.0 / 35,
+  minimum host build 5304, four ABI choices plus universal and 16384-byte native-page metadata.
+- The published index and installed plugin use identical day/night catalog artwork and fixed
+  #FAFAFA / #212121 surfaces. Icon Studio's catalog scan recognizes the project as published.
 
-The index must not advertise a downloadable stable entry before its real Release exists.
+The final local gates passed: 176 JVM tests, Temurin platform selection, debug/androidTest and
+signed release assembly, debug/release lint, native alignment, 36 generated documents and
+22 Icon Studio resources. Each of the 13 final device installations was hash-matched to its
+Release asset; the controlled process-termination check also passed against the signed APK.
+
+This receipt is a documentation-only follow-up to the published tag. Its required commit-count
+increment does not replace the immutable build 35 APKs or claim an additional application release.
+The related host and editor tasks retain their own workspaces and publication scopes.

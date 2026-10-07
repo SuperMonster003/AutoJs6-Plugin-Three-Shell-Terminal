@@ -55,3 +55,16 @@ The maintainer resumed device acceptance on 2026-10-07. All 13 candidate install
 their 26 host acceptance tests passed. The final source also fixes restoration of a task after
 process death; its separate lifecycle and process checks are in `p6-robustness-evidence.md`.
 Final Release APK hashes and reinstallation results are recorded with the publication receipt.
+
+## Published v1.0.0 acceptance
+
+The final source is `7af6fc27984546f0b8032af03c5254a77558c769`, build 35. After the restoration
+fix, all six rows above were repeated using the exact five APK files attached to the stable
+Release: 13 signed installations and 26 host tests passed. Every installed artifact hash was
+matched to the uploaded asset and index admission record. Sony G8441 again ran the armv7
+process; the API 37.1 AVD again used 16384-byte pages. Sony XQ-DQ72 (QV770340J7) additionally
+received the final universal APK without clearing its data.
+
+The [stable Release](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/releases/tag/v1.0.0)
+contains the five APKs and `SHA256SUMS`. Catalog day/night PNGs are byte-identical to the
+plugin's transparent Plugin Center resources, with #FAFAFA / #212121 backgrounds.

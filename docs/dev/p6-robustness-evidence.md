@@ -80,3 +80,9 @@ The 13 signed candidate installations and 26 host tests in `p6-compat-matrix.md`
 including the real armv7 process. The final API 35 prompt samples and isolated Node extraction
 are in `p6-performance-evidence.md`. Final Release APKs are rebuilt after committing this
 source and checked again before publication.
+
+The controlled termination was repeated against the exact final signed universal APK (build 35)
+on API 24: app 16704 -> 16791, shell 16738 -> 16830.
+The old processes were reaped, the private marker survived, the new shell answered and normal
+exit stopped foreground protection. The coordinator first establishes a fresh task after host
+tests; the measured termination is SIGKILL, not that setup force-stop.

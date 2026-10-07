@@ -48,3 +48,18 @@ library/ABI combinations pass the 16384-byte alignment gate.
   the warmed total fd count. Android framework descriptors can disappear independently.
 - 100 MiB output: the draining subscriber retains the complete file, stalled subscribers report
   their own loss, and main-thread heartbeat gaps stay below 2000 ms in the device stress test.
+
+## Published APK sizes
+
+Final v1.0.0 build 35, source `7af6fc2`, official signer, verified uploaded SHA-256:
+
+| APK | Bytes |
+| --- | --- |
+| arm64-v8a | 1783222 |
+| armeabi-v7a | 1780438 |
+| universal | 1882323 |
+| x86 | 1781654 |
+| x86_64 | 1783520 |
+
+The universal APK is 1.80 MiB. All four ABI-specific APKs and the universal APK were installed
+and exercised after their final source commit. Release shrinking and 16 KiB alignment passed.

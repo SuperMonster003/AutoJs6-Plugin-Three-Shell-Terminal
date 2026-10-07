@@ -99,6 +99,7 @@
     <string name="terminal_copy_transcript">Copier la transcription</string>
     <string name="terminal_directory_inaccessible">%1$s n\'est pas un répertoire accessible. La session a démarré dans le répertoire personnel.</string>
     <string name="terminal_error_occurred">Une erreur est survenue</string>
+    <string name="terminal_explorer_open_in_terminal">Ouvrir dans le terminal</string>
     <string name="terminal_help">Aide</string>
     <string name="terminal_input_tips">Saisissez directement dans le terminal. Appuyez longuement sur le texte, ajustez la sélection avec les poignées, puis choisissez Copier ou Tout sélectionner.\nBalayez la zone de touches gauche pour afficher plus de symboles. CTRL et ALT s\'appliquent à la touche suivante.</string>
     <string name="terminal_manager">Gestion du terminal</string>

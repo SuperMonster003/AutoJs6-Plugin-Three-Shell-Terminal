@@ -1,6 +1,6 @@
 3-Shell Terminal reprend le terminal intégré d'AutoJs6 : l'interrupteur "Terminal" du tiroir d'accueil, "Ouvrir dans le terminal" dans le menu des dossiers du gestionnaire de fichiers et la barre d'outils du projet, ainsi que l'objet global `terminal` côté script pour ouvrir, piloter et observer des sessions. Chaque session est un shell système (`/system/bin/sh`) exécuté dans un pty, qui continue en arrière-plan quand on quitte l'écran.
 
-La version 1.1.0 ajoute les couleurs et polices du terminal, les notifications de fin de commande et l'approbation de signatures Node.js tierces au terminal autonome, aux sessions en arrière-plan, aux API de script interactives et aux réglages. Les API complètes exigent AutoJs6 6.8.0 build 5315 ou ultérieur; le protocole de base exige le build 5304. Android 7.0 ou ultérieur est pris en charge.
+La version 1.1.0 ajoute les couleurs et polices du terminal, les notifications de fin de commande et l'approbation de signatures Node.js tierces au terminal autonome, aux sessions en arrière-plan, aux API de script interactives et aux réglages. Les API complètes exigent AutoJs6 6.8.0 build 5315 ou ultérieur; le protocole de base exige le build 5304, et l'entrée du plugin dans le menu des dossiers du gestionnaire de fichiers exige le build 5320. Android 7.0 ou ultérieur est pris en charge.
 
 ### Utilisation
 

@@ -99,6 +99,7 @@
     <string name="terminal_copy_transcript">출력 기록 복사</string>
     <string name="terminal_directory_inaccessible">%1$s 은(는) 접근할 수 있는 디렉터리가 아닙니다. 세션은 대신 홈 디렉터리에서 시작되었습니다.</string>
     <string name="terminal_error_occurred">오류가 발생했습니다</string>
+    <string name="terminal_explorer_open_in_terminal">터미널에서 열기</string>
     <string name="terminal_help">도움말</string>
     <string name="terminal_input_tips">터미널에 직접 입력하세요. 텍스트를 길게 누른 후 핸들을 드래그하여 범위를 조정하고 복사 또는 전체 선택을 사용할 수 있습니다.\n왼쪽 키 영역을 좌우로 밀면 더 많은 기호가 표시됩니다. CTRL과 ALT는 다음 키에 적용됩니다.</string>
     <string name="terminal_manager">터미널 관리자</string>

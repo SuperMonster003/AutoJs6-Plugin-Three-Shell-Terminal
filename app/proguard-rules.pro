@@ -4,12 +4,17 @@
 # Host discovery entry points are looked up by class name from the manifest.
 -keep class io.github.supermonster003.autojs6.plugin.three.shell.terminal.ThreeShellTerminalPluginInfoService { *; }
 -keep class io.github.supermonster003.autojs6.plugin.three.shell.terminal.ThreeShellTerminalPluginService { *; }
+-keep class io.github.supermonster003.autojs6.plugin.three.shell.terminal.ThreeShellTerminalExplorerActionService { *; }
 -keep class io.github.supermonster003.autojs6.plugin.three.shell.terminal.WakeActivity { *; }
 
 # Host contract AARs: parcelables and AIDL stubs are resolved reflectively across processes.
 -keep class org.autojs.plugin.common.api.** { *; }
 -keep class org.autojs.plugin.nodejs.api.** { *; }
 -keep class org.autojs.plugin.terminal.api.** { *; }
+# Explorer Action (roadmap P8.1): only the discovery AIDL is used; its constants are inlined, so the archive,
+# host-session and input-session interfaces of the module are left to R8.
+-keep class org.autojs.plugin.explorer.api.IExplorerActionPlugin { *; }
+-keep class org.autojs.plugin.explorer.api.IExplorerActionPlugin$* { *; }
 
 # jackpal Android-Terminal-Emulator: JNI_OnLoad of libjackpal-androidterm5.so registers Exec natives by name,
 # and libjackpal-termexec2.so exports Java_jackpal_androidterm_TermExec_* symbols (roadmap D13 / AGENTS.md 9).

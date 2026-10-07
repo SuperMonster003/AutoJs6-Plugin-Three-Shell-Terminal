@@ -89,6 +89,24 @@
         </activity>
 
         <!--
+            File manager "Open in terminal" (roadmap P8.1, appendix D Q10): the Explorer Action protocol v23 directory
+            action the host lists in the directory menu. Exported behind the PLUGIN signature permission, invisible,
+            left out of recents; it checks the caller it can name, validates the request and forwards to the terminal
+            screen (own task) in the selected directory, then finishes.
+        -->
+        <activity
+            android:name=".ThreeShellTerminalExplorerActivity"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:permission="org.autojs.permission.PLUGIN"
+            android:theme="@android:style/Theme.NoDisplay">
+            <intent-filter>
+                <action android:name="org.autojs.plugin.EXPLORER_ACTION_EXECUTE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <!--
             Launcher target (roadmap D30 / P3.3): invisible forwarder to the terminal screen (most recent session or a
             new one at home). Shares the terminal's task affinity so the task the home screen creates is the terminal
             task. Not exported; the launcher icon aliases below carry MAIN / LAUNCHER and point here.
@@ -246,6 +264,22 @@
             <meta-data
                 android:name="requiresHostVersion"
                 android:value="5304" />
+        </service>
+
+        <!--
+            Explorer Action discovery (roadmap P8.1, appendix D Q10): identity with engine explorer-action and the catalog
+            of the directory action above. No requiresHostVersion meta-data: the plugin center keeps reading the INFO
+            service, and the host's Explorer Action registry reads the build requirement from getInfo().capabilities.
+        -->
+        <service
+            android:name=".ThreeShellTerminalExplorerActionService"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="org.autojs.permission.PLUGIN">
+            <intent-filter>
+                <action android:name="org.autojs.plugin.EXPLORER_ACTION" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </service>
 
         <!--

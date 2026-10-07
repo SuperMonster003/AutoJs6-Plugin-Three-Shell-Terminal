@@ -99,6 +99,7 @@
     <string name="terminal_copy_transcript">Copy transcript</string>
     <string name="terminal_directory_inaccessible">%1$s is not an accessible directory. The session started in the home directory instead.</string>
     <string name="terminal_error_occurred">An error occurred</string>
+    <string name="terminal_explorer_open_in_terminal">Open in terminal</string>
     <string name="terminal_help">Help</string>
     <string name="terminal_input_tips">Type directly in the terminal. Long press text to select it, drag the handles to adjust the range, then choose Copy or Select all.\nSwipe the left key area for more symbols. CTRL and ALT apply to the next key.</string>
     <string name="terminal_manager">Terminal manager</string>

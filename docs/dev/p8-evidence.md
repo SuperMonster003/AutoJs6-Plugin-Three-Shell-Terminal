@@ -95,3 +95,38 @@ The whole instrumentation suite ran on the final P8 source, debug APKs rebuilt a
 The skips are the no-runtime branch (both devices have a Node.js Runtime), the coordinated Node.js lifecycle
 case that needs a disposable device, and the API 24-only split-screen case. v1.0.0 had 78 cases; P8 and the
 review added the parity, trust, command notice and appearance cases.
+
+## Explorer Action directory action (roadmap P8.1, appendix D Q10 option B)
+
+- Host (AutoJs6 commit `9fe2c84202`, build 5320): Explorer Action protocol v23 adds the optional catalog flag
+  `filesystemPath`. The host accepts it only for a single-directory, read-only, overflow Activity action without
+  output, matchers, probes or session capabilities, and rejects the whole action otherwise. For an accepted action
+  the single target Bundle carries the canonical directory path (at most 4096 characters) and no host file session
+  is created. The path grants nothing. The hard-coded "Open in terminal" directory menu item is removed; the drawer
+  item and the project toolbar keep `TerminalLauncher`. Protocol document: host `docs/dev/explorer-action-protocol-v23.md`.
+- Plugin: `ThreeShellTerminalExplorerActionService` answers the Explorer Action identity (engine `explorer-action`,
+  capabilities `requiresHostVersion` 5320 and protocol 23 only, without computing the Node.js state) and a catalog
+  with `three-shell-terminal.open-directory`. `ThreeShellTerminalExplorerActivity` is exported behind the PLUGIN
+  permission, checks the caller it can name, accepts only the execute action, this action id, protocol 23, exactly
+  one directory target and an absolute normalized path within both ceilings, keeps the path out of the log, and
+  opens the terminal like the former host item: the most recent session changes into the directory, or a new
+  session starts there. Without storage access the existing fallback to `HOME` with the storage banner applies.
+- Compatibility: hosts 5304-5319 advertise at most protocol 22, never list the action and keep their own item, so
+  the menu never shows two entries. The plugin center keeps a single entry (the INFO identity).
+
+| Evidence | Configuration | Result |
+| --- | --- | --- |
+| JVM (host) | `ExplorerActionCatalogPolicyTest` v23 table (accepted shape, protocol gate, file / mixed / multiple targets, write access, primary placement, host presentation and matchers rejected), protocol version frozen at 23 | 114 explorer tests passed |
+| JVM (plugin) | `explorer/TerminalExplorerActionTest`, `ManifestContractTest`, `VendoredAarLockTest` | 199 passed |
+| BUILD | debug, androidTest, release (R8, resource shrinking), lintDebug and lintRelease (0 errors), 16 KB alignment; `aapt2` shows the kept title string and both components in the release APK | passed |
+| DEVICE | `explorer` package on the API 37 x86_64 AVD, Redmi 22120RN86C API 33 and Sony G8441 API 28 | 4 / 4 each |
+| DEVICE | host 5320 debug with plugin debug and signed release on the API 37 AVD: directory menu, "Open in terminal" | terminal opens in `/storage/emulated/0/Scripts/<dir>` in its own task; Back returns to the file manager |
+| DEVICE | host 5319 with plugin 1.1.0 on the Sony G8441 API 28 | only the host's own "Open in terminal" item |
+| DEVICE | whole suite on the API 37 AVD | OK (91 tests): 88 passed, 3 existing explicit skips |
+
+- Size: keeping the whole Explorer Action module gave a 2064230-byte universal release APK (+9.7 percent against
+  1882323 bytes for v1.0.0). Only the discovery AIDL is kept now, which gives 2047846 bytes (+8.8 percent); the
+  signed release was verified again on the device.
+- Device note: during the whole-suite run the host stayed on its Plugins tab and an injected test tap switched
+  3-Shell Terminal off in the Plugin Center, which hid the action in later checks. It was switched back on through
+  the host UI, and device runs now start from the home screen.

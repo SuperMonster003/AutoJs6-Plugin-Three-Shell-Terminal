@@ -11,10 +11,12 @@
 * `新增` 信任第三方 Node.js Runtime 签名: 环境探测页对非官方签名列出 SHA-256 并提供 "信任此签名", 经二次确认后新会话即可使用其 node / npm 命令; 设置页 "受信任的 Node.js 签名" 可随时撤销
 * `新增` 命令完成通知: 不带交互式 shell 的命令 (例如脚本以 `keepOpen: false` 调用 `exec`) 自行结束时发出通知, 点击查看输出末尾, 可复制, 分享或在原目录打开终端; 通知只写会话编号与目录, 连续多条只提醒一次, 可在设置中关闭
 * `新增` 终端配色与字体: 设置页新增 "终端配色" (跟随浅色 / 深色外观, 深色, 浅色, 按主题色着色) 与 "终端字体" (系统等宽或内置无连字的 JetBrains Mono); 文本选择层与命令输出页也使用同一字体, 返回终端即生效且会话保持运行
+* `新增` 文件管理器目录菜单的 "在终端中打开" 改由插件提供 (AutoJs6 6.8.0 构建 5320 或更高版本): AutoJs6 只传递所选目录的路径, 不授予额外权限; 最近的会话切换到该目录, 没有会话时在该目录新建; 更早的 AutoJs6 构建继续显示自带的菜单项
 * `修复` 在 Android 17 等较新系统上, 长按终端后重新显示选择手柄与 "复制 / 全选" 工具栏, 文本可以再次选择和复制
 * `修复` 复制或分享很长的终端记录不再使插件崩溃 (Android 7.0 上崩溃会结束全部会话); 超长时只使用最近的 100000 个字符并给出提示
 * `依赖` 升级 jackpal emulatorview 补丁 1.0.42-p6.1 -> 1.0.42-p8.1: 渲染器字体可由插件设置, 并以 `Math.ceil` 取代 API 23 起已移出 SDK 的 `android.util.FloatMath`; 其余类逐字节不变, `locks/vendored-aars.lock` 已更新
 * `依赖` 附加 JetBrains Mono NL 2.304 (SIL Open Font License 1.1) 作为可选的终端字体, 原样打包并在关于页提供许可证, 来源与 SHA-256 记录于 `vendor/fonts/jetbrains-mono/`
+* `依赖` 附加 `explorer-action-api.aar` (AutoJs6 模块 `plugin-api/explorer-action-api`, 宿主构建 6.8.0 / 5320, MPL 2.0) 作为 Explorer Action 协议 v23 契约, 用于文件管理器目录动作, 并在 `locks/host-api-aars.lock` 中锁定哈希
 
 # v1.0.0
 

@@ -1,6 +1,6 @@
 3-Shell Terminal takes over the built-in terminal of AutoJs6: the "Terminal" switch of the home drawer, "Open in terminal" in the file manager directory menu and the project toolbar, and the script-side global object `terminal` for opening, driving and observing terminal sessions. Every session is a system shell (`/system/bin/sh`) running in a pty that keeps running in the background after the screen is left.
 
-Version 1.1.0 adds terminal colors and fonts, command completion notices and trust for third-party Node.js signers to the standalone terminal, background sessions, interactive script APIs and settings. Complete script APIs require AutoJs6 6.8.0 build 5315 or later; build 5304 is the base plugin-protocol requirement. Android 7.0 or later is supported.
+Version 1.1.0 adds terminal colors and fonts, command completion notices and trust for third-party Node.js signers to the standalone terminal, background sessions, interactive script APIs and settings. Complete script APIs require AutoJs6 6.8.0 build 5315 or later; build 5304 is the base plugin-protocol requirement, and the plugin's file manager directory menu entry requires build 5320. Android 7.0 or later is supported.
 
 ### Usage
 

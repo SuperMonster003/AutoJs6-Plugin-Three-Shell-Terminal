@@ -99,6 +99,7 @@
     <string name="terminal_copy_transcript">نسخ النص الكامل</string>
     <string name="terminal_directory_inaccessible">%1$s ليس دليلاً يمكن الوصول إليه. بدأت الجلسة في الدليل الرئيسي بدلاً من ذلك.</string>
     <string name="terminal_error_occurred">حدث خطأ</string>
+    <string name="terminal_explorer_open_in_terminal">فتح في الطرفية</string>
     <string name="terminal_help">مساعدة</string>
     <string name="terminal_input_tips">اكتب مباشرة في الطرفية. اضغط مطولا على النص واسحب المقابض لضبط التحديد ثم اختر نسخ أو تحديد الكل.\nاسحب منطقة المفاتيح اليسرى أفقيا لعرض المزيد من الرموز. يطبق CTRL و ALT على المفتاح التالي.</string>
     <string name="terminal_manager">مدير الطرفية</string>

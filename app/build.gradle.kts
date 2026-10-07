@@ -94,8 +94,9 @@ fun lockedAars(lockFile: File, ids: List<String>, directory: String, forbidDebug
     }
 }
 
-// Host contract AARs (roadmap P1.1): common-plugin-api + nodejs-api from host build 5303, terminal-api from host commit b8f4d6c939 (build 5304).
-val hostApiIds = listOf("common-plugin-api", "nodejs-api", "terminal-api")
+// Host contract AARs (roadmap P1.1): common-plugin-api + nodejs-api from host build 5303, terminal-api from host commit b8f4d6c939 (build 5304),
+// explorer-action-api (Explorer Action protocol v23, roadmap P8.1) from host commit 9fe2c84202 (build 5320).
+val hostApiIds = listOf("common-plugin-api", "explorer-action-api", "nodejs-api", "terminal-api")
 val hostApiAars = lockedAars(rootProject.file("locks/host-api-aars.lock"), hostApiIds, "libs", forbidDebug = true)
 
 // The term AAR is the upstream "term-debug.aar" distribution (its only release form, Java only); the

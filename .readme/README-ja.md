@@ -52,7 +52,7 @@ AutoJs6 は Binder サービスでプラグインを検出し, 明示的な Inte
 
 ******
 
-1.1.0 は独立した端末, バックグラウンドセッション, 対話型スクリプト API と設定画面に, 端末の配色とフォント, コマンド完了の通知, サードパーティの Node.js 署名の信頼を加えます. 完全なスクリプト API には AutoJs6 6.8.0 ビルド 5315 以降が必要です. 基本プラグインプロトコルの要件はビルド 5304 です. Android 7.0 以降に対応します.
+1.1.0 は独立した端末, バックグラウンドセッション, 対話型スクリプト API と設定画面に, 端末の配色とフォント, コマンド完了の通知, サードパーティの Node.js 署名の信頼を加えます. 完全なスクリプト API には AutoJs6 6.8.0 ビルド 5315 以降が必要です. 基本プラグインプロトコルの要件はビルド 5304 で, ファイルマネージャーのディレクトリメニューにあるプラグインの項目にはビルド 5320 が必要です. Android 7.0 以降に対応します.
 
 ******
 
@@ -65,7 +65,7 @@ AutoJs6 は Binder サービスでプラグインを検出し, 明示的な Inte
 - 複数セッション: 作成, 切り替え, 終了とセッションマネージャー. 画面を離れた後もフォアグラウンドサービスがセッションを維持し, 通知に現在のディレクトリとセッション数, "セッションを終了" 操作を表示します.
 - ターミナル画面: 2 段のキーバー (Esc / Tab / Ctrl / 矢印 / よく使う記号), ネイティブのテキスト選択とコピー / すべて選択, 記録のコピーと共有, 文字サイズ, 貼り付けと消去, 4 種類の端末配色 (外観に従う / ダーク / ライト / テーマカラーで色付け) と端末フォント (システムの等幅または合字なしの内蔵 JetBrains Mono).
 - Node.js ツールチェーン: Node.js Runtime プラグイン (1.5.0+) をインストールすると node / npm / npx / corepack / yarn / pnpm が使え, npm レジストリと "インストールスクリプトを無視" の設定, パッケージメニュー (npm init / install / run script など) も利用できます.
-- AutoJs6 の入口: ホームドロワーのスイッチ (セッション数, すべて終了), ファイルマネージャーのディレクトリメニューとプロジェクトツールバーの "ターミナルで開く".
+- AutoJs6 の入口: ホームドロワーのスイッチ (セッション数, すべて終了), ファイルマネージャーのディレクトリメニューとプロジェクトツールバーの "ターミナルで開く". AutoJs6 ビルド 5320 以降, ディレクトリメニューの項目はプラグインが Explorer Action プロトコルで提供し, AutoJs6 は選択したディレクトリのパスだけを渡します.
 - スクリプト API `terminal` (別名 `$terminal`): セッション管理, 可視実行 (`exec`, `npm.run`), `output` / `exit` イベントと `write`, `waitFor` を持つセッションオブジェクト. 失敗はすべて安定した `code` を持つ `TerminalError` です.
 - コマンド完了の通知: 対話シェルなしのコマンド (例: スクリプトが `keepOpen: false` で呼ぶ `exec`) が自ら終了すると通知し, タップで出力の末尾を表示してコピー, 共有, またはそのディレクトリで端末を開けます. 通知にはセッション番号とディレクトリのみを表示し, コマンドや出力は含めません. 設定でオフにできます.
 - 単体アプリ: ランチャーアイコンから直接ターミナルを開き, 設定ページ (AutoJs6 に追従する外観, 文字サイズ, 端末の配色とフォント, npm レジストリ, Node.js 連携, 信頼済みの Node.js 署名, コマンド完了の通知, すべてのファイルへのアクセス, ターミナルデータの消去), 情報, リリース履歴を備えます.
@@ -176,7 +176,7 @@ aidl interface: org.autojs.plugin.terminal.api.ITerminalPlugin
 minimum host build: 5304 (6.8.0)
 ```
 
-`ThreeShellTerminalPluginService` は `org.autojs.plugin.TERMINAL` (category `terminal`) に応答し, ロードマップ P2 以降でホストの terminal-api 契約 `org.autojs.plugin.terminal.api.ITerminalPlugin` を実装します. `ThreeShellTerminalPluginInfoService` は `org.autojs.plugin.INFO` に PluginInfo で応答します. `WakeActivity` はホストがプラグインを起動するためのもので, ターミナル画面は `org.autojs.plugin.TERMINAL_OPEN` で開かれます.
+`ThreeShellTerminalPluginService` は `org.autojs.plugin.TERMINAL` (category `terminal`) に応答し, ロードマップ P2 以降でホストの terminal-api 契約 `org.autojs.plugin.terminal.api.ITerminalPlugin` を実装します. `ThreeShellTerminalPluginInfoService` は `org.autojs.plugin.INFO` に PluginInfo で応答します. `WakeActivity` はホストがプラグインを起動するためのもので, ターミナル画面は `org.autojs.plugin.TERMINAL_OPEN` で開かれます. `ThreeShellTerminalExplorerActionService` は `org.autojs.plugin.EXPLORER_ACTION` (Explorer Action プロトコル v23) に単一ディレクトリの "ターミナルで開く" アクションで応答し, `ThreeShellTerminalExplorerActivity` がそれを実行します.
 
 ******
 
@@ -201,10 +201,12 @@ _2026/10/07_
 - `機能` サードパーティの Node.js Runtime 署名を信頼: 環境診断画面が非公式署名の SHA-256 を表示して "この署名を信頼" を提供し, 再確認後は新しいセッションでその node / npm コマンドを使用できます. 設定の "信頼済みの Node.js 署名" でいつでも取り消せます
 - `機能` コマンド完了の通知: 対話シェルなしのコマンド (例: スクリプトが `keepOpen: false` で呼ぶ `exec`) が自ら終了すると通知し, タップで出力の末尾を表示してコピー, 共有, またはそのディレクトリで端末を開けます. 通知はセッション番号とディレクトリのみを表示し, 連続した通知は一度だけ鳴り, 設定でオフにできます
 - `機能` 端末の配色とフォント: 設定に "端末の配色" (ライト / ダークの外観に従う, ダーク, ライト, テーマカラーで色付け) と "端末のフォント" (システムの等幅または合字なしの内蔵 JetBrains Mono) を追加しました. 選択レイヤーとコマンド出力画面も同じフォントを使い, 端末に戻ると反映され, セッションは動作し続けます
+- `機能` ファイルマネージャーのディレクトリメニューの "ターミナルで開く" をプラグインが提供するようになりました (AutoJs6 6.8.0 ビルド 5320 以降). AutoJs6 は選択したディレクトリのパスだけを渡し, 追加の権限は付与しません. 最新のセッションがそのディレクトリへ移動し, セッションがない場合はそこで新しいセッションを開始します. それ以前の AutoJs6 ビルドでは従来のメニュー項目が引き続き表示されます
 - `修正` Android 17 などの新しいバージョンで, 端末を長押しすると選択ハンドルと "コピー / すべて選択" ツールバーが再び表示され, テキストを選択してコピーできます
 - `修正` 非常に長い端末記録をコピーまたは共有してもプラグインがクラッシュしなくなりました (Android 7.0 ではクラッシュですべてのセッションが終了していました); 長すぎる場合は最新の 100000 文字のみを使用し, その旨を通知します
 - `依存関係` jackpal emulatorview パッチを 1.0.42-p6.1 -> 1.0.42-p8.1 に更新: レンダラーのフォントをプラグインが設定し, API 23 で SDK から外れた `android.util.FloatMath` を `Math.ceil` に置き換えました. その他のクラスはバイト単位で同一で, `locks/vendored-aars.lock` を更新しました
 - `依存関係` 任意の端末フォントとして JetBrains Mono NL 2.304 (SIL Open Font License 1.1) を追加しました. 改変せずに同梱し, ライセンスを情報画面に表示します. 入手元と SHA-256 は `vendor/fonts/jetbrains-mono/` に記録しています
+- `依存関係` ファイルマネージャーのディレクトリアクション用に Explorer Action プロトコル v23 の契約として `explorer-action-api.aar` (AutoJs6 モジュール `plugin-api/explorer-action-api`, ホストビルド 6.8.0 / 5320, MPL 2.0) を追加しました. ハッシュは `locks/host-api-aars.lock` で固定しています
 
 #### v1.0.0
 

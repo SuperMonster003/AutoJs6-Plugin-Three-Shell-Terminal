@@ -9,8 +9,14 @@ import org.autojs.plugin.common.api.PluginInfo
 import org.autojs.plugin.terminal.api.TerminalCapabilityKeys
 import org.autojs.plugin.terminal.api.TerminalContract
 
-/** Collects the installed package version, the packaged ABIs and the localized metadata of this plugin. */
-internal fun Context.threeShellTerminalPluginRuntimeInfo(): ThreeShellTerminalPluginRuntimeInfo {
+/**
+ * Collects the installed package version, the packaged ABIs and the localized metadata of this plugin.
+ * [includeNodeCliState] is false for identities that never report the Node CLI state (the Explorer
+ * Action identity), so answering them neither inspects nor warms up the Node.js runtime.
+ * zh-CN: 收集已安装包版本, 打包的 ABI 与本地化元数据. 不报告 Node CLI 状态的身份 (Explorer Action) 传 false,
+ * 应答时既不检查也不预热 Node.js 运行时.
+ */
+internal fun Context.threeShellTerminalPluginRuntimeInfo(includeNodeCliState: Boolean = true): ThreeShellTerminalPluginRuntimeInfo {
     val packageInfo = packageManager.getPackageInfo(packageName, 0)
     val versionCode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
         packageInfo.longVersionCode
@@ -28,7 +34,7 @@ internal fun Context.threeShellTerminalPluginRuntimeInfo(): ThreeShellTerminalPl
         versionCode = versionCode,
         versionDate = getString(R.string.plugin_version_date),
         supportedAbis = NativeLibraryInventory.supportedAbis(this),
-        nodeCliState = NodeCliState.contractState(this),
+        nodeCliState = if (includeNodeCliState) NodeCliState.contractState(this) else "",
     )
 }
 

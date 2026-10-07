@@ -10,7 +10,8 @@
       "feature": [
         "Confiar en la firma de un Node.js Runtime de terceros: el diagnóstico del entorno muestra el SHA-256 de una firma no oficial y ofrece \"Confiar en esta firma\"; tras una segunda confirmación, las nuevas sesiones pueden usar sus comandos node / npm, y \"Firmas de Node.js de confianza\" en los ajustes revoca la confianza en cualquier momento",
         "Avisos de fin de comando: cuando un comando sin shell interactivo (por ejemplo un `exec` de script con `keepOpen: false`) termina por sí mismo, un aviso abre el final de su salida para copiarla, compartirla o reabrir un terminal en su carpeta; los avisos solo indican la sesión y la carpeta, una ráfaga alerta una sola vez y los ajustes permiten desactivarlos",
-        "Colores y fuente de la terminal: los ajustes añaden \"Colores de la terminal\" (seguir la apariencia clara / oscura, oscuro, claro, teñido con el color del tema) y \"Fuente de la terminal\" (monoespaciada del sistema o JetBrains Mono integrada, sin ligaduras); la selección y la pantalla de salida de comandos usan la misma fuente, y volver a la terminal aplica el cambio sin detener la sesión"
+        "Colores y fuente de la terminal: los ajustes añaden \"Colores de la terminal\" (seguir la apariencia clara / oscura, oscuro, claro, teñido con el color del tema) y \"Fuente de la terminal\" (monoespaciada del sistema o JetBrains Mono integrada, sin ligaduras); la selección y la pantalla de salida de comandos usan la misma fuente, y volver a la terminal aplica el cambio sin detener la sesión",
+        "\"Abrir en la terminal\" del menú de carpetas del gestor de archivos ahora lo proporciona el plugin (AutoJs6 6.8.0 compilación 5320 o posterior): AutoJs6 pasa solo la ruta de la carpeta seleccionada y no concede acceso adicional; la sesión más reciente cambia a ella, o se inicia allí una nueva sesión si no hay ninguna; las compilaciones anteriores de AutoJs6 siguen mostrando su propia entrada de menú"
       ],
       "fix": [
         "En versiones recientes de Android como Android 17, una pulsación larga en la terminal vuelve a mostrar los controles de selección y la barra Copiar / Seleccionar todo, de modo que el texto se puede seleccionar y copiar",
@@ -18,7 +19,8 @@
       ],
       "dependency": [
         "Se actualiza el parche de jackpal emulatorview 1.0.42-p6.1 -> 1.0.42-p8.1: el complemento fija la fuente del renderizador y `Math.ceil` sustituye a `android.util.FloatMath`, retirado del SDK desde la API 23; las demás clases son idénticas byte a byte y `locks/vendored-aars.lock` se actualiza",
-        "Se añade JetBrains Mono NL 2.304 (SIL Open Font License 1.1) como fuente opcional de la terminal, incluida sin cambios con su licencia en la pantalla Acerca de; el origen y el SHA-256 constan en `vendor/fonts/jetbrains-mono/`"
+        "Se añade JetBrains Mono NL 2.304 (SIL Open Font License 1.1) como fuente opcional de la terminal, incluida sin cambios con su licencia en la pantalla Acerca de; el origen y el SHA-256 constan en `vendor/fonts/jetbrains-mono/`",
+        "Se añade `explorer-action-api.aar` (módulo de AutoJs6 `plugin-api/explorer-action-api`, compilación del host 6.8.0 / 5320, MPL 2.0) como contrato del protocolo Explorer Action v23 para la acción de carpeta del gestor de archivos, con hash fijado en `locks/host-api-aars.lock`"
       ]
     },
     "v1.0.0": {

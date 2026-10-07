@@ -99,6 +99,7 @@
     <string name="terminal_copy_transcript">复制终端记录</string>
     <string name="terminal_directory_inaccessible">%1$s 不是可访问的目录. 会话已改在主目录中启动.</string>
     <string name="terminal_error_occurred">发生错误</string>
+    <string name="terminal_explorer_open_in_terminal">在终端中打开</string>
     <string name="terminal_help">帮助</string>
     <string name="terminal_input_tips">直接在终端中输入. 长按文本后可拖动手柄调整选区, 并选择复制或全选.\n左右滑动左侧按键区域可查看更多符号. CTRL 和 ALT 作用于下一个按键.</string>
     <string name="terminal_manager">终端管理器</string>

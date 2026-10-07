@@ -99,6 +99,7 @@
     <string name="terminal_copy_transcript">出力ログをコピー</string>
     <string name="terminal_directory_inaccessible">%1$s はアクセスできるディレクトリではありません. セッションは代わりにホームディレクトリで開始されました.</string>
     <string name="terminal_error_occurred">エラーが発生しました</string>
+    <string name="terminal_explorer_open_in_terminal">ターミナルで開く</string>
     <string name="terminal_help">ヘルプ</string>
     <string name="terminal_input_tips">ターミナルに直接入力します. テキストを長押しし, ハンドルをドラッグして範囲を調整すると, コピーや全選択ができます.\n左側のキー領域を左右にスワイプすると他の記号が表示されます. CTRL と ALT は次のキーに適用されます.</string>
     <string name="terminal_manager">ターミナル管理</string>

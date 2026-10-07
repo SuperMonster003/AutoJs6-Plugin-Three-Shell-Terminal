@@ -52,7 +52,7 @@ AutoJs6 는 Binder 서비스로 플러그인을 발견하고, 명시적 Intent �
 
 ******
 
-1.1.0은 독립 터미널, 백그라운드 세션, 대화형 스크립트 API와 설정에 터미널 색상과 글꼴, 명령 완료 알림, 타사 Node.js 서명 신뢰를 더합니다. 전체 스크립트 API는 AutoJs6 6.8.0 빌드 5315 이상이 필요하며, 기본 플러그인 프로토콜은 빌드 5304부터 지원합니다. Android 7.0 이상을 지원합니다.
+1.1.0은 독립 터미널, 백그라운드 세션, 대화형 스크립트 API와 설정에 터미널 색상과 글꼴, 명령 완료 알림, 타사 Node.js 서명 신뢰를 더합니다. 전체 스크립트 API는 AutoJs6 6.8.0 빌드 5315 이상이 필요하며, 기본 플러그인 프로토콜은 빌드 5304부터, 파일 관리자 디렉터리 메뉴의 플러그인 항목은 빌드 5320부터 지원합니다. Android 7.0 이상을 지원합니다.
 
 ******
 
@@ -65,7 +65,7 @@ AutoJs6 는 Binder 서비스로 플러그인을 발견하고, 명시적 Intent �
 - 다중 세션: 생성, 전환, 종료와 세션 관리자. 화면을 떠난 뒤에도 포그라운드 서비스가 세션을 유지하며, 알림에 현재 디렉터리와 세션 수, "세션 종료" 동작을 표시합니다.
 - 터미널 화면: 두 줄 키 바 (Esc / Tab / Ctrl / 방향키 / 자주 쓰는 기호), 네이티브 텍스트 선택과 복사 / 전체 선택, 기록 복사와 공유, 글자 크기, 붙여넣기와 지우기, 네 가지 터미널 색상 (모양 따르기 / 어둡게 / 밝게 / 테마 색상으로 물들이기)과 터미널 글꼴 (시스템 고정폭 또는 합자 없는 내장 JetBrains Mono).
 - Node.js 도구 체인: Node.js Runtime 플러그인 (1.5.0+) 을 설치하면 node / npm / npx / corepack / yarn / pnpm 을 사용할 수 있고, npm 레지스트리와 "설치 스크립트 무시" 설정, 패키지 메뉴 (npm init / install / run script 등) 도 제공됩니다.
-- AutoJs6 진입점: 홈 드로어 스위치 (세션 수, 전체 종료), 파일 관리자 디렉터리 메뉴와 프로젝트 도구 모음의 "터미널에서 열기".
+- AutoJs6 진입점: 홈 드로어 스위치 (세션 수, 전체 종료), 파일 관리자 디렉터리 메뉴와 프로젝트 도구 모음의 "터미널에서 열기". AutoJs6 빌드 5320부터 디렉터리 메뉴 항목은 플러그인이 Explorer Action 프로토콜로 제공하며, AutoJs6는 선택한 디렉터리의 경로만 전달합니다.
 - 스크립트 API `terminal` (별칭 `$terminal`): 세션 관리, 보이는 실행 (`exec`, `npm.run`), `output` / `exit` 이벤트와 `write`, `waitFor` 를 갖춘 세션 객체. 모든 실패는 안정적인 `code` 를 가진 `TerminalError` 입니다.
 - 명령 완료 알림: 대화형 셸 없는 명령 (예: 스크립트가 `keepOpen: false`로 호출한 `exec`)이 스스로 끝나면 알림을 보내고, 탭하면 출력 끝부분을 보여 주어 복사, 공유하거나 해당 디렉터리에서 터미널을 다시 열 수 있습니다. 알림에는 세션 번호와 디렉터리만 표시되고 명령이나 출력은 포함되지 않으며, 설정에서 끌 수 있습니다.
 - 독립 앱: 런처 아이콘이 바로 터미널을 열고, 설정 페이지 (AutoJs6 를 따르는 외관, 글자 크기, 터미널 색상과 글꼴, npm 레지스트리, Node.js 통합, 신뢰하는 Node.js 서명, 명령 완료 알림, 모든 파일 접근, 터미널 데이터 지우기), 정보와 릴리스 기록을 제공합니다.
@@ -176,7 +176,7 @@ aidl interface: org.autojs.plugin.terminal.api.ITerminalPlugin
 minimum host build: 5304 (6.8.0)
 ```
 
-`ThreeShellTerminalPluginService` 는 `org.autojs.plugin.TERMINAL` (category `terminal`) 에 응답하며 로드맵 P2 부터 호스트 terminal-api 계약 `org.autojs.plugin.terminal.api.ITerminalPlugin` 를 구현합니다. `ThreeShellTerminalPluginInfoService` 는 `org.autojs.plugin.INFO` 에 PluginInfo 로 응답합니다. `WakeActivity` 는 호스트가 플러그인을 활성화하는 데 쓰이며, 터미널 화면은 `org.autojs.plugin.TERMINAL_OPEN` 으로 열립니다.
+`ThreeShellTerminalPluginService` 는 `org.autojs.plugin.TERMINAL` (category `terminal`) 에 응답하며 로드맵 P2 부터 호스트 terminal-api 계약 `org.autojs.plugin.terminal.api.ITerminalPlugin` 를 구현합니다. `ThreeShellTerminalPluginInfoService` 는 `org.autojs.plugin.INFO` 에 PluginInfo 로 응답합니다. `WakeActivity` 는 호스트가 플러그인을 활성화하는 데 쓰이며, 터미널 화면은 `org.autojs.plugin.TERMINAL_OPEN` 으로 열립니다. `ThreeShellTerminalExplorerActionService` 는 `org.autojs.plugin.EXPLORER_ACTION` (Explorer Action 프로토콜 v23) 에 단일 디렉터리용 "터미널에서 열기" 작업으로 응답하며, `ThreeShellTerminalExplorerActivity` 가 이를 실행합니다.
 
 ******
 
@@ -201,10 +201,12 @@ _2026/10/07_
 - `기능` 타사 Node.js Runtime 서명 신뢰: 환경 진단 화면이 비공식 서명의 SHA-256을 표시하고 "이 서명 신뢰"를 제공하며, 한 번 더 확인하면 새 세션에서 해당 node / npm 명령을 사용할 수 있습니다. 설정의 "신뢰하는 Node.js 서명"에서 언제든지 취소할 수 있습니다
 - `기능` 명령 완료 알림: 대화형 셸 없는 명령 (예: 스크립트가 `keepOpen: false`로 호출한 `exec`)이 스스로 끝나면 알림을 보내고, 탭하면 출력 끝부분을 보여 주어 복사, 공유하거나 해당 디렉터리에서 터미널을 다시 열 수 있습니다. 알림에는 세션 번호와 디렉터리만 표시되고, 연속된 알림은 한 번만 울리며, 설정에서 끌 수 있습니다
 - `기능` 터미널 색상과 글꼴: 설정에 "터미널 색상" (밝은 / 어두운 모양 따르기, 어둡게, 밝게, 테마 색상으로 물들이기)과 "터미널 글꼴" (시스템 고정폭 또는 합자 없는 내장 JetBrains Mono)이 추가되었습니다. 선택 레이어와 명령 출력 화면도 같은 글꼴을 사용하며, 터미널로 돌아오면 세션을 유지한 채 적용됩니다
+- `기능` 파일 관리자 디렉터리 메뉴의 "터미널에서 열기"를 이제 플러그인이 제공합니다 (AutoJs6 6.8.0 빌드 5320 이상). AutoJs6는 선택한 디렉터리의 경로만 전달하며 추가 권한을 부여하지 않습니다. 가장 최근 세션이 해당 디렉터리로 이동하고, 세션이 없으면 그곳에서 새 세션을 시작합니다. 이전 AutoJs6 빌드는 자체 메뉴 항목을 계속 표시합니다
 - `수정` Android 17 등 최신 버전에서 터미널을 길게 누르면 선택 핸들과 "복사 / 모두 선택" 도구 모음이 다시 표시되어 텍스트를 선택하고 복사할 수 있습니다
 - `수정` 매우 긴 터미널 기록을 복사하거나 공유해도 플러그인이 더 이상 충돌하지 않습니다 (Android 7.0에서는 충돌로 모든 세션이 종료되었습니다); 너무 긴 경우 최근 100000자만 사용하고 안내를 표시합니다
 - `의존성` jackpal emulatorview 패치를 1.0.42-p6.1 -> 1.0.42-p8.1로 업그레이드: 플러그인이 렌더러 글꼴을 설정하고, API 23에서 SDK에서 빠진 `android.util.FloatMath`를 `Math.ceil`로 대체했습니다. 다른 클래스는 바이트 단위로 동일하며 `locks/vendored-aars.lock`을 갱신했습니다
 - `의존성` 선택 가능한 터미널 글꼴로 JetBrains Mono NL 2.304 (SIL Open Font License 1.1)를 추가했습니다. 수정 없이 포함하고 라이선스를 정보 화면에 표시하며, 출처와 SHA-256은 `vendor/fonts/jetbrains-mono/`에 기록되어 있습니다
+- `의존성` 파일 관리자 디렉터리 작업을 위한 Explorer Action 프로토콜 v23 계약으로 `explorer-action-api.aar` (AutoJs6 모듈 `plugin-api/explorer-action-api`, 호스트 빌드 6.8.0 / 5320, MPL 2.0)를 추가했습니다. 해시는 `locks/host-api-aars.lock`에 고정되어 있습니다
 
 #### v1.0.0
 

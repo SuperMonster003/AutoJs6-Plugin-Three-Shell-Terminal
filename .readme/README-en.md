@@ -52,7 +52,7 @@ AutoJs6 discovers the plugin through its Binder service, opens the terminal scre
 
 ******
 
-Version 1.1.0 adds terminal colors and fonts, command completion notices and trust for third-party Node.js signers to the standalone terminal, background sessions, interactive script APIs and settings. Complete script APIs require AutoJs6 6.8.0 build 5315 or later; build 5304 is the base plugin-protocol requirement. Android 7.0 or later is supported.
+Version 1.1.0 adds terminal colors and fonts, command completion notices and trust for third-party Node.js signers to the standalone terminal, background sessions, interactive script APIs and settings. Complete script APIs require AutoJs6 6.8.0 build 5315 or later; build 5304 is the base plugin-protocol requirement, and the plugin's file manager directory menu entry requires build 5320. Android 7.0 or later is supported.
 
 ******
 
@@ -65,7 +65,7 @@ The plugin provides the following capabilities:
 - Multiple sessions: create, switch, close and a session manager; a foreground service keeps sessions running after the screen is left, and its notification shows the current directory and the session count with a "Close sessions" action.
 - Terminal screen: a two-row key bar (Esc / Tab / Ctrl / arrows / common symbols), native text selection with Copy / Select all, transcript copy and share, text size, paste and clear; four terminal color schemes (follow the appearance / dark / light / tinted by the theme color) and the terminal font (system monospace or the built-in JetBrains Mono without ligatures).
 - Node.js toolchain: with the Node.js Runtime plugin (1.5.0+) installed, node / npm / npx / corepack / yarn / pnpm become available, together with the npm registry and "ignore install scripts" settings and the package menu (npm init / install / run script and more).
-- AutoJs6 entries: the home drawer switch (session count, close all), "Open in terminal" in the file manager directory menu and the project toolbar.
+- AutoJs6 entries: the home drawer switch (session count, close all), "Open in terminal" in the file manager directory menu and the project toolbar. Since AutoJs6 build 5320 the directory menu item comes from the plugin through the Explorer Action protocol, and AutoJs6 passes only the path of the selected directory.
 - Script API `terminal` (alias `$terminal`): session management, visible execution (`exec`, `npm.run`) and a session object with `output` / `exit` events, `write` and `waitFor`; every failure is a `TerminalError` with a stable `code`.
 - Command completion notices: when a command without an interactive shell (for example a script's `exec` with `keepOpen: false`) ends by itself, a notice opens the end of its output to copy, share or reopen a terminal in its directory; the notice names only the session and directory, never the command or output, and can be turned off in the settings.
 - Standalone app: the launcher icon opens the terminal directly; a settings page (appearance following AutoJs6, text size, terminal colors and font, npm registry, Node.js integration, trusted Node.js signers, command completion notices, all files access, clear terminal data), About and the release history.
@@ -176,7 +176,7 @@ aidl interface: org.autojs.plugin.terminal.api.ITerminalPlugin
 minimum host build: 5304 (6.8.0)
 ```
 
-`ThreeShellTerminalPluginService` answers `org.autojs.plugin.TERMINAL` (category `terminal`) and implements the host terminal-api contract `org.autojs.plugin.terminal.api.ITerminalPlugin` from roadmap P2 on. `ThreeShellTerminalPluginInfoService` answers `org.autojs.plugin.INFO` with PluginInfo. `WakeActivity` lets the host activate the plugin; the terminal screen is opened through `org.autojs.plugin.TERMINAL_OPEN`.
+`ThreeShellTerminalPluginService` answers `org.autojs.plugin.TERMINAL` (category `terminal`) and implements the host terminal-api contract `org.autojs.plugin.terminal.api.ITerminalPlugin` from roadmap P2 on. `ThreeShellTerminalPluginInfoService` answers `org.autojs.plugin.INFO` with PluginInfo. `WakeActivity` lets the host activate the plugin; the terminal screen is opened through `org.autojs.plugin.TERMINAL_OPEN`. `ThreeShellTerminalExplorerActionService` responds to `org.autojs.plugin.EXPLORER_ACTION` (Explorer Action protocol v23) with the single-directory "Open in terminal" action, which `ThreeShellTerminalExplorerActivity` executes.
 
 ******
 
@@ -201,10 +201,12 @@ _2026/10/07_
 - `Feature` Trust a third-party Node.js Runtime signer: the environment probe lists the SHA-256 of an unofficial signer and offers "Trust this signer"; after a second confirmation new sessions can use its node / npm commands, and "Trusted Node.js signers" in the settings revokes the trust at any time
 - `Feature` Command completion notices: when a command without an interactive shell (for example a script's `exec` with `keepOpen: false`) ends by itself, a notice opens the end of its output to copy, share or reopen a terminal in its directory; notices name only the session and directory, a burst alerts once, and the settings can turn them off
 - `Feature` Terminal colors and font: the settings add "Terminal colors" (follow the light / dark appearance, dark, light, tinted by the theme color) and "Terminal font" (system monospace or the built-in JetBrains Mono without ligatures); the selection overlay and the command output screen use the same font, and returning to the terminal applies the change while the session keeps running
+- `Feature` "Open in terminal" in the file manager directory menu now comes from the plugin (AutoJs6 6.8.0 build 5320 or later): AutoJs6 passes only the path of the selected directory and grants no extra access; the most recent session changes into it, or a new session starts there when none exists; earlier AutoJs6 builds keep showing their own menu item
 - `Fix` On newer Android versions such as Android 17, a long press on the terminal shows the selection handles and the Copy / Select all toolbar again, so text can be selected and copied
 - `Fix` Copying or sharing a very long transcript no longer crashes the plugin (on Android 7.0 the crash ended every session); overly long text keeps its most recent 100000 characters and a notice says so
 - `Dependency` Upgraded the jackpal emulatorview patch 1.0.42-p6.1 -> 1.0.42-p8.1: the plugin sets the renderer typeface, and `Math.ceil` replaces `android.util.FloatMath`, which left the SDK in API 23; every other class is byte-identical and `locks/vendored-aars.lock` is updated
 - `Dependency` Added JetBrains Mono NL 2.304 (SIL Open Font License 1.1) as the optional terminal font, bundled unmodified with its license on the About screen; source and SHA-256 are recorded in `vendor/fonts/jetbrains-mono/`
+- `Dependency` Added `explorer-action-api.aar` (AutoJs6 module `plugin-api/explorer-action-api`, host build 6.8.0 / 5320, MPL 2.0) as the Explorer Action protocol v23 contract for the file manager directory action, hash-locked in `locks/host-api-aars.lock`
 
 #### v1.0.0
 

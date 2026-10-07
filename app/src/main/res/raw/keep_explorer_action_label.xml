@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The host resolves the Explorer Action menu title in this package by name (roadmap P8.1); nothing references it through R. -->
+<resources xmlns:tools="http://schemas.android.com/tools"
+    tools:keep="@string/terminal_explorer_open_in_terminal" />

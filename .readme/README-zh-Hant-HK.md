@@ -52,7 +52,7 @@ AutoJs6 透過 Binder 服務發現外掛, 以顯式 Intent 開啟終端機介面
 
 ******
 
-1.1.0 在獨立終端, 背景工作階段, 互動式指令碼 API 和設定頁面之上, 增加終端配色與字型, 指令完成通知和第三方 Node.js 簽署信任. 完整指令碼 API 需要 AutoJs6 6.8.0 組建 5315 或更新版本; 基礎外掛協定要求組建 5304. 支援 Android 7.0 及以上版本.
+1.1.0 在獨立終端, 背景工作階段, 互動式指令碼 API 和設定頁面之上, 增加終端配色與字型, 指令完成通知和第三方 Node.js 簽署信任. 完整指令碼 API 需要 AutoJs6 6.8.0 組建 5315 或更新版本; 基礎外掛協定要求組建 5304; 檔案管理員目錄選單的外掛入口要求組建 5320. 支援 Android 7.0 及以上版本.
 
 ******
 
@@ -65,7 +65,7 @@ AutoJs6 透過 Binder 服務發現外掛, 以顯式 Intent 開啟終端機介面
 - 多工作階段: 新建, 切換, 關閉與工作階段管理員; 離開介面後工作階段由前景服務保持執行, 通知欄顯示目前目錄與工作階段數並提供 "關閉全部".
 - 終端機介面: 兩列快捷按鍵列 (Esc / Tab / Ctrl / 方向鍵 / 常用符號), 原生文字選取與複製 / 全選, 轉錄複製與分享, 字型大小設定, 貼上與清除畫面; 4 種終端配色 (跟隨外觀 / 深色 / 淺色 / 按主題色著色) 與終端字型 (系統等寬 / 內建無連字的 JetBrains Mono).
 - Node.js 工具鏈: 安裝 Node.js Runtime 外掛 (1.5.0+) 後可用 node / npm / npx / corepack / yarn / pnpm, npm 鏡像來源與 "忽略安裝指令碼" 設定, 以及 npm init / install / 執行指令碼等套件管理選單.
-- AutoJs6 入口: 主頁抽屜開關 (顯示工作階段數, 可關閉全部), 檔案管理員目錄選單與專案工具列的 "在終端機中開啟".
+- AutoJs6 入口: 主頁抽屜開關 (顯示工作階段數, 可關閉全部), 檔案管理員目錄選單與專案工具列的 "在終端機中開啟". 自 AutoJs6 組建 5320 起, 目錄選單項目由外掛經 Explorer Action 協定提供, AutoJs6 只傳遞所選目錄的路徑.
 - 指令碼 API `terminal` (別名 `$terminal`): 工作階段管理, 可見執行 (`exec`, `npm.run`), 以及帶 `output` / `exit` 事件, `write` 與 `waitFor` 的工作階段物件; 每個失敗都是帶穩定 `code` 的 `TerminalError`.
 - 指令完成通知: 不帶互動式 shell 的指令 (例如指令碼以 `keepOpen: false` 呼叫 `exec`) 自行結束時發出通知, 點按查看輸出末尾, 可複製, 分享或在原目錄開啟終端機; 通知只寫工作階段編號與目錄, 不含指令與輸出, 可在設定中關閉.
 - 獨立應用程式: 啟動器圖示直接進入終端機, 設定頁 (外觀跟隨 AutoJs6, 字型大小, 終端配色與字型, npm 鏡像來源, Node.js 整合, 受信任的 Node.js 簽署, 指令完成通知, 所有檔案存取, 清除終端機資料), 關於與發行歷史.
@@ -176,7 +176,7 @@ aidl interface: org.autojs.plugin.terminal.api.ITerminalPlugin
 minimum host build: 5304 (6.8.0)
 ```
 
-`ThreeShellTerminalPluginService` 回應 `org.autojs.plugin.TERMINAL` (category `terminal`), 自路線圖 P2 起實作主程式 terminal-api 契約 `org.autojs.plugin.terminal.api.ITerminalPlugin`. `ThreeShellTerminalPluginInfoService` 以 PluginInfo 回應 `org.autojs.plugin.INFO`. `WakeActivity` 供主程式啟用外掛; 終端機介面經 `org.autojs.plugin.TERMINAL_OPEN` 開啟.
+`ThreeShellTerminalPluginService` 回應 `org.autojs.plugin.TERMINAL` (category `terminal`), 自路線圖 P2 起實作主程式 terminal-api 契約 `org.autojs.plugin.terminal.api.ITerminalPlugin`. `ThreeShellTerminalPluginInfoService` 以 PluginInfo 回應 `org.autojs.plugin.INFO`. `WakeActivity` 供主程式啟用外掛; 終端機介面經 `org.autojs.plugin.TERMINAL_OPEN` 開啟. `ThreeShellTerminalExplorerActionService` 回應 `org.autojs.plugin.EXPLORER_ACTION` (Explorer Action 協定 v23), 宣告單一目錄的 "在終端機中開啟" 動作, 由 `ThreeShellTerminalExplorerActivity` 執行.
 
 ******
 
@@ -201,10 +201,12 @@ _2026/10/07_
 - `新增` 信任第三方 Node.js Runtime 簽署: 環境探測頁對非官方簽署列出 SHA-256 並提供 "信任此簽署", 經二次確認後新工作階段即可使用其 node / npm 指令; 設定頁 "受信任的 Node.js 簽署" 可隨時撤銷
 - `新增` 指令完成通知: 不帶互動式 shell 的指令 (例如指令碼以 `keepOpen: false` 呼叫 `exec`) 自行結束時發出通知, 點按查看輸出末尾, 可複製, 分享或在原目錄開啟終端機; 通知只寫工作階段編號與目錄, 連續多條只提醒一次, 可在設定中關閉
 - `新增` 終端配色與字型: 設定頁新增 "終端配色" (跟隨淺色 / 深色外觀, 深色, 淺色, 按主題色著色) 與 "終端字型" (系統等寬或內建無連字的 JetBrains Mono); 選取層與指令輸出頁也使用同一字型, 返回終端即生效且工作階段保持執行
+- `新增` 檔案管理員目錄選單的 "在終端機中開啟" 改由外掛提供 (AutoJs6 6.8.0 組建 5320 或更新版本): AutoJs6 只傳遞所選目錄的路徑, 不授予額外權限; 最近的工作階段切換到該目錄, 沒有工作階段時在該目錄新建; 更早的 AutoJs6 組建繼續顯示自帶的選單項目
 - `修復` 在 Android 17 等較新系統上, 長按終端後重新顯示選取控點與 "複製 / 全選" 工具列, 文字可以再次選取和複製
 - `修復` 複製或分享很長的終端記錄不再使外掛崩潰 (Android 7.0 上崩潰會結束全部工作階段); 過長時只使用最近的 100000 個字元並給出提示
 - `依賴` 升級 jackpal emulatorview 修補 1.0.42-p6.1 -> 1.0.42-p8.1: 渲染器字型可由外掛設定, 並以 `Math.ceil` 取代 API 23 起已移出 SDK 的 `android.util.FloatMath`; 其餘類別逐位元組不變, `locks/vendored-aars.lock` 已更新
 - `依賴` 附加 JetBrains Mono NL 2.304 (SIL Open Font License 1.1) 作為可選的終端字型, 原樣打包並在關於頁提供授權條款, 來源與 SHA-256 記錄於 `vendor/fonts/jetbrains-mono/`
+- `依賴` 附加 `explorer-action-api.aar` (AutoJs6 模組 `plugin-api/explorer-action-api`, 主程式組建 6.8.0 / 5320, MPL 2.0) 作為 Explorer Action 協定 v23 契約, 用於檔案管理員目錄動作, 並在 `locks/host-api-aars.lock` 中鎖定雜湊
 
 #### v1.0.0
 

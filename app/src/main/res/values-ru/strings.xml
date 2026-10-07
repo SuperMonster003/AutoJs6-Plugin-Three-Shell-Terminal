@@ -99,6 +99,7 @@
     <string name="terminal_copy_transcript">Копировать вывод</string>
     <string name="terminal_directory_inaccessible">%1$s не является доступным каталогом. Сеанс запущен в домашнем каталоге.</string>
     <string name="terminal_error_occurred">Произошла ошибка</string>
+    <string name="terminal_explorer_open_in_terminal">Открыть в терминале</string>
     <string name="terminal_help">Справка</string>
     <string name="terminal_input_tips">Вводите текст прямо в терминале. Нажмите и удерживайте текст, настройте выделение маркерами и выберите Копировать или Выделить все.\nПрокрутите левую область клавиш по горизонтали для доступа к другим символам. CTRL и ALT применяются к следующей клавише.</string>
     <string name="terminal_manager">Диспетчер терминала</string>

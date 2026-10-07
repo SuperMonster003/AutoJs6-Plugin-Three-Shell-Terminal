@@ -52,7 +52,7 @@ AutoJs6 descubre el plugin mediante su servicio Binder, abre la pantalla del ter
 
 ******
 
-La versión 1.1.0 añade colores y fuentes de la terminal, avisos de fin de comando y confianza en firmas de Node.js de terceros al terminal independiente, las sesiones en segundo plano, las API de scripts interactivos y los ajustes. Las API completas requieren AutoJs6 6.8.0 compilación 5315 o posterior; el protocolo básico requiere la compilación 5304. Compatible con Android 7.0 o posterior.
+La versión 1.1.0 añade colores y fuentes de la terminal, avisos de fin de comando y confianza en firmas de Node.js de terceros al terminal independiente, las sesiones en segundo plano, las API de scripts interactivos y los ajustes. Las API completas requieren AutoJs6 6.8.0 compilación 5315 o posterior; el protocolo básico requiere la compilación 5304, y la entrada del plugin en el menú de carpetas del gestor de archivos requiere la compilación 5320. Compatible con Android 7.0 o posterior.
 
 ******
 
@@ -65,7 +65,7 @@ El complemento ofrece las siguientes capacidades:
 - Varias sesiones: crear, cambiar, cerrar y un gestor de sesiones; un servicio en primer plano mantiene las sesiones tras salir de la pantalla y su notificación muestra la carpeta actual y el número de sesiones con la acción "Cerrar sesiones".
 - Pantalla del terminal: barra de teclas de dos filas (Esc / Tab / Ctrl / flechas / símbolos habituales), selección de texto nativa con Copiar / Seleccionar todo, copia y compartición de la transcripción, tamaño del texto, pegar y limpiar; cuatro esquemas de color de la terminal (seguir la apariencia / oscuro / claro / teñido con el color del tema) y la fuente de la terminal (monoespaciada del sistema o JetBrains Mono integrada, sin ligaduras).
 - Cadena Node.js: con el plugin Node.js Runtime (1.5.0+) instalado quedan disponibles node / npm / npx / corepack / yarn / pnpm, junto con los ajustes de registro npm e "ignorar scripts de instalación" y el menú de paquetes (npm init / install / run script y más).
-- Entradas de AutoJs6: el interruptor del cajón de inicio (número de sesiones, cerrar todas), "Abrir en el terminal" en el menú de carpetas del gestor de archivos y en la barra de herramientas del proyecto.
+- Entradas de AutoJs6: el interruptor del cajón de inicio (número de sesiones, cerrar todas), "Abrir en el terminal" en el menú de carpetas del gestor de archivos y en la barra de herramientas del proyecto. Desde la compilación 5320 de AutoJs6, la entrada del menú de carpetas la proporciona el plugin mediante el protocolo Explorer Action, y AutoJs6 solo pasa la ruta de la carpeta seleccionada.
 - API de script `terminal` (alias `$terminal`): gestión de sesiones, ejecución visible (`exec`, `npm.run`) y un objeto de sesión con eventos `output` / `exit`, `write` y `waitFor`; cada fallo es un `TerminalError` con un `code` estable.
 - Avisos de fin de comando: cuando un comando sin shell interactivo (por ejemplo un `exec` de script con `keepOpen: false`) termina por sí mismo, un aviso abre el final de su salida para copiarla, compartirla o reabrir un terminal en su carpeta; el aviso solo indica la sesión y la carpeta, nunca el comando ni la salida, y se puede desactivar en los ajustes.
 - Aplicación independiente: el icono del lanzador abre directamente el terminal; página de ajustes (apariencia que sigue a AutoJs6, tamaño del texto, colores y fuente de la terminal, registro npm, integración Node.js, firmas de Node.js de confianza, avisos de fin de comando, acceso a todos los archivos, borrar datos del terminal), Acerca de e historial de versiones.
@@ -176,7 +176,7 @@ aidl interface: org.autojs.plugin.terminal.api.ITerminalPlugin
 minimum host build: 5304 (6.8.0)
 ```
 
-`ThreeShellTerminalPluginService` responde a `org.autojs.plugin.TERMINAL` (category `terminal`) e implementa el contrato terminal-api del host `org.autojs.plugin.terminal.api.ITerminalPlugin` a partir de la fase P2. `ThreeShellTerminalPluginInfoService` responde a `org.autojs.plugin.INFO` con PluginInfo. `WakeActivity` permite al host activar el plugin; la pantalla del terminal se abre mediante `org.autojs.plugin.TERMINAL_OPEN`.
+`ThreeShellTerminalPluginService` responde a `org.autojs.plugin.TERMINAL` (category `terminal`) e implementa el contrato terminal-api del host `org.autojs.plugin.terminal.api.ITerminalPlugin` a partir de la fase P2. `ThreeShellTerminalPluginInfoService` responde a `org.autojs.plugin.INFO` con PluginInfo. `WakeActivity` permite al host activar el plugin; la pantalla del terminal se abre mediante `org.autojs.plugin.TERMINAL_OPEN`. `ThreeShellTerminalExplorerActionService` responde a `org.autojs.plugin.EXPLORER_ACTION` (protocolo Explorer Action v23) con la acción "Abrir en la terminal" para una sola carpeta, que ejecuta `ThreeShellTerminalExplorerActivity`.
 
 ******
 
@@ -201,10 +201,12 @@ _2026/10/07_
 - `Función` Confiar en la firma de un Node.js Runtime de terceros: el diagnóstico del entorno muestra el SHA-256 de una firma no oficial y ofrece "Confiar en esta firma"; tras una segunda confirmación, las nuevas sesiones pueden usar sus comandos node / npm, y "Firmas de Node.js de confianza" en los ajustes revoca la confianza en cualquier momento
 - `Función` Avisos de fin de comando: cuando un comando sin shell interactivo (por ejemplo un `exec` de script con `keepOpen: false`) termina por sí mismo, un aviso abre el final de su salida para copiarla, compartirla o reabrir un terminal en su carpeta; los avisos solo indican la sesión y la carpeta, una ráfaga alerta una sola vez y los ajustes permiten desactivarlos
 - `Función` Colores y fuente de la terminal: los ajustes añaden "Colores de la terminal" (seguir la apariencia clara / oscura, oscuro, claro, teñido con el color del tema) y "Fuente de la terminal" (monoespaciada del sistema o JetBrains Mono integrada, sin ligaduras); la selección y la pantalla de salida de comandos usan la misma fuente, y volver a la terminal aplica el cambio sin detener la sesión
+- `Función` "Abrir en la terminal" del menú de carpetas del gestor de archivos ahora lo proporciona el plugin (AutoJs6 6.8.0 compilación 5320 o posterior): AutoJs6 pasa solo la ruta de la carpeta seleccionada y no concede acceso adicional; la sesión más reciente cambia a ella, o se inicia allí una nueva sesión si no hay ninguna; las compilaciones anteriores de AutoJs6 siguen mostrando su propia entrada de menú
 - `Corrección` En versiones recientes de Android como Android 17, una pulsación larga en la terminal vuelve a mostrar los controles de selección y la barra Copiar / Seleccionar todo, de modo que el texto se puede seleccionar y copiar
 - `Corrección` Copiar o compartir una transcripción muy larga ya no bloquea el complemento (en Android 7.0 el bloqueo cerraba todas las sesiones); un texto demasiado largo conserva sus últimos 100000 caracteres y un aviso lo indica
 - `Dependencia` Se actualiza el parche de jackpal emulatorview 1.0.42-p6.1 -> 1.0.42-p8.1: el complemento fija la fuente del renderizador y `Math.ceil` sustituye a `android.util.FloatMath`, retirado del SDK desde la API 23; las demás clases son idénticas byte a byte y `locks/vendored-aars.lock` se actualiza
 - `Dependencia` Se añade JetBrains Mono NL 2.304 (SIL Open Font License 1.1) como fuente opcional de la terminal, incluida sin cambios con su licencia en la pantalla Acerca de; el origen y el SHA-256 constan en `vendor/fonts/jetbrains-mono/`
+- `Dependencia` Se añade `explorer-action-api.aar` (módulo de AutoJs6 `plugin-api/explorer-action-api`, compilación del host 6.8.0 / 5320, MPL 2.0) como contrato del protocolo Explorer Action v23 para la acción de carpeta del gestor de archivos, con hash fijado en `locks/host-api-aars.lock`
 
 #### v1.0.0
 

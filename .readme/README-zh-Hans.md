@@ -52,7 +52,7 @@ AutoJs6 通过 Binder 服务发现插件, 以显式 Intent 打开终端界面, �
 
 ******
 
-1.1.0 在独立终端, 后台会话, 交互式脚本 API 和设置页面之上, 增加终端配色与字体, 命令完成通知和第三方 Node.js 签名信任. 完整脚本 API 需要 AutoJs6 6.8.0 构建 5315 或更高版本; 基础插件协议要求构建 5304. 支持 Android 7.0 及以上版本.
+1.1.0 在独立终端, 后台会话, 交互式脚本 API 和设置页面之上, 增加终端配色与字体, 命令完成通知和第三方 Node.js 签名信任. 完整脚本 API 需要 AutoJs6 6.8.0 构建 5315 或更高版本; 基础插件协议要求构建 5304; 文件管理器目录菜单的插件入口要求构建 5320. 支持 Android 7.0 及以上版本.
 
 ******
 
@@ -65,7 +65,7 @@ AutoJs6 通过 Binder 服务发现插件, 以显式 Intent 打开终端界面, �
 - 多会话: 新建, 切换, 关闭与会话管理器; 离开界面后会话由前台服务保持运行, 通知栏显示当前目录与会话数并提供 "关闭全部".
 - 终端界面: 两行快捷键栏 (Esc / Tab / Ctrl / 方向键 / 常用符号), 原生文本选择与复制 / 全选, 转录复制与分享, 字号设置, 粘贴与清屏; 4 种终端配色 (跟随外观 / 深色 / 浅色 / 按主题色着色) 与终端字体 (系统等宽 / 内置无连字的 JetBrains Mono).
 - Node.js 工具链: 安装 Node.js Runtime 插件 (1.5.0+) 后可用 node / npm / npx / corepack / yarn / pnpm, npm 镜像源与 "忽略安装脚本" 设置, 以及 npm init / install / 运行脚本等包管理菜单.
-- AutoJs6 入口: 主页抽屉开关 (显示会话数, 可关闭全部), 文件管理器目录菜单与项目工具栏的 "在终端中打开".
+- AutoJs6 入口: 主页抽屉开关 (显示会话数, 可关闭全部), 文件管理器目录菜单与项目工具栏的 "在终端中打开". 自 AutoJs6 构建 5320 起, 目录菜单项由插件经 Explorer Action 协议提供, AutoJs6 只传递所选目录的路径.
 - 脚本 API `terminal` (别名 `$terminal`): 会话管理, 可见执行 (`exec`, `npm.run`), 以及带 `output` / `exit` 事件, `write` 与 `waitFor` 的会话对象; 每个失败都是带稳定 `code` 的 `TerminalError`.
 - 命令完成通知: 不带交互式 shell 的命令 (例如脚本以 `keepOpen: false` 调用 `exec`) 自行结束时发出通知, 点击查看输出末尾, 可复制, 分享或在原目录打开终端; 通知只写会话编号与目录, 不含命令与输出, 可在设置中关闭.
 - 独立应用: 启动器图标直接进入终端, 设置页 (外观跟随 AutoJs6, 字号, 终端配色与字体, npm 镜像源, Node.js 集成, 受信任的 Node.js 签名, 命令完成通知, 全部文件访问, 清除终端数据), 关于与发行历史.
@@ -176,7 +176,7 @@ aidl interface: org.autojs.plugin.terminal.api.ITerminalPlugin
 minimum host build: 5304 (6.8.0)
 ```
 
-`ThreeShellTerminalPluginService` 响应 `org.autojs.plugin.TERMINAL` (category `terminal`), 自路线图 P2 起实现宿主 terminal-api 契约 `org.autojs.plugin.terminal.api.ITerminalPlugin`. `ThreeShellTerminalPluginInfoService` 以 PluginInfo 响应 `org.autojs.plugin.INFO`. `WakeActivity` 供宿主激活插件; 终端界面经 `org.autojs.plugin.TERMINAL_OPEN` 打开.
+`ThreeShellTerminalPluginService` 响应 `org.autojs.plugin.TERMINAL` (category `terminal`), 自路线图 P2 起实现宿主 terminal-api 契约 `org.autojs.plugin.terminal.api.ITerminalPlugin`. `ThreeShellTerminalPluginInfoService` 以 PluginInfo 响应 `org.autojs.plugin.INFO`. `WakeActivity` 供宿主激活插件; 终端界面经 `org.autojs.plugin.TERMINAL_OPEN` 打开. `ThreeShellTerminalExplorerActionService` 响应 `org.autojs.plugin.EXPLORER_ACTION` (Explorer Action 协议 v23), 声明单个目录的 "在终端中打开" 动作, 由 `ThreeShellTerminalExplorerActivity` 执行.
 
 ******
 
@@ -201,10 +201,12 @@ _2026/10/07_
 - `新增` 信任第三方 Node.js Runtime 签名: 环境探测页对非官方签名列出 SHA-256 并提供 "信任此签名", 经二次确认后新会话即可使用其 node / npm 命令; 设置页 "受信任的 Node.js 签名" 可随时撤销
 - `新增` 命令完成通知: 不带交互式 shell 的命令 (例如脚本以 `keepOpen: false` 调用 `exec`) 自行结束时发出通知, 点击查看输出末尾, 可复制, 分享或在原目录打开终端; 通知只写会话编号与目录, 连续多条只提醒一次, 可在设置中关闭
 - `新增` 终端配色与字体: 设置页新增 "终端配色" (跟随浅色 / 深色外观, 深色, 浅色, 按主题色着色) 与 "终端字体" (系统等宽或内置无连字的 JetBrains Mono); 文本选择层与命令输出页也使用同一字体, 返回终端即生效且会话保持运行
+- `新增` 文件管理器目录菜单的 "在终端中打开" 改由插件提供 (AutoJs6 6.8.0 构建 5320 或更高版本): AutoJs6 只传递所选目录的路径, 不授予额外权限; 最近的会话切换到该目录, 没有会话时在该目录新建; 更早的 AutoJs6 构建继续显示自带的菜单项
 - `修复` 在 Android 17 等较新系统上, 长按终端后重新显示选择手柄与 "复制 / 全选" 工具栏, 文本可以再次选择和复制
 - `修复` 复制或分享很长的终端记录不再使插件崩溃 (Android 7.0 上崩溃会结束全部会话); 超长时只使用最近的 100000 个字符并给出提示
 - `依赖` 升级 jackpal emulatorview 补丁 1.0.42-p6.1 -> 1.0.42-p8.1: 渲染器字体可由插件设置, 并以 `Math.ceil` 取代 API 23 起已移出 SDK 的 `android.util.FloatMath`; 其余类逐字节不变, `locks/vendored-aars.lock` 已更新
 - `依赖` 附加 JetBrains Mono NL 2.304 (SIL Open Font License 1.1) 作为可选的终端字体, 原样打包并在关于页提供许可证, 来源与 SHA-256 记录于 `vendor/fonts/jetbrains-mono/`
+- `依赖` 附加 `explorer-action-api.aar` (AutoJs6 模块 `plugin-api/explorer-action-api`, 宿主构建 6.8.0 / 5320, MPL 2.0) 作为 Explorer Action 协议 v23 契约, 用于文件管理器目录动作, 并在 `locks/host-api-aars.lock` 中锁定哈希
 
 #### v1.0.0
 

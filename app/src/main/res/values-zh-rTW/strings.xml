@@ -99,6 +99,7 @@
     <string name="terminal_copy_transcript">複製終端機記錄</string>
     <string name="terminal_directory_inaccessible">%1$s 不是可存取的目錄. 工作階段已改在主目錄中啟動.</string>
     <string name="terminal_error_occurred">發生錯誤</string>
+    <string name="terminal_explorer_open_in_terminal">在終端機中開啟</string>
     <string name="terminal_help">說明</string>
     <string name="terminal_input_tips">直接在終端機中輸入. 長按文字後可拖動控點調整選取範圍, 並選擇複製或全選.\n左右滑動左側按鍵區域可查看更多符號. CTRL 和 ALT 作用於下一個按鍵.</string>
     <string name="terminal_manager">終端機管理員</string>

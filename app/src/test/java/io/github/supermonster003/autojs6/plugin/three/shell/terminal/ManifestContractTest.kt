@@ -133,7 +133,7 @@ class ManifestContractTest {
         val activities = manifest.child("application").children("activity").map { it.androidAttribute("name") }
         assertEquals(
             listOf(
-                ".WakeActivity", ".ThreeShellTerminalEntryActivity", ".ui.LauncherActivity", ".ui.TerminalActivity", ".ui.TerminalManagerActivity",
+                ".WakeActivity", ".ThreeShellTerminalEntryActivity", ".ThreeShellTerminalExplorerActivity", ".ui.LauncherActivity", ".ui.TerminalActivity", ".ui.TerminalManagerActivity",
                 ".ui.settings.AboutActivity", ".ui.settings.ReleaseHistoryActivity", ".ui.settings.SettingsActivity", ".ui.settings.NodeProbeActivity",
                 ".ui.CommandResultActivity",
             ),
@@ -170,6 +170,34 @@ class ManifestContractTest {
         assertTrue("the host resolves exactly one TERMINAL_OPEN activity", manifest.child("application").children("activity").count { activity ->
             activity.children("intent-filter").any { f -> f.children("action").any { it.androidAttribute("name") == ThreeShellTerminalPlugin.OPEN_TERMINAL_ACTION } }
         } == 1)
+    }
+
+    @Test
+    fun `the Explorer Action directory activity and service follow the host protocol`() {
+        val activity = manifest.child("application").children("activity").single { it.androidAttribute("name") == ".ThreeShellTerminalExplorerActivity" }
+        assertEquals("true", activity.androidAttribute("exported"))
+        assertEquals(PLUGIN_PERMISSION, activity.androidAttribute("permission"))
+        assertEquals("true", activity.androidAttribute("excludeFromRecents"))
+        assertEquals("@android:style/Theme.NoDisplay", activity.androidAttribute("theme"))
+        assertNull("the forwarder joins the file manager's task", activity.androidAttributeOrNull("taskAffinity"))
+        val filter = activity.child("intent-filter")
+        assertEquals(listOf(ThreeShellTerminalPlugin.EXPLORER_EXECUTE_ACTION), filter.children("action").map { it.androidAttribute("name") })
+        assertEquals(listOf("org.autojs.plugin.EXPLORER_ACTION_EXECUTE"), filter.children("action").map { it.androidAttribute("name") })
+        assertEquals(listOf("android.intent.category.DEFAULT"), filter.children("category").map { it.androidAttribute("name") })
+
+        val service = manifest.child("application").children("service").single { it.androidAttribute("name") == EXPLORER_SERVICE }
+        assertEquals("true", service.androidAttribute("exported"))
+        assertEquals("true", service.androidAttribute("enabled"))
+        assertEquals(PLUGIN_PERMISSION, service.androidAttribute("permission"))
+        assertNull(service.androidAttributeOrNull("process"))
+        val serviceFilter = service.child("intent-filter")
+        assertEquals(listOf(ThreeShellTerminalPlugin.EXPLORER_ACTION), serviceFilter.children("action").map { it.androidAttribute("name") })
+        assertEquals(listOf("org.autojs.plugin.EXPLORER_ACTION"), serviceFilter.children("action").map { it.androidAttribute("name") })
+        assertEquals(listOf("android.intent.category.DEFAULT"), serviceFilter.children("category").map { it.androidAttribute("name") })
+        assertTrue(
+            "the plugin center reads requiresHostVersion from the INFO service; the registry reads getInfo().capabilities",
+            service.children("meta-data").isEmpty(),
+        )
     }
 
     @Test
@@ -216,7 +244,7 @@ class ManifestContractTest {
     @Test
     fun `info service and terminal service match the identity constants`() {
         val services = manifest.child("application").children("service").associateBy { it.androidAttribute("name") }
-        assertEquals(setOf(".ThreeShellTerminalPluginInfoService", ".ThreeShellTerminalPluginService", SESSION_SERVICE), services.keys)
+        assertEquals(setOf(".ThreeShellTerminalPluginInfoService", ".ThreeShellTerminalPluginService", EXPLORER_SERVICE, SESSION_SERVICE), services.keys)
 
         val info = services.getValue(".ThreeShellTerminalPluginInfoService")
         assertDiscoveryContract(info, ThreeShellTerminalPlugin.INFO_ACTION)
@@ -249,6 +277,7 @@ class ManifestContractTest {
         val expected = mapOf(
             ".WakeActivity" to PLUGIN_PERMISSION,
             ".ThreeShellTerminalEntryActivity" to PLUGIN_PERMISSION,
+            ".ThreeShellTerminalExplorerActivity" to PLUGIN_PERMISSION,
             ".ui.settings.SettingsActivity" to PLUGIN_PERMISSION,
             ".launcher.AdaptiveLightIconAlias" to null,
             ".launcher.AdaptiveDarkIconAlias" to null,
@@ -256,6 +285,7 @@ class ManifestContractTest {
             ".launcher.TransparentIconAlias" to null,
             ".ThreeShellTerminalPluginInfoService" to PLUGIN_PERMISSION,
             ".ThreeShellTerminalPluginService" to PLUGIN_PERMISSION,
+            EXPLORER_SERVICE to PLUGIN_PERMISSION,
         )
         val components = listOf("activity", "activity-alias", "service", "receiver", "provider")
             .flatMap { manifest.child("application").children(it) }
@@ -300,5 +330,6 @@ class ManifestContractTest {
         const val TOOLS_NAMESPACE = "http://schemas.android.com/tools"
         const val PLUGIN_PERMISSION = "org.autojs.permission.PLUGIN"
         const val SESSION_SERVICE = ".service.ThreeShellTerminalSessionService"
+        const val EXPLORER_SERVICE = ".ThreeShellTerminalExplorerActionService"
     }
 }

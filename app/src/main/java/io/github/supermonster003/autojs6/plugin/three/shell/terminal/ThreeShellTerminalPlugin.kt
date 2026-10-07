@@ -1,6 +1,7 @@
 package io.github.supermonster003.autojs6.plugin.three.shell.terminal
 
 import org.autojs.plugin.common.api.PluginActions
+import org.autojs.plugin.explorer.api.ExplorerActionPluginActions
 import org.autojs.plugin.nodejs.api.NodeJsPluginActions
 import org.autojs.plugin.terminal.api.ITerminalPlugin
 import org.autojs.plugin.terminal.api.TerminalActions
@@ -74,4 +75,29 @@ object ThreeShellTerminalPlugin {
 
     /** Native page alignment of the vendored pty libraries, declared in the manifest (roadmap D14). */
     const val NATIVE_PAGE_ALIGNMENT = 16384
+
+    /**
+     * Explorer Action discovery and launch actions of the file manager's "Open in terminal"
+     * directory action (roadmap P8.1, appendix D Q10), provided by the host `explorer-action-api` AAR.
+     * zh-CN: 文件管理器 "在终端中打开" 目录动作的 Explorer Action 发现与启动 action (P8.1, 附录 D Q10).
+     */
+    const val EXPLORER_ACTION = ExplorerActionPluginActions.EXPLORER_ACTION
+    const val EXPLORER_EXECUTE_ACTION = ExplorerActionPluginActions.EXECUTE
+
+    /** Catalog id of the directory action. zh-CN: 目录动作的目录项 id. */
+    const val EXPLORER_DIRECTORY_ACTION_ID = "three-shell-terminal.open-directory"
+
+    /**
+     * Explorer Action protocol version the catalog declares: v23 is the first in which the host
+     * discloses the canonical path of a single selected directory (`filesystemPath`).
+     * zh-CN: 目录声明的 Explorer Action 协议版本: v23 起宿主披露单个所选目录的规范路径 (`filesystemPath`).
+     */
+    const val EXPLORER_PROTOCOL_VERSION = 23
+
+    /**
+     * First AutoJs6 build that accepts protocol v23 and no longer hard-codes "Open in terminal"
+     * in the directory menu; older hosts never list the action and keep their own menu item.
+     * zh-CN: 首个接受协议 v23 并移除目录菜单硬编码 "在终端中打开" 的宿主构建; 更早的宿主不列出该动作, 保留自身菜单项.
+     */
+    const val EXPLORER_REQUIRED_HOST_VERSION = 5320L
 }

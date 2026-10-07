@@ -41,6 +41,7 @@ import io.github.supermonster003.autojs6.plugin.three.shell.terminal.storage.Sto
 import jackpal.androidterm.emulatorview.ColorScheme
 import org.autojs.plugin.terminal.api.TerminalContract
 import org.autojs.plugin.terminal.api.TerminalErrorCodes
+import java.util.UUID
 import kotlin.math.max
 
 /**
@@ -120,7 +121,14 @@ class TerminalActivity : HostAppearanceActivity() {
         setUpKeyBar()
         setUpBackHandling()
         TerminalSessionManager.addListener(sessionListener)
-        openSession(intent, savedInstanceState?.getString(STATE_SESSION_ID))
+        if (savedInstanceState != null && savedInstanceState.getString(STATE_PROCESS_INSTANCE) != processInstance) {
+            // Android can restore the old task after this process and all its sessions died.
+            // Start a clean shell instead of reusing an old id or replaying the original command.
+            kit.toast(R.string.terminal_session_ended)
+            startSession(null, null)
+        } else {
+            openSession(intent, savedInstanceState?.getString(STATE_SESSION_ID))
+        }
     }
 
     private fun applyPalette() {
@@ -304,6 +312,7 @@ class TerminalActivity : HostAppearanceActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(STATE_SESSION_ID, session?.id)
+        outState.putString(STATE_PROCESS_INSTANCE, processInstance)
     }
 
     /**
@@ -590,6 +599,8 @@ class TerminalActivity : HostAppearanceActivity() {
     companion object {
 
         private const val STATE_SESSION_ID = "session_id"
+        private const val STATE_PROCESS_INSTANCE = "process_instance"
+        private val processInstance = UUID.randomUUID().toString()
         private const val SUBTITLE_REFRESH_DELAY_MILLIS = 800L
 
         private val NPM_MENU_ITEMS = listOf(

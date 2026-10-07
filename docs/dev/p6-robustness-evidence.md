@@ -1,7 +1,7 @@
 # P6 robustness evidence
 
 Recorded on 2026-10-07. The implementation is in `e2a52ae` (development build 32).
-This record distinguishes completed checks from the remaining release acceptance work.
+The final task-restoration refinement and its acceptance were completed on the same date.
 
 ## Implemented fixes
 
@@ -15,6 +15,9 @@ This record distinguishes completed checks from the remaining release acceptance
   APIs available on API 24 and does not introduce an inherited duplicate master descriptor.
 - Resuming a terminal retries foreground protection if background restrictions denied its
   initial start. This was reproduced on Xiaomi API 35 and verified on Xiaomi and Redmi.
+- Saved Activity state identifies its process instance. After process death, restoring the old
+  task starts a fresh HOME shell and shows the existing session-ended notice. It never replays
+  the original command. Same-process recreation still attaches the original session.
 - Test cleanup joins the output reader before checking its termination and always closes
   the owned shell and removes the owned file, retaining the original failure if cleanup fails.
 
@@ -57,14 +60,23 @@ the already running node process producing output. A new plan refreshed command 
 replacement/restoration and provided a usable plain shell after uninstall. The coordinator
 only acted on its own disposable AVD; no physical device's runtime was uninstalled.
 
-## Remaining release acceptance
+## Process termination and final acceptance
 
-- Controlled termination of the actual plugin process, proof that its old children are gone,
-  preservation of private data, and a clean new launch. The prepared API 24 coordinator needs
-  the legacy `ps` format; its first attempt stopped before writing a marker or killing a process.
-- Final signed ABI/universal installation and host acceptance rows in
-  `p6-compat-matrix.md`, including the armv7 package on a compatible physical device.
-- Final API 35 physical performance spot-check after the shared-descriptor implementation.
+The maintainer resumed device work on 2026-10-07. On the owned API 24 AVD, the coordinator
+launched a shell, wrote a uniquely named private marker, went HOME, checked the foreground
+service, then sent SIGKILL to the actual plugin process. The original app and shell disappeared
+from procfs. A single launcher action created a different app process and shell, and the marker
+was unchanged. Removing only that marker and entering `exit` reaped the shell and stopped the
+foreground service when no sessions remained. Recorded PIDs: app 14747 -> 14883, shell
+14839 -> 14924. This is actual process termination, not Activity recreation or force-stop.
 
-The maintainer asked on 2026-10-07 to prioritize work that does not use the shared devices
-while other tasks still need them. These remaining items are intentionally not marked passed.
+The first run exposed a stale restored session ID which finished the screen instead of opening
+a new shell. The process-instance guard fixes that case. The corrected coordinator passed;
+the lifecycle and launcher/entry regression run on API 37.1 reported OK (8 tests), including
+the explicitly skipped opt-in API 24 split-screen case. Original session/rotation behavior
+remained intact. Debug/release lint and JVM tests also passed after this change.
+
+The 13 signed candidate installations and 26 host tests in `p6-compat-matrix.md` passed,
+including the real armv7 process. The final API 35 prompt samples and isolated Node extraction
+are in `p6-performance-evidence.md`. Final Release APKs are rebuilt after committing this
+source and checked again before publication.

@@ -31,7 +31,8 @@
         "La lecture et la reprise de la sortie omettent les lignes vides de remplissage de l'écran, tout en préservant les espaces de l'invite et la séparation avec la sortie suivante",
         "Une session en cours de démarrage pouvait disparaître brièvement des requêtes de l'hôte et empêcher l'ouverture de son terminal",
         "Les sorties continues ne bloquent plus la file de messages du terminal; les fermetures pendant le démarrage et les fins naturelles libèrent les pty et les threads d'entrée-sortie",
-        "Ouvrir un terminal existant retente la protection du service de premier plan si les restrictions en arrière-plan ont empêché son démarrage"
+        "Ouvrir un terminal existant retente la protection du service de premier plan si les restrictions en arrière-plan ont empêché son démarrage",
+        "La réouverture d'une tâche après la fin du processus du plugin crée un nouveau shell sans réexécuter l'ancienne commande"
       ],
       "improvement": [
         "Taille visuelle harmonisée des icônes du lanceur et du Centre de plugins, avec des fonds transparents et des motifs noirs, blancs ou gris neutres",

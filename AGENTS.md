@@ -264,7 +264,7 @@ py .python/generate_launcher_icons.py --check
 
 - 纯文档改动只需前两条; 涉及源码的改动至少跑 JVM 测试与 debug 装配; 涉及 Manifest, Binder, 前台服务, pty 或原生库的改动必须在至少一台真机或 AVD 上跑 instrumentation.
 - Release 前额外执行 `:app:appendDigestToReleasedFiles`, 检查 `releases/` 恰好 5 个已签名 APK 且 CRC32 与内容一致.
-- 性能与资源回归阈值: API 35 真机预热后 10 个会话的首个提示符均 < 500 ms (排除 Node 首次解压); universal APK < 6 MiB, 比已验收版本增加超过 10% 时调查原因. 100 次创建/关闭后终端线程与 pty 必须回收, 总 fd 数不得增加; 100 MiB 输出时读者之间的溢出独立, 主线程心跳间隔 < 2000 ms. 记录设备与当前代码的实测值, 模拟器耗时不能代替真机. 详见 `docs/dev/p6-performance-evidence.md`; 最终真机验收尚待设备空闲后补齐.
+- 性能与资源回归阈值: API 35 真机预热后 10 个会话的首个提示符均 < 500 ms (排除 Node 首次解压); universal APK < 6 MiB, 比已验收版本增加超过 10% 时调查原因. 100 次创建/关闭后终端线程与 pty 必须回收, 总 fd 数不得增加; 100 MiB 输出时读者之间的溢出独立, 主线程心跳间隔 < 2000 ms. 记录设备与当前代码的实测值, 模拟器耗时不能代替真机. 详见 `docs/dev/p6-performance-evidence.md`; 2026-10-07 最终共享描述符实现在 API 35 真机的中位数为 79 ms, 最大值为 103 ms.
 - 任何未执行的验证都在最终说明中明确列出原因.
 
 ## 15. 许可证, 安全与隐私

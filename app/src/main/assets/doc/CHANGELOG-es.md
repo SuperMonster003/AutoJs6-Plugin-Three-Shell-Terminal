@@ -23,6 +23,7 @@
 * `Corrección` Una sesión al iniciarse podía desaparecer brevemente de las consultas del anfitrión e impedir la apertura de su terminal
 * `Corrección` La salida continua ya no bloquea la cola de mensajes del terminal; los cierres durante el inicio y la salida natural del proceso liberan los pty y los hilos de entrada y salida
 * `Corrección` Abrir un terminal existente vuelve a intentar la protección del servicio en primer plano si las restricciones impidieron iniciarlo
+* `Corrección` Al reabrir una tarea tras terminar el proceso del complemento se crea un shell nuevo sin volver a ejecutar el comando anterior
 * `Mejora` Tamaño visual uniforme de los iconos del lanzador y del Centro de complementos, con fondos transparentes y diseños en blanco, negro o grises neutros
 * `Mejora` Los iconos del centro de plugins usan los tamaños, posiciones, imágenes claras y oscuras y fondos circulares ajustados en Icon Studio, conservando fuentes y parámetros reproducibles
 * `Mejora` Los iconos de información de la aplicación de Android comparten las imágenes y los fondos claros y oscuros de Icon Studio, conservando las imágenes transparentes del centro de plugins y las opciones del lanzador

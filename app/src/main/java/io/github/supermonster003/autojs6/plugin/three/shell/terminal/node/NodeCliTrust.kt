@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.content.pm.Signature
 import android.os.Build
+import io.github.supermonster003.autojs6.plugin.three.shell.terminal.core.TerminalPreferences
 import java.security.MessageDigest
 
 /**
@@ -16,6 +17,10 @@ import java.security.MessageDigest
  * Multiple current signers (APK signed by several keys) must all be trusted; a single signer is
  * accepted when it or any key of its rotation lineage is trusted, which is the platform's own
  * notion of "same developer".
+ *
+ * Since roadmap P8 (D34 Q3) the user may also confirm one exact set of current signers for one
+ * package ([UserTrust], [Verdict.UserTrusted]); the confirmation lives in the plugin preferences,
+ * covers neither the lineage nor another package, and can be revoked on the settings page.
  *
  * zh-CN: Node.js 运行时插件的签名信任规则 (路线图 D17): 终端在自身进程内执行该插件的启动器, 因此其签名必须属于
  * 官方 AutoJs6 插件密钥集合 (与宿主 `PluginTrustManager.OFFICIAL_SHA_256` 同值) 或与本插件自身签名一致 (开发构建),
@@ -41,26 +46,39 @@ object NodeCliTrust {
         /** Signed by the same key as this terminal plugin (development builds). zh-CN: 与本插件同一密钥 (开发构建). */
         object Self : Verdict()
 
-        /** Neither; [signers] lists the digests seen, empty when the package has none. zh-CN: 均不是; [signers] 为所见摘要. */
-        data class Untrusted(val signers: List<String>) : Verdict()
+        /** The user confirmed exactly these current signers for this package (roadmap P8). zh-CN: 用户为该包确认了这组当前签名者 (P8). */
+        data class UserTrusted(val current: List<String>) : Verdict()
+
+        /**
+         * Neither; [signers] lists the digests seen (current first, then the lineage), empty when the package has
+         * none, and [current] the current signers a user confirmation would cover.
+         * zh-CN: 均不是; [signers] 为所见摘要 (当前签名者在前, 其后为谱系), [current] 为用户确认所针对的当前签名者.
+         */
+        data class Untrusted(val signers: List<String>, val current: List<String> = signers) : Verdict()
 
         val isTrusted: Boolean get() = this !is Untrusted
     }
 
     /**
      * Pure rule shared with the JVM table test. Digests are compared case-insensitively.
-     * zh-CN: 与 JVM 判定表共用的纯规则; 摘要比较不区分大小写.
+     * [userTrusted] holds the [fingerprint]s the user confirmed for this package; it never widens the
+     * official or own-key rules and only matches the exact current signer set.
+     * zh-CN: 与 JVM 判定表共用的纯规则; 摘要比较不区分大小写. [userTrusted] 为用户为该包确认的 [fingerprint],
+     * 只匹配完全相同的当前签名者集合.
      */
     @JvmStatic
-    fun evaluate(signers: Signers, ownSigners: Set<String>): Verdict {
+    @JvmOverloads
+    fun evaluate(signers: Signers, ownSigners: Set<String>, userTrusted: Set<String> = emptySet()): Verdict {
         val current = signers.current.map(::normalizeDigest).filter { it.isNotEmpty() }
         if (current.isEmpty()) return Verdict.Untrusted(emptyList())
         val own = ownSigners.map(::normalizeDigest).toSet()
         val official = OFFICIAL_SHA_256
+        val confirmed = fingerprint(current) in userTrusted
         if (current.size > 1) {
             return when {
                 current.all { it in official } -> Verdict.Official
                 current.all { it in official || it in own } -> Verdict.Self
+                confirmed -> Verdict.UserTrusted(current)
                 else -> Verdict.Untrusted(current)
             }
         }
@@ -68,19 +86,70 @@ object NodeCliTrust {
         return when {
             candidates.any { it in official } -> Verdict.Official
             candidates.any { it in own } -> Verdict.Self
-            else -> Verdict.Untrusted(candidates)
+            confirmed -> Verdict.UserTrusted(current)
+            else -> Verdict.Untrusted(candidates, current)
         }
     }
 
     /**
-     * Trust verdict for [packageName] against this plugin's own signers.
-     * zh-CN: 以本插件自身签名为参照, 对 [packageName] 的信任判定.
+     * Trust verdict for [packageName] against this plugin's own signers and the user's confirmations.
+     * zh-CN: 以本插件自身签名与用户确认为参照, 对 [packageName] 的信任判定.
      */
     @JvmStatic
     fun verdict(context: Context, packageName: String): Verdict {
         val signers = signersOf(context, packageName) ?: return Verdict.Untrusted(emptyList())
         val own = signersOf(context, context.packageName)?.let { (it.current + it.lineage).toSet() }.orEmpty()
-        return evaluate(signers, own)
+        val confirmed = TerminalPreferences(context).trustedNodeSigners.filter { it.packageName == packageName }.map { it.fingerprint }.toSet()
+        return evaluate(signers, own, confirmed)
+    }
+
+    /** Order-independent key of a current signer set. zh-CN: 当前签名者集合的顺序无关键. */
+    @JvmStatic
+    fun fingerprint(current: List<String>): String =
+        current.map(::normalizeDigest).filter { it.isNotEmpty() }.distinct().sorted().joinToString(",")
+
+    /**
+     * One user confirmation: [packageName] signed by exactly [digests] (normalized, sorted). Stored as
+     * `package|sha256[,sha256]`; malformed values are dropped when read.
+     * zh-CN: 一条用户确认: [packageName] 恰由 [digests] 签名. 存储为 `package|sha256[,sha256]`, 读取时丢弃格式错误的值.
+     */
+    class UserTrust private constructor(val packageName: String, val digests: List<String>) {
+
+        val fingerprint: String get() = digests.joinToString(",")
+
+        fun encode(): String = "$packageName|$fingerprint"
+
+        override fun equals(other: Any?): Boolean = other is UserTrust && other.packageName == packageName && other.digests == digests
+
+        override fun hashCode(): Int = 31 * packageName.hashCode() + digests.hashCode()
+
+        override fun toString(): String = "UserTrust(${encode()})"
+
+        companion object {
+
+            const val MAX_ENTRIES = 8
+            const val MAX_DIGESTS = 4
+            private val PACKAGE = Regex("[A-Za-z][A-Za-z0-9_]*(\\.[A-Za-z][A-Za-z0-9_]*)+")
+            private val DIGEST = Regex("[0-9a-f]{64}")
+
+            /** A valid confirmation, or null for a malformed package name or digest list. zh-CN: 有效的确认, 包名或摘要非法时为 null. */
+            @JvmStatic
+            fun of(packageName: String, digests: List<String>): UserTrust? {
+                val normalized = digests.map(::normalizeDigest).filter { it.isNotEmpty() }.distinct().sorted()
+                if (packageName.length > 255 || !PACKAGE.matches(packageName)) return null
+                if (normalized.isEmpty() || normalized.size > MAX_DIGESTS || !normalized.all(DIGEST::matches)) return null
+                return UserTrust(packageName, normalized)
+            }
+
+            @JvmStatic
+            fun decode(value: String): UserTrust? {
+                val separator = value.indexOf('|')
+                if (separator <= 0) return null
+                return of(value.substring(0, separator), value.substring(separator + 1).split(','))
+            }
+
+        }
+
     }
 
     /**

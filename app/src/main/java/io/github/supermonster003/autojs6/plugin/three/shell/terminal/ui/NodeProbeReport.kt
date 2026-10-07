@@ -2,6 +2,7 @@ package io.github.supermonster003.autojs6.plugin.three.shell.terminal.ui
 
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.node.NodeCliLocator
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.node.NodeCliLocator.Resolution
+import io.github.supermonster003.autojs6.plugin.three.shell.terminal.node.NodeCliTrust
 
 /**
  * Plain-text report of a Node.js launcher resolution for the "Details" dialog and the P5 settings
@@ -27,6 +28,7 @@ internal object NodeProbeReport {
                 appendLine("Result: plugin signer not trusted")
                 appendLine("Plugin: ${resolution.packageName}")
                 appendLine("Signers: ${resolution.signers.joinToString(", ").ifEmpty { "(none)" }}")
+                if (resolution.current != resolution.signers) appendLine("Current signers: ${resolution.current.joinToString(", ").ifEmpty { "(none)" }}")
             }
             is Resolution.Unavailable.PluginTooOld -> {
                 appendLine("Result: plugin has no terminal launcher")
@@ -55,8 +57,16 @@ internal object NodeProbeReport {
         }
     }.trimEnd()
 
+    private fun trust(verdict: NodeCliTrust.Verdict): String = when (verdict) {
+        NodeCliTrust.Verdict.Official -> "official AutoJs6 plugin key"
+        NodeCliTrust.Verdict.Self -> "same key as 3-Shell Terminal"
+        is NodeCliTrust.Verdict.UserTrusted -> "confirmed in the settings (${verdict.current.joinToString(", ")})"
+        is NodeCliTrust.Verdict.Untrusted -> "not trusted"
+    }
+
     private fun StringBuilder.appendLauncher(launcher: NodeCliLocator.Launcher) {
         appendLine("Plugin: ${launcher.packageName} (${launcher.versionCode})")
+        appendLine("Trust: ${trust(launcher.trust)}")
         appendLine("Launcher: ${launcher.executable.path}")
         appendLine("Commands: ${launcher.descriptor.commands.joinToString(", ")}")
         launcher.descriptor.npmVersion?.let { appendLine("npm: $it") }

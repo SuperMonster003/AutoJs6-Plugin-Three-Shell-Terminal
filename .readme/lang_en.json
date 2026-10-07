@@ -53,7 +53,7 @@
     "The Binder service and the screen entry are protected by the `org.autojs.permission.PLUGIN` signature permission and verify the caller signature, so only AutoJs6 can reach them; the launcher entry only opens the terminal and accepts no external command.",
     "The storage permission (\"All files access\" on Android 11+) is only used to enter the directories you choose; the terminal never scans or uploads files.",
     "The `INTERNET` permission is used by the commands you run in the shell (for example `npm install`) and by the manual release check against this plugin's fixed GitHub Releases API; the plugin itself never goes online in the background.",
-    "The launcher of the Node.js Runtime plugin is executed only when its signature is the official one (or matches this plugin); the plugin does not log session input or output and excludes its private storage from backups."
+    "The launcher of the Node.js Runtime plugin is executed only when its signature is the official one, matches this plugin, or was confirmed by you after reviewing its SHA-256 on the environment probe screen (revocable in the settings); the plugin does not log session input or output and excludes its private storage from backups."
   ],
   "p_security_permission": "Only obtain the plugin from the official [Releases]({{ repo_url }}/releases) page or the AutoJs6 plugin center. Packages from unknown sources may fail host verification or carry risks even when the version number looks identical.",
   "h3_plugin_interface": "Plugin Interface",

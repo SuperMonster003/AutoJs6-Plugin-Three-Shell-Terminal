@@ -2,6 +2,7 @@ package io.github.supermonster003.autojs6.plugin.three.shell.terminal.core
 
 import android.content.Context
 import android.content.SharedPreferences
+import io.github.supermonster003.autojs6.plugin.three.shell.terminal.node.NodeCliTrust
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.node.TerminalNodeEnvironment
 
 /**
@@ -63,6 +64,33 @@ class TerminalPreferences(private val preferences: SharedPreferences) {
         set(value) = preferences.edit().putBoolean(KEY_NODE_INTEGRATION_ENABLED, value).apply()
 
     /**
+     * Signer sets the user confirmed for third-party Node.js Runtime builds (roadmap P8, D34 Q3), oldest
+     * first; malformed stored values are ignored.
+     * zh-CN: 用户为第三方 Node.js Runtime 构建确认过的签名集合 (P8, D34 Q3), 旧的在前; 忽略格式错误的存储值.
+     */
+    val trustedNodeSigners: List<NodeCliTrust.UserTrust>
+        get() = preferences.getString(KEY_NODE_TRUSTED_SIGNERS, null).orEmpty()
+            .split('\n').mapNotNull { NodeCliTrust.UserTrust.decode(it.trim()) }.distinct()
+            .take(NodeCliTrust.UserTrust.MAX_ENTRIES)
+
+    /**
+     * Records [trust]; the oldest confirmation makes room once [NodeCliTrust.UserTrust.MAX_ENTRIES] are stored.
+     * zh-CN: 记录 [trust]; 达到上限时移除最旧的确认.
+     */
+    fun addTrustedNodeSigners(trust: NodeCliTrust.UserTrust) {
+        val kept = (trustedNodeSigners - trust).takeLast(NodeCliTrust.UserTrust.MAX_ENTRIES - 1) + trust
+        writeTrustedNodeSigners(kept)
+    }
+
+    fun removeTrustedNodeSigners(trust: NodeCliTrust.UserTrust) = writeTrustedNodeSigners(trustedNodeSigners - trust)
+
+    private fun writeTrustedNodeSigners(values: List<NodeCliTrust.UserTrust>) {
+        preferences.edit().apply {
+            if (values.isEmpty()) remove(KEY_NODE_TRUSTED_SIGNERS) else putString(KEY_NODE_TRUSTED_SIGNERS, values.joinToString("\n") { it.encode() })
+        }.apply()
+    }
+
+    /**
      * Whether the terminal screen already asked for `POST_NOTIFICATIONS` (API 33+, roadmap D15); the
      * request is made once, a refusal only hides the session notification.
      * zh-CN: 终端界面是否已请求过通知权限 (API 33+, D15); 只请求一次, 拒绝仅隐藏会话通知.
@@ -101,6 +129,7 @@ class TerminalPreferences(private val preferences: SharedPreferences) {
         const val KEY_NPM_IGNORE_SCRIPTS = "npm_ignore_scripts"
         const val KEY_NODE_INTEGRATION_ENABLED = "node_integration_enabled"
         const val KEY_NOTIFICATION_PERMISSION_REQUESTED = "notification_permission_requested"
+        const val KEY_NODE_TRUSTED_SIGNERS = "node_trusted_signers"
 
         /** Appearance choices of the settings page (roadmap P5.1), read by `ui.AppearancePreferences`. */
         const val KEY_APPEARANCE_LANGUAGE = "appearance_language"

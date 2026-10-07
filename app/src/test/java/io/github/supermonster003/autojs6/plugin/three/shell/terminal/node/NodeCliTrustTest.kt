@@ -63,6 +63,53 @@ class NodeCliTrustTest {
     }
 
     @Test
+    fun aUserConfirmationCoversExactlyTheConfirmedCurrentSigners() {
+        val confirmed = setOf(NodeCliTrust.fingerprint(listOf(other)))
+        assertEquals(Verdict.UserTrusted(listOf(other)), NodeCliTrust.evaluate(Signers(listOf(other)), ownSigners, confirmed))
+        assertEquals(Verdict.UserTrusted(listOf(other)), NodeCliTrust.evaluate(Signers(listOf(other.uppercase())), ownSigners, confirmed))
+        assertTrue(NodeCliTrust.evaluate(Signers(listOf(other)), ownSigners, confirmed).isTrusted)
+        val elsewhere = "c".repeat(64)
+        assertEquals(Verdict.Untrusted(listOf(elsewhere)), NodeCliTrust.evaluate(Signers(listOf(elsewhere)), ownSigners, confirmed))
+        // A confirmed older key of the lineage does not cover a rotated current key.
+        val rotated = Signers(current = listOf(elsewhere), lineage = listOf(other, elsewhere))
+        val verdict = NodeCliTrust.evaluate(rotated, ownSigners, confirmed)
+        assertEquals(Verdict.Untrusted(listOf(elsewhere, other), listOf(elsewhere)), verdict)
+    }
+
+    @Test
+    fun officialAndOwnKeysTakePrecedenceOverUserConfirmations() {
+        val confirmedEverything = setOf(official, own, other).map { NodeCliTrust.fingerprint(listOf(it)) }.toSet()
+        assertEquals(Verdict.Official, NodeCliTrust.evaluate(Signers(listOf(official)), ownSigners, confirmedEverything))
+        assertEquals(Verdict.Self, NodeCliTrust.evaluate(Signers(listOf(own)), ownSigners, confirmedEverything))
+    }
+
+    @Test
+    fun multiSignedConfirmationsAreOrderIndependentButNeverPartial() {
+        val second = "d".repeat(64)
+        val confirmed = setOf(NodeCliTrust.fingerprint(listOf(second, other)))
+        assertEquals(Verdict.UserTrusted(listOf(other, second)), NodeCliTrust.evaluate(Signers(listOf(other, second)), ownSigners, confirmed))
+        assertEquals(Verdict.Untrusted(listOf(other, second)), NodeCliTrust.evaluate(Signers(listOf(other, second)), ownSigners, setOf(NodeCliTrust.fingerprint(listOf(other)))))
+        assertEquals(NodeCliTrust.fingerprint(listOf(second, other)), NodeCliTrust.fingerprint(listOf(other.uppercase(), second, other)))
+    }
+
+    @Test
+    fun userTrustRecordsAreValidatedAndRoundTrip() {
+        val trust = NodeCliTrust.UserTrust.of("com.example.node", listOf(other.uppercase(), "a1".repeat(32)))!!
+        assertEquals(listOf("a1".repeat(32), other), trust.digests)
+        assertEquals("com.example.node|${"a1".repeat(32)},$other", trust.encode())
+        assertEquals(trust, NodeCliTrust.UserTrust.decode(trust.encode()))
+        val colon = other.chunked(2).joinToString(":")
+        assertEquals(NodeCliTrust.UserTrust.of("com.example.node", listOf(other)), NodeCliTrust.UserTrust.of("com.example.node", listOf(colon)))
+        assertEquals(null, NodeCliTrust.UserTrust.of("node", listOf(other)))
+        assertEquals(null, NodeCliTrust.UserTrust.of("com.example.node|x", listOf(other)))
+        assertEquals(null, NodeCliTrust.UserTrust.of("com.example.node", emptyList()))
+        assertEquals(null, NodeCliTrust.UserTrust.of("com.example.node", listOf("xyz")))
+        assertEquals(null, NodeCliTrust.UserTrust.of("com.example.node", (0 until 5).map { "%064x".format(it) }))
+        assertEquals(null, NodeCliTrust.UserTrust.decode("com.example.node"))
+        assertEquals(null, NodeCliTrust.UserTrust.decode("|$other"))
+    }
+
+    @Test
     fun sha256RendersLowercaseHex() {
         assertEquals("e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", NodeCliTrust.sha256(ByteArray(0)))
     }

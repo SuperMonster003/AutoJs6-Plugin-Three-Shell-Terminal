@@ -1,13 +1,16 @@
 package io.github.supermonster003.autojs6.plugin.three.shell.terminal.ui
 
+import android.content.Intent
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.R
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.core.TerminalSettingsActions
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.node.NodeCliLocator.Resolution
+import io.github.supermonster003.autojs6.plugin.three.shell.terminal.ui.settings.NodeProbeActivity
 
 /**
  * Explains why `node` is unavailable and offers the one action that helps (roadmap D17): install
  * or update the Node.js Runtime plugin (its GitHub Releases page; the AutoJs6 plugin center lists
- * the same package), enable the integration switch, or show the probe report. The npm menu items
+ * the same package), enable the integration switch, open the probe screen for an untrusted signer
+ * (where the user may trust it, roadmap P8), or show the probe report. The npm menu items
  * call [ensureAvailable] so they explain instead of typing a command that cannot run.
  * zh-CN: 说明 `node` 为何不可用并给出唯一有用的动作 (D17): 安装 / 更新 Node.js 运行时插件 (GitHub Release 页,
  * AutoJs6 插件中心列出同一包), 启用集成开关, 或显示探测报告; npm 菜单项先经 [ensureAvailable] 解释原因.
@@ -71,6 +74,10 @@ internal class NodeBanner(
         is Resolution.Unavailable.PluginMissing -> Remedy(activity.getString(R.string.terminal_action_install_node_runtime), ::openRuntimeReleases)
         is Resolution.Unavailable.PluginTooOld -> Remedy(activity.getString(R.string.terminal_action_update_node_runtime), ::openRuntimeReleases)
         is Resolution.Unavailable.IntegrationDisabled -> Remedy(activity.getString(R.string.terminal_action_enable), ::enableIntegration)
+        // The probe screen shows the digests and offers "Trust this signer" (roadmap P8, D34 Q3).
+        is Resolution.Unavailable.PluginNotTrusted -> Remedy(activity.getString(R.string.terminal_action_details)) {
+            ExternalIntents.startSafely(activity, Intent(activity, NodeProbeActivity::class.java))
+        }
         else -> Remedy(activity.getString(R.string.terminal_action_details)) { showProbeDetails(resolution) }
     }
 

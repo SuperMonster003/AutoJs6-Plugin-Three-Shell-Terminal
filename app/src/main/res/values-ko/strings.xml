@@ -55,6 +55,12 @@
     <string name="settings_probe_again">다시 확인</string>
     <string name="settings_section_information">정보</string>
     <string name="settings_source">소스 코드</string>
+    <string name="settings_trusted_signers">신뢰하는 Node.js 서명</string>
+    <string name="settings_trusted_signers_none">공식 키와 이 플러그인의 키만</string>
+    <string name="settings_trusted_signers_revoke">취소</string>
+    <string name="settings_trusted_signers_revoke_confirm">새 세션에서는 더 이상 %1$s의 Node.js 명령을 실행하지 않습니다. 실행 중인 세션은 기존 환경을 유지합니다.</string>
+    <string name="settings_trusted_signers_revoke_title">신뢰를 취소하시겠습니까?</string>
+    <string name="settings_trusted_signers_revoked">신뢰를 취소했습니다. 실행 중인 세션은 기존 환경을 유지합니다</string>
     <string name="terminal_action_close">닫기</string>
     <string name="terminal_action_copy">복사</string>
     <string name="terminal_action_details">세부 정보</string>
@@ -89,6 +95,11 @@
     <string name="terminal_node_plugin_too_old">설치된 Node.js 런타임 플러그인에 터미널 런처가 없습니다. 여기서 node 와 npm 을 사용하려면 플러그인을 업데이트하세요</string>
     <string name="terminal_node_probe">Node.js 런처 확인</string>
     <string name="terminal_node_probe_running" tools:ignore="TypographyEllipsis">Node.js 런처를 확인하는 중...</string>
+    <string name="terminal_node_trust_action">신뢰</string>
+    <string name="terminal_node_trust_confirm">%1$s은(는) AutoJs6 공식 플러그인 키도 3-Shell Terminal의 키도 아닌 키로 서명되었습니다:\n\n%2$s\n\n신뢰하면 터미널이 이 플러그인의 node, npm 등 명령을 3-Shell Terminal의 권한 (모든 파일 액세스와 네트워크 액세스 포함)으로 실행합니다. 이 패키지를 직접 빌드했거나 게시자를 신뢰하는 경우에만 계속하세요. 신뢰는 설정에서 취소할 수 있습니다.</string>
+    <string name="terminal_node_trust_signer">이 서명 신뢰</string>
+    <string name="terminal_node_trust_title">이 서명을 신뢰하시겠습니까?</string>
+    <string name="terminal_node_trusted">서명을 신뢰했습니다. 새 세션에서 node를 사용할 수 있습니다</string>
     <string name="terminal_nodejs">Node.js</string>
     <string name="terminal_npm_ignore_scripts">npm 라이프사이클 스크립트 무시</string>
     <string name="terminal_npm_ignore_scripts_summary">--ignore-scripts 로 npm 을 실행하여 패키지가 설치 훅을 실행하지 못하게 합니다 (네이티브 바이너리는 어차피 여기서 실행할 수 없습니다)</string>
@@ -128,7 +139,7 @@
     <string name="terminal_tips">터미널 도움말</string>
     <string name="terminal_tips_content">셸은 3-Shell Terminal 앱 사용자로 (AutoJs6 가 아닌) 실행되며 자체 홈 디렉터리 (%1$s) 를 가집니다. 키 바에서 Esc / Tab / Ctrl / Alt 와 커서 키를 사용할 수 있고, 화면을 길게 누르면 텍스트를 선택할 수 있으며, 메뉴에서 출력 기록을 복사하거나 공유할 수 있습니다. 터미널을 지원하는 Node.js 런타임 플러그인을 설치하면 node 와 npm 을 사용할 수 있습니다. 터미널을 떠나도 세션과 그 프로세스는 백그라운드에서 계속 실행됩니다 (알림 표시). 메뉴의 \"세션 닫기\" 로 종료할 수 있습니다.</string>
     <string name="terminal_title">터미널</string>
-    <string name="terminal_transfer_truncated">너무 길어서 마지막 %1$d자만 사용했습니다</string>
+    <string name="terminal_transfer_truncated" tools:ignore="PluralsCandidate">너무 길어서 마지막 %1$d자만 사용했습니다</string>
     <string name="terminal_uptime">실행 시간</string>
     <string name="terminal_working_directory">작업 디렉터리</string>
     <string name="theme_picker_custom">사용자 지정 색상</string>

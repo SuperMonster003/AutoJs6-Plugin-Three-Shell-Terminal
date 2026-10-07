@@ -150,7 +150,7 @@ The plugin follows explicit boundaries:
 - The Binder service and the screen entry are protected by the `org.autojs.permission.PLUGIN` signature permission and verify the caller signature, so only AutoJs6 can reach them; the launcher entry only opens the terminal and accepts no external command.
 - The storage permission ("All files access" on Android 11+) is only used to enter the directories you choose; the terminal never scans or uploads files.
 - The `INTERNET` permission is used by the commands you run in the shell (for example `npm install`) and by the manual release check against this plugin's fixed GitHub Releases API; the plugin itself never goes online in the background.
-- The launcher of the Node.js Runtime plugin is executed only when its signature is the official one (or matches this plugin); the plugin does not log session input or output and excludes its private storage from backups.
+- The launcher of the Node.js Runtime plugin is executed only when its signature is the official one, matches this plugin, or was confirmed by you after reviewing its SHA-256 on the environment probe screen (revocable in the settings); the plugin does not log session input or output and excludes its private storage from backups.
 
 Only obtain the plugin from the official [Releases](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/releases) page or the AutoJs6 plugin center. Packages from unknown sources may fail host verification or carry risks even when the version number looks identical.
 
@@ -196,6 +196,7 @@ The plugin's plans and progress are maintained as a checkable list in ROADMAP.md
 
 _2026/10/07_
 
+- `Feature` Trust a third-party Node.js Runtime signer: the environment probe lists the SHA-256 of an unofficial signer and offers "Trust this signer"; after a second confirmation new sessions can use its node / npm commands, and "Trusted Node.js signers" in the settings revokes the trust at any time
 - `Fix` On newer Android versions such as Android 17, a long press on the terminal shows the selection handles and the Copy / Select all toolbar again, so text can be selected and copied
 - `Fix` Copying or sharing a very long transcript no longer crashes the plugin (on Android 7.0 the crash ended every session); overly long text keeps its most recent 100000 characters and a notice says so
 

@@ -17,6 +17,7 @@ import androidx.test.runner.lifecycle.Stage
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.R
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.core.TerminalPreferences
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.core.TerminalSettingsActions
+import io.github.supermonster003.autojs6.plugin.three.shell.terminal.node.NodeCliLocator
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.node.NodeCliState
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.ui.AppearancePreferences
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.ui.TerminalActivity
@@ -69,6 +70,66 @@ class SettingsActivityInstrumentationTest {
         TerminalSettingsActions(context).setNodeIntegration(nodeIntegration)
         appearance.write(context)
         if (LauncherIcons.current(context) != launcherIcon) LauncherIcons.select(context, launcherIcon)
+        NodeProbeActivity.resolverForTest = null
+        TerminalSettingsActions(context).let { actions -> actions.trustedNodeSigners.filter { it.packageName == TEST_PACKAGE }.forEach(actions::revokeNodeSigners) }
+    }
+
+    /**
+     * Roadmap P8 (D34 Q3): an untrusted signer gets "Trust this signer" on the probe screen; the confirmation names
+     * the package and the exact current digest, only the second step stores it, and the settings row revokes it.
+     * The resolution is injected because no third-party signed Node.js Runtime exists on the test devices.
+     */
+    @Test
+    fun anUntrustedSignerCanBeTrustedAfterConfirmationAndRevokedFromTheSettings() {
+        val current = "c".repeat(64)
+        val older = "d".repeat(64)
+        val actions = TerminalSettingsActions(context)
+        NodeProbeActivity.resolverForTest = { _, _, _ ->
+            val trusted = actions.trustedNodeSigners.any { it.packageName == TEST_PACKAGE }
+            if (trusted) NodeCliLocator.Resolution.Unavailable.PluginMissing
+            else NodeCliLocator.Resolution.Unavailable.PluginNotTrusted(TEST_PACKAGE, listOf(current, older), listOf(current))
+        }
+        val probe = launch(Intent(context, NodeProbeActivity::class.java)) as NodeProbeActivity
+        val trust = awaitValue { onMain { probe.scaffold.content.findViewWithTag<View>(NodeProbeActivity.TAG_TRUST)?.takeIf { it.visibility == View.VISIBLE } } }
+        val report = onMain { probe.scaffold.content.findViewWithTag<android.widget.TextView>(NodeProbeActivity.TAG_REPORT).text.toString() }
+        assertTrue(report, report.contains("Current signers: $current"))
+
+        // The first step only asks; Cancel stores nothing.
+        onMain { trust.performClick() }
+        var dialog = awaitValue { onMain { probe.prompt?.takeIf { it.isShowing } } }
+        val message = onMain { dialog.findViewById<android.widget.TextView>(android.R.id.message)?.text.toString() }
+        assertTrue(message, message.contains(TEST_PACKAGE) && message.contains("SHA-256: $current") && !message.contains(older))
+        onMain { dialog.getButton(AlertDialog.BUTTON_NEGATIVE).performClick() }
+        await { onMain { probe.prompt?.isShowing != true } }
+        assertTrue(actions.trustedNodeSigners.none { it.packageName == TEST_PACKAGE })
+
+        // The confirmed second step stores exactly the current signer and re-probes.
+        onMain { trust.performClick() }
+        dialog = awaitValue { onMain { probe.prompt?.takeIf { it.isShowing } } }
+        onMain {
+            assertEquals(context.getString(R.string.terminal_node_trust_action), dialog.getButton(AlertDialog.BUTTON_POSITIVE).text.toString())
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).performClick()
+        }
+        await { actions.trustedNodeSigners.any { it.packageName == TEST_PACKAGE } }
+        assertEquals(listOf(current), actions.trustedNodeSigners.single { it.packageName == TEST_PACKAGE }.digests)
+        await { onMain { trust.visibility == View.GONE } }
+        onMain { probe.finish() }
+
+        // The settings row lists the package and revokes it after choose-then-confirm.
+        val settings = launchSettings()
+        val row = settings.rows.getValue(SettingsActivity.KEY_TRUSTED_SIGNERS)
+        assertTrue(onMain { row.summary.text.toString() }.contains(TEST_PACKAGE))
+        onMain { row.view.performClick() }
+        dialog = awaitPrompt(settings)
+        onMain { dialog.getButton(AlertDialog.BUTTON_POSITIVE).performClick() }
+        dialog = awaitValue { onMain { settings.prompt?.takeIf { it.isShowing && it !== dialog && it.listView == null } } }
+        onMain {
+            assertEquals(context.getString(R.string.settings_trusted_signers_revoke), dialog.getButton(AlertDialog.BUTTON_POSITIVE).text.toString())
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).performClick()
+        }
+        await { actions.trustedNodeSigners.none { it.packageName == TEST_PACKAGE } }
+        await { !onMain { row.summary.text.toString() }.contains(TEST_PACKAGE) }
+        Log.i(TAG, "trust: confirmed $TEST_PACKAGE with one current digest, revoked from the settings")
     }
 
     @Test
@@ -77,7 +138,7 @@ class SettingsActivityInstrumentationTest {
         val expected = listOf(
             SettingsActivity.KEY_LANGUAGE, SettingsActivity.KEY_DARK_MODE, SettingsActivity.KEY_COLOR, SettingsActivity.KEY_LAUNCHER_ICON,
             SettingsActivity.KEY_TEXT_SIZE, SettingsActivity.KEY_REGISTRY, SettingsActivity.KEY_IGNORE_SCRIPTS, SettingsActivity.KEY_NODE_INTEGRATION,
-            SettingsActivity.KEY_NODE_PROBE, SettingsActivity.KEY_STORAGE, SettingsActivity.KEY_CLEAR_DATA,
+            SettingsActivity.KEY_NODE_PROBE, SettingsActivity.KEY_TRUSTED_SIGNERS, SettingsActivity.KEY_STORAGE, SettingsActivity.KEY_CLEAR_DATA,
             SettingsActivity.KEY_UPDATE, SettingsActivity.KEY_HISTORY, SettingsActivity.KEY_ABOUT,
         )
         onMain {
@@ -126,7 +187,7 @@ class SettingsActivityInstrumentationTest {
         }
         await { onMain { !settings.hasUnconfirmedDialogForTest() } }
         assertFalse(onMain { settings.isFinishing })
-        Log.i(TAG, "all 14 rows present; language, theme color and clear-data dialogs cancelled without saving")
+        Log.i(TAG, "all 15 rows present; language, theme color and clear-data dialogs cancelled without saving")
     }
 
     @Test
@@ -304,6 +365,7 @@ class SettingsActivityInstrumentationTest {
 
     private companion object {
         const val TAG = "ThreeShellTerminalSettings"
+        const val TEST_PACKAGE = "io.github.supermonster003.autojs6.plugin.three.shell.terminal.trusttest"
     }
 
 }

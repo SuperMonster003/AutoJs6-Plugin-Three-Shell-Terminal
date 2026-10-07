@@ -150,7 +150,7 @@ console.log(driven.waitFor(/received:AutoJs6/, 15e3));
 - Binder 服务与界面入口受 `org.autojs.permission.PLUGIN` 签名权限保护并校验调用方签名, 只有 AutoJs6 能够访问; 启动器入口只打开终端, 不接收外部命令.
 - 存储权限 (Android 11+ 为 "所有文件访问权限") 只用于进入你选择的目录; 终端不会扫描或上传文件.
 - `INTERNET` 权限由你在 shell 中运行的命令 (如 `npm install`) 使用, 以及手动检查更新时访问本插件固定的 GitHub Releases 接口; 插件自身不在后台联网.
-- Node.js Runtime 插件的启动器只在其签名为官方签名 (或与本插件一致) 时执行; 插件不记录会话输入输出, 并将私有存储排除在备份之外.
+- Node.js Runtime 插件的启动器只在其签名为官方签名, 与本插件一致, 或已由你在环境探测页查看 SHA-256 后确认信任时执行 (可在设置中撤销); 插件不记录会话输入输出, 并将私有存储排除在备份之外.
 
 请只从官方 [Releases](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/releases) 页面或 AutoJs6 插件中心获取插件. 来源不明的安装包即使版本号相同, 也可能无法通过宿主校验或带来风险.
 
@@ -196,6 +196,7 @@ minimum host build: 5304 (6.8.0)
 
 _2026/10/07_
 
+- `新增` 信任第三方 Node.js Runtime 签名: 环境探测页对非官方签名列出 SHA-256 并提供 "信任此签名", 经二次确认后新会话即可使用其 node / npm 命令; 设置页 "受信任的 Node.js 签名" 可随时撤销
 - `修复` 在 Android 17 等较新系统上, 长按终端后重新显示选择手柄与 "复制 / 全选" 工具栏, 文本可以再次选择和复制
 - `修复` 复制或分享很长的终端记录不再使插件崩溃 (Android 7.0 上崩溃会结束全部会话); 超长时只使用最近的 100000 个字符并给出提示
 

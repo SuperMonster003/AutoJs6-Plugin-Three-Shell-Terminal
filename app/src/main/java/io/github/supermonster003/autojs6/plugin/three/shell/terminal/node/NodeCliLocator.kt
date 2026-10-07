@@ -33,12 +33,14 @@ object NodeCliLocator {
     /** Package of the official Node.js Runtime plugin. zh-CN: 官方 Node.js 运行时插件包名. */
     const val OFFICIAL_PLUGIN_PACKAGE = ThreeShellTerminalPlugin.NODEJS_PACKAGE_NAME
 
+    /** [trust] says why the signer was accepted (official key, this plugin's key, or a user confirmation). */
     data class Launcher(
         val packageName: String,
         val versionCode: Long,
         val nativeLibraryDir: String,
         val executable: File,
         val descriptor: NodeCliMetadata.Descriptor,
+        val trust: NodeCliTrust.Verdict = NodeCliTrust.Verdict.Official,
     )
 
     /** An installed runtime service with the package facts the cache key is built from. zh-CN: 已安装的运行时服务及缓存键所需的包信息. */
@@ -63,8 +65,12 @@ object NodeCliLocator {
             /** No enabled runtime plugin service is installed at all. zh-CN: 完全没有已启用的运行时插件. */
             object PluginMissing : Unavailable()
 
-            /** Installed, but signed by neither the official key nor this plugin's key (D17). zh-CN: 已安装但签名既非官方也非本插件 (D17). */
-            data class PluginNotTrusted(val packageName: String, val signers: List<String>) : Unavailable()
+            /**
+             * Installed, but signed by neither the official key nor this plugin's key (D17) and not confirmed by the
+             * user (P8); [current] is the signer set a confirmation would cover.
+             * zh-CN: 已安装但签名既非官方也非本插件 (D17), 也未经用户确认 (P8); [current] 为确认所针对的签名集合.
+             */
+            data class PluginNotTrusted(val packageName: String, val signers: List<String>, val current: List<String> = signers) : Unavailable()
 
             /** The plugin predates the launcher contract. zh-CN: 插件早于启动器契约. */
             data class PluginTooOld(val packageName: String, val reason: String) : Unavailable()
@@ -188,7 +194,7 @@ object NodeCliLocator {
         val packageName = candidate.packageName
         val verdict = NodeCliTrust.verdict(context, packageName)
         if (verdict is NodeCliTrust.Verdict.Untrusted) {
-            return Inspection.Unavailable(Resolution.Unavailable.PluginNotTrusted(packageName, verdict.signers))
+            return Inspection.Unavailable(Resolution.Unavailable.PluginNotTrusted(packageName, verdict.signers, verdict.current))
         }
         val descriptor = when (val parsed = NodeCliMetadata.parse(candidate.serviceInfo.metaData?.toMap())) {
             is NodeCliMetadata.ParseResult.Missing -> return Inspection.Unavailable(Resolution.Unavailable.PluginTooOld(packageName, parsed.reason))
@@ -205,7 +211,7 @@ object NodeCliLocator {
                 ),
             )
         }
-        return Inspection.Ready(Launcher(packageName, candidate.versionCode, nativeLibraryDir, executable, descriptor))
+        return Inspection.Ready(Launcher(packageName, candidate.versionCode, nativeLibraryDir, executable, descriptor, verdict))
     }
 
     /**

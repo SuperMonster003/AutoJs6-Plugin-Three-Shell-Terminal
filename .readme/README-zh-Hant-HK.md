@@ -150,7 +150,7 @@ console.log(driven.waitFor(/received:AutoJs6/, 15e3));
 - Binder 服務與介面入口受 `org.autojs.permission.PLUGIN` 簽署權限保護並驗證呼叫方簽署, 只有 AutoJs6 能夠存取; 啟動器入口只開啟終端機, 不接收外部命令.
 - 儲存權限 (Android 11+ 為 "所有檔案存取權限") 只用於進入你選擇的目錄; 終端機不會掃描或上傳檔案.
 - `INTERNET` 權限由你在 shell 中執行的命令 (如 `npm install`) 使用, 以及手動檢查更新時存取本外掛固定的 GitHub Releases 介面; 外掛自身不在背景連線.
-- Node.js Runtime 外掛的啟動器只在其簽署為官方簽署 (或與本外掛一致) 時執行; 外掛不記錄工作階段輸入輸出, 並將私有儲存排除在備份之外.
+- Node.js Runtime 外掛的啟動器只在其簽署為官方簽署, 與本外掛一致, 或已由你在環境探測頁查看 SHA-256 後確認信任時執行 (可在設定中撤銷); 外掛不記錄工作階段輸入輸出, 並將私有儲存排除在備份之外.
 
 請只從官方 [Releases](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/releases) 頁面或 AutoJs6 外掛中心取得外掛. 來源不明的安裝套件即使版本號相同, 也可能無法通過主程式驗證或帶來風險.
 
@@ -196,6 +196,7 @@ minimum host build: 5304 (6.8.0)
 
 _2026/10/07_
 
+- `新增` 信任第三方 Node.js Runtime 簽署: 環境探測頁對非官方簽署列出 SHA-256 並提供 "信任此簽署", 經二次確認後新工作階段即可使用其 node / npm 指令; 設定頁 "受信任的 Node.js 簽署" 可隨時撤銷
 - `修復` 在 Android 17 等較新系統上, 長按終端後重新顯示選取控點與 "複製 / 全選" 工具列, 文字可以再次選取和複製
 - `修復` 複製或分享很長的終端記錄不再使外掛崩潰 (Android 7.0 上崩潰會結束全部工作階段); 過長時只使用最近的 100000 個字元並給出提示
 

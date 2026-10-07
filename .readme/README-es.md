@@ -150,7 +150,7 @@ El plugin sigue límites explícitos:
 - El servicio Binder y la entrada de pantalla están protegidos por el permiso de firma `org.autojs.permission.PLUGIN` y verifican la firma del llamante, de modo que solo AutoJs6 puede alcanzarlos; la entrada del lanzador solo abre el terminal y no acepta comandos externos.
 - El permiso de almacenamiento ("Acceso a todos los archivos" en Android 11+) se usa únicamente para entrar en las carpetas que elijas; el terminal nunca escanea ni sube archivos.
 - El permiso `INTERNET` lo usan los comandos que ejecutas en el shell (por ejemplo `npm install`) y la comprobación manual de versiones contra la API fija de GitHub Releases de este plugin; el plugin en sí nunca se conecta en segundo plano.
-- El lanzador del plugin Node.js Runtime solo se ejecuta cuando su firma es la oficial (o coincide con la de este plugin); el plugin no registra la entrada ni la salida de las sesiones y excluye su almacenamiento privado de las copias de seguridad.
+- El lanzador del plugin Node.js Runtime solo se ejecuta cuando su firma es la oficial, coincide con la de este plugin o la confirmaste tras revisar su SHA-256 en la pantalla de diagnóstico del entorno (revocable en los ajustes); el plugin no registra la entrada ni la salida de las sesiones y excluye su almacenamiento privado de las copias de seguridad.
 
 Obtenga el plugin únicamente desde la página oficial de [Releases](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/releases) o el centro de plugins de AutoJs6. Los paquetes de origen desconocido pueden fallar la verificación del anfitrión o conllevar riesgos aunque el número de versión parezca idéntico.
 
@@ -196,6 +196,7 @@ Los planes y el progreso del plugin se mantienen como una lista verificable en R
 
 _2026/10/07_
 
+- `Función` Confiar en la firma de un Node.js Runtime de terceros: el diagnóstico del entorno muestra el SHA-256 de una firma no oficial y ofrece "Confiar en esta firma"; tras una segunda confirmación, las nuevas sesiones pueden usar sus comandos node / npm, y "Firmas de Node.js de confianza" en los ajustes revoca la confianza en cualquier momento
 - `Corrección` En versiones recientes de Android como Android 17, una pulsación larga en la terminal vuelve a mostrar los controles de selección y la barra Copiar / Seleccionar todo, de modo que el texto se puede seleccionar y copiar
 - `Corrección` Copiar o compartir una transcripción muy larga ya no bloquea el complemento (en Android 7.0 el bloqueo cerraba todas las sesiones); un texto demasiado largo conserva sus últimos 100000 caracteres y un aviso lo indica
 

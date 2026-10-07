@@ -8,6 +8,7 @@
 
 ###### 2026/10/07
 
+* `Fonctionnalité` Approuver la signature d'un Node.js Runtime tiers: le diagnostic de l'environnement affiche le SHA-256 d'une signature non officielle et propose "Faire confiance à cette signature"; après une seconde confirmation, les nouvelles sessions peuvent utiliser ses commandes node / npm, et "Signatures Node.js approuvées" dans les paramètres révoque la confiance à tout moment
 * `Correctif` Sur les versions récentes d'Android comme Android 17, un appui long sur le terminal affiche de nouveau les poignées de sélection et la barre Copier / Tout sélectionner, le texte peut donc être sélectionné et copié
 * `Correctif` Copier ou partager une très longue transcription ne fait plus planter le plugin (sous Android 7.0, le plantage fermait toutes les sessions); un texte trop long conserve ses 100000 derniers caractères et une notification l'indique
 

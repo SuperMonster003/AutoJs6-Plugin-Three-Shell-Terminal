@@ -150,7 +150,7 @@ Le plugin respecte des limites explicites :
 - Le service Binder et l'entrée d'écran sont protégés par la permission de signature `org.autojs.permission.PLUGIN` et vérifient la signature de l'appelant, donc seul AutoJs6 peut les atteindre ; l'entrée du lanceur ouvre seulement le terminal et n'accepte aucune commande externe.
 - La permission de stockage ("Accès à tous les fichiers" sur Android 11+) sert uniquement à entrer dans les dossiers que vous choisissez ; le terminal n'analyse ni n'envoie jamais de fichiers.
 - La permission `INTERNET` est utilisée par les commandes que vous exécutez dans le shell (par exemple `npm install`) et par la vérification manuelle des versions via l'API GitHub Releases fixe de ce plugin ; le plugin lui-même ne se connecte jamais en arrière-plan.
-- Le lanceur du plugin Node.js Runtime n'est exécuté que si sa signature est l'officielle (ou correspond à ce plugin) ; le plugin ne journalise pas les entrées / sorties des sessions et exclut son stockage privé des sauvegardes.
+- Le lanceur du plugin Node.js Runtime n'est exécuté que si sa signature est l'officielle, correspond à ce plugin ou a été approuvée par vous après vérification de son SHA-256 sur l'écran de diagnostic de l'environnement (révocable dans les paramètres) ; le plugin ne journalise pas les entrées / sorties des sessions et exclut son stockage privé des sauvegardes.
 
 N'obtenez le plugin que depuis la page officielle [Releases](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/releases) ou le centre de plugins d'AutoJs6. Les paquets de sources inconnues peuvent échouer à la vérification de l'hôte ou présenter des risques même lorsque le numéro de version semble identique.
 
@@ -196,6 +196,7 @@ Les plans et l'avancement du plugin sont tenus sous forme de liste cochable dans
 
 _2026/10/07_
 
+- `Fonctionnalité` Approuver la signature d'un Node.js Runtime tiers: le diagnostic de l'environnement affiche le SHA-256 d'une signature non officielle et propose "Faire confiance à cette signature"; après une seconde confirmation, les nouvelles sessions peuvent utiliser ses commandes node / npm, et "Signatures Node.js approuvées" dans les paramètres révoque la confiance à tout moment
 - `Correctif` Sur les versions récentes d'Android comme Android 17, un appui long sur le terminal affiche de nouveau les poignées de sélection et la barre Copier / Tout sélectionner, le texte peut donc être sélectionné et copié
 - `Correctif` Copier ou partager une très longue transcription ne fait plus planter le plugin (sous Android 7.0, le plantage fermait toutes les sessions); un texte trop long conserve ses 100000 derniers caractères et une notification l'indique
 

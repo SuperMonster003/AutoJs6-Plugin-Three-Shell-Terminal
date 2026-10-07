@@ -55,6 +55,12 @@
     <string name="settings_probe_again">Comprobar de nuevo</string>
     <string name="settings_section_information">Información</string>
     <string name="settings_source">Código fuente</string>
+    <string name="settings_trusted_signers">Firmas de Node.js de confianza</string>
+    <string name="settings_trusted_signers_none">Solo la clave oficial y la de este complemento</string>
+    <string name="settings_trusted_signers_revoke">Revocar</string>
+    <string name="settings_trusted_signers_revoke_confirm">Las nuevas sesiones ya no ejecutarán los comandos de Node.js de %1$s. Las sesiones en curso conservan su entorno.</string>
+    <string name="settings_trusted_signers_revoke_title">Revocar la confianza?</string>
+    <string name="settings_trusted_signers_revoked">Confianza revocada. Las sesiones en curso conservan su entorno</string>
     <string name="terminal_action_close">Cerrar</string>
     <string name="terminal_action_copy">Copiar</string>
     <string name="terminal_action_details">Detalles</string>
@@ -89,6 +95,11 @@
     <string name="terminal_node_plugin_too_old">El plugin Node.js Runtime instalado no tiene lanzador de terminal, actualízalo para usar node y npm aquí</string>
     <string name="terminal_node_probe">Comprobación del lanzador de Node.js</string>
     <string name="terminal_node_probe_running" tools:ignore="TypographyEllipsis">Comprobando el lanzador de Node.js...</string>
+    <string name="terminal_node_trust_action">Confiar</string>
+    <string name="terminal_node_trust_confirm">%1$s está firmado con una clave que no es la clave oficial de los complementos de AutoJs6 ni la de 3-Shell Terminal:\n\n%2$s\n\nConfiar en ella permite que la terminal ejecute node, npm y los demás comandos de este complemento con los permisos de 3-Shell Terminal, incluido el acceso a todos los archivos y a la red. Continúa solo si compilaste este paquete tú mismo o confías en su editor. La confianza se puede revocar en los ajustes.</string>
+    <string name="terminal_node_trust_signer">Confiar en esta firma</string>
+    <string name="terminal_node_trust_title">Confiar en esta firma?</string>
+    <string name="terminal_node_trusted">Firma de confianza. Las nuevas sesiones pueden usar node</string>
     <string name="terminal_nodejs">Node.js</string>
     <string name="terminal_npm_ignore_scripts">Ignorar scripts de ciclo de vida de npm</string>
     <string name="terminal_npm_ignore_scripts_summary">Ejecutar npm con --ignore-scripts para que los paquetes no puedan ejecutar hooks de instalación (los binarios nativos no pueden ejecutarse aquí de todos modos)</string>
@@ -128,7 +139,7 @@
     <string name="terminal_tips">Consejos de la terminal</string>
     <string name="terminal_tips_content">El shell se ejecuta como el usuario de la app 3-Shell Terminal (no como AutoJs6) con su propio directorio personal (%1$s). La barra de teclas ofrece Esc / Tab / Ctrl / Alt y las teclas de cursor, una pulsación larga en la pantalla selecciona texto y el menú copia o comparte la transcripción. node y npm estarán disponibles cuando se instale un plugin Node.js Runtime compatible con la terminal. Al salir de la terminal, la sesión y sus procesos siguen ejecutándose en segundo plano (con una notificación); \"Cerrar sesión\" en el menú la termina.</string>
     <string name="terminal_title">Terminal</string>
-    <string name="terminal_transfer_truncated">Texto demasiado largo, solo se usaron los últimos %1$d caracteres</string>
+    <string name="terminal_transfer_truncated" tools:ignore="PluralsCandidate">Texto demasiado largo, solo se usaron los últimos %1$d caracteres</string>
     <string name="terminal_uptime">Tiempo de actividad</string>
     <string name="terminal_working_directory">Directorio de trabajo</string>
     <string name="theme_picker_custom">Color personalizado</string>

@@ -55,6 +55,12 @@
     <string name="settings_probe_again">再確認</string>
     <string name="settings_section_information">情報</string>
     <string name="settings_source">ソースコード</string>
+    <string name="settings_trusted_signers">信頼済みの Node.js 署名</string>
+    <string name="settings_trusted_signers_none">公式の鍵とこのプラグインの鍵のみ</string>
+    <string name="settings_trusted_signers_revoke">取り消す</string>
+    <string name="settings_trusted_signers_revoke_confirm">新しいセッションでは %1$s の Node.js コマンドを実行しなくなります. 実行中のセッションは元の環境を保持します.</string>
+    <string name="settings_trusted_signers_revoke_title">信頼を取り消しますか?</string>
+    <string name="settings_trusted_signers_revoked">信頼を取り消しました. 実行中のセッションは元の環境を保持します</string>
     <string name="terminal_action_close">閉じる</string>
     <string name="terminal_action_copy">コピー</string>
     <string name="terminal_action_details">詳細</string>
@@ -89,6 +95,11 @@
     <string name="terminal_node_plugin_too_old">インストール済みの Node.js ランタイムプラグインにはターミナルランチャーがありません. ここで node と npm を使うにはプラグインを更新してください</string>
     <string name="terminal_node_probe">Node.js ランチャーの確認</string>
     <string name="terminal_node_probe_running" tools:ignore="TypographyEllipsis">Node.js ランチャーを確認しています...</string>
+    <string name="terminal_node_trust_action">信頼する</string>
+    <string name="terminal_node_trust_confirm">%1$s は AutoJs6 公式プラグインの鍵でも 3-Shell Terminal の鍵でもない鍵で署名されています:\n\n%2$s\n\n信頼すると, 端末はこのプラグインの node, npm などのコマンドを 3-Shell Terminal の権限 (すべてのファイルへのアクセスとネットワークアクセスを含む) で実行します. このパッケージを自分でビルドした場合, または発行者を信頼できる場合にのみ続行してください. 信頼は設定で取り消せます.</string>
+    <string name="terminal_node_trust_signer">この署名を信頼</string>
+    <string name="terminal_node_trust_title">この署名を信頼しますか?</string>
+    <string name="terminal_node_trusted">署名を信頼しました. 新しいセッションで node を使用できます</string>
     <string name="terminal_nodejs">Node.js</string>
     <string name="terminal_npm_ignore_scripts">npm ライフサイクルスクリプトを無視</string>
     <string name="terminal_npm_ignore_scripts_summary">--ignore-scripts 付きで npm を実行し, パッケージがインストールフックを実行できないようにします (ネイティブバイナリはここでは元々実行できません)</string>
@@ -128,7 +139,7 @@
     <string name="terminal_tips">ターミナルのヒント</string>
     <string name="terminal_tips_content">シェルは 3-Shell Terminal アプリのユーザーとして (AutoJs6 ではなく) 実行され, 専用のホームディレクトリ (%1$s) を持ちます. キーバーには Esc / Tab / Ctrl / Alt とカーソルキーがあり, 画面を長押しするとテキストを選択でき, メニューから出力ログをコピーまたは共有できます. ターミナル対応の Node.js ランタイムプラグインをインストールすると node と npm が使えるようになります. ターミナルを離れてもセッションとそのプロセスはバックグラウンドで実行を続けます (通知付き). メニューの \"セッションを閉じる\" で終了できます.</string>
     <string name="terminal_title">ターミナル</string>
-    <string name="terminal_transfer_truncated">長すぎるため, 最後の %1$d 文字のみを使用しました</string>
+    <string name="terminal_transfer_truncated" tools:ignore="PluralsCandidate">長すぎるため, 最後の %1$d 文字のみを使用しました</string>
     <string name="terminal_uptime">稼働時間</string>
     <string name="terminal_working_directory">作業ディレクトリ</string>
     <string name="theme_picker_custom">カスタム色</string>

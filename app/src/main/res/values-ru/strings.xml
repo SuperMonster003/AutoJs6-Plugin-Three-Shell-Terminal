@@ -55,6 +55,12 @@
     <string name="settings_probe_again">Проверить снова</string>
     <string name="settings_section_information">Информация</string>
     <string name="settings_source">Исходный код</string>
+    <string name="settings_trusted_signers">Доверенные подписи Node.js</string>
+    <string name="settings_trusted_signers_none">Только официальный ключ и ключ этого плагина</string>
+    <string name="settings_trusted_signers_revoke">Отозвать</string>
+    <string name="settings_trusted_signers_revoke_confirm">Новые сеансы больше не будут запускать команды Node.js из %1$s. Запущенные сеансы сохраняют свое окружение.</string>
+    <string name="settings_trusted_signers_revoke_title">Отозвать доверие?</string>
+    <string name="settings_trusted_signers_revoked">Доверие отозвано. Запущенные сеансы сохраняют свое окружение</string>
     <string name="terminal_action_close">Закрыть</string>
     <string name="terminal_action_copy">Копировать</string>
     <string name="terminal_action_details">Подробности</string>
@@ -89,6 +95,11 @@
     <string name="terminal_node_plugin_too_old">Установленный плагин Node.js Runtime не содержит загрузчика для терминала, обновите его, чтобы использовать здесь node и npm</string>
     <string name="terminal_node_probe">Проверка загрузчика Node.js</string>
     <string name="terminal_node_probe_running" tools:ignore="TypographyEllipsis">Проверка загрузчика Node.js...</string>
+    <string name="terminal_node_trust_action">Доверять</string>
+    <string name="terminal_node_trust_confirm">%1$s подписан ключом, который не является ни официальным ключом плагинов AutoJs6, ни ключом 3-Shell Terminal:\n\n%2$s\n\nДоверие позволит терминалу запускать node, npm и другие команды этого плагина с правами 3-Shell Terminal, включая доступ ко всем файлам и к сети. Продолжайте, только если вы сами собрали этот пакет или доверяете его издателю. Доверие можно отозвать в настройках.</string>
+    <string name="terminal_node_trust_signer">Доверять этой подписи</string>
+    <string name="terminal_node_trust_title">Доверять этой подписи?</string>
+    <string name="terminal_node_trusted">Подпись признана доверенной. Новые сеансы могут использовать node</string>
     <string name="terminal_nodejs">Node.js</string>
     <string name="terminal_npm_ignore_scripts">Игнорировать скрипты жизненного цикла npm</string>
     <string name="terminal_npm_ignore_scripts_summary">Запускать npm с --ignore-scripts, чтобы пакеты не выполняли хуки установки (нативные бинарники здесь все равно не запускаются)</string>
@@ -128,7 +139,7 @@
     <string name="terminal_tips">Подсказки по терминалу</string>
     <string name="terminal_tips_content">Оболочка работает от имени пользователя приложения 3-Shell Terminal (а не AutoJs6) и имеет собственный домашний каталог (%1$s). Панель клавиш содержит Esc / Tab / Ctrl / Alt и клавиши курсора, долгое нажатие на экран выделяет текст, а меню копирует или отправляет вывод. node и npm становятся доступны после установки плагина Node.js Runtime с поддержкой терминала. После выхода из терминала сеанс и его процессы продолжают работать в фоне (с уведомлением); пункт меню \"Закрыть сеанс\" завершает его.</string>
     <string name="terminal_title">Терминал</string>
-    <string name="terminal_transfer_truncated">Текст слишком длинный, использованы только последние %1$d символов</string>
+    <string name="terminal_transfer_truncated" tools:ignore="PluralsCandidate">Текст слишком длинный, использованы только последние %1$d символов</string>
     <string name="terminal_uptime">Время работы</string>
     <string name="terminal_working_directory">Рабочий каталог</string>
     <string name="theme_picker_custom">Свой цвет</string>

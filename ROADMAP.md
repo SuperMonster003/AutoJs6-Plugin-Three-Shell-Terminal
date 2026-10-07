@@ -532,7 +532,7 @@ runtime/api/augment/terminal/           Terminal.kt (AugmentableKey("terminal"))
 - [ ] (插件 + 宿主) Explorer Action v2 目录动作 (D33 / Q6): 插件声明 `TARGET_DIRECTORY` 动作 "在终端中打开", 宿主删除 `menu_dir_options.xml` 的硬编码项与 `ExplorerPageViewHolder` 的分支; 保留项目工具栏与抽屉的 `TerminalLauncher` 路径.
 - [ ] (插件) 配色方案 (至少 深 / 浅 / 跟随主题色 三套) 与等宽字体选择 (系统等宽 / 内置一款 OFL 字体); 字号与配色同步到设置页.
 - [ ] (插件) 命令完成通知: `exec` 的非交互会话退出时发通知 (可在设置关闭); 通知点击打开对应会话.
-- [ ] (插件) Node.js 插件签名的 "信任此签名" 确认流程 (D34 Q3): 探测详情页对非官方签名显示 SHA-256 与确认按钮, 确认后持久化到插件偏好, 设置页可撤销.
+- [x] (插件) Node.js 插件签名的 "信任此签名" 确认流程 (D34 Q3): 探测详情页对非官方签名显示 SHA-256 与确认按钮, 确认后持久化到插件偏好, 设置页可撤销. (SOURCE / JVM / DEVICE 2026-10-07: `NodeCliTrust.Verdict.UserTrusted` 只匹配同一包完全相同的当前签名集合, 官方 / 自身规则优先, 轮换谱系不被覆盖; 偏好 `node_trusted_signers` 最多 8 条, 变更即清除定位器缓存; 终端横幅对未信任签名改为打开环境探测页, 其 "信任此签名" 经列出包名与摘要的破坏性确认后才保存, 设置页新增第 15 行 "受信任的 Node.js 签名" 先选后确认撤销; JVM 186/186; `ui.settings` 包在 API 37 AVD 与 Redmi API 33 各 12/12, Redmi `node` 包 5 通过 + 2 显式跳过; 见 `docs/dev/p8-evidence.md`)
 - [ ] (插件) 多标签页 UI 评估 (当前为多 Activity 实例 + 管理器); 评估结论写入附录 D.
 - [ ] (插件) 共享存储外的 `content://` 目录 (SAF) 评估: 终端只能操作真实路径, 结论预计为不支持, 文档注明.
 

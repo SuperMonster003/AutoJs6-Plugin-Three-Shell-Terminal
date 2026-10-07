@@ -55,6 +55,12 @@
     <string name="settings_probe_again">重新檢測</string>
     <string name="settings_section_information">資訊</string>
     <string name="settings_source">原始碼</string>
+    <string name="settings_trusted_signers">受信任的 Node.js 簽署</string>
+    <string name="settings_trusted_signers_none">僅官方金鑰與本外掛程式的金鑰</string>
+    <string name="settings_trusted_signers_revoke">撤銷</string>
+    <string name="settings_trusted_signers_revoke_confirm">新工作階段將不再執行 %1$s 的 Node.js 指令. 執行中的工作階段保留原有環境.</string>
+    <string name="settings_trusted_signers_revoke_title">撤銷信任?</string>
+    <string name="settings_trusted_signers_revoked">已撤銷信任. 執行中的工作階段保留原有環境</string>
     <string name="terminal_action_close">關閉</string>
     <string name="terminal_action_copy">複製</string>
     <string name="terminal_action_details">詳細資料</string>
@@ -89,6 +95,11 @@
     <string name="terminal_node_plugin_too_old">已安裝的 Node.js 執行階段外掛程式不含終端機啟動器, 更新外掛程式後方可在此使用 node 與 npm</string>
     <string name="terminal_node_probe">Node.js 啟動器檢測</string>
     <string name="terminal_node_probe_running" tools:ignore="TypographyEllipsis">正在檢測 Node.js 啟動器...</string>
+    <string name="terminal_node_trust_action">信任</string>
+    <string name="terminal_node_trust_confirm">%1$s 的簽署金鑰既不是 AutoJs6 官方外掛程式金鑰, 也不是 3-Shell Terminal 的金鑰:\n\n%2$s\n\n信任後, 終端機會以 3-Shell Terminal 的權限 (包括全部檔案存取與網路存取) 執行該外掛程式的 node, npm 等指令. 僅在此套件由你自行建置或你信任其發布者時繼續. 可在設定中撤銷信任.</string>
+    <string name="terminal_node_trust_signer">信任此簽署</string>
+    <string name="terminal_node_trust_title">信任此簽署?</string>
+    <string name="terminal_node_trusted">已信任該簽署. 新工作階段可以使用 node</string>
     <string name="terminal_nodejs">Node.js</string>
     <string name="terminal_npm_ignore_scripts">忽略 npm 生命週期指令碼</string>
     <string name="terminal_npm_ignore_scripts_summary">以 --ignore-scripts 執行 npm, 使套件無法執行安裝掛鉤 (原生二進位檔在此本來也無法執行)</string>
@@ -128,7 +139,7 @@
     <string name="terminal_tips">終端機提示</string>
     <string name="terminal_tips_content">shell 以 3-Shell Terminal 應用程式使用者身分執行 (而非 AutoJs6), 擁有獨立的主目錄 (%1$s). 按鍵列提供 Esc / Tab / Ctrl / Alt 及方向鍵, 長按螢幕可選取文字, 選單可複製或分享終端機記錄. 安裝支援終端機的 Node.js 執行階段外掛程式後即可使用 node 與 npm. 離開終端機後工作階段及其處理程序在背景繼續執行 (帶通知), 選單中的 \"關閉工作階段\" 可將其結束.</string>
     <string name="terminal_title">終端機</string>
-    <string name="terminal_transfer_truncated">內容過長, 僅使用了最後 %1$d 個字元</string>
+    <string name="terminal_transfer_truncated" tools:ignore="PluralsCandidate">內容過長, 僅使用了最後 %1$d 個字元</string>
     <string name="terminal_uptime">執行時間</string>
     <string name="terminal_working_directory">工作目錄</string>
     <string name="theme_picker_custom">自訂色彩</string>

@@ -55,6 +55,12 @@
     <string name="settings_probe_again">Check again</string>
     <string name="settings_section_information">Information</string>
     <string name="settings_source">Source code</string>
+    <string name="settings_trusted_signers">Trusted Node.js signers</string>
+    <string name="settings_trusted_signers_none">Only the official key and the key of this plugin</string>
+    <string name="settings_trusted_signers_revoke">Revoke</string>
+    <string name="settings_trusted_signers_revoke_confirm">New sessions will no longer run the Node.js commands of %1$s. Running sessions keep their environment.</string>
+    <string name="settings_trusted_signers_revoke_title">Revoke trust?</string>
+    <string name="settings_trusted_signers_revoked">Trust revoked. Running sessions keep their environment</string>
     <string name="terminal_action_close">Close</string>
     <string name="terminal_action_copy">Copy</string>
     <string name="terminal_action_details">Details</string>
@@ -89,6 +95,11 @@
     <string name="terminal_node_plugin_too_old">The installed Node.js Runtime plugin has no terminal launcher, update it to use node and npm here</string>
     <string name="terminal_node_probe">Node.js launcher check</string>
     <string name="terminal_node_probe_running" tools:ignore="TypographyEllipsis">Checking the Node.js launcher...</string>
+    <string name="terminal_node_trust_action">Trust</string>
+    <string name="terminal_node_trust_confirm">%1$s is signed by a key that is neither the official AutoJs6 plugin key nor the key of 3-Shell Terminal:\n\n%2$s\n\nTrusting it lets the terminal run node, npm and the other commands of this plugin with the permissions of 3-Shell Terminal, including all files access and network access. Continue only if you built this package yourself or trust its publisher. The trust can be revoked in the settings.</string>
+    <string name="terminal_node_trust_signer">Trust this signer</string>
+    <string name="terminal_node_trust_title">Trust this signer?</string>
+    <string name="terminal_node_trusted">Signer trusted. New sessions can use node</string>
     <string name="terminal_nodejs">Node.js</string>
     <string name="terminal_npm_ignore_scripts">Ignore npm lifecycle scripts</string>
     <string name="terminal_npm_ignore_scripts_summary">Run npm with --ignore-scripts so packages cannot execute install hooks (native binaries cannot run here anyway)</string>
@@ -128,7 +139,7 @@
     <string name="terminal_tips">Terminal tips</string>
     <string name="terminal_tips_content">The shell runs as the 3-Shell Terminal app user (not as AutoJs6) with its own home directory (%1$s). The key bar provides Esc / Tab / Ctrl / Alt and the cursor keys, a long press on the screen selects text, and the menu copies or shares the transcript. node and npm become available once a Node.js Runtime plugin with terminal support is installed. Leaving the terminal keeps the session and its processes running in the background (with a notification); \"Close session\" in the menu ends it.</string>
     <string name="terminal_title">Terminal</string>
-    <string name="terminal_transfer_truncated">Too long to pass on in full; only the last %1$d characters were used</string>
+    <string name="terminal_transfer_truncated" tools:ignore="PluralsCandidate">Too long to pass on in full; only the last %1$d characters were used</string>
     <string name="terminal_uptime">Uptime</string>
     <string name="terminal_working_directory">Working directory</string>
     <string name="theme_picker_custom">Custom color</string>

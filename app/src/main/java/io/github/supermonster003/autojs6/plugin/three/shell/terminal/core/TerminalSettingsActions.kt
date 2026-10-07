@@ -5,6 +5,7 @@ import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.node.NodeCliLocator
+import io.github.supermonster003.autojs6.plugin.three.shell.terminal.node.NodeCliTrust
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.node.TerminalNodeEnvironment
 import java.io.IOException
 import java.util.concurrent.Executors
@@ -26,6 +27,25 @@ class TerminalSettingsActions internal constructor(context: Context, private val
 
     fun setNodeIntegration(enabled: Boolean) {
         preferences.nodeIntegrationEnabled = enabled
+        NodeCliLocator.invalidate()
+    }
+
+    val trustedNodeSigners: List<NodeCliTrust.UserTrust> get() = preferences.trustedNodeSigners
+
+    /**
+     * Records the user's confirmation of [current] for [packageName] (roadmap P8, D34 Q3) after the UI showed the
+     * digests and the consequences; false for a malformed package name or digest list. New sessions pick it up.
+     * zh-CN: 记录用户对 [packageName] 的 [current] 签名的确认 (P8, D34 Q3), 界面须先展示摘要与后果; 非法输入返回 false.
+     */
+    fun trustNodeSigners(packageName: String, current: List<String>): Boolean {
+        val trust = NodeCliTrust.UserTrust.of(packageName, current) ?: return false
+        preferences.addTrustedNodeSigners(trust)
+        NodeCliLocator.invalidate()
+        return true
+    }
+
+    fun revokeNodeSigners(trust: NodeCliTrust.UserTrust) {
+        preferences.removeTrustedNodeSigners(trust)
         NodeCliLocator.invalidate()
     }
 

@@ -289,7 +289,7 @@ runtime/api/augment/terminal/           Terminal.kt (AugmentableKey("terminal"))
 
 建议会话切分: P0 一次 (骨架 + spike); P1 两次 (契约 + 客户端 + 入口改造 + 注册为一次; 删除旧终端 + 数据清理 + changelog + 文档为一次, 维护者已接受短期无终端 (D34 Q7), 两次可连续执行); P2 两到三次 (会话 / 服务 / 存储; Binder 与上限; Node CLI 与包管理); P3 一到两次; P4 两次 (第一 / 二档 + 错误; 第三档会话对象 + 输出管道 + 示例); P5 一到两次; P6 一到两次; P7 一次; P8 按需.
 
-当前进度 (2026-10-07): P0-P6, P7.1 与 P7.2 已完成. P6 签名候选包在四台真机与 API 24 / API 37.1 AVD 的 13 次安装中通过 26 项宿主检查, 包含真机 armv7 与 16 KiB 页. 受控进程终止揭示的旧任务恢复问题已修复并复验; API 35 真机首个提示符中位数 79 ms, 最大值 103 ms. 详细证据见 docs/dev/p6-*.md. 当前进行 P7.3: 构建最终签名包, 验证对应提交的 CI, 发布 v1.0.0 并更新官方索引. 维护者已解除插件发布门控; 宿主推送仍不在本任务范围内.
+当前进度 (2026-10-07): P0-P6 与 P7 的插件发布范围已完成. v1.0.0 (build 35, tag 7af6fc2) 已正式发布, 含 5 个签名 APK 与 SHA-256; 最终设备矩阵 13 次安装 / 26 项宿主检查全部通过, 受控进程终止恢复和云端 API 24 / API 35 检查通过. 官方索引已登记 46 个项目, 本插件的图稿与安装版本一致, Icon Studio 可识别为已发布. 发布证据见 docs/dev/p7-integration-evidence.md. 宿主推送仍按维护者原有门控独立处理. 下次功能开发起点为 P8.
 
 ---
 
@@ -518,10 +518,10 @@ runtime/api/augment/terminal/           Terminal.kt (AugmentableKey("terminal"))
 
 ### P7.3 本地发布 gate
 
-- [ ] (发布) 平台验收构建 (Temurin 参数) + `:app:testDebugUnitTest` + `:app:assembleDebugAndroidTest` + `:app:lintDebug` + `:app:verifyNativePageAlignment` + `:app:appendDigestToReleasedFiles` (5 个签名 APK, CRC32 文件名); `git diff --check`; `VERSION_BUILD == git rev-list --count HEAD`; 工作树干净; 宿主与兄弟仓库同样工作树干净.
-- [ ] (发布, D9 门控) GitHub 仓库 `SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal` (功能性描述, 例如 `Terminal plugin for AutoJs6 with multi-session pty shells and Node.js commands`), 推送, tag `v1.0.0`, Release 附 5 个 APK 与 SHA-256; 维护者明确恢复推送后执行.
-- [ ] (索引, D9 门控) `official-repositories.json` 插入仓库名 (字母序, 计数同步), `release-manifests/io.github.supermonster003.autojs6.plugin.three.shell.terminal/<versionCode>.json` (多产物 `artifacts`), 本地运行生成器验证后提交推送 `main`.
-- [ ] (宿主, D9 门控) 宿主提交 (`feat(terminal): ...` 系列) 推送按维护者指示.
+- [x] (发布) 平台验收构建 (Temurin 参数) + `:app:testDebugUnitTest` + `:app:assembleDebugAndroidTest` + `:app:lintDebug` + `:app:verifyNativePageAlignment` + `:app:appendDigestToReleasedFiles` (5 个签名 APK, CRC32 文件名); `git diff --check`; `VERSION_BUILD == git rev-list --count HEAD`; 工作树干净; 本次涉及的宿主与兄弟仓库改动已提交; 其他会话的在途工作由其独立管理.
+- [x] (发布, D9 门控) GitHub 仓库 `SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal` (功能性描述, 例如 `Terminal plugin for AutoJs6 with multi-session pty shells and Node.js commands`), 推送, tag `v1.0.0`, Release 附 5 个 APK 与 SHA-256; 维护者明确恢复推送后执行.
+- [x] (索引, D9 门控) `official-repositories.json` 插入仓库名 (字母序, 计数同步), `release-manifests/io.github.supermonster003.autojs6.plugin.three.shell.terminal/<versionCode>.json` (多产物 `artifacts`), 本地运行生成器验证后提交推送 `main`.
+- [ ] (宿主, D9 门控) 宿主提交 (`feat(terminal): ...` 系列) 推送按维护者指示. 本轮明确不含宿主推送, 此项保留门控, 不阻塞插件发行.
 
 验收条件: 四个关联仓库已本地提交; 本地 gate 全部通过; 门控条目在解锁前保持未勾选并注明原因.
 
@@ -891,3 +891,11 @@ t.on('exit', code => console.log('done', code));
 - 维护者要求继续设备验收和正式发布. 已完成四台 D32 真机与两台 AVD 的对应 ABI + universal 安装, 并在 Sony G8441 额外验证 armeabi-v7a, 共 13 次签名候选包安装与 26 项宿主检查全部通过. Redmi 修正后的 npx 用例补验通过 1/1.
 - API 24 实际 SIGKILL 进程验收发现 Android 恢复旧任务时沿用失效 session ID. 现以保存的进程实例标识区分旋转与进程重建, 后者新建 HOME shell, 不重放原命令. 旧进程与 shell 已回收, 私有标记保留, 新 shell 正常退出后前台服务停止. API 37.1 生命周期与入口回归通过.
 - 最终共享 pty 描述符实现的 API 35 真机提示符 10 次均 < 500 ms (中位数 79 ms, 最大 103 ms), Node 首次解压 420 ms / 1699 项 / 10068758 字节, 缓存启动 1 ms. P6 全部关闭, P7.3 的正式发布与索引更新继续推进.
+
+
+### 2026-10-07 v1.0.0 published
+
+- 正式版本 v1.0.0 / build 35 已发布, tag 为 7af6fc27984546f0b8032af03c5254a77558c769. 5 个签名 APK 与 SHA256SUMS 上传后的摘要全部匹配本地验收产物.
+- 最终签名包完整复验 13 次安装 / 26 项宿主检查通过; QV770340J7 已安装 universal. 签名包进程终止复验通过, 原进程与子进程回收, 私有文件保留, 新会话可用.
+- 发布提交的构建, API 24 / API 35 完整测试和文档检查通过. API 24 首次运行停滞后已取消并保留日志, 同一提交完整重跑通过, 未缩减测试范围.
+- 官方索引提交 5de2fcd91bc47fce938d90e27d955468df0ba7ed 与生成/CI 验证通过, 库清单 46 项, build 35 的准入记录包含全部产物. 插件与目录图稿一致, Icon Studio 扫描为已发布. P7 本轮发布范围关闭, 宿主推送保留独立门控.

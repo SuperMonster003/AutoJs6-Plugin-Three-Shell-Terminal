@@ -21,6 +21,10 @@ class TerminalPreferencesTest {
         assertEquals("notification_permission_requested", TerminalPreferences.KEY_NOTIFICATION_PERMISSION_REQUESTED)
         assertEquals("node_trusted_signers", TerminalPreferences.KEY_NODE_TRUSTED_SIGNERS)
         assertEquals("command_completion_notifications", TerminalPreferences.KEY_COMMAND_NOTIFICATIONS)
+        assertEquals("terminal_color_scheme", TerminalPreferences.KEY_COLOR_SCHEME)
+        assertEquals(listOf("follow", "dark", "light", "theme"), TerminalPreferences.COLOR_SCHEMES)
+        assertEquals("terminal_font", TerminalPreferences.KEY_FONT)
+        assertEquals(listOf("system", "jetbrains-mono"), TerminalPreferences.FONTS)
         assertEquals(listOf("appearance_language", "appearance_dark_mode", "appearance_color"), TerminalPreferences.APPEARANCE_KEYS)
         assertEquals(
             listOf("manager_status_collapsed", "manager_controls_collapsed", "manager_sessions_collapsed", "manager_settings_collapsed"),

@@ -2,6 +2,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="about_developer">開発者</string>
     <string name="about_developer_page">開発者のページ</string>
+    <string name="about_font_license">JetBrains Mono のライセンス</string>
     <string name="about_jackpal_license">Android-Terminal-Emulator ライセンス</string>
     <string name="about_jackpal_notice">Android-Terminal-Emulator 通知</string>
     <string name="about_summary">バージョン, 開発者, ライセンス</string>
@@ -54,6 +55,11 @@
     <string name="settings_clear_data_confirm">%1$s 以下のターミナルデータをすべて削除しますか? 実行中のセッションは閉じられます.</string>
     <string name="settings_clear_data_summary">ターミナルのホーム, インストール済みパッケージ, npm キャッシュを削除します</string>
     <string name="settings_clearing" tools:ignore="TypographyEllipsis">ターミナルデータを消去しています...</string>
+    <string name="settings_color_scheme">端末の配色</string>
+    <string name="settings_color_scheme_dark">ダーク</string>
+    <string name="settings_color_scheme_follow">ライト / ダークの外観に従う</string>
+    <string name="settings_color_scheme_light">ライト</string>
+    <string name="settings_color_scheme_theme">テーマカラーで色付け</string>
     <string name="settings_command_notifications">コマンド完了の通知</string>
     <string name="settings_command_notifications_summary">対話シェルなしで開始したコマンド (スクリプトの exec など) の終了時に通知し, タップで出力を表示します</string>
     <string name="settings_data_cleared">ターミナルデータを消去しました</string>
@@ -66,6 +72,9 @@
     <string name="settings_probe_again">再確認</string>
     <string name="settings_section_information">情報</string>
     <string name="settings_source">ソースコード</string>
+    <string name="settings_terminal_font">端末のフォント</string>
+    <string name="settings_terminal_font_jetbrains_mono">JetBrains Mono (内蔵)</string>
+    <string name="settings_terminal_font_system">システムの等幅フォント</string>
     <string name="settings_trusted_signers">信頼済みの Node.js 署名</string>
     <string name="settings_trusted_signers_none">公式の鍵とこのプラグインの鍵のみ</string>
     <string name="settings_trusted_signers_revoke">取り消す</string>

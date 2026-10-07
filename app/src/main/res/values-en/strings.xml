@@ -2,6 +2,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="about_developer">Developer</string>
     <string name="about_developer_page">Developer page</string>
+    <string name="about_font_license">JetBrains Mono license</string>
     <string name="about_jackpal_license">Android-Terminal-Emulator license</string>
     <string name="about_jackpal_notice">Android-Terminal-Emulator notice</string>
     <string name="about_summary">Version, developer and licenses</string>
@@ -54,6 +55,11 @@
     <string name="settings_clear_data_confirm">Delete all terminal data under %1$s? Running sessions will be closed.</string>
     <string name="settings_clear_data_summary">Remove the terminal home, installed packages and npm caches</string>
     <string name="settings_clearing" tools:ignore="TypographyEllipsis">Clearing terminal data...</string>
+    <string name="settings_color_scheme">Terminal colors</string>
+    <string name="settings_color_scheme_dark">Dark</string>
+    <string name="settings_color_scheme_follow">Follow light / dark appearance</string>
+    <string name="settings_color_scheme_light">Light</string>
+    <string name="settings_color_scheme_theme">Tinted by the theme color</string>
     <string name="settings_command_notifications">Command completion notifications</string>
     <string name="settings_command_notifications_summary">Notify when a command started without an interactive shell, such as a script\'s exec, finishes; the notice shows its output</string>
     <string name="settings_data_cleared">Terminal data cleared</string>
@@ -66,6 +72,9 @@
     <string name="settings_probe_again">Check again</string>
     <string name="settings_section_information">Information</string>
     <string name="settings_source">Source code</string>
+    <string name="settings_terminal_font">Terminal font</string>
+    <string name="settings_terminal_font_jetbrains_mono">JetBrains Mono (built in)</string>
+    <string name="settings_terminal_font_system">System monospace</string>
     <string name="settings_trusted_signers">Trusted Node.js signers</string>
     <string name="settings_trusted_signers_none">Only the official key and the key of this plugin</string>
     <string name="settings_trusted_signers_revoke">Revoke</string>

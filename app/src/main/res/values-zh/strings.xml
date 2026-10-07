@@ -2,6 +2,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="about_developer">开发者</string>
     <string name="about_developer_page">开发者主页</string>
+    <string name="about_font_license">JetBrains Mono 许可证</string>
     <string name="about_jackpal_license">Android-Terminal-Emulator 许可证</string>
     <string name="about_jackpal_notice">Android-Terminal-Emulator 声明</string>
     <string name="about_summary">版本, 开发者与许可证</string>
@@ -54,6 +55,11 @@
     <string name="settings_clear_data_confirm">删除 %1$s 下的全部终端数据? 运行中的会话将被关闭.</string>
     <string name="settings_clear_data_summary">删除终端主目录, 已安装的包与 npm 缓存</string>
     <string name="settings_clearing" tools:ignore="TypographyEllipsis">正在清除终端数据...</string>
+    <string name="settings_color_scheme">终端配色</string>
+    <string name="settings_color_scheme_dark">深色</string>
+    <string name="settings_color_scheme_follow">跟随浅色 / 深色外观</string>
+    <string name="settings_color_scheme_light">浅色</string>
+    <string name="settings_color_scheme_theme">按主题色着色</string>
     <string name="settings_command_notifications">命令完成通知</string>
     <string name="settings_command_notifications_summary">不带交互式 shell 启动的命令 (例如脚本的 exec) 结束时发出通知, 点击可查看输出</string>
     <string name="settings_data_cleared">终端数据已清除</string>
@@ -66,6 +72,9 @@
     <string name="settings_probe_again">重新检测</string>
     <string name="settings_section_information">信息</string>
     <string name="settings_source">源码</string>
+    <string name="settings_terminal_font">终端字体</string>
+    <string name="settings_terminal_font_jetbrains_mono">JetBrains Mono (内置)</string>
+    <string name="settings_terminal_font_system">系统等宽字体</string>
     <string name="settings_trusted_signers">受信任的 Node.js 签名</string>
     <string name="settings_trusted_signers_none">仅官方密钥与本插件的密钥</string>
     <string name="settings_trusted_signers_revoke">撤销</string>

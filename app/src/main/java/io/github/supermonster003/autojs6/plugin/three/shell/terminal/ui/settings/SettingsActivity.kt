@@ -34,7 +34,7 @@ import java.util.Locale
 /**
  * The standalone settings page (roadmap D29, P5.1; standalone settings specification): the
  * appearance group (language, night mode, theme color, launcher icon, each defaulting to "follow
- * AutoJs6"), the terminal group (text size, npm registry, ignore-scripts, Node.js integration,
+ * AutoJs6"), the terminal group (text size, color scheme and font (P8), npm registry, ignore-scripts, Node.js integration,
  * environment probe, user-trusted Node.js signers and command completion notices (P8), all-files access,
  * clear data) and the information group (update check,
  * version history, About). Every choice dialog follows choose-then-confirm; a change applies at
@@ -131,6 +131,8 @@ class SettingsActivity : HostAppearanceActivity() {
         add(page, KEY_TEXT_SIZE, settingRow(getString(R.string.terminal_text_size), textSizeSummary(), R.drawable.ic_settings_text_size, KEY_TEXT_SIZE) {
             TerminalSettingsDialogs.showTextSize(kit, preferences, onChanged = { rows.getValue(KEY_TEXT_SIZE).setSummary(textSizeSummary()) }, onPrompt = { prompt = it })
         })
+        add(page, KEY_COLOR_SCHEME, settingRow(getString(R.string.settings_color_scheme), colorSchemeSummary(), R.drawable.ic_settings_scheme, KEY_COLOR_SCHEME) { chooseColorScheme() })
+        add(page, KEY_FONT, settingRow(getString(R.string.settings_terminal_font), fontSummary(), R.drawable.ic_settings_font, KEY_FONT) { chooseFont() })
         add(page, KEY_REGISTRY, settingRow(getString(R.string.terminal_npm_registry), registrySummary(), R.drawable.ic_settings_registry, KEY_REGISTRY) {
             TerminalSettingsDialogs.showNpmRegistry(kit, preferences, settingsActions, onChanged = { rows.getValue(KEY_REGISTRY).setSummary(registrySummary()) }, onPrompt = { prompt = it })
         })
@@ -170,6 +172,8 @@ class SettingsActivity : HostAppearanceActivity() {
     /** Values that other screens or the system may have changed while this one was away. */
     private fun refreshSummaries() {
         rows[KEY_TEXT_SIZE]?.setSummary(textSizeSummary())
+        rows[KEY_COLOR_SCHEME]?.setSummary(colorSchemeSummary())
+        rows[KEY_FONT]?.setSummary(fontSummary())
         rows[KEY_REGISTRY]?.setSummary(registrySummary())
         rows[KEY_IGNORE_SCRIPTS]?.setChecked(preferences.npmIgnoreScripts)
         rows[KEY_NODE_INTEGRATION]?.setChecked(preferences.nodeIntegrationEnabled)
@@ -205,6 +209,10 @@ class SettingsActivity : HostAppearanceActivity() {
     private fun launcherIconSummary(): String = getString(LAUNCHER_ICON_LABELS[LauncherIcons.current(this).ordinal])
 
     private fun textSizeSummary(): String = "${preferences.textSizeSp} sp"
+
+    private fun colorSchemeSummary(): String = getString(COLOR_SCHEME_LABELS[TerminalPreferences.COLOR_SCHEMES.indexOf(preferences.colorScheme)])
+
+    private fun fontSummary(): String = getString(FONT_LABELS[TerminalPreferences.FONTS.indexOf(preferences.font)])
 
     private fun registrySummary(): String = when (preferences.npmRegistryChoice) {
         TerminalPreferences.REGISTRY_NPMMIRROR -> getString(R.string.terminal_npm_registry_npmmirror)
@@ -251,6 +259,27 @@ class SettingsActivity : HostAppearanceActivity() {
         value.write(this)
         appearancePreferences = value
         recreate()
+    }
+
+    /**
+     * Terminal colors (roadmap P8); the terminal screens pick the new pair up when they resume, this page has no
+     * terminal surface to repaint.
+     * zh-CN: 终端配色 (P8); 终端界面回到前台时采用新配色, 本页没有需要重绘的终端区域.
+     */
+    private fun chooseColorScheme() {
+        val index = TerminalPreferences.COLOR_SCHEMES.indexOf(preferences.colorScheme).coerceAtLeast(0)
+        prompt = kit.confirmedChoiceDialog(getString(R.string.settings_color_scheme), COLOR_SCHEME_LABELS.map(::getString), index) {
+            preferences.colorScheme = TerminalPreferences.COLOR_SCHEMES[it]
+            rows[KEY_COLOR_SCHEME]?.setSummary(colorSchemeSummary())
+        }
+    }
+
+    private fun chooseFont() {
+        val index = TerminalPreferences.FONTS.indexOf(preferences.font).coerceAtLeast(0)
+        prompt = kit.confirmedChoiceDialog(getString(R.string.settings_terminal_font), FONT_LABELS.map(::getString), index) {
+            preferences.font = TerminalPreferences.FONTS[it]
+            rows[KEY_FONT]?.setSummary(fontSummary())
+        }
     }
 
     private fun chooseLauncherIcon() {
@@ -356,6 +385,8 @@ class SettingsActivity : HostAppearanceActivity() {
         const val KEY_COLOR = "appearance-color"
         const val KEY_LAUNCHER_ICON = "launcher-icon"
         const val KEY_TEXT_SIZE = "terminal-text-size"
+        const val KEY_COLOR_SCHEME = "terminal-color-scheme"
+        const val KEY_FONT = "terminal-font"
         const val KEY_REGISTRY = "terminal-registry"
         const val KEY_IGNORE_SCRIPTS = "terminal-ignore-scripts"
         const val KEY_NODE_INTEGRATION = "terminal-node-integration"
@@ -380,6 +411,14 @@ class SettingsActivity : HostAppearanceActivity() {
         internal val MODE_LABELS: List<Int> = listOf(
             R.string.app_settings_follow_autojs6, R.string.app_settings_follow_system, R.string.app_settings_always_light, R.string.app_settings_always_dark,
         )
+
+        /** Labels in the order of [TerminalPreferences.COLOR_SCHEMES]. */
+        internal val COLOR_SCHEME_LABELS: List<Int> = listOf(
+            R.string.settings_color_scheme_follow, R.string.settings_color_scheme_dark, R.string.settings_color_scheme_light, R.string.settings_color_scheme_theme,
+        )
+
+        /** Labels in the order of [TerminalPreferences.FONTS]. */
+        internal val FONT_LABELS: List<Int> = listOf(R.string.settings_terminal_font_system, R.string.settings_terminal_font_jetbrains_mono)
 
         /** Labels in the order of [LauncherIconMode.entries]. */
         internal val LAUNCHER_ICON_LABELS: List<Int> = listOf(

@@ -2,6 +2,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="about_developer">Desarrollador</string>
     <string name="about_developer_page">Página del desarrollador</string>
+    <string name="about_font_license">Licencia de JetBrains Mono</string>
     <string name="about_jackpal_license">Licencia de Android-Terminal-Emulator</string>
     <string name="about_jackpal_notice">Aviso de Android-Terminal-Emulator</string>
     <string name="about_summary">Versión, desarrollador y licencias</string>
@@ -54,6 +55,11 @@
     <string name="settings_clear_data_confirm">Eliminar todos los datos de la terminal en %1$s? Las sesiones en ejecución se cerrarán.</string>
     <string name="settings_clear_data_summary">Eliminar el directorio personal de la terminal, los paquetes instalados y las cachés de npm</string>
     <string name="settings_clearing" tools:ignore="TypographyEllipsis">Borrando los datos de la terminal...</string>
+    <string name="settings_color_scheme">Colores de la terminal</string>
+    <string name="settings_color_scheme_dark">Oscuro</string>
+    <string name="settings_color_scheme_follow">Seguir la apariencia clara / oscura</string>
+    <string name="settings_color_scheme_light">Claro</string>
+    <string name="settings_color_scheme_theme">Teñido con el color del tema</string>
     <string name="settings_command_notifications">Notificaciones de fin de comando</string>
     <string name="settings_command_notifications_summary">Avisa cuando termina un comando iniciado sin shell interactivo, como el exec de un script; la notificación muestra su salida</string>
     <string name="settings_data_cleared">Datos de la terminal borrados</string>
@@ -66,6 +72,9 @@
     <string name="settings_probe_again">Comprobar de nuevo</string>
     <string name="settings_section_information">Información</string>
     <string name="settings_source">Código fuente</string>
+    <string name="settings_terminal_font">Fuente de la terminal</string>
+    <string name="settings_terminal_font_jetbrains_mono">JetBrains Mono (integrada)</string>
+    <string name="settings_terminal_font_system">Monoespaciada del sistema</string>
     <string name="settings_trusted_signers">Firmas de Node.js de confianza</string>
     <string name="settings_trusted_signers_none">Solo la clave oficial y la de este complemento</string>
     <string name="settings_trusted_signers_revoke">Revocar</string>

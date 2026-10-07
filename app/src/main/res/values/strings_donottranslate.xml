@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="about_component_font" translatable="false">JetBrains Mono NL</string>
+    <string name="about_component_font_summary" translatable="false">2.304, terminal font (SIL Open Font License 1.1)</string>
     <string name="about_component_host_api" translatable="false">AutoJs6 plugin API</string>
     <string name="about_component_host_api_summary" translatable="false">common-plugin-api, nodejs-api, terminal-api (Mozilla Public License 2.0)</string>
     <string name="about_component_jackpal" translatable="false">jackpal Android-Terminal-Emulator</string>

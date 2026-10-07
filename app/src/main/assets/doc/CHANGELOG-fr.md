@@ -10,8 +10,11 @@
 
 * `Fonctionnalité` Approuver la signature d'un Node.js Runtime tiers: le diagnostic de l'environnement affiche le SHA-256 d'une signature non officielle et propose "Faire confiance à cette signature"; après une seconde confirmation, les nouvelles sessions peuvent utiliser ses commandes node / npm, et "Signatures Node.js approuvées" dans les paramètres révoque la confiance à tout moment
 * `Fonctionnalité` Notifications de fin de commande: lorsqu'une commande sans shell interactif (par exemple un `exec` de script avec `keepOpen: false`) se termine d'elle-même, une notification ouvre la fin de sa sortie pour la copier, la partager ou rouvrir un terminal dans son dossier; les notifications ne citent que la session et le dossier, une rafale n'alerte qu'une fois, et les réglages permettent de les désactiver
+* `Fonctionnalité` Couleurs et police du terminal: les réglages ajoutent "Couleurs du terminal" (suivre l'apparence claire / sombre, sombre, clair, teinté par la couleur du thème) et "Police du terminal" (chasse fixe du système ou JetBrains Mono intégrée, sans ligatures); la sélection et l'écran de sortie des commandes utilisent la même police, et le retour au terminal applique le changement sans interrompre la session
 * `Correctif` Sur les versions récentes d'Android comme Android 17, un appui long sur le terminal affiche de nouveau les poignées de sélection et la barre Copier / Tout sélectionner, le texte peut donc être sélectionné et copié
 * `Correctif` Copier ou partager une très longue transcription ne fait plus planter le plugin (sous Android 7.0, le plantage fermait toutes les sessions); un texte trop long conserve ses 100000 derniers caractères et une notification l'indique
+* `Dépendance` Mise à niveau du correctif jackpal emulatorview 1.0.42-p6.1 -> 1.0.42-p8.1: le plugin choisit la police du moteur de rendu, et `Math.ceil` remplace `android.util.FloatMath`, retiré du SDK depuis l'API 23; toutes les autres classes sont identiques octet par octet et `locks/vendored-aars.lock` est mis à jour
+* `Dépendance` Ajout de JetBrains Mono NL 2.304 (SIL Open Font License 1.1) comme police facultative du terminal, intégrée sans modification avec sa licence dans l'écran À propos; la source et le SHA-256 sont consignés dans `vendor/fonts/jetbrains-mono/`
 
 # v1.0.0
 

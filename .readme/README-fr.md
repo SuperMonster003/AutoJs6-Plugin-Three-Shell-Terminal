@@ -52,7 +52,7 @@ AutoJs6 découvre le plugin via son service Binder, ouvre l'écran du terminal p
 
 ******
 
-La version 1.0.0 fournit un terminal autonome, des sessions en arrière-plan, des API de script interactives et les réglages. Les API complètes exigent AutoJs6 6.8.0 build 5315 ou ultérieur; le protocole de base exige le build 5304. Android 7.0 ou ultérieur est pris en charge.
+La version 1.1.0 ajoute les couleurs et polices du terminal, les notifications de fin de commande et l'approbation de signatures Node.js tierces au terminal autonome, aux sessions en arrière-plan, aux API de script interactives et aux réglages. Les API complètes exigent AutoJs6 6.8.0 build 5315 ou ultérieur; le protocole de base exige le build 5304. Android 7.0 ou ultérieur est pris en charge.
 
 ******
 
@@ -63,12 +63,12 @@ La version 1.0.0 fournit un terminal autonome, des sessions en arrière-plan, de
 Le plugin fournit les capacités suivantes:
 
 - Sessions multiples : création, bascule, fermeture et gestionnaire de sessions ; un service au premier plan maintient les sessions après avoir quitté l'écran, et sa notification affiche le dossier courant et le nombre de sessions avec une action "Fermer les sessions".
-- Écran du terminal : barre de touches sur deux lignes (Esc / Tab / Ctrl / flèches / symboles courants), sélection de texte native avec Copier / Tout sélectionner, copie et partage de la transcription, taille du texte, coller et effacer.
+- Écran du terminal : barre de touches sur deux lignes (Esc / Tab / Ctrl / flèches / symboles courants), sélection de texte native avec Copier / Tout sélectionner, copie et partage de la transcription, taille du texte, coller et effacer ; quatre jeux de couleurs du terminal (suivre l'apparence / sombre / clair / teinté par la couleur du thème) et la police du terminal (chasse fixe du système ou JetBrains Mono intégrée, sans ligatures).
 - Chaîne Node.js : avec le plugin Node.js Runtime (1.5.0+), node / npm / npx / corepack / yarn / pnpm deviennent disponibles, avec les réglages de registre npm et "ignorer les scripts d'installation" et le menu de paquets (npm init / install / run script, etc.).
 - Entrées AutoJs6 : l'interrupteur du tiroir d'accueil (nombre de sessions, tout fermer), "Ouvrir dans le terminal" dans le menu des dossiers du gestionnaire de fichiers et la barre d'outils du projet.
 - API de script `terminal` (alias `$terminal`) : gestion des sessions, exécution visible (`exec`, `npm.run`) et objet session avec événements `output` / `exit`, `write` et `waitFor` ; chaque échec est une `TerminalError` au `code` stable.
 - Notifications de fin de commande : lorsqu'une commande sans shell interactif (par exemple un `exec` de script avec `keepOpen: false`) se termine d'elle-même, une notification ouvre la fin de sa sortie pour la copier, la partager ou rouvrir un terminal dans son dossier ; la notification ne cite que la session et le dossier, jamais la commande ni la sortie, et peut être désactivée dans les réglages.
-- Application autonome : l'icône du lanceur ouvre directement le terminal ; page de réglages (apparence suivant AutoJs6, taille du texte, registre npm, intégration Node.js, signatures Node.js approuvées, notifications de fin de commande, accès à tous les fichiers, effacer les données du terminal), À propos et historique des versions.
+- Application autonome : l'icône du lanceur ouvre directement le terminal ; page de réglages (apparence suivant AutoJs6, taille du texte, couleurs et police du terminal, registre npm, intégration Node.js, signatures Node.js approuvées, notifications de fin de commande, accès à tous les fichiers, effacer les données du terminal), À propos et historique des versions.
 
 ******
 
@@ -199,8 +199,11 @@ _2026/10/07_
 
 - `Fonctionnalité` Approuver la signature d'un Node.js Runtime tiers: le diagnostic de l'environnement affiche le SHA-256 d'une signature non officielle et propose "Faire confiance à cette signature"; après une seconde confirmation, les nouvelles sessions peuvent utiliser ses commandes node / npm, et "Signatures Node.js approuvées" dans les paramètres révoque la confiance à tout moment
 - `Fonctionnalité` Notifications de fin de commande: lorsqu'une commande sans shell interactif (par exemple un `exec` de script avec `keepOpen: false`) se termine d'elle-même, une notification ouvre la fin de sa sortie pour la copier, la partager ou rouvrir un terminal dans son dossier; les notifications ne citent que la session et le dossier, une rafale n'alerte qu'une fois, et les réglages permettent de les désactiver
+- `Fonctionnalité` Couleurs et police du terminal: les réglages ajoutent "Couleurs du terminal" (suivre l'apparence claire / sombre, sombre, clair, teinté par la couleur du thème) et "Police du terminal" (chasse fixe du système ou JetBrains Mono intégrée, sans ligatures); la sélection et l'écran de sortie des commandes utilisent la même police, et le retour au terminal applique le changement sans interrompre la session
 - `Correctif` Sur les versions récentes d'Android comme Android 17, un appui long sur le terminal affiche de nouveau les poignées de sélection et la barre Copier / Tout sélectionner, le texte peut donc être sélectionné et copié
 - `Correctif` Copier ou partager une très longue transcription ne fait plus planter le plugin (sous Android 7.0, le plantage fermait toutes les sessions); un texte trop long conserve ses 100000 derniers caractères et une notification l'indique
+- `Dépendance` Mise à niveau du correctif jackpal emulatorview 1.0.42-p6.1 -> 1.0.42-p8.1: le plugin choisit la police du moteur de rendu, et `Math.ceil` remplace `android.util.FloatMath`, retiré du SDK depuis l'API 23; toutes les autres classes sont identiques octet par octet et `locks/vendored-aars.lock` est mis à jour
+- `Dépendance` Ajout de JetBrains Mono NL 2.304 (SIL Open Font License 1.1) comme police facultative du terminal, intégrée sans modification avec sa licence dans l'écran À propos; la source et le SHA-256 sont consignés dans `vendor/fonts/jetbrains-mono/`
 
 #### v1.0.0
 

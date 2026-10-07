@@ -30,3 +30,9 @@ app/src/main/res/raw/keep_icon_studio_application.xml text eol=lf
 # The patched emulatorview rebuild checks exact source bytes on every platform.
 vendor/emulatorview/** text eol=lf
 vendor/emulatorview/**/*.aar binary
+
+# The bundled terminal font and its license are packaged byte for byte (roadmap P8).
+*.ttf binary
+vendor/fonts/**/*.txt text eol=lf
+vendor/fonts/**/*.md text eol=lf
+vendor/fonts/**/*.json text eol=lf

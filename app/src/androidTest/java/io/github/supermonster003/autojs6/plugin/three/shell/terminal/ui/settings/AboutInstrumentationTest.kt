@@ -83,6 +83,7 @@ class AboutInstrumentationTest {
             BundledDocument.NOTICES to "Third-party notices",
             BundledDocument.JACKPAL_LICENSE to "Apache License",
             BundledDocument.JACKPAL_NOTICE to "Android Open Source Project",
+            BundledDocument.FONT_LICENSE to "SIL OPEN FONT LICENSE Version 1.1",
         )
         markers.forEach { (document, marker) ->
             val screen = launch(ReleaseHistoryActivity.intent(context, document)) as ReleaseHistoryActivity

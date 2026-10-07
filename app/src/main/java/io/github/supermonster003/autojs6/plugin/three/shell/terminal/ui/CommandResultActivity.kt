@@ -2,7 +2,6 @@ package io.github.supermonster003.autojs6.plugin.three.shell.terminal.ui
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Typeface
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
@@ -51,7 +50,7 @@ class CommandResultActivity : HostAppearanceActivity() {
         }
         val output = TextView(this).apply {
             tag = TAG_OUTPUT
-            typeface = Typeface.MONOSPACE
+            typeface = TerminalFonts.typeface(this@CommandResultActivity)
             textSize = 12f
             setTextIsSelectable(true)
             kit.tintTextHandles(this)

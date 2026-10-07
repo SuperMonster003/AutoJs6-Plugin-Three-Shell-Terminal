@@ -22,6 +22,16 @@ The plugin enables EOF cleanup in `TerminalPtySession`, and closes failed or
 unattached exited sessions as well. No JNI symbol or terminal public API changes.
 All other original classes and AAR entries keep their original bytes.
 
+The 2026-10-07 P8 patch (`1.0.42-p8.1`) changes only `PaintRenderer`:
+
+- A package-private default typeface replaces the hard-coded `Typeface.MONOSPACE`; the plugin sets it
+  through its same-package `TerminalTypeface` bridge, and renderers created afterwards use it.
+- `Math.ceil` replaces `android.util.FloatMath.ceil`, which left the public SDK in API 23. The result is
+  identical, and the class no longer calls a framework class outside the SDK.
+
+The original `PaintRenderer.java` from the same upstream commit is in `upstream/`. Rebuilding reproduces
+every other class byte for byte, including `TermSession`.
+
 Rebuild with JDK 21 and the Android SDK platform jar recorded by SHA-256 in
 `provenance.json`:
 

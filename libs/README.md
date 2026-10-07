@@ -29,8 +29,8 @@ bypass this policy.
 - `libtermexec-1_0.aar` (jackpal `libtermexec` 1.0 with the 16 KB aligned native libraries; its SHA-256 must equal `aarSha256` in `../native/jackpal-termexec/provenance.json`)
 
 The files originate from the AutoJs6 host `libs/` directory (roadmap D13). Since P6, emulatorview carries
-the bounded I/O and shutdown patch `1.0.42-p6.1`; its original input, patched source, offline rebuild script
-and exact provenance are in `../vendor/emulatorview/`. The other two AARs are unchanged. Rebuilding the native
+the bounded I/O and shutdown patch, and since P8 the renderer typeface patch (`1.0.42-p8.1`); its original input,
+patched sources, offline rebuild script and exact provenance are in `../vendor/emulatorview/`. The other two AARs are unchanged. Rebuilding the native
 libraries is done with `../native/jackpal-termexec/build.py`, which writes a fresh AAR plus provenance; update the
 lock, the provenance and `../THIRD_PARTY_NOTICES.md` together.
 

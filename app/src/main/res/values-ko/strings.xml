@@ -2,6 +2,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="about_developer">개발자</string>
     <string name="about_developer_page">개발자 페이지</string>
+    <string name="about_font_license">JetBrains Mono 라이선스</string>
     <string name="about_jackpal_license">Android-Terminal-Emulator 라이선스</string>
     <string name="about_jackpal_notice">Android-Terminal-Emulator 고지</string>
     <string name="about_summary">버전, 개발자 및 라이선스</string>
@@ -54,6 +55,11 @@
     <string name="settings_clear_data_confirm">%1$s 아래의 모든 터미널 데이터를 삭제할까요? 실행 중인 세션은 닫힙니다.</string>
     <string name="settings_clear_data_summary">터미널 홈, 설치된 패키지, npm 캐시를 삭제합니다</string>
     <string name="settings_clearing" tools:ignore="TypographyEllipsis">터미널 데이터를 지우는 중...</string>
+    <string name="settings_color_scheme">터미널 색상</string>
+    <string name="settings_color_scheme_dark">어둡게</string>
+    <string name="settings_color_scheme_follow">밝은 / 어두운 모양 따르기</string>
+    <string name="settings_color_scheme_light">밝게</string>
+    <string name="settings_color_scheme_theme">테마 색상으로 물들이기</string>
     <string name="settings_command_notifications">명령 완료 알림</string>
     <string name="settings_command_notifications_summary">대화형 셸 없이 시작한 명령 (예: 스크립트의 exec)이 끝나면 알리고, 탭하면 출력을 보여 줍니다</string>
     <string name="settings_data_cleared">터미널 데이터를 지웠습니다</string>
@@ -66,6 +72,9 @@
     <string name="settings_probe_again">다시 확인</string>
     <string name="settings_section_information">정보</string>
     <string name="settings_source">소스 코드</string>
+    <string name="settings_terminal_font">터미널 글꼴</string>
+    <string name="settings_terminal_font_jetbrains_mono">JetBrains Mono (내장)</string>
+    <string name="settings_terminal_font_system">시스템 고정폭 글꼴</string>
     <string name="settings_trusted_signers">신뢰하는 Node.js 서명</string>
     <string name="settings_trusted_signers_none">공식 키와 이 플러그인의 키만</string>
     <string name="settings_trusted_signers_revoke">취소</string>

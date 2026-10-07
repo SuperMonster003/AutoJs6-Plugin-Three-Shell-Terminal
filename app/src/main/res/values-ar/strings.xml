@@ -2,6 +2,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="about_developer">المطور</string>
     <string name="about_developer_page">صفحة المطور</string>
+    <string name="about_font_license">ترخيص JetBrains Mono</string>
     <string name="about_jackpal_license">ترخيص Android-Terminal-Emulator</string>
     <string name="about_jackpal_notice">إشعار Android-Terminal-Emulator</string>
     <string name="about_summary">الإصدار والمطور والتراخيص</string>
@@ -54,6 +55,11 @@
     <string name="settings_clear_data_confirm">هل تريد حذف كل بيانات الطرفية ضمن %1$s? سيتم إغلاق الجلسات قيد التشغيل.</string>
     <string name="settings_clear_data_summary">إزالة الدليل الرئيسي للطرفية والحزم المثبتة وذاكرة npm المؤقتة</string>
     <string name="settings_clearing" tools:ignore="TypographyEllipsis">جار مسح بيانات الطرفية...</string>
+    <string name="settings_color_scheme">ألوان الطرفية</string>
+    <string name="settings_color_scheme_dark">داكن</string>
+    <string name="settings_color_scheme_follow">اتباع المظهر الفاتح / الداكن</string>
+    <string name="settings_color_scheme_light">فاتح</string>
+    <string name="settings_color_scheme_theme">ملون بلون السمة</string>
     <string name="settings_command_notifications">إشعارات اكتمال الأوامر</string>
     <string name="settings_command_notifications_summary">إشعار عند انتهاء أمر بدأ دون صدفة تفاعلية, مثل exec في نص برمجي; يعرض الإشعار مخرجاته</string>
     <string name="settings_data_cleared">تم مسح بيانات الطرفية</string>
@@ -66,6 +72,9 @@
     <string name="settings_probe_again">إعادة الفحص</string>
     <string name="settings_section_information">معلومات</string>
     <string name="settings_source">الشيفرة المصدرية</string>
+    <string name="settings_terminal_font">خط الطرفية</string>
+    <string name="settings_terminal_font_jetbrains_mono">JetBrains Mono (مدمج)</string>
+    <string name="settings_terminal_font_system">خط النظام ثابت العرض</string>
     <string name="settings_trusted_signers">توقيعات Node.js الموثوقة</string>
     <string name="settings_trusted_signers_none">المفتاح الرسمي ومفتاح هذه الإضافة فقط</string>
     <string name="settings_trusted_signers_revoke">إلغاء</string>

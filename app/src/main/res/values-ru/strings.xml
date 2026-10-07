@@ -2,6 +2,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="about_developer">Разработчик</string>
     <string name="about_developer_page">Страница разработчика</string>
+    <string name="about_font_license">Лицензия JetBrains Mono</string>
     <string name="about_jackpal_license">Лицензия Android-Terminal-Emulator</string>
     <string name="about_jackpal_notice">Уведомление Android-Terminal-Emulator</string>
     <string name="about_summary">Версия, разработчик и лицензии</string>
@@ -54,6 +55,11 @@
     <string name="settings_clear_data_confirm">Удалить все данные терминала в %1$s? Запущенные сеансы будут закрыты.</string>
     <string name="settings_clear_data_summary">Удалить домашний каталог терминала, установленные пакеты и кэш npm</string>
     <string name="settings_clearing" tools:ignore="TypographyEllipsis">Очистка данных терминала...</string>
+    <string name="settings_color_scheme">Цвета терминала</string>
+    <string name="settings_color_scheme_dark">Темные</string>
+    <string name="settings_color_scheme_follow">Как светлое / темное оформление</string>
+    <string name="settings_color_scheme_light">Светлые</string>
+    <string name="settings_color_scheme_theme">С оттенком цвета темы</string>
     <string name="settings_command_notifications">Уведомления о завершении команд</string>
     <string name="settings_command_notifications_summary">Уведомлять о завершении команды, запущенной без интерактивной оболочки, например exec из сценария; уведомление показывает ее вывод</string>
     <string name="settings_data_cleared">Данные терминала очищены</string>
@@ -66,6 +72,9 @@
     <string name="settings_probe_again">Проверить снова</string>
     <string name="settings_section_information">Информация</string>
     <string name="settings_source">Исходный код</string>
+    <string name="settings_terminal_font">Шрифт терминала</string>
+    <string name="settings_terminal_font_jetbrains_mono">JetBrains Mono (встроенный)</string>
+    <string name="settings_terminal_font_system">Системный моноширинный</string>
     <string name="settings_trusted_signers">Доверенные подписи Node.js</string>
     <string name="settings_trusted_signers_none">Только официальный ключ и ключ этого плагина</string>
     <string name="settings_trusted_signers_revoke">Отозвать</string>

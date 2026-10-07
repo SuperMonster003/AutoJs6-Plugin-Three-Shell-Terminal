@@ -49,6 +49,49 @@ class TerminalPaletteTest {
         }
     }
 
+    /** Roadmap P8 color schemes: the theme-tinted pair stays far above 7:1, and the accent stays readable on it. */
+    @Test
+    fun colorSchemesKeepTerminalTextReadableAndTheAccentReadableOnThem() {
+        for (mode in listOf(false, true)) {
+            for (seed in SEEDS) {
+                val pair = TerminalSchemeColors.theme(seed, mode)
+                val ratio = ColorPolicy.contrastRatio(pair.foreground, pair.background)
+                assertTrue("theme seed ${hex(seed)} dark=$mode: $ratio", ratio >= 7.0)
+                assertEquals(mode, ColorPolicy.luminance(pair.background) < ColorPolicy.luminance(pair.foreground))
+                val palette = TerminalPalette.build(if (mode) dark else light, seed, mode, terminal = pair, scheme = "theme")
+                assertEquals(pair.background, palette.terminalBackground)
+                assertEquals(pair.foreground, palette.terminalForeground)
+                assertEquals("theme", palette.scheme)
+                assertTrue(ColorPolicy.contrastRatio(palette.accent, palette.terminalBackground) >= ColorPolicy.MINIMUM_TEXT_CONTRAST)
+            }
+        }
+        // A gray seed gives a neutral pair.
+        val gray = TerminalSchemeColors.theme(0xFF808080.toInt(), true)
+        for (color in listOf(gray.background, gray.foreground)) {
+            val r = color shr 16 and 0xFF
+            val g = color shr 8 and 0xFF
+            val b = color and 0xFF
+            assertTrue(hex(color), abs(r - g) <= 2 && abs(g - b) <= 2)
+        }
+        // Always-dark and always-light reuse the neutral terminal pair of the other mode; the accent stays readable on
+        // the surfaces it is drawn on, which no single color could also guarantee on the opposite-side terminal.
+        for ((mode, scheme, pair) in listOf(
+            Triple(false, "dark", TerminalSchemeColors.Pair(dark[8], dark[9])),
+            Triple(true, "light", TerminalSchemeColors.Pair(light[8], light[9])),
+        )) {
+            for (seed in SEEDS) {
+                val palette = TerminalPalette.build(if (mode) dark else light, seed, mode, terminal = pair, scheme = scheme)
+                assertEquals(pair.background, palette.terminalBackground)
+                assertEquals(mode, palette.isDark)
+                assertTrue(ColorPolicy.contrastRatio(palette.terminalForeground, palette.terminalBackground) >= 7.0)
+                for (surface in listOf(palette.background, palette.surface, palette.surfaceVariant)) {
+                    assertTrue("$scheme seed ${hex(seed)}", ColorPolicy.contrastRatio(palette.accent, surface) >= ColorPolicy.MINIMUM_TEXT_CONTRAST)
+                }
+            }
+        }
+        assertEquals("follow", TerminalPalette.build(light, Appearance.DEFAULT_COLOR, false).scheme)
+    }
+
     @Test
     fun neutralTextRolesMeetTheContrastBarInBothModes() {
         for ((mode, neutral) in listOf(false to light, true to dark)) {

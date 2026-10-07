@@ -102,6 +102,7 @@ class TerminalActivity : HostAppearanceActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_terminal)
+        TerminalFonts.apply(this)
         root = findViewById(R.id.root)
         statusBarSpacer = findViewById(R.id.status_bar_spacer)
         toolbar = findViewById(R.id.toolbar)
@@ -297,6 +298,9 @@ class TerminalActivity : HostAppearanceActivity() {
             ThreeShellTerminalSessionService.ensureStarted(this)
         }
         terminalView.textSizeSp = preferences.textSizeSp
+        // The settings page may have changed the font while this screen was away (P8).
+        TerminalFonts.apply(this)
+        terminalView.refreshTypeface()
         terminalView.onResume()
         CommandNotifications.visibleSessionId = session?.id
         refreshSubtitle()

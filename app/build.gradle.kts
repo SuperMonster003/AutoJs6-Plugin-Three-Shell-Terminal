@@ -307,6 +307,10 @@ val bundledLegalAssets = tasks.register<Sync>("bundleLegalAssets") {
         include("LICENSE", "NOTICE")
         into("legal/jackpal")
     }
+    from(rootProject.file("vendor/fonts/jetbrains-mono")) {
+        include("OFL.txt")
+        into("legal/fonts/jetbrains-mono")
+    }
     into(layout.buildDirectory.dir("generated/legal-assets"))
 }
 android.sourceSets.getByName("main").assets.directories.add(layout.buildDirectory.dir("generated/legal-assets").get().asFile.path)

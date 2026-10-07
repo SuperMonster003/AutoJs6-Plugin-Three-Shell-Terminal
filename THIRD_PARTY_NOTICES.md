@@ -18,20 +18,30 @@ The terminal emulation, the pty bridge and the native helpers come from jackpal'
 (https://github.com/jackpal/Android-Terminal-Emulator, Apache License 2.0, commit
 `35188f8a8b57989a4a4ec9485e11187b46be26d9`). The AARs originate from the AutoJs6 host
 (`libs/` of the host repository); the host keeps its own copies for the script `shell()` API (roadmap D2).
-The plugin's emulatorview AAR carries the P6 bounded-input and shutdown patch. Its original AAR,
-original source, modified `TermSession` source, deterministic offline rebuild script and SHA-256
-provenance are preserved in `vendor/emulatorview/`. All other AAR classes/resources and the other
+The plugin's emulatorview AAR carries the P6 bounded-input and shutdown patch and the P8 typeface
+patch. Its original AAR, original sources, modified `TermSession` and `PaintRenderer` sources,
+deterministic offline rebuild script and SHA-256 provenance are preserved in `vendor/emulatorview/`. All other AAR classes/resources and the other
 two libraries retain their original content. The modified source retains the Apache-2.0 license.
 
 | Artifact | Upstream module | Version | Content | SHA-256 |
 | --- | --- | --- | --- | --- |
 | `term-1_0_70.aar` | `term` (`jackpal.androidterm`) | 1.0.70 | `Exec` JNI declarations (`setPtyWindowSizeInternal`, `setPtyUTF8ModeInternal`), `GenericTermSession`; only the `term-debug` distribution exists upstream | `75d47c8ca207ac8c3afb5820019e5203b361f5977b2631fd1c95ecd9f308dce1` |
-| `emulatorview-1_0_42.aar` | `emulatorview` (`jackpal.androidterm.emulatorview`) | 1.0.42-p6.1 | `TermSession`, `EmulatorView`, the VT100 emulator and renderers; bounded main-thread input and complete worker/pty cleanup | `ec7be1e7b717e06801e5c1765b99fc3a9f2d68d9e7e208726f1db8febeabad91` |
+| `emulatorview-1_0_42.aar` | `emulatorview` (`jackpal.androidterm.emulatorview`) | 1.0.42-p8.1 | `TermSession`, `EmulatorView`, the VT100 emulator and renderers; bounded main-thread input and complete worker/pty cleanup (P6), a selectable renderer typeface without the removed `android.util.FloatMath` (P8) | `acde6014fb455a214264f79c04c5221292acfbefcf0662be0d71b812fa007f09` |
 | `libtermexec-1_0.aar` | `libtermexec` (`jackpal.androidterm.libtermexec`) | 1.0 | `TermExec` (`createSubprocess` / `waitFor` / `sendSignal` JNI), `ITerminal`, and `libjackpal-androidterm5.so` + `libjackpal-termexec2.so` for arm64-v8a, armeabi-v7a, x86_64 and x86, rebuilt with NDK 28.2.13676358 against platform 24 for 16 KB page alignment | `46c6aea86dc45908a3d2555635a6f31d2fcb74c7af01a9b1d80a9f3cb5522fc4` |
 
 `native/jackpal-termexec/` holds the reproducible rebuild recipe for the native libraries (`build.py`,
 `CMakeLists.txt`, `upstream.lock.json`, `provenance.json` with per-library SHA-256 and load alignment) together
 with the upstream `LICENSE` and `NOTICE`, which are also bundled into the APK under `assets/legal/`.
+
+## Bundled font
+
+| Component | Version | License | Source | SHA-256 |
+| --- | --- | --- | --- | --- |
+| JetBrains Mono NL Regular (`res/font/jetbrains_mono_nl_regular.ttf`) | 2.304 | SIL Open Font License 1.1 | https://github.com/JetBrains/JetBrainsMono (release `JetBrainsMono-2.304.zip`, entry `fonts/ttf/JetBrainsMonoNL-Regular.ttf`) | `fb3b2575d7b0657359707993288f12a7360344d39387bb26050e276d61f6bd2a` |
+
+The optional terminal font (roadmap P8) is unmodified. Its license text (`OFL.txt`, SHA-256
+`30f0c136e3c88e422d0791acd97238870f9054a9729bc34cf2ff0d4ed8cac4ad`) is bundled under `assets/legal/fonts/jetbrains-mono/`
+and shown on the About screen; `vendor/fonts/jetbrains-mono/` records the provenance.
 
 ## Sources migrated from the AutoJs6 host
 

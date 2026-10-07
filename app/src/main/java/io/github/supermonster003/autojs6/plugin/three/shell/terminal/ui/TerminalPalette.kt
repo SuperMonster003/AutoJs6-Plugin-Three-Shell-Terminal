@@ -6,6 +6,7 @@ import android.content.res.Configuration
 import com.google.android.material.color.utilities.Hct
 import com.google.android.material.color.utilities.TonalPalette
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.R
+import io.github.supermonster003.autojs6.plugin.three.shell.terminal.core.TerminalPreferences
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.math.abs
 import kotlin.math.max
@@ -94,9 +95,33 @@ internal object ThemeAccentRoles {
 }
 
 /**
+ * The terminal's own foreground / background pair per color scheme (roadmap P8). The theme-tinted
+ * scheme keeps the hue of the theme color at low chroma (neutral for gray seeds) and stays far above
+ * 7:1 in both modes.
+ * zh-CN: 各配色方案下终端自身的前景 / 背景 (P8). 主题色方案保留主题色色相并取低彩度 (灰色种子为中性), 两种模式下对比度都远高于 7:1.
+ */
+internal object TerminalSchemeColors {
+
+    const val THEME_CHROMA = 16.0
+
+    data class Pair(val background: Int, val foreground: Int)
+
+    @SuppressLint("RestrictedApi")
+    fun theme(seed: Int, dark: Boolean): Pair {
+        val source = Hct.fromInt(seed or 0xFF000000.toInt())
+        val chroma = if (source.chroma < 4.0) 0.0 else THEME_CHROMA
+        val background = TonalPalette.fromHueAndChroma(source.hue, chroma).tone(if (dark) 10 else 96)
+        val foreground = TonalPalette.fromHueAndChroma(source.hue, chroma / 2).tone(if (dark) 92 else 14)
+        return Pair(background, foreground)
+    }
+
+}
+
+/**
  * Runtime colors of the terminal screens: neutral surfaces from `colors.xml` in the requested night
  * mode plus an accent derived from the followed or chosen theme color and pushed to 4.5:1 against
- * every surface it is drawn on. The emulator keeps its own foreground / background pair.
+ * every surface it is drawn on. The emulator keeps its own foreground / background pair, chosen by
+ * the terminal color scheme ([scheme], roadmap P8).
  * zh-CN: 终端界面的运行时配色: 中性表面来自对应夜间模式的 `colors.xml`, 强调色由跟随或自选的主题色派生并保证
  * 对每个承载表面都达到 4.5:1; 模拟器保留自己的前景 / 背景.
  */
@@ -116,6 +141,7 @@ internal data class TerminalPalette(
     val terminalBackground: Int,
     val terminalForeground: Int,
     val isDark: Boolean,
+    val scheme: String = TerminalPreferences.COLOR_SCHEME_FOLLOW,
 ) {
 
     /** Translucent accent fill of the armed Ctrl / Alt keys and tonal controls. */
@@ -127,7 +153,10 @@ internal data class TerminalPalette(
 
         const val TONE_ALPHA = 0x30
 
-        private data class Key(val seed: Int, val accentSeed: Int, val dark: Boolean)
+        /** Below this relative luminance black text reads worse than white text (equal contrast at about 0.18). */
+        private const val DARK_LUMINANCE = 0.18
+
+        private data class Key(val seed: Int, val accentSeed: Int, val dark: Boolean, val scheme: String)
 
         private val cache = ConcurrentHashMap<Key, TerminalPalette>()
         private val neutrals = ConcurrentHashMap<Boolean, IntArray>()
@@ -139,7 +168,16 @@ internal data class TerminalPalette(
             val dark = isDark(context, appearance)
             val seed = (appearance?.primarySeed ?: Appearance.DEFAULT_COLOR) or 0xFF000000.toInt()
             val accentSeed = (appearance?.accentSeed ?: seed) or 0xFF000000.toInt()
-            return cache.getOrPut(Key(seed, accentSeed, dark)) { build(neutralColors(context, dark), seed, dark, accentSeed) }
+            val scheme = TerminalPreferences(context).colorScheme
+            return cache.getOrPut(Key(seed, accentSeed, dark, scheme)) {
+                val terminal = when (scheme) {
+                    TerminalPreferences.COLOR_SCHEME_DARK -> neutralColors(context, true).let { TerminalSchemeColors.Pair(it[8], it[9]) }
+                    TerminalPreferences.COLOR_SCHEME_LIGHT -> neutralColors(context, false).let { TerminalSchemeColors.Pair(it[8], it[9]) }
+                    TerminalPreferences.COLOR_SCHEME_THEME -> TerminalSchemeColors.theme(seed, dark)
+                    else -> null
+                }
+                build(neutralColors(context, dark), seed, dark, accentSeed, terminal, scheme)
+            }
         }
 
         /** Static neutrals of the requested night mode, read once per mode from the resources. */
@@ -159,18 +197,31 @@ internal data class TerminalPalette(
             ).map(resources::getColor).toIntArray()
         }
 
-        /** Pure construction from the nine neutrals (JVM tests feed the specification values directly). */
-        internal fun build(neutral: IntArray, seed: Int, dark: Boolean, accentSeed: Int = seed): TerminalPalette {
+        /**
+         * Pure construction from the ten neutrals (JVM tests feed the specification values directly); [terminal]
+         * replaces the neutral terminal pair for a non-following color scheme.
+         */
+        internal fun build(
+            neutral: IntArray,
+            seed: Int,
+            dark: Boolean,
+            accentSeed: Int = seed,
+            terminal: TerminalSchemeColors.Pair? = null,
+            scheme: String = TerminalPreferences.COLOR_SCHEME_FOLLOW,
+        ): TerminalPalette {
             val roles = ThemeAccentRoles.fromSeed(seed, dark)
             val accentRoles = ThemeAccentRoles.fromSeed(accentSeed, dark)
             val background = neutral[0]
             val surface = neutral[1]
             val surfaceVariant = neutral[2]
-            val terminalBackground = neutral[8]
+            val terminalBackground = terminal?.background ?: neutral[8]
             var accent = ColorPolicy.readableAccent(accentRoles.primary, background)
+            // An always-dark terminal in a light appearance (or the reverse) cannot share one 4.5:1 accent with the
+            // surfaces; the accent is drawn on the surfaces (key bar, banners), so only a same-side terminal counts.
+            val terminalOnSameSide = terminal == null || (ColorPolicy.luminance(terminalBackground) < DARK_LUMINANCE) == dark
             repeat(8) {
-                for (reference in listOf(
-                    background, surface, surfaceVariant, terminalBackground,
+                for (reference in listOfNotNull(
+                    background, surface, surfaceVariant, terminalBackground.takeIf { terminalOnSameSide },
                     ColorPolicy.blend(background, accent, TONE_ALPHA / 255.0),
                     ColorPolicy.blend(surface, accent, TONE_ALPHA / 255.0),
                 )) {
@@ -191,8 +242,9 @@ internal data class TerminalPalette(
                 muted = neutral[6],
                 danger = neutral[7],
                 terminalBackground = terminalBackground,
-                terminalForeground = neutral[9],
+                terminalForeground = terminal?.foreground ?: neutral[9],
                 isDark = dark,
+                scheme = scheme,
             )
         }
 

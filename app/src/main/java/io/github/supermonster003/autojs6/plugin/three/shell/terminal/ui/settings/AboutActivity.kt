@@ -68,6 +68,11 @@ class AboutActivity : HostAppearanceActivity() {
                 }.view,
             )
             page.addView(
+                settingRow(getString(R.string.about_component_font), getString(R.string.about_component_font_summary), R.drawable.ic_settings_license, TAG_FONT) {
+                    open(BundledDocument.FONT_LICENSE)
+                }.view,
+            )
+            page.addView(
                 settingRow(getString(R.string.about_component_host_api), getString(R.string.about_component_host_api_summary), R.drawable.ic_settings_license, TAG_HOST_API) {
                     open(BundledDocument.NOTICES)
                 }.view,
@@ -160,6 +165,7 @@ class AboutActivity : HostAppearanceActivity() {
         const val TAG_LICENSE = "about-license"
         const val TAG_NOTICES = "about-notices"
         const val TAG_JACKPAL = "about-jackpal"
+        const val TAG_FONT = "about-font"
         const val TAG_HOST_API = "about-host-api"
         const val TAG_LIBRARIES = "about-libraries"
         const val TAG_VERSION = "about-version"

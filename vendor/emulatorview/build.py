@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Rebuild only TermSession and its nested classes, preserving all other AAR content."""
+"""Rebuild only the patched classes (TermSession, PaintRenderer) and their nested classes, preserving all other AAR content."""
 from __future__ import annotations
 import argparse
 import hashlib
@@ -46,10 +46,13 @@ def main() -> None:
         subprocess.run([str(javac), "-encoding", "UTF-8", "-source", "8", "-target", "8", "-Xlint:-options", "-g",
                         "-classpath", os.pathsep.join([str(args.android_jar.resolve()), str(base)]),
                         "-d", str(classes), *map(str, sources)], check=True)
+        patched = [p.relative_to(ROOT / "src").with_suffix("").as_posix() for p in sources]
+
+        def replaced(name: str) -> bool:
+            return any(name == f"{stem}.class" or name.startswith(f"{stem}$") for stem in patched)
+
         with zipfile.ZipFile(base) as jar:
-            bytecode = {n: jar.read(n) for n in jar.namelist() if not n.endswith("/") and
-                        not (n.startswith("jackpal/androidterm/emulatorview/TermSession$") or
-                             n == "jackpal/androidterm/emulatorview/TermSession.class")}
+            bytecode = {n: jar.read(n) for n in jar.namelist() if not n.endswith("/") and not replaced(n)}
         bytecode.update({p.relative_to(classes).as_posix(): p.read_bytes() for p in classes.rglob("*.class")})
         entries["classes.jar"] = pack(bytecode)
     artifact = pack(entries)
@@ -57,7 +60,7 @@ def main() -> None:
     provenance = {
         "upstreamCommit": "35188f8a8b57989a4a4ec9485e11187b46be26d9",
         "originalAarSha256": BASE_SHA256,
-        "patchVersion": "1.0.42-p6.1",
+        "patchVersion": "1.0.42-p8.1",
         "compiler": subprocess.check_output([str(javac), "-version"], text=True).strip(),
         "androidJarSha256": hashlib.sha256(args.android_jar.read_bytes()).hexdigest(),
         "sources": {p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest() for p in sources},

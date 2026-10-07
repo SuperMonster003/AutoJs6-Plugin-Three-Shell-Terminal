@@ -2,6 +2,7 @@ package io.github.supermonster003.autojs6.plugin.three.shell.terminal.ui
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Typeface
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
@@ -9,6 +10,7 @@ import io.github.supermonster003.autojs6.plugin.three.shell.terminal.core.Termin
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.core.TerminalPreferences
 import jackpal.androidterm.emulatorview.EmulatorView
 import jackpal.androidterm.emulatorview.TermSession
+import jackpal.androidterm.emulatorview.TerminalTypeface
 
 /**
  * [EmulatorView] with pinch-to-zoom text size (persisted in [TerminalPreferences]) and the terminal
@@ -29,6 +31,7 @@ class TerminalEmulatorView @JvmOverloads constructor(
             field = clamped
             if (termSession != null) {
                 setTextSize(clamped)
+                rendererTypeface = TerminalTypeface.get()
             }
             preferences.textSizeSp = clamped
             onTextSizeChanged?.invoke(clamped)
@@ -40,6 +43,21 @@ class TerminalEmulatorView @JvmOverloads constructor(
     var onSelectionRequested: ((Float, Float) -> Unit)? = null
 
     val transcriptTopLine: Int get() = computeVerticalScrollOffset()
+
+    /** The typeface the current renderer was built with (roadmap P8 font choice). zh-CN: 当前渲染器所用字体 (P8). */
+    var rendererTypeface: Typeface? = null
+        private set
+
+    /**
+     * Rebuilds the renderer when the terminal font changed since it was built; the view then measures its cells and
+     * the pty size again, as for a text size change.
+     * zh-CN: 字体自上次构建后变化时重建渲染器; 随后视图重新测量单元格与 pty 尺寸, 与改字号相同.
+     */
+    fun refreshTypeface() {
+        if (termSession == null || rendererTypeface === TerminalTypeface.get()) return
+        setTextSize(textSizeSp)
+        rendererTypeface = TerminalTypeface.get()
+    }
 
     private var scaleAccumulator = 1f
 
@@ -76,6 +94,7 @@ class TerminalEmulatorView @JvmOverloads constructor(
         // zh-CN: 持有终端类型的按键监听器与文本画笔在会话附加后才存在.
         setTermType(TerminalEnvironment.DEFAULT_TERM)
         setTextSize(textSizeSp)
+        rendererTypeface = TerminalTypeface.get()
     }
 
     // Taps are dispatched by the base class's GestureDetector (onSingleTapUp shows the keyboard), long presses by

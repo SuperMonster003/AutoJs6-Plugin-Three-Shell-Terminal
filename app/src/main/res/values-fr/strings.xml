@@ -2,6 +2,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="about_developer">Développeur</string>
     <string name="about_developer_page">Page du développeur</string>
+    <string name="about_font_license">Licence de JetBrains Mono</string>
     <string name="about_jackpal_license">Licence Android-Terminal-Emulator</string>
     <string name="about_jackpal_notice">Avis Android-Terminal-Emulator</string>
     <string name="about_summary">Version, développeur et licences</string>
@@ -54,6 +55,11 @@
     <string name="settings_clear_data_confirm">Supprimer toutes les données du terminal dans %1$s ? Les sessions en cours seront fermées.</string>
     <string name="settings_clear_data_summary">Supprimer le répertoire personnel du terminal, les paquets installés et les caches npm</string>
     <string name="settings_clearing" tools:ignore="TypographyEllipsis">Effacement des données du terminal...</string>
+    <string name="settings_color_scheme">Couleurs du terminal</string>
+    <string name="settings_color_scheme_dark">Sombre</string>
+    <string name="settings_color_scheme_follow">Suivre l\'apparence claire / sombre</string>
+    <string name="settings_color_scheme_light">Clair</string>
+    <string name="settings_color_scheme_theme">Teinté par la couleur du thème</string>
     <string name="settings_command_notifications">Notifications de fin de commande</string>
     <string name="settings_command_notifications_summary">Avertit lorsqu\'une commande lancée sans shell interactif, comme le exec d\'un script, se termine; la notification affiche sa sortie</string>
     <string name="settings_data_cleared">Données du terminal effacées</string>
@@ -66,6 +72,9 @@
     <string name="settings_probe_again">Vérifier à nouveau</string>
     <string name="settings_section_information">Informations</string>
     <string name="settings_source">Code source</string>
+    <string name="settings_terminal_font">Police du terminal</string>
+    <string name="settings_terminal_font_jetbrains_mono">JetBrains Mono (intégrée)</string>
+    <string name="settings_terminal_font_system">Police à chasse fixe du système</string>
     <string name="settings_trusted_signers">Signatures Node.js approuvées</string>
     <string name="settings_trusted_signers_none">Uniquement la clé officielle et celle de ce plugin</string>
     <string name="settings_trusted_signers_revoke">Révoquer</string>

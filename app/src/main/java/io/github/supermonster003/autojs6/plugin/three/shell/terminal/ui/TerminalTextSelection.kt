@@ -42,7 +42,8 @@ internal class TerminalTextSelection(private val terminal: TerminalEmulatorView,
         val snapshot = TerminalSelectionSnapshot.capture(session, terminal.visibleColumns, terminal.transcriptTopLine)
         val text = AppCompatTextView(context).apply {
             id = R.id.terminal_selection
-            typeface = Typeface.MONOSPACE
+            // The overlay must wrap exactly like the emulator, so it uses the renderer's face (roadmap P8 font choice).
+            typeface = terminal.rendererTypeface ?: Typeface.MONOSPACE
             setTextSize(TypedValue.COMPLEX_UNIT_SP, terminal.textSizeSp.toFloat())
             setTextColor(palette.terminalForeground)
             setBackgroundColor(palette.terminalBackground)

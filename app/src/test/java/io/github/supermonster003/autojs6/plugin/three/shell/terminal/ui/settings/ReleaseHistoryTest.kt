@@ -48,7 +48,7 @@ class ReleaseHistoryTest {
         assertEquals(BundledDocument.HISTORY, BundledDocument.of(null))
         assertEquals(BundledDocument.HISTORY, BundledDocument.of("unknown"))
         assertEquals(
-            listOf(null, "legal/LICENSE", "legal/THIRD_PARTY_NOTICES.md", "legal/jackpal/LICENSE", "legal/jackpal/NOTICE"),
+            listOf(null, "legal/LICENSE", "legal/THIRD_PARTY_NOTICES.md", "legal/jackpal/LICENSE", "legal/jackpal/NOTICE", "legal/fonts/jetbrains-mono/OFL.txt"),
             BundledDocument.entries.map { it.assetPath },
         )
     }

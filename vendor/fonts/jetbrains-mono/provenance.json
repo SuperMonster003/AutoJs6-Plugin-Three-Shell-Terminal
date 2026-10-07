@@ -1,0 +1,12 @@
+{
+  "name": "JetBrains Mono NL",
+  "version": "2.304",
+  "license": "OFL-1.1",
+  "source": "https://github.com/JetBrains/JetBrainsMono/releases/download/v2.304/JetBrainsMono-2.304.zip",
+  "archiveSha256": "6f6376c6ed2960ea8a963cd7387ec9d76e3f629125bc33d1fdcd7eb7012f7bbf",
+  "archiveEntry": "fonts/ttf/JetBrainsMonoNL-Regular.ttf",
+  "resource": "app/src/main/res/font/jetbrains_mono_nl_regular.ttf",
+  "resourceSha256": "fb3b2575d7b0657359707993288f12a7360344d39387bb26050e276d61f6bd2a",
+  "licenseEntry": "OFL.txt",
+  "licenseSha256": "30f0c136e3c88e422d0791acd97238870f9054a9729bc34cf2ff0d4ed8cac4ad"
+}

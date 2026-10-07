@@ -22,6 +22,26 @@ class TerminalPreferences(private val preferences: SharedPreferences) {
         get() = preferences.getInt(KEY_TEXT_SIZE, DEFAULT_TEXT_SIZE_SP).coerceIn(MIN_TEXT_SIZE_SP, MAX_TEXT_SIZE_SP)
         set(value) = preferences.edit().putInt(KEY_TEXT_SIZE, value.coerceIn(MIN_TEXT_SIZE_SP, MAX_TEXT_SIZE_SP)).apply()
 
+    /**
+     * Terminal colors (roadmap P8), one of [COLOR_SCHEMES]: follow the light / dark appearance, always dark,
+     * always light, or tinted by the theme color. Unknown stored values read as [COLOR_SCHEME_FOLLOW].
+     * zh-CN: 终端配色 (P8), [COLOR_SCHEMES] 之一: 跟随浅色 / 深色外观, 始终深色, 始终浅色, 或按主题色着色.
+     */
+    var colorScheme: String
+        get() = preferences.getString(KEY_COLOR_SCHEME, null)?.takeIf { it in COLOR_SCHEMES } ?: COLOR_SCHEME_FOLLOW
+        set(value) {
+            require(value in COLOR_SCHEMES) { "Unknown color scheme: $value" }
+            preferences.edit().putString(KEY_COLOR_SCHEME, value).apply()
+        }
+
+    /** Terminal font (roadmap P8), one of [FONTS]; unknown stored values read as [FONT_SYSTEM]. zh-CN: 终端字体 (P8). */
+    var font: String
+        get() = preferences.getString(KEY_FONT, null)?.takeIf { it in FONTS } ?: FONT_SYSTEM
+        set(value) {
+            require(value in FONTS) { "Unknown font: $value" }
+            preferences.edit().putString(KEY_FONT, value).apply()
+        }
+
     /** One of [REGISTRY_CHOICES]; unknown stored values read as [REGISTRY_NPMJS]. zh-CN: [REGISTRY_CHOICES] 之一; 未知值按 [REGISTRY_NPMJS] 处理. */
     var npmRegistryChoice: String
         get() = preferences.getString(KEY_NPM_REGISTRY, null)?.takeIf { it in REGISTRY_CHOICES } ?: REGISTRY_NPMJS
@@ -140,6 +160,18 @@ class TerminalPreferences(private val preferences: SharedPreferences) {
         const val KEY_NOTIFICATION_PERMISSION_REQUESTED = "notification_permission_requested"
         const val KEY_NODE_TRUSTED_SIGNERS = "node_trusted_signers"
         const val KEY_COMMAND_NOTIFICATIONS = "command_completion_notifications"
+        const val KEY_COLOR_SCHEME = "terminal_color_scheme"
+        const val KEY_FONT = "terminal_font"
+
+        const val COLOR_SCHEME_FOLLOW = "follow"
+        const val COLOR_SCHEME_DARK = "dark"
+        const val COLOR_SCHEME_LIGHT = "light"
+        const val COLOR_SCHEME_THEME = "theme"
+        val COLOR_SCHEMES: List<String> = listOf(COLOR_SCHEME_FOLLOW, COLOR_SCHEME_DARK, COLOR_SCHEME_LIGHT, COLOR_SCHEME_THEME)
+
+        const val FONT_SYSTEM = "system"
+        const val FONT_JETBRAINS_MONO = "jetbrains-mono"
+        val FONTS: List<String> = listOf(FONT_SYSTEM, FONT_JETBRAINS_MONO)
 
         /** Appearance choices of the settings page (roadmap P5.1), read by `ui.AppearancePreferences`. */
         const val KEY_APPEARANCE_LANGUAGE = "appearance_language"

@@ -56,3 +56,29 @@ Follow-up observed: when a non-interactive command exits right after printing, t
 "[Process completed (code N)]" before the reader has drained the final output, so the terminal screen and
 `readTranscript` can show that line above the last output lines. This predates P8; the pty lifecycle was left
 unchanged here because P6 stabilized it under load.
+
+## Terminal color schemes and font (roadmap P8)
+
+- Color schemes: `terminal_color_scheme` is `follow` (default, the neutral pair of the current light / dark
+  appearance), `dark`, `light` (the neutral pair of the other mode) or `theme` (HCT tones 10 / 92 in dark and
+  96 / 14 in light of the theme hue at chroma 16, neutral for gray seeds). The palette carries its scheme; a
+  screen resumes, sees a different stored scheme and recreates itself, and the terminal reattaches the same
+  session. Because no single accent can be readable on both a light surface and a dark terminal (or the
+  reverse), the accent is corrected against the terminal background only when both are on the same side.
+- Font: `terminal_font` is `system` (default, `Typeface.MONOSPACE`) or `jetbrains-mono` (bundled JetBrains Mono
+  NL 2.304, SIL OFL 1.1, the variant without ligatures). The emulatorview patch `1.0.42-p8.1` gives
+  `PaintRenderer` a default typeface that the plugin sets through the same-package `TerminalTypeface`; each view
+  remembers the face its renderer was built with and rebuilds it on resume when the face changed. The selection
+  overlay and the command output screen draw with the same face, so the overlay still wraps like the emulator.
+  The same patch replaces `android.util.FloatMath.ceil` (removed from the SDK in API 23) with `Math.ceil`.
+  Rebuilding the AAR with the recorded JDK 21.0.12.1 and android-37.0 jar changes only `PaintRenderer.class`.
+- Size: the signed release universal APK is 2037690 bytes against 1882323 bytes for v1.0.0 (+8.3 percent, all of
+  P8 including the font), below the 10 percent investigation threshold.
+
+| Evidence | Configuration | Result |
+| --- | --- | --- |
+| JVM | `ui/TerminalPaletteTest` (theme pair >= 7:1 for ten seeds in both modes, gray seed neutral, always-dark / always-light keep the accent readable on the surfaces), `BundledFontTest`, `TerminalPreferencesTest`, `ReleaseHistoryTest` | 192 passed |
+| BUILD | `vendor/emulatorview/build.py --check` with JDK 21.0.12.1 and the recorded android.jar; old and new AAR compared class by class | reproducible; only `PaintRenderer.class` differs |
+| DEVICE | `ui/TerminalAppearanceInstrumentationTest` on the API 37 x86_64 AVD and Redmi 22120RN86C API 33 | 3 / 3 each (same shell pid across three recreations; the font face swapped; settings dialogs write both choices) |
+| DEVICE | signed release x86_64 APK on the API 37 AVD, choices made through the settings page | theme-tinted background and JetBrains Mono shown after returning; R8 keeps the patch working |
+| DEVICE | screenshots on the API 37 AVD (reviewed, not committed) | `->`, `!=`, `=>` stay separate cells, box drawing renders, CJK falls back as wide cells |

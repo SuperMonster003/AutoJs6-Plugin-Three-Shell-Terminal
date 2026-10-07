@@ -10,14 +10,16 @@ import android.view.WindowInsetsController
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import io.github.supermonster003.autojs6.plugin.three.shell.terminal.core.TerminalPreferences
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.ui.settings.LauncherIcons
 
 /**
  * Base of every screen of the plugin: the night mode is fixed on the AppCompat delegate and the
  * locale-wrapped base context is attached before any resource is read, so language, night mode and
  * the theme color follow AutoJs6 (standalone settings specification, sections 6 and 7). The host
- * snapshot is refreshed off the main thread on every resume; when the effective appearance changed
- * the screen is recreated, unless a subclass reports an unconfirmed dialog or user interaction.
+ * snapshot is refreshed off the main thread on every resume; when the effective appearance or the
+ * terminal color scheme changed the screen is recreated, unless a subclass reports an unconfirmed
+ * dialog or user interaction.
  *
  * zh-CN: 插件全部界面的基类: 在读取任何资源之前先在 AppCompat delegate 上固定夜间模式并附着带语言的基础上下文,
  * 使语言, 夜间模式与主题色跟随 AutoJs6 (独立设置页规范第 6, 7 节). 每次 onResume 在工作线程刷新宿主快照,
@@ -32,8 +34,11 @@ abstract class HostAppearanceActivity : AppCompatActivity() {
 
     internal val appearance: Appearance? get() = applied
 
-    /** Runtime palette of this screen, resolved once from the attached appearance. */
+    /** Runtime palette of this screen, resolved once from the attached appearance and the terminal color scheme. */
     internal val palette: TerminalPalette by lazy { TerminalPalette.resolve(this, applied) }
+
+    /** The terminal color scheme changed since this screen resolved its palette (roadmap P8). */
+    private fun colorSchemeChanged(): Boolean = palette.scheme != TerminalPreferences(this).colorScheme
 
     internal val kit: UiKit by lazy { UiKit(this, palette) }
 
@@ -84,7 +89,7 @@ abstract class HostAppearanceActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         interacted = false
-        if (!hasUnconfirmedDialog() && applied != Appearance.resolve(systemContext)) {
+        if (!hasUnconfirmedDialog() && (applied != Appearance.resolve(systemContext) || colorSchemeChanged())) {
             recreate()
             return
         }

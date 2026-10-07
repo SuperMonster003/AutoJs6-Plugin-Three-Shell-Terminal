@@ -8,8 +8,8 @@ import java.util.Locale
 
 /**
  * The documents bundled into the APK (AGENTS.md 12, roadmap D31): the localized changelog, the
- * plugin license, the third-party notices and the upstream jackpal license and notice copied by
- * the `bundleLegalAssets` Gradle task. The [key] travels in the Intent extra of the document screen.
+ * plugin license, the third-party notices, the upstream jackpal license and notice and the license
+ * of the bundled terminal font (roadmap P8), copied by the `bundleLegalAssets` Gradle task. The [key] travels in the Intent extra of the document screen.
  * zh-CN: 打包进 APK 的文档 (AGENTS.md 12, D31): 本地化更新日志, 插件许可证, 第三方声明以及由
  * `bundleLegalAssets` 任务复制的上游 jackpal 许可证与声明; [key] 作为文档界面的 Intent extra 传递.
  */
@@ -18,7 +18,8 @@ internal enum class BundledDocument(val key: String, val assetPath: String?, @pa
     LICENSE("license", "legal/LICENSE", R.string.settings_license, false),
     NOTICES("notices", "legal/THIRD_PARTY_NOTICES.md", R.string.settings_notices, true),
     JACKPAL_LICENSE("jackpal-license", "legal/jackpal/LICENSE", R.string.about_jackpal_license, false),
-    JACKPAL_NOTICE("jackpal-notice", "legal/jackpal/NOTICE", R.string.about_jackpal_notice, false);
+    JACKPAL_NOTICE("jackpal-notice", "legal/jackpal/NOTICE", R.string.about_jackpal_notice, false),
+    FONT_LICENSE("font-license", "legal/fonts/jetbrains-mono/OFL.txt", R.string.about_font_license, false);
 
     companion object {
         fun of(key: String?): BundledDocument = entries.firstOrNull { it.key == key } ?: HISTORY

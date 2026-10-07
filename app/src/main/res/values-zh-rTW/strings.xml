@@ -2,6 +2,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="about_developer">開發者</string>
     <string name="about_developer_page">開發者主頁</string>
+    <string name="about_font_license">JetBrains Mono 授權條款</string>
     <string name="about_jackpal_license">Android-Terminal-Emulator 授權條款</string>
     <string name="about_jackpal_notice">Android-Terminal-Emulator 聲明</string>
     <string name="about_summary">版本, 開發者與授權條款</string>
@@ -54,6 +55,11 @@
     <string name="settings_clear_data_confirm">刪除 %1$s 下的全部終端機資料? 執行中的工作階段將被關閉.</string>
     <string name="settings_clear_data_summary">刪除終端機主目錄, 已安裝的套件與 npm 快取</string>
     <string name="settings_clearing" tools:ignore="TypographyEllipsis">正在清除終端機資料...</string>
+    <string name="settings_color_scheme">終端機配色</string>
+    <string name="settings_color_scheme_dark">深色</string>
+    <string name="settings_color_scheme_follow">跟隨淺色 / 深色外觀</string>
+    <string name="settings_color_scheme_light">淺色</string>
+    <string name="settings_color_scheme_theme">依主題色著色</string>
     <string name="settings_command_notifications">指令完成通知</string>
     <string name="settings_command_notifications_summary">不帶互動式 shell 啟動的指令 (例如指令碼的 exec) 結束時發出通知, 點按可查看輸出</string>
     <string name="settings_data_cleared">終端機資料已清除</string>
@@ -66,6 +72,9 @@
     <string name="settings_probe_again">重新檢測</string>
     <string name="settings_section_information">資訊</string>
     <string name="settings_source">原始碼</string>
+    <string name="settings_terminal_font">終端機字型</string>
+    <string name="settings_terminal_font_jetbrains_mono">JetBrains Mono (內建)</string>
+    <string name="settings_terminal_font_system">系統等寬字型</string>
     <string name="settings_trusted_signers">受信任的 Node.js 簽署</string>
     <string name="settings_trusted_signers_none">僅官方金鑰與本外掛程式的金鑰</string>
     <string name="settings_trusted_signers_revoke">撤銷</string>

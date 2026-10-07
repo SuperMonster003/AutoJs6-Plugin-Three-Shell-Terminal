@@ -33,6 +33,6 @@ vendor/emulatorview/**/*.aar binary
 
 # The bundled terminal font and its license are packaged byte for byte (roadmap P8).
 *.ttf binary
-vendor/fonts/**/*.txt text eol=lf
+vendor/fonts/**/*.txt text eol=lf -whitespace
 vendor/fonts/**/*.md text eol=lf
 vendor/fonts/**/*.json text eol=lf

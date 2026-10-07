@@ -506,15 +506,15 @@ runtime/api/augment/terminal/           Terminal.kt (AugmentableKey("terminal"))
 
 ### P7.1 文档与声明
 
-- [ ] (文档) `D:/webstorm-projects/AutoJs6-Documentation`: `api/terminal.md` (模块页, 结构参照 `api/epub.md` / `api/installer.md`: 插件依赖说明, `PLUGIN_UNAVAILABLE`, 同步 / Async / 会话三形态, `terminal` 与 `$terminal`, 与 `shell()` 的区别与各自适用场景互相提示), `api/terminalSessionType.md`, `api/terminalOpenOptionsType.md`, `api/terminalErrorType.md` (或合并进模块页, 按既有粒度); `api/shell.md` 增加指向 `terminal` 的提示; `api/sidebar.md` / `api/toc.md` 登记; 从 `generator/` 运行 `python auto-generate.py terminal shell` 只生成涉及页面, 提交文档仓库; 离线文档插件同步按既有策略另行决定.
-- [ ] (文档) `D:/webstorm-projects/AutoJs6-TypeScript-Declarations`: `declarations/autojs6/aj6-int-terminal.d.ts` (`@Source` 指向宿主 `runtime/api/augment/terminal/*.kt` 与 `runtime/api/terminal/*.kt`, `Internal.Terminal` 命名空间, 重载与事件类型), `index.d.ts` 引用; `aj6dts.bat -Publish -DeclarationsOutput ... -ApiRoots ...`; Ace 插件同步 `aj6-int-terminal.d.ts` (LF), 两仓库版本号 +1 且版本名称按语义升级 (新增模块 -> y+1), Ace 执行 `:app:generateAutoJs6LspDeclarations`; 分别提交.
-- [ ] (兄弟) `AutoJs6-Plugin-NodeJs-Runtime/docs/nodejs/TERMINAL.md` 与 `Roadmap.md` M21 注记: 消费者由 "AutoJs6 宿主 (宿主 uid)" 改为 "3-Shell Terminal 插件 (插件 uid)", 宿主侧布局段落改为插件侧; 不改契约; 本地提交.
-- [ ] (宿主) `docs/dev/terminal-plugin-protocol-v1.md` 补齐脚本 API 与会话流章节; 宿主 changelog 核对 (P1.4 / P4.3 条目合并整理, 日期为当日).
+- [x] (文档) `D:/webstorm-projects/AutoJs6-Documentation`: `api/terminal.md` (模块页, 结构参照 `api/epub.md` / `api/installer.md`: 插件依赖说明, `PLUGIN_UNAVAILABLE`, 同步 / Async / 会话三形态, `terminal` 与 `$terminal`, 与 `shell()` 的区别与各自适用场景互相提示), `api/terminalSessionType.md`, `api/terminalOpenOptionsType.md`, `api/terminalErrorType.md` (或合并进模块页, 按既有粒度); `api/shell.md` 增加指向 `terminal` 的提示; `api/sidebar.md` / `api/toc.md` 登记; 从 `generator/` 运行 `python auto-generate.py terminal shell` 只生成涉及页面, 提交文档仓库; 离线文档插件同步按既有策略另行决定.
+- [x] (文档) `D:/webstorm-projects/AutoJs6-TypeScript-Declarations`: `declarations/autojs6/aj6-int-terminal.d.ts` (`@Source` 指向宿主 `runtime/api/augment/terminal/*.kt` 与 `runtime/api/terminal/*.kt`, `Internal.Terminal` 命名空间, 重载与事件类型), `index.d.ts` 引用; `aj6dts.bat -Publish -DeclarationsOutput ... -ApiRoots ...`; Ace 插件同步 `aj6-int-terminal.d.ts` (LF), 两仓库版本号 +1 且版本名称按语义升级 (新增模块 -> y+1), Ace 执行 `:app:generateAutoJs6LspDeclarations`; 分别提交.
+- [x] (兄弟) `AutoJs6-Plugin-NodeJs-Runtime/docs/nodejs/TERMINAL.md` 与 `Roadmap.md` M21 注记: 消费者由 "AutoJs6 宿主 (宿主 uid)" 改为 "3-Shell Terminal 插件 (插件 uid)", 宿主侧布局段落改为插件侧; 不改契约; 本地提交.
+- [x] (宿主) `docs/dev/terminal-plugin-protocol-v1.md` 补齐脚本 API 与会话流章节; 宿主 changelog 核对 (P1.4 / P4.3 条目合并整理, 日期为当日).
 
 ### P7.2 插件 README 与 changelog
 
-- [ ] (插件) `.readme/lang_*.json` 10 语言: 简介, 功能 (多会话 / 后台运行 / 快捷键栏 / 文本选择 / Node.js 命令 / npm 镜像源 / 包管理菜单), 安装 (插件中心向导或 Release), Node.js 说明 (需要 Node.js Runtime 1.5.0+, W^X 限制, corepack 默认版本), 存储权限说明 (为什么需要全部文件访问, 不授权时的行为), 脚本示例 (`terminal.open`, `exec`, `npm.run`, `session.on('output')`), 兼容性 (Android 7.0+, 16 KB 页, ABI 变体选择), 常见问题 (进程以插件 uid 运行 / `EACCES` / 会话不可跨进程恢复 / HyperOS 后台限制), 发行历史, 许可证与第三方声明; 生成器 `--check` 通过.
-- [ ] (插件) `.changelog` 10 语言 `v1.0.0` 定稿 (`feature` / `improvement` / `dependency`, 依赖用 `附加` 记录 common-plugin-api / nodejs-api / terminal-api / jackpal Android-Terminal-Emulator).
+- [x] (插件) `.readme/lang_*.json` 10 语言: 简介, 功能 (多会话 / 后台运行 / 快捷键栏 / 文本选择 / Node.js 命令 / npm 镜像源 / 包管理菜单), 安装 (插件中心向导或 Release), Node.js 说明 (需要 Node.js Runtime 1.5.0+, W^X 限制, corepack 默认版本), 存储权限说明 (为什么需要全部文件访问, 不授权时的行为), 脚本示例 (`terminal.open`, `exec`, `npm.run`, `session.on('output')`), 兼容性 (Android 7.0+, 16 KB 页, ABI 变体选择), 常见问题 (进程以插件 uid 运行 / `EACCES` / 会话不可跨进程恢复 / HyperOS 后台限制), 发行历史, 许可证与第三方声明; 生成器 `--check` 通过.
+- [x] (插件) `.changelog` 10 语言 `v1.0.0` 定稿 (`feature` / `improvement` / `dependency`, 依赖用 `附加` 记录 common-plugin-api / nodejs-api / terminal-api / jackpal Android-Terminal-Emulator).
 
 ### P7.3 本地发布 gate
 
@@ -876,3 +876,11 @@ t.on('exit', code => console.log('done', code));
 ### 2026-10-04 源码公开与图稿同步
 
 维护者已授权创建公开 GitHub 仓库并推送本插件源码, 提交采用 noreply 邮箱. 本条更新 D9 的源码推送门控; 既有开发阶段和实测记录保持其原有含义. 本次工作整理并提交当前工作区, 同步图稿与生成材料, 不以源码公开代替 APK 发布和发行验收. 宿主改动另行处理.
+
+
+### 2026-10-07 P6 stabilization and P7 preparation
+
+- 维护者已明确授权完成 P6/P7 后发布正式 v1.0.0, 并更新官方索引; 本条解除 D9 对插件 tag / Release / 索引的门控, 宿主推送仍不在范围内.
+- P6 代码与压力覆盖在 e2a52ae (build 32): emulatorview 有界输入与关闭修复, 共享 pty 描述符的可取消 I/O, 前台恢复时重试服务保护, 100 MiB / 100 次会话 / 分屏 / Node 生命周期回归. API 24 本地 71 通过 + 7 跳过, API 37.1 / 16 KiB 本地 70 通过 + 8 跳过, 均零失败. 首轮 GitHub API 35 捕获旋转尚未结束时读取尺寸的测试时序问题, ec83424 改为等待配置并比较稳定视图与 pty 尺寸; 持续不匹配仍失败.
+- P7.1/P7.2 的相关仓库内容与提交已核对, 文档, 声明, Ace 补全与离线文档检查通过; 证据见 docs/dev/p7-integration-evidence.md.
+- 维护者随后要求在其他任务仍使用设备时优先推进其余工作. 最终签名 ABI/universal 矩阵, API 35 最终性能抽查和受控进程终止验收保留未完成, 未创建 tag / Release, 未将候选包写入官方可下载索引. 具体已测与待测范围见 docs/dev/p6-robustness-evidence.md, docs/dev/p6-compat-matrix.md 和 docs/dev/p6-performance-evidence.md.

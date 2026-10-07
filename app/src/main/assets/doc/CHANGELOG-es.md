@@ -4,6 +4,13 @@
 
 ******
 
+# v1.1.0
+
+###### 2026/10/07
+
+* `Corrección` En versiones recientes de Android como Android 17, una pulsación larga en la terminal vuelve a mostrar los controles de selección y la barra Copiar / Seleccionar todo, de modo que el texto se puede seleccionar y copiar
+* `Corrección` Copiar o compartir una transcripción muy larga ya no bloquea el complemento (en Android 7.0 el bloqueo cerraba todas las sesiones); un texto demasiado largo conserva sus últimos 100000 caracteres y un aviso lo indica
+
 # v1.0.0
 
 ###### 2026/10/07

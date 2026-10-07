@@ -95,6 +95,9 @@ class TerminalActivity : HostAppearanceActivity() {
 
     override fun hasUnconfirmedDialog(): Boolean = progressDialog?.isShowing == true || textSelection != null
 
+    /** The open text selection, for instrumentation. zh-CN: 当前的文本选择层, 供 instrumentation 使用. */
+    internal val textSelectionForTest: TerminalTextSelection? get() = textSelection
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_terminal)
@@ -574,8 +577,7 @@ class TerminalActivity : HostAppearanceActivity() {
 
     private fun copyToClipboard(text: String?) {
         val value = text?.takeIf { it.isNotEmpty() } ?: return
-        Clipboard.set(this, value)
-        kit.toast(R.string.terminal_copied_to_clipboard)
+        Clipboard.copyAndReport(this, value)
     }
 
     private fun clearScreen() {

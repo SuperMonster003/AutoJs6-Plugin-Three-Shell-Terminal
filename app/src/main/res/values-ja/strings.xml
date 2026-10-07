@@ -128,6 +128,7 @@
     <string name="terminal_tips">ターミナルのヒント</string>
     <string name="terminal_tips_content">シェルは 3-Shell Terminal アプリのユーザーとして (AutoJs6 ではなく) 実行され, 専用のホームディレクトリ (%1$s) を持ちます. キーバーには Esc / Tab / Ctrl / Alt とカーソルキーがあり, 画面を長押しするとテキストを選択でき, メニューから出力ログをコピーまたは共有できます. ターミナル対応の Node.js ランタイムプラグインをインストールすると node と npm が使えるようになります. ターミナルを離れてもセッションとそのプロセスはバックグラウンドで実行を続けます (通知付き). メニューの \"セッションを閉じる\" で終了できます.</string>
     <string name="terminal_title">ターミナル</string>
+    <string name="terminal_transfer_truncated">長すぎるため, 最後の %1$d 文字のみを使用しました</string>
     <string name="terminal_uptime">稼働時間</string>
     <string name="terminal_working_directory">作業ディレクトリ</string>
     <string name="theme_picker_custom">カスタム色</string>

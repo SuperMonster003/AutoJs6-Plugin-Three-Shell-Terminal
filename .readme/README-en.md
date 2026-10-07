@@ -192,6 +192,13 @@ The plugin's plans and progress are maintained as a checkable list in ROADMAP.md
 
 ******
 
+#### v1.1.0
+
+_2026/10/07_
+
+- `Fix` On newer Android versions such as Android 17, a long press on the terminal shows the selection handles and the Copy / Select all toolbar again, so text can be selected and copied
+- `Fix` Copying or sharing a very long transcript no longer crashes the plugin (on Android 7.0 the crash ended every session); overly long text keeps its most recent 100000 characters and a notice says so
+
 #### v1.0.0
 
 _2026/10/07_

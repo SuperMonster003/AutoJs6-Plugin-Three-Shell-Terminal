@@ -128,6 +128,7 @@
     <string name="terminal_tips">터미널 도움말</string>
     <string name="terminal_tips_content">셸은 3-Shell Terminal 앱 사용자로 (AutoJs6 가 아닌) 실행되며 자체 홈 디렉터리 (%1$s) 를 가집니다. 키 바에서 Esc / Tab / Ctrl / Alt 와 커서 키를 사용할 수 있고, 화면을 길게 누르면 텍스트를 선택할 수 있으며, 메뉴에서 출력 기록을 복사하거나 공유할 수 있습니다. 터미널을 지원하는 Node.js 런타임 플러그인을 설치하면 node 와 npm 을 사용할 수 있습니다. 터미널을 떠나도 세션과 그 프로세스는 백그라운드에서 계속 실행됩니다 (알림 표시). 메뉴의 \"세션 닫기\" 로 종료할 수 있습니다.</string>
     <string name="terminal_title">터미널</string>
+    <string name="terminal_transfer_truncated">너무 길어서 마지막 %1$d자만 사용했습니다</string>
     <string name="terminal_uptime">실행 시간</string>
     <string name="terminal_working_directory">작업 디렉터리</string>
     <string name="theme_picker_custom">사용자 지정 색상</string>

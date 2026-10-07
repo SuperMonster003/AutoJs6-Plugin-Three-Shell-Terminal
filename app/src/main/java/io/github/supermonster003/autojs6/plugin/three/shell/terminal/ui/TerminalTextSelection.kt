@@ -6,6 +6,7 @@ import android.text.Selection
 import android.text.Spannable
 import android.util.TypedValue
 import android.view.ActionMode
+import android.view.InputDevice
 import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
@@ -31,6 +32,8 @@ internal class TerminalTextSelection(private val terminal: TerminalEmulatorView,
     private val scroll = ScrollView(context)
     private var actionMode: ActionMode? = null
     private var dismissed = false
+    private var selectionText: TextView? = null
+    private var selectionSnapshot: TerminalSelectionSnapshot? = null
 
     fun show(x: Float, y: Float) {
         val session = terminal.termSession ?: return dismiss()
@@ -60,20 +63,7 @@ internal class TerminalTextSelection(private val terminal: TerminalEmulatorView,
 
                 override fun onPrepareActionMode(mode: ActionMode, menu: Menu) = false
 
-                override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean = when (item.itemId) {
-                    android.R.id.copy -> {
-                        Clipboard.set(context, snapshot.selectedText(selectionStart, selectionEnd))
-                        kit.toast(R.string.terminal_copied_to_clipboard)
-                        mode.finish()
-                        true
-                    }
-                    android.R.id.selectAll -> {
-                        Selection.setSelection(this@apply.text as Spannable, 0, this@apply.length())
-                        mode.invalidate()
-                        true
-                    }
-                    else -> false
-                }
+                override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean = perform(item.itemId)
 
                 override fun onDestroyActionMode(mode: ActionMode) {
                     actionMode = null
@@ -81,6 +71,8 @@ internal class TerminalTextSelection(private val terminal: TerminalEmulatorView,
                 }
             }
         }
+        selectionText = text
+        selectionSnapshot = snapshot
         scroll.setBackgroundColor(palette.terminalBackground)
         scroll.isFillViewport = true
         scroll.addView(text, ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
@@ -95,12 +87,41 @@ internal class TerminalTextSelection(private val terminal: TerminalEmulatorView,
             val localY = (y + scroll.scrollY).coerceIn(0f, (text.height - 1).toFloat())
             for (action in listOf(MotionEvent.ACTION_DOWN, MotionEvent.ACTION_UP)) {
                 val event = MotionEvent.obtain(now, now, action, x, localY, 0)
+                // The editor shows handles and its toolbar only for touchscreen input; obtain() reports a bare pointer.
+                // zh-CN: 编辑器只为触屏输入显示手柄与工具栏; obtain() 生成的事件来源仅为通用指针.
+                event.source = InputDevice.SOURCE_TOUCHSCREEN
                 text.dispatchTouchEvent(event)
                 event.recycle()
                 // End the synthetic long press with an UP so Android shows its handles and toolbar.
                 // zh-CN: 以 UP 事件结束合成的长按, 让系统显示手柄与工具栏.
                 if (action == MotionEvent.ACTION_DOWN) text.performLongClick()
             }
+        }
+    }
+
+    /** True while Android shows the selection handles and the copy / select-all toolbar. */
+    internal val isActionModeShown: Boolean get() = actionMode != null
+
+    /**
+     * Runs one toolbar action ([android.R.id.copy] or [android.R.id.selectAll]); the action mode's callback and the
+     * instrumentation share this path, so a test exercises the same copy as a tap on the toolbar.
+     * zh-CN: 执行一个工具栏动作; 选择模式回调与 instrumentation 共用此路径.
+     */
+    internal fun perform(itemId: Int): Boolean {
+        val text = selectionText ?: return false
+        val snapshot = selectionSnapshot ?: return false
+        return when (itemId) {
+            android.R.id.copy -> {
+                Clipboard.copyAndReport(context, snapshot.selectedText(text.selectionStart, text.selectionEnd))
+                actionMode?.finish() ?: dismiss()
+                true
+            }
+            android.R.id.selectAll -> {
+                Selection.setSelection(text.text as Spannable, 0, text.length())
+                actionMode?.invalidate()
+                true
+            }
+            else -> false
         }
     }
 

@@ -15,6 +15,7 @@ import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.text.InputType
+import android.util.Log
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
@@ -411,13 +412,67 @@ internal class UiKit(val context: Context, val palette: TerminalPalette) {
 
 }
 
+/**
+ * Bounds text handed to another process. The clipboard and the share sheet carry it inside one Binder
+ * transaction (about 1 MiB, UTF-16), while a full 10000-row transcript can exceed that; the most recent
+ * output is the part worth keeping, so the tail is used, starting at a line break when one is near.
+ * zh-CN: 限制交给其它进程的文本. 剪贴板与分享经单个 Binder 事务传递 (约 1 MiB, UTF-16), 完整的 10000 行转录可能超出;
+ * 最近的输出最有价值, 因此保留尾部, 附近有换行时从换行处开始.
+ */
+internal object TextTransfer {
+
+    /** 200 KB of UTF-16, well inside the transaction buffer the process shares with other calls. */
+    const val MAX_CHARS = 100_000
+
+    private const val LINE_START_WINDOW = 4096
+
+    data class Bounded(val text: String, val truncated: Boolean)
+
+    fun tail(text: String, maxChars: Int = MAX_CHARS): Bounded {
+        require(maxChars > 0) { "maxChars must be positive" }
+        if (text.length <= maxChars) return Bounded(text, false)
+        var start = text.length - maxChars
+        if (Character.isLowSurrogate(text[start])) start++
+        val lineBreak = text.indexOf('\n', start)
+        if (lineBreak >= 0 && lineBreak - start < LINE_START_WINDOW && lineBreak + 1 < text.length) start = lineBreak + 1
+        return Bounded(text.substring(start), true)
+    }
+
+}
+
 /** Clipboard access without logging the content (AGENTS.md 15). */
 internal object Clipboard {
 
-    fun set(context: Context, text: CharSequence) {
-        val manager = context.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager ?: return
-        manager.setPrimaryClip(ClipData.newPlainText("text", text))
+    enum class Outcome { COPIED, TRUNCATED, FAILED }
+
+    /**
+     * Copies at most [TextTransfer.MAX_CHARS] (the tail); a clip the system still refuses is reported instead of
+     * crashing the process that hosts every session (API 24 threw `TransactionTooLargeException` here).
+     * zh-CN: 最多复制 [TextTransfer.MAX_CHARS] 个字符 (尾部); 系统仍拒绝时返回失败, 而不是让承载全部会话的进程崩溃.
+     */
+    fun set(context: Context, text: CharSequence): Outcome {
+        val manager = context.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager ?: return Outcome.FAILED
+        val bounded = TextTransfer.tail(text.toString())
+        return try {
+            manager.setPrimaryClip(ClipData.newPlainText("text", bounded.text))
+            if (bounded.truncated) Outcome.TRUNCATED else Outcome.COPIED
+        } catch (e: RuntimeException) {
+            Log.w(TAG, "The clipboard refused ${bounded.text.length} chars: ${e.javaClass.simpleName}")
+            Outcome.FAILED
+        }
     }
+
+    /** Copies and tells the user what happened. zh-CN: 复制并告知结果. */
+    fun copyAndReport(context: Context, text: CharSequence) {
+        val kit = UiKit.of(context)
+        when (set(context, text)) {
+            Outcome.COPIED -> kit.toast(R.string.terminal_copied_to_clipboard)
+            Outcome.TRUNCATED -> kit.toast(context.getString(R.string.terminal_transfer_truncated, TextTransfer.MAX_CHARS), long = true)
+            Outcome.FAILED -> kit.toast(R.string.terminal_error_occurred)
+        }
+    }
+
+    private const val TAG = "ThreeShellTerminalClip"
 
     fun get(context: Context): CharSequence? {
         val manager = context.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager ?: return null
@@ -429,9 +484,17 @@ internal object Clipboard {
 /** Outgoing intents that must never crash the terminal when no handler exists. */
 internal object ExternalIntents {
 
+    /** Opens the share sheet with at most [TextTransfer.MAX_CHARS] (the tail) and tells the user when text was cut or nothing could be shared. */
     fun shareText(context: Context, text: String): Boolean {
-        val send = Intent(Intent.ACTION_SEND).setType("text/plain").putExtra(Intent.EXTRA_TEXT, text)
-        return startSafely(context, Intent.createChooser(send, null))
+        val bounded = TextTransfer.tail(text)
+        val send = Intent(Intent.ACTION_SEND).setType("text/plain").putExtra(Intent.EXTRA_TEXT, bounded.text)
+        val started = startSafely(context, Intent.createChooser(send, null))
+        val kit = UiKit.of(context)
+        when {
+            !started -> kit.toast(R.string.terminal_error_occurred)
+            bounded.truncated -> kit.toast(context.getString(R.string.terminal_transfer_truncated, TextTransfer.MAX_CHARS), long = true)
+        }
+        return started
     }
 
     fun browse(context: Context, url: String): Boolean =

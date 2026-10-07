@@ -422,7 +422,7 @@ runtime/api/augment/terminal/           Terminal.kt (AugmentableKey("terminal"))
 
 验收条件: 两台设备上宿主三入口 + 启动器 + 管理器全部可用; `TerminalSessionsInstrumentationTest` 四用例 + 新增用例通过; 文本选择 / 复制 / 分享 / 字号 / 键盘显示与宿主内置版行为一致 (手动清单写入 `docs/dev/p3-ui-evidence.md`).
 
-验收记录 (2026-10-02): 宿主三入口 + 管理器 + 启动器转发在 Sony XQ-DQ72 (API 33, 宿主 debug 5307) 真机可用; 入口 / 启动器 instrumentation 在 API 24 AVD, API 33, API 35 三台设备通过; `TerminalSessionsInstrumentationTest` 四用例在 P3.1 已于 API 24 / 35 通过. 其余设备池中的宿主为 5303 (低于所需 5304) 或 5305 (Redmi), 未另行安装宿主. 文本选择 / 复制 / 分享 / 字号 / 键盘显示的手动对照清单已写入 `docs/dev/p3-ui-evidence.md`, 其中与宿主内置版的逐项人工对照仍待维护者执行 (自动化只覆盖目录复制与键盘弹出).
+验收记录 (2026-10-02): 宿主三入口 + 管理器 + 启动器转发在 Sony XQ-DQ72 (API 33, 宿主 debug 5307) 真机可用; 入口 / 启动器 instrumentation 在 API 24 AVD, API 33, API 35 三台设备通过; `TerminalSessionsInstrumentationTest` 四用例在 P3.1 已于 API 24 / 35 通过. 其余设备池中的宿主为 5303 (低于所需 5304) 或 5305 (Redmi), 未另行安装宿主. 文本选择 / 复制 / 分享 / 字号 / 键盘显示的手动对照清单已写入 `docs/dev/p3-ui-evidence.md`, 其中与宿主内置版的逐项人工对照仍待维护者执行 (自动化只覆盖目录复制与键盘弹出). 2026-10-07 复审: 五项已由 `ui/TerminalParityInstrumentationTest` 自动化 (API 24 AVD / Sony API 28 / Redmi API 33 各 3/3, API 37 16 KiB AVD 在 `ui` 包 24 项中通过), 并修复两处自 P3.1 迁入的缺陷: API 37 长按只选中单词而不显示手柄与 "复制 / 全选" 工具栏; API 24 复制完整转录在主线程抛出 `TransactionTooLargeException` 并结束进程与全部会话. 详见 `docs/dev/p3-ui-evidence.md`.
 
 ---
 

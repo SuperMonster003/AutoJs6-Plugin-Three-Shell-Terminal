@@ -128,6 +128,7 @@
     <string name="terminal_tips">终端提示</string>
     <string name="terminal_tips_content">shell 以 3-Shell Terminal 应用用户身份运行 (而非 AutoJs6), 拥有独立的主目录 (%1$s). 按键栏提供 Esc / Tab / Ctrl / Alt 及方向键, 长按屏幕可选择文本, 菜单可复制或分享终端记录. 安装支持终端的 Node.js 运行时插件后即可使用 node 与 npm. 离开终端后会话及其进程在后台继续运行 (带通知), 菜单中的 \"关闭会话\" 可将其结束.</string>
     <string name="terminal_title">终端</string>
+    <string name="terminal_transfer_truncated">内容过长, 仅使用了最后 %1$d 个字符</string>
     <string name="terminal_uptime">运行时长</string>
     <string name="terminal_working_directory">工作目录</string>
     <string name="theme_picker_custom">自定义颜色</string>

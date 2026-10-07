@@ -56,8 +56,7 @@ class NodeProbeActivity : HostAppearanceActivity() {
             addView(textButton(getString(android.R.string.copy), TAG_COPY) {
                 val text = report.text?.toString().orEmpty()
                 if (text.isNotEmpty()) {
-                    Clipboard.set(this@NodeProbeActivity, text)
-                    kit.toast(R.string.terminal_copied_to_clipboard)
+                    Clipboard.copyAndReport(this@NodeProbeActivity, text)
                 }
             })
             addView(textButton(getString(R.string.settings_probe_again), TAG_AGAIN) { probe(refresh = true) })

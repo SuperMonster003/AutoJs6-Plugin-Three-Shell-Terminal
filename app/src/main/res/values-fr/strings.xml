@@ -128,6 +128,7 @@
     <string name="terminal_tips">Conseils du terminal</string>
     <string name="terminal_tips_content">Le shell s\'exécute en tant qu\'utilisateur de l\'application 3-Shell Terminal (et non AutoJs6) avec son propre répertoire personnel (%1$s). La barre de touches fournit Esc / Tab / Ctrl / Alt et les touches de curseur, un appui long sur l\'écran sélectionne du texte, et le menu copie ou partage la transcription. node et npm deviennent disponibles une fois qu\'un plugin Node.js Runtime prenant en charge le terminal est installé. Quitter le terminal laisse la session et ses processus tourner en arrière-plan (avec une notification) ; \"Fermer la session\" dans le menu y met fin.</string>
     <string name="terminal_title">Terminal</string>
+    <string name="terminal_transfer_truncated">Texte trop long, seuls les %1$d derniers caractères ont été utilisés</string>
     <string name="terminal_uptime">Durée d\'exécution</string>
     <string name="terminal_working_directory">Répertoire de travail</string>
     <string name="theme_picker_custom">Couleur personnalisée</string>

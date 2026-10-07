@@ -5,6 +5,13 @@
   "changelog_label_improvement": "优化",
   "changelog_label_dependency": "依赖",
   "$data": {
+    "v1.1.0": {
+      "released_date": "2026/10/07",
+      "fix": [
+        "在 Android 17 等较新系统上, 长按终端后重新显示选择手柄与 \"复制 / 全选\" 工具栏, 文本可以再次选择和复制",
+        "复制或分享很长的终端记录不再使插件崩溃 (Android 7.0 上崩溃会结束全部会话); 超长时只使用最近的 100000 个字符并给出提示"
+      ]
+    },
     "v1.0.0": {
       "released_date": "2026/10/07",
       "hint": [

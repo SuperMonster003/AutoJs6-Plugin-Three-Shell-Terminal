@@ -239,8 +239,7 @@ internal class TerminalManagerDialog private constructor(
             .setTitle(kit.string(R.string.terminal_session_title, id))
             .setMessage(info)
             .setNeutralButton(R.string.terminal_action_copy) { _, _ ->
-                Clipboard.set(activity, info)
-                kit.toast(R.string.terminal_copied_to_clipboard)
+                Clipboard.copyAndReport(activity, info)
             }
             .setNegativeButton(R.string.terminal_close_session) { _, _ -> closeSession(id) }
             .setPositiveButton(R.string.terminal_action_open) { _, _ -> openSession(id) }

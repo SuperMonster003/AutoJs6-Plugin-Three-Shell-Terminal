@@ -4,6 +4,13 @@
 
 ******
 
+# v1.1.0
+
+###### 2026/10/07
+
+* `Correctif` Sur les versions récentes d'Android comme Android 17, un appui long sur le terminal affiche de nouveau les poignées de sélection et la barre Copier / Tout sélectionner, le texte peut donc être sélectionné et copié
+* `Correctif` Copier ou partager une très longue transcription ne fait plus planter le plugin (sous Android 7.0, le plantage fermait toutes les sessions); un texte trop long conserve ses 100000 derniers caractères et une notification l'indique
+
 # v1.0.0
 
 ###### 2026/10/07

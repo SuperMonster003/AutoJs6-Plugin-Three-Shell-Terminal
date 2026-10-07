@@ -84,15 +84,29 @@ explicit intents (tests) until P3.3 lands.
   Activity is resumed ("Background activity is restricted"); sessions still run, the notification
   is simply absent. A screen opened by the user is foreground, so the real path is unaffected.
 
-## Manual parity checklist (P3.3 acceptance, added 2026-10-02)
+## Manual parity checklist (P3.3 acceptance, added 2026-10-02, automated 2026-10-07)
 
-Items the roadmap asks to compare by hand against the host's former built-in terminal. Automation
-covers only part of each row; the maintainer's manual pass is still open.
+Items the roadmap asks to compare against the host's former built-in terminal. The 2026-10-07
+review automated each row in `ui/TerminalParityInstrumentationTest` and found two defects that
+the source port had carried since P3.1. The host's built-in terminal no longer exists, so the
+comparison is against the ported behavior and the platform's own text selection.
 
-| Item | Automated evidence | Manual comparison |
+| Item | Automated evidence | Result |
 | --- | --- | --- |
-| Text selection | none (`TerminalTextSelection` ported as source) | open |
-| Copy | subtitle long-press copies the real directory (`ui/TerminalActivityInstrumentationTest`, API 24 / 35) | open for selection copy |
-| Share | none | open |
-| Text size | manager shows the current size (`ui/TerminalManagerInstrumentationTest`); dialog change not automated | open |
-| Keyboard | `adjustResize|stateVisible`: keyboard opens with the screen (Sony API 33 host-side run: first Back hid it) | open |
+| Text selection | long press on the emulator view opens the frozen transcript, Android starts its selection mode, Back closes only the selection (`longPressSelection...`) | Defect fixed: the synthetic touch that starts the selection reported a bare pointer source, so API 37 selected a word without handles or the Copy / Select all toolbar. A probe build without the fix still showed them on API 28 and 33. The events now carry the touchscreen source; a real `input swipe` long press on API 37 shows both |
+| Copy | select-all + copy returns logical lines, a wrapped line comes back whole; menu "Copy transcript" after 10000 full rows | Defect fixed: API 24 threw `TransactionTooLargeException` (1539892-byte parcel) from `ClipboardManager.setPrimaryClip` on the main thread, which kills the process and every session. Copies now keep the newest 100000 characters, report truncation and survive a refusal |
+| Share | menu "Share transcript" after the same output, chooser captured by an `ActivityMonitor` (inspected on API 26+, counted below) | same 100000-character tail and notice as Copy |
+| Text size | two-finger pinch on the view changes the size and persists it; the dialog path is covered by `ui/settings/SettingsActivityInstrumentationTest` (12 -> 13 sp reaches the terminal view) | passes |
+| Keyboard | `ui/TerminalLifecycleInstrumentationTest` shows / hides the IME and checks view and pty geometry (P6.1) | passes |
+
+| Device | Parity class | Complete `ui` package |
+| --- | --- | --- |
+| API 24 x86 AVD | 3 / 3 | not repeated |
+| API 37 x86_64 AVD, 16 KiB pages | 3 / 3 inside the package run after an AVD restart; an earlier run timed out launching the Activity while the AVD was swapping (load average 25) | 23 passed, 1 explicit skip (API 24 split screen) |
+| Sony G8441, API 28 | 3 / 3 | not repeated |
+| Redmi 22120RN86C, API 33 | 3 / 3 | 23 passed, 1 explicit skip |
+
+Findings while automating: injected touches are taken by the system clipboard overlay of API 33+
+after any copy, so the test dispatches gestures to the view; below API 26 an `ActivityMonitor` with an
+`ACTION_CHOOSER` filter also matches the action-less terminal intent, so it is added only for the share
+step; the API 24 mksh `printf` mangles wide numeric padding (`%0133d`), so the long line is a literal.

@@ -63,8 +63,7 @@ internal class NodeBanner(
     fun showProbeDetails(resolution: Resolution) {
         val report = NodeProbeReport.render(resolution)
         kit.messageDialog(activity.getString(R.string.terminal_node_probe), report, activity.getString(android.R.string.copy) to {
-            Clipboard.set(activity, report)
-            kit.toast(R.string.terminal_copied_to_clipboard)
+            Clipboard.copyAndReport(activity, report)
         })
     }
 

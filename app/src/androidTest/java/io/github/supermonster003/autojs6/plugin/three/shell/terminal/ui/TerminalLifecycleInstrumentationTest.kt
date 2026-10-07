@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.ActivityManager
 import android.app.NotificationManager
 import android.content.pm.ActivityInfo
+import android.content.res.Configuration
 import android.os.Build
 import android.os.ParcelFileDescriptor
 import android.os.SystemClock
@@ -72,10 +73,10 @@ class TerminalLifecycleInstrumentationTest {
                 scenario.recreate()
                 assertGeometry(scenario, session, "recreated")
                 scenario.onActivity { it.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE }
-                SystemClock.sleep(700)
+                awaitOrientation(scenario, Configuration.ORIENTATION_LANDSCAPE)
                 assertGeometry(scenario, session, "landscape")
                 scenario.onActivity { it.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT }
-                SystemClock.sleep(700)
+                awaitOrientation(scenario, Configuration.ORIENTATION_PORTRAIT)
                 assertGeometry(scenario, session, "portrait")
                 scenario.onActivity {
                     val view = it.findViewById<TerminalEmulatorView>(R.id.terminal)
@@ -116,20 +117,50 @@ class TerminalLifecycleInstrumentationTest {
     }
 
     private fun assertGeometry(scenario: ActivityScenario<TerminalActivity>, session: TerminalSessionManager.Session, stage: String) {
-        var columns = 0
-        var rows = 0
-        scenario.onActivity {
-            val view = it.findViewById<TerminalEmulatorView>(R.id.terminal)
-            assertTrue(view.termSession === session.pty)
-            columns = view.visibleColumns
-            rows = view.visibleRows
-            session.pty.write("printf '__P6_${stage}_%s__\\n' \"\$LINES \$COLUMNS\"\r")
+        fun dimensions(): Pair<Int, Int>? {
+            var value: Pair<Int, Int>? = null
+            scenario.onActivity {
+                val view = it.findViewById<TerminalEmulatorView>(R.id.terminal)
+                assertTrue(view.termSession === session.pty)
+                if (!view.isLayoutRequested && view.visibleColumns > 0 && view.visibleRows > 0) {
+                    value = view.visibleColumns to view.visibleRows
+                }
+            }
+            return value
         }
-        assertTrue(columns > 0 && rows > 0)
-        await("view/kernel geometry at $stage ($rows x $columns)") {
-            onMain { session.pty.transcriptText.contains("__P6_${stage}_${rows} $columns" + "__") }
+        val deadline = SystemClock.uptimeMillis() + 20_000
+        var attempt = 0
+        var expected: Pair<Int, Int>? = null
+        while (SystemClock.uptimeMillis() < deadline) {
+            expected = dimensions()
+            SystemClock.sleep(100)
+            if (expected == null || dimensions() != expected) continue
+            val (columns, rows) = expected
+            val marker = "__P6_${stage}_${++attempt}_"
+            onMain {
+                // Newer Android has stty; API 24 uses mksh's SIGWINCH-updated variables.
+                session.pty.write("printf '${marker}%s__\\n' \"\$(if command -v stty >/dev/null 2>&1; then stty size; else printf '%s %s' \"\$LINES\" \"\$COLUMNS\"; fi)\"\r")
+            }
+            val probeDeadline = minOf(deadline, SystemClock.uptimeMillis() + 1_000)
+            while (SystemClock.uptimeMillis() < probeDeadline && dimensions() == expected) {
+                if (onMain { session.pty.transcriptText.contains("$marker$rows $columns" + "__") }) {
+                    Log.i("ThreeShellP6", "viewStage=$stage columns=$columns rows=$rows")
+                    return
+                }
+                SystemClock.sleep(30)
+            }
+            // Rotation and IME insets may complete after the first probe on a loaded CI runner.
+            // Recheck the current dimensions; a persistent view/kernel mismatch still times out.
         }
-        Log.i("ThreeShellP6", "viewStage=$stage columns=$columns rows=$rows")
+        error("Timed out: view/kernel geometry at $stage, last view=$expected")
+    }
+
+    private fun awaitOrientation(scenario: ActivityScenario<TerminalActivity>, expected: Int) {
+        var current = Configuration.ORIENTATION_UNDEFINED
+        await("orientation $expected") {
+            scenario.onActivity { current = it.resources.configuration.orientation }
+            current == expected
+        }
     }
 
     private fun notifications() = context.getSystemService(NotificationManager::class.java).activeNotifications.size

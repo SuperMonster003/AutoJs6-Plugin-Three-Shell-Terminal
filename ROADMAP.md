@@ -931,7 +931,7 @@ t.on('exit', code => console.log('done', code));
 ### 2026-10-07 P8 (1.1.0 候选)
 
 - 提交 (均为本地, 未推送): 22989e0 "信任此签名" (build 39), 4948fc5 命令完成通知 (build 40), 7f610c2 终端配色与字体 (build 41), c9b3fbd 字体许可证原文免于空白检查 (build 42), 以及本条所在的评估与文档提交. 版本名 1.1.0 自 076babd 起.
-- 验证: JVM 192/192; debug / androidTest / release (R8) / lintDebug 0 error 无新增警告 / 16 KB 对齐 / 36 个文档与 22 个 Icon Studio 资源检查通过; emulatorview 补丁离线重建可复现. 设备: API 37 x86_64 AVD 与 Redmi 22120RN86C API 33 的 `ui` 包各 28 项 (27 通过 + 1 项仅 API 24 的分屏用例跳过); 命令通知用例另在 Sony G8441 API 28 通过; `binder` 包 API 37 18/18; Redmi `node` 包 5 通过 + 2 跳过; 签名发布包在 API 37 AVD 经设置页切换配色与字体后生效. 发布 universal APK 2037690 字节 (+8.3%).
+- 验证: JVM 192/192; debug / androidTest / release (R8) / lintDebug 0 error 无新增警告 / 16 KB 对齐 / 36 个文档与 22 个 Icon Studio 资源检查通过; emulatorview 补丁离线重建可复现. 设备: API 37 x86_64 AVD 与 Redmi 22120RN86C API 33 的 `ui` 包各 28 项 (27 通过 + 1 项仅 API 24 的分屏用例跳过); 命令通知用例另在 Sony G8441 API 28 通过; `binder` 包 API 37 18/18; Redmi `node` 包 5 通过 + 2 跳过; 签名发布包在 API 37 AVD 经设置页切换配色与字体后生效. 发布 universal APK 2037690 字节 (+8.3%). 最终在 e85e2f9 (build 43) 上, 全套 instrumentation 在 API 37 AVD 与 Redmi API 33 均为 OK (87 tests): 84 通过, 3 项显式跳过 (未装运行时分支, 需一次性设备的 Node 生命周期用例, 仅 API 24 的分屏用例).
 - 评估: 附录 D Q8 (多标签页: 1.1.0 不做, 推荐 1.2.0 工具栏标题会话列表), Q9 (SAF: 不支持, README 注明), Q10 (Explorer Action v2 目录动作与协议 "不披露路径" 冲突, 待维护者拍板).
 - 后续事项: 非交互命令刚输出就退出时, 回收线程追加的 "[Process completed (code N)]" 可能排在最后几行输出之前 (P8 结果页已去掉该行, 终端界面与 `readTranscript` 仍可见, P6 已稳定的 pty 生命周期本次未改); 1.1.0 发布时同步兄弟仓库 `docs/nodejs/TERMINAL.md` 的信任规则 (该仓库有其它会话的未提交改动, 且当前文本对已发布的 1.0.0 仍准确); 文档仓库 `api/terminal.md` 可补充 `keepOpen: false` 的命令可能产生完成通知; 宿主插件中心 Activity 导出前, Node.js 横幅的安装动作继续打开 GitHub Releases.
 - 设备说明: API 37 AVD 上的终端字号偏好曾被一次因 adb 守护进程被外部重启而中断的用例留在 6 sp, 已恢复为 12; 其余真机的偏好未受影响.

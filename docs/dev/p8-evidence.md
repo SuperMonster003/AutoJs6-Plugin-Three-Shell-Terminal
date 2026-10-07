@@ -82,3 +82,16 @@ unchanged here because P6 stabilized it under load.
 | DEVICE | `ui/TerminalAppearanceInstrumentationTest` on the API 37 x86_64 AVD and Redmi 22120RN86C API 33 | 3 / 3 each (same shell pid across three recreations; the font face swapped; settings dialogs write both choices) |
 | DEVICE | signed release x86_64 APK on the API 37 AVD, choices made through the settings page | theme-tinted background and JetBrains Mono shown after returning; R8 keeps the patch working |
 | DEVICE | screenshots on the API 37 AVD (reviewed, not committed) | `->`, `!=`, `=>` stay separate cells, box drawing renders, CJK falls back as wide cells |
+
+## Complete suite at e85e2f9 (build 43)
+
+The whole instrumentation suite ran on the final P8 source, debug APKs rebuilt at that commit:
+
+| Device | Result |
+| --- | --- |
+| API 37 x86_64 AVD, 16 KiB pages | OK (87 tests): 84 passed, 3 explicit skips |
+| Redmi 22120RN86C, API 33, arm64-v8a, Node.js Runtime installed | OK (87 tests): 84 passed, 3 explicit skips |
+
+The skips are the no-runtime branch (both devices have a Node.js Runtime), the coordinated Node.js lifecycle
+case that needs a disposable device, and the API 24-only split-screen case. v1.0.0 had 78 cases; P8 and the
+review added the parity, trust, command notice and appearance cases.

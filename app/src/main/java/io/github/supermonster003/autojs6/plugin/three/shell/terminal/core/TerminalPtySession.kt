@@ -276,7 +276,33 @@ class TerminalPtySession(
         }
     }
 
+    /**
+     * When set before the session ends, [finish] keeps the last [FINAL_TRANSCRIPT_CHARS] of the transcript in
+     * [finalTranscript] before the emulator releases it (command completion notices, roadmap P8). The text never
+     * leaves the process unless the user copies or shares it.
+     * zh-CN: 会话结束前设置时, [finish] 在模拟器释放转录之前把末尾 [FINAL_TRANSCRIPT_CHARS] 个字符保存到
+     * [finalTranscript] (命令完成通知, P8); 除非用户复制或分享, 文本不会离开进程.
+     */
+    @Volatile
+    var keepFinalTranscript: Boolean = false
+
+    @Volatile
+    var finalTranscript: String? = null
+        private set
+
+    val isFinished: Boolean get() = finished
+
+    /** The last [FINAL_TRANSCRIPT_CHARS] characters while the emulator still holds them, otherwise null. */
+    fun transcriptTail(): String? {
+        if (finished || !emulatorInitialized) return null
+        val text = runCatching { transcriptText }.getOrNull() ?: return null
+        var start = maxOf(0, text.length - FINAL_TRANSCRIPT_CHARS)
+        if (start > 0 && Character.isLowSurrogate(text[start])) start++
+        return text.substring(start)
+    }
+
     override fun finish() {
+        if (keepFinalTranscript && finalTranscript == null) finalTranscript = transcriptTail()
         synchronized(processLock) {
             if (finished) return
             finished = true
@@ -314,6 +340,7 @@ class TerminalPtySession(
         private const val TAG = "TerminalPtySession"
         const val START_FAILURE_CODE = -1
         private const val CLOSE_GRACE_MILLIS = 500L
+        const val FINAL_TRANSCRIPT_CHARS = 64 * 1024
     }
 
 }

@@ -35,6 +35,7 @@ import io.github.supermonster003.autojs6.plugin.three.shell.terminal.core.Termin
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.core.TerminalSettingsActions
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.node.NodeCliLocator
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.node.NodeCliLocator.Resolution
+import io.github.supermonster003.autojs6.plugin.three.shell.terminal.service.CommandNotifications
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.service.SessionNotifications
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.service.ThreeShellTerminalSessionService
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.storage.StorageAccess
@@ -297,6 +298,7 @@ class TerminalActivity : HostAppearanceActivity() {
         }
         terminalView.textSizeSp = preferences.textSizeSp
         terminalView.onResume()
+        CommandNotifications.visibleSessionId = session?.id
         refreshSubtitle()
         storageBanner.refresh()
         // The settings page may have flipped the Node.js integration switch while this screen was away (P5.1).
@@ -304,6 +306,7 @@ class TerminalActivity : HostAppearanceActivity() {
     }
 
     override fun onPause() {
+        if (CommandNotifications.visibleSessionId == session?.id) CommandNotifications.visibleSessionId = null
         textSelection?.dismiss()
         terminalView.onPause()
         // A foreground terminal may attach the same PTY while this screen stays underneath it.
@@ -355,6 +358,8 @@ class TerminalActivity : HostAppearanceActivity() {
         parent.addView(terminalView, index, params)
         session = newSession
         sessionAttached = true
+        // A session switched in while the screen is resumed is the one the user sees (no completion notice needed).
+        if (lifecycle.currentState.isAtLeast(androidx.lifecycle.Lifecycle.State.RESUMED)) CommandNotifications.visibleSessionId = newSession.id
         val pty = newSession.pty
         val view = terminalView
         val scheme = ColorScheme(palette.terminalForeground, palette.terminalBackground)

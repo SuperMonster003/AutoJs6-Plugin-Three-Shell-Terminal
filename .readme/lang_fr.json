@@ -17,7 +17,8 @@
     "Chaîne Node.js : avec le plugin Node.js Runtime (1.5.0+), node / npm / npx / corepack / yarn / pnpm deviennent disponibles, avec les réglages de registre npm et \"ignorer les scripts d'installation\" et le menu de paquets (npm init / install / run script, etc.).",
     "Entrées AutoJs6 : l'interrupteur du tiroir d'accueil (nombre de sessions, tout fermer), \"Ouvrir dans le terminal\" dans le menu des dossiers du gestionnaire de fichiers et la barre d'outils du projet.",
     "API de script `terminal` (alias `$terminal`) : gestion des sessions, exécution visible (`exec`, `npm.run`) et objet session avec événements `output` / `exit`, `write` et `waitFor` ; chaque échec est une `TerminalError` au `code` stable.",
-    "Application autonome : l'icône du lanceur ouvre directement le terminal ; page de réglages (apparence suivant AutoJs6, taille du texte, registre npm, intégration Node.js, accès à tous les fichiers, effacer les données du terminal), À propos et historique des versions."
+    "Notifications de fin de commande : lorsqu'une commande sans shell interactif (par exemple un `exec` de script avec `keepOpen: false`) se termine d'elle-même, une notification ouvre la fin de sa sortie pour la copier, la partager ou rouvrir un terminal dans son dossier ; la notification ne cite que la session et le dossier, jamais la commande ni la sortie, et peut être désactivée dans les réglages.",
+    "Application autonome : l'icône du lanceur ouvre directement le terminal ; page de réglages (apparence suivant AutoJs6, taille du texte, registre npm, intégration Node.js, signatures Node.js approuvées, notifications de fin de commande, accès à tous les fichiers, effacer les données du terminal), À propos et historique des versions."
   ],
   "h3_usage": "Utilisation",
   "usage_steps": [

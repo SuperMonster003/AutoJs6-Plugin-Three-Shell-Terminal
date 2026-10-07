@@ -18,6 +18,10 @@
     <string name="app_settings_follow_system">跟隨系統</string>
     <string name="app_settings_language">語言</string>
     <string name="app_settings_theme_color">主題色</string>
+    <string name="command_result_exit_code">結束代碼 %1$d</string>
+    <string name="command_result_open_terminal">在此開啟終端機</string>
+    <string name="command_result_title">指令輸出</string>
+    <string name="command_result_unavailable">該指令的輸出已不可用. 輸出只保存在記憶體中, 外掛程式重新啟動後即不再保留.</string>
     <string name="document_loading" tools:ignore="TypographyEllipsis">正在載入...</string>
     <string name="launcher_icon_applied_note">啟動器可能需要幾秒鐘重新整理. 部分主畫面捷徑可能需要重新新增.</string>
     <string name="launcher_icon_auto">自適應圖示 (自動)</string>
@@ -31,6 +35,11 @@
     <string name="notification_channel_description">顯示在背景持續執行的終端機工作階段, 並可將其關閉</string>
     <string name="notification_channel_name">終端機工作階段</string>
     <string name="notification_close_sessions">關閉工作階段</string>
+    <string name="notification_command_failed">指令失敗 (結束代碼 %1$d)</string>
+    <string name="notification_command_finished">指令已完成</string>
+    <string name="notification_command_session">工作階段 %1$s, %2$s</string>
+    <string name="notification_commands_channel_description">不帶互動式 shell 執行的指令 (例如指令碼的 exec) 結束時通知你</string>
+    <string name="notification_commands_channel_name">已結束的指令</string>
     <string name="notification_title">終端機工作階段執行中</string>
     <string name="notification_title_multiple" tools:ignore="PluralsCandidate">%1$d 個終端機工作階段執行中</string>
     <string name="plugin_description">多工作階段終端機, 在 pty 中執行系統 shell, 支援背景執行, 快捷按鍵及 Node.js 命令</string>
@@ -45,6 +54,8 @@
     <string name="settings_clear_data_confirm">刪除 %1$s 下的全部終端機資料? 執行中的工作階段將被關閉.</string>
     <string name="settings_clear_data_summary">刪除終端機主目錄, 已安裝的套件與 npm 快取</string>
     <string name="settings_clearing" tools:ignore="TypographyEllipsis">正在清除終端機資料...</string>
+    <string name="settings_command_notifications">指令完成通知</string>
+    <string name="settings_command_notifications_summary">不帶互動式 shell 啟動的指令 (例如指令碼的 exec) 結束時發出通知, 點按可查看輸出</string>
     <string name="settings_data_cleared">終端機資料已清除</string>
     <string name="settings_license">授權條款</string>
     <string name="settings_node_integration">Node.js 整合</string>

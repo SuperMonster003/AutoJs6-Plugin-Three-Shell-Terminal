@@ -1,6 +1,7 @@
 package io.github.supermonster003.autojs6.plugin.three.shell.terminal.core
 
 import android.content.Context
+import io.github.supermonster003.autojs6.plugin.three.shell.terminal.service.CommandNotifications
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.service.ThreeShellTerminalSessionService
 import java.io.File
 import java.util.concurrent.atomic.AtomicLong
@@ -24,6 +25,8 @@ object TerminalSessionManager {
         val paths: TerminalPaths,
         title: String,
         val createdAt: Long = System.currentTimeMillis(),
+        /** False for a command that exits with its own status instead of leaving a shell (`keepOpen: false`). */
+        val keepOpen: Boolean = true,
     ) {
         /**
          * Short label for lists and notifications: the explicit title of the request, otherwise the
@@ -38,6 +41,11 @@ object TerminalSessionManager {
         val exitCode: Int? get() = pty.exitCode
 
         val isAlive: Boolean get() = pty.isProcessAlive
+
+        /** Set by [close]: the user, the host or a script ended the session, so its exit is not a finished command. */
+        @Volatile
+        var closeRequested: Boolean = false
+            internal set
     }
 
     /** Receives the exit code of a session's shell (main thread) right before the session leaves the registry. zh-CN: 会话 shell 的退出码 (主线程), 在会话移出注册表之前收到. */
@@ -94,6 +102,7 @@ object TerminalSessionManager {
      * @param command          command line the session runs or the caller is about to type, used for the default title
      * @param id               an id from [reserveId], otherwise a fresh one
      * @param argv             the child's argv; defaults to the interactive wrapper of [TerminalSessionLauncher]
+     * @param keepOpen         whether [argv] leaves an interactive shell; a finished non-interactive [command] may post a completion notice (P8)
      * zh-CN: 准备磁盘目录布局, 构建环境变量, 并在 [directory] 启动 shell.
      */
     @JvmOverloads
@@ -105,12 +114,14 @@ object TerminalSessionManager {
         command: String? = null,
         id: String? = null,
         argv: List<String>? = null,
+        keepOpen: Boolean = true,
     ): Session {
         TerminalDataLifecycle.ticket()
         val paths = TerminalPaths.of(context).ensureLayout()
         val environment = TerminalEnvironment.build(buildSpec(paths, extraEnvironment))
         val pty = TerminalPtySession(argv ?: TerminalSessionLauncher.buildCommand(directory), environment)
-        val session = Session(id ?: reserveId(), pty, directory, paths, defaultTitle(directory, title, command))
+        val session = Session(id ?: reserveId(), pty, directory, paths, defaultTitle(directory, title, command), keepOpen = keepOpen)
+        if (!keepOpen && command != null) CommandNotifications.watch(context, session)
         synchronized(this) {
             check(session.id !in sessions) { "Session ${session.id} already exists" }
             sessions[session.id] = session
@@ -151,6 +162,7 @@ object TerminalSessionManager {
 
     fun close(id: String) {
         val session = synchronized(this) { sessions[id] } ?: return
+        session.closeRequested = true
         session.pty.finish()
         remove(id)
     }

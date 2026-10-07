@@ -138,7 +138,7 @@ class SettingsActivityInstrumentationTest {
         val expected = listOf(
             SettingsActivity.KEY_LANGUAGE, SettingsActivity.KEY_DARK_MODE, SettingsActivity.KEY_COLOR, SettingsActivity.KEY_LAUNCHER_ICON,
             SettingsActivity.KEY_TEXT_SIZE, SettingsActivity.KEY_REGISTRY, SettingsActivity.KEY_IGNORE_SCRIPTS, SettingsActivity.KEY_NODE_INTEGRATION,
-            SettingsActivity.KEY_NODE_PROBE, SettingsActivity.KEY_TRUSTED_SIGNERS, SettingsActivity.KEY_STORAGE, SettingsActivity.KEY_CLEAR_DATA,
+            SettingsActivity.KEY_NODE_PROBE, SettingsActivity.KEY_TRUSTED_SIGNERS, SettingsActivity.KEY_COMMAND_NOTIFICATIONS, SettingsActivity.KEY_STORAGE, SettingsActivity.KEY_CLEAR_DATA,
             SettingsActivity.KEY_UPDATE, SettingsActivity.KEY_HISTORY, SettingsActivity.KEY_ABOUT,
         )
         onMain {
@@ -187,7 +187,7 @@ class SettingsActivityInstrumentationTest {
         }
         await { onMain { !settings.hasUnconfirmedDialogForTest() } }
         assertFalse(onMain { settings.isFinishing })
-        Log.i(TAG, "all 15 rows present; language, theme color and clear-data dialogs cancelled without saving")
+        Log.i(TAG, "all 16 rows present; language, theme color and clear-data dialogs cancelled without saving")
     }
 
     @Test

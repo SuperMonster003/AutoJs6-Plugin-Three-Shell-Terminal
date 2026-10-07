@@ -208,6 +208,14 @@
             android:exported="false"
             android:theme="@style/Theme.ThreeShellTerminal" />
 
+        <!-- Command completion notices (roadmap P8): the notice opens the finished command's output kept in memory. -->
+        <activity
+            android:name=".ui.CommandResultActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:taskAffinity="${applicationId}.commands"
+            android:theme="@style/Theme.ThreeShellTerminal" />
+
         <service
             android:name=".ThreeShellTerminalPluginInfoService"
             android:enabled="true"

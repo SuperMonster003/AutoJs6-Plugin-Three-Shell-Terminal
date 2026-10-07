@@ -64,6 +64,15 @@ class TerminalPreferences(private val preferences: SharedPreferences) {
         set(value) = preferences.edit().putBoolean(KEY_NODE_INTEGRATION_ENABLED, value).apply()
 
     /**
+     * Whether a command that ran without an interactive shell (`keepOpen: false`) posts a notice when it ends
+     * (roadmap P8); on by default.
+     * zh-CN: 不带交互 shell 运行的命令 (`keepOpen: false`) 结束时是否发出通知 (P8); 默认开启.
+     */
+    var commandNotificationsEnabled: Boolean
+        get() = preferences.getBoolean(KEY_COMMAND_NOTIFICATIONS, true)
+        set(value) = preferences.edit().putBoolean(KEY_COMMAND_NOTIFICATIONS, value).apply()
+
+    /**
      * Signer sets the user confirmed for third-party Node.js Runtime builds (roadmap P8, D34 Q3), oldest
      * first; malformed stored values are ignored.
      * zh-CN: 用户为第三方 Node.js Runtime 构建确认过的签名集合 (P8, D34 Q3), 旧的在前; 忽略格式错误的存储值.
@@ -130,6 +139,7 @@ class TerminalPreferences(private val preferences: SharedPreferences) {
         const val KEY_NODE_INTEGRATION_ENABLED = "node_integration_enabled"
         const val KEY_NOTIFICATION_PERMISSION_REQUESTED = "notification_permission_requested"
         const val KEY_NODE_TRUSTED_SIGNERS = "node_trusted_signers"
+        const val KEY_COMMAND_NOTIFICATIONS = "command_completion_notifications"
 
         /** Appearance choices of the settings page (roadmap P5.1), read by `ui.AppearancePreferences`. */
         const val KEY_APPEARANCE_LANGUAGE = "appearance_language"

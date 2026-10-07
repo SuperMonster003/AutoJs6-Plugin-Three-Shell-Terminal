@@ -67,7 +67,8 @@ The plugin provides the following capabilities:
 - Node.js toolchain: with the Node.js Runtime plugin (1.5.0+) installed, node / npm / npx / corepack / yarn / pnpm become available, together with the npm registry and "ignore install scripts" settings and the package menu (npm init / install / run script and more).
 - AutoJs6 entries: the home drawer switch (session count, close all), "Open in terminal" in the file manager directory menu and the project toolbar.
 - Script API `terminal` (alias `$terminal`): session management, visible execution (`exec`, `npm.run`) and a session object with `output` / `exit` events, `write` and `waitFor`; every failure is a `TerminalError` with a stable `code`.
-- Standalone app: the launcher icon opens the terminal directly; a settings page (appearance following AutoJs6, text size, npm registry, Node.js integration, all files access, clear terminal data), About and the release history.
+- Command completion notices: when a command without an interactive shell (for example a script's `exec` with `keepOpen: false`) ends by itself, a notice opens the end of its output to copy, share or reopen a terminal in its directory; the notice names only the session and directory, never the command or output, and can be turned off in the settings.
+- Standalone app: the launcher icon opens the terminal directly; a settings page (appearance following AutoJs6, text size, npm registry, Node.js integration, trusted Node.js signers, command completion notices, all files access, clear terminal data), About and the release history.
 
 ******
 
@@ -197,6 +198,7 @@ The plugin's plans and progress are maintained as a checkable list in ROADMAP.md
 _2026/10/07_
 
 - `Feature` Trust a third-party Node.js Runtime signer: the environment probe lists the SHA-256 of an unofficial signer and offers "Trust this signer"; after a second confirmation new sessions can use its node / npm commands, and "Trusted Node.js signers" in the settings revokes the trust at any time
+- `Feature` Command completion notices: when a command without an interactive shell (for example a script's `exec` with `keepOpen: false`) ends by itself, a notice opens the end of its output to copy, share or reopen a terminal in its directory; notices name only the session and directory, a burst alerts once, and the settings can turn them off
 - `Fix` On newer Android versions such as Android 17, a long press on the terminal shows the selection handles and the Copy / Select all toolbar again, so text can be selected and copied
 - `Fix` Copying or sharing a very long transcript no longer crashes the plugin (on Android 7.0 the crash ended every session); overly long text keeps its most recent 100000 characters and a notice says so
 

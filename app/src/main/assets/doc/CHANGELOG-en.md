@@ -9,6 +9,7 @@
 ###### 2026/10/07
 
 * `Feature` Trust a third-party Node.js Runtime signer: the environment probe lists the SHA-256 of an unofficial signer and offers "Trust this signer"; after a second confirmation new sessions can use its node / npm commands, and "Trusted Node.js signers" in the settings revokes the trust at any time
+* `Feature` Command completion notices: when a command without an interactive shell (for example a script's `exec` with `keepOpen: false`) ends by itself, a notice opens the end of its output to copy, share or reopen a terminal in its directory; notices name only the session and directory, a burst alerts once, and the settings can turn them off
 * `Fix` On newer Android versions such as Android 17, a long press on the terminal shows the selection handles and the Copy / Select all toolbar again, so text can be selected and copied
 * `Fix` Copying or sharing a very long transcript no longer crashes the plugin (on Android 7.0 the crash ended every session); overly long text keeps its most recent 100000 characters and a notice says so
 

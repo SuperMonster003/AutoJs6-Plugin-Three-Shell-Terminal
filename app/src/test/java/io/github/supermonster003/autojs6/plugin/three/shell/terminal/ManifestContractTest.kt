@@ -135,9 +135,15 @@ class ManifestContractTest {
             listOf(
                 ".WakeActivity", ".ThreeShellTerminalEntryActivity", ".ui.LauncherActivity", ".ui.TerminalActivity", ".ui.TerminalManagerActivity",
                 ".ui.settings.AboutActivity", ".ui.settings.ReleaseHistoryActivity", ".ui.settings.SettingsActivity", ".ui.settings.NodeProbeActivity",
+                ".ui.CommandResultActivity",
             ),
             activities,
         )
+        // The completion notice opens its own private task, so clearing it never touches the terminal or settings tasks.
+        val result = manifest.child("application").children("activity").single { it.androidAttribute("name") == ".ui.CommandResultActivity" }
+        assertEquals("false", result.androidAttribute("exported"))
+        assertNull(result.androidAttributeOrNull("permission"))
+        assertEquals("\${applicationId}.commands", result.androidAttribute("taskAffinity"))
         val terminal = manifest.child("application").children("activity").single { it.androidAttribute("name") == ".ui.TerminalActivity" }
         assertEquals("false", terminal.androidAttribute("exported"))
         assertNull("the terminal screen needs no caller permission because it is not exported", terminal.androidAttributeOrNull("permission"))

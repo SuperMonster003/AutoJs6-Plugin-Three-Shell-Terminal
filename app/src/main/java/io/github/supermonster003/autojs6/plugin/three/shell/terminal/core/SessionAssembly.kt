@@ -86,7 +86,7 @@ object SessionAssembly {
         environment.putAll(extraEnvironment)
         val directory = plan.directory.directory.path
         val argv = TerminalSessionLauncher.buildCommand(directory, command, keepOpen)
-        return TerminalSessionManager.create(context, directory, environment, title, command, id, argv)
+        return TerminalSessionManager.create(context, directory, environment, title, command, id, argv, keepOpen)
     }
 
 }

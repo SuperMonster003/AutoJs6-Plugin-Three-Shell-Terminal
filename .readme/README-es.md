@@ -67,7 +67,8 @@ El complemento ofrece las siguientes capacidades:
 - Cadena Node.js: con el plugin Node.js Runtime (1.5.0+) instalado quedan disponibles node / npm / npx / corepack / yarn / pnpm, junto con los ajustes de registro npm e "ignorar scripts de instalación" y el menú de paquetes (npm init / install / run script y más).
 - Entradas de AutoJs6: el interruptor del cajón de inicio (número de sesiones, cerrar todas), "Abrir en el terminal" en el menú de carpetas del gestor de archivos y en la barra de herramientas del proyecto.
 - API de script `terminal` (alias `$terminal`): gestión de sesiones, ejecución visible (`exec`, `npm.run`) y un objeto de sesión con eventos `output` / `exit`, `write` y `waitFor`; cada fallo es un `TerminalError` con un `code` estable.
-- Aplicación independiente: el icono del lanzador abre directamente el terminal; página de ajustes (apariencia que sigue a AutoJs6, tamaño del texto, registro npm, integración Node.js, acceso a todos los archivos, borrar datos del terminal), Acerca de e historial de versiones.
+- Avisos de fin de comando: cuando un comando sin shell interactivo (por ejemplo un `exec` de script con `keepOpen: false`) termina por sí mismo, un aviso abre el final de su salida para copiarla, compartirla o reabrir un terminal en su carpeta; el aviso solo indica la sesión y la carpeta, nunca el comando ni la salida, y se puede desactivar en los ajustes.
+- Aplicación independiente: el icono del lanzador abre directamente el terminal; página de ajustes (apariencia que sigue a AutoJs6, tamaño del texto, registro npm, integración Node.js, firmas de Node.js de confianza, avisos de fin de comando, acceso a todos los archivos, borrar datos del terminal), Acerca de e historial de versiones.
 
 ******
 
@@ -197,6 +198,7 @@ Los planes y el progreso del plugin se mantienen como una lista verificable en R
 _2026/10/07_
 
 - `Función` Confiar en la firma de un Node.js Runtime de terceros: el diagnóstico del entorno muestra el SHA-256 de una firma no oficial y ofrece "Confiar en esta firma"; tras una segunda confirmación, las nuevas sesiones pueden usar sus comandos node / npm, y "Firmas de Node.js de confianza" en los ajustes revoca la confianza en cualquier momento
+- `Función` Avisos de fin de comando: cuando un comando sin shell interactivo (por ejemplo un `exec` de script con `keepOpen: false`) termina por sí mismo, un aviso abre el final de su salida para copiarla, compartirla o reabrir un terminal en su carpeta; los avisos solo indican la sesión y la carpeta, una ráfaga alerta una sola vez y los ajustes permiten desactivarlos
 - `Corrección` En versiones recientes de Android como Android 17, una pulsación larga en la terminal vuelve a mostrar los controles de selección y la barra Copiar / Seleccionar todo, de modo que el texto se puede seleccionar y copiar
 - `Corrección` Copiar o compartir una transcripción muy larga ya no bloquea el complemento (en Android 7.0 el bloqueo cerraba todas las sesiones); un texto demasiado largo conserva sus últimos 100000 caracteres y un aviso lo indica
 

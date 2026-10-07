@@ -67,7 +67,8 @@ Le plugin fournit les capacités suivantes:
 - Chaîne Node.js : avec le plugin Node.js Runtime (1.5.0+), node / npm / npx / corepack / yarn / pnpm deviennent disponibles, avec les réglages de registre npm et "ignorer les scripts d'installation" et le menu de paquets (npm init / install / run script, etc.).
 - Entrées AutoJs6 : l'interrupteur du tiroir d'accueil (nombre de sessions, tout fermer), "Ouvrir dans le terminal" dans le menu des dossiers du gestionnaire de fichiers et la barre d'outils du projet.
 - API de script `terminal` (alias `$terminal`) : gestion des sessions, exécution visible (`exec`, `npm.run`) et objet session avec événements `output` / `exit`, `write` et `waitFor` ; chaque échec est une `TerminalError` au `code` stable.
-- Application autonome : l'icône du lanceur ouvre directement le terminal ; page de réglages (apparence suivant AutoJs6, taille du texte, registre npm, intégration Node.js, accès à tous les fichiers, effacer les données du terminal), À propos et historique des versions.
+- Notifications de fin de commande : lorsqu'une commande sans shell interactif (par exemple un `exec` de script avec `keepOpen: false`) se termine d'elle-même, une notification ouvre la fin de sa sortie pour la copier, la partager ou rouvrir un terminal dans son dossier ; la notification ne cite que la session et le dossier, jamais la commande ni la sortie, et peut être désactivée dans les réglages.
+- Application autonome : l'icône du lanceur ouvre directement le terminal ; page de réglages (apparence suivant AutoJs6, taille du texte, registre npm, intégration Node.js, signatures Node.js approuvées, notifications de fin de commande, accès à tous les fichiers, effacer les données du terminal), À propos et historique des versions.
 
 ******
 
@@ -197,6 +198,7 @@ Les plans et l'avancement du plugin sont tenus sous forme de liste cochable dans
 _2026/10/07_
 
 - `Fonctionnalité` Approuver la signature d'un Node.js Runtime tiers: le diagnostic de l'environnement affiche le SHA-256 d'une signature non officielle et propose "Faire confiance à cette signature"; après une seconde confirmation, les nouvelles sessions peuvent utiliser ses commandes node / npm, et "Signatures Node.js approuvées" dans les paramètres révoque la confiance à tout moment
+- `Fonctionnalité` Notifications de fin de commande: lorsqu'une commande sans shell interactif (par exemple un `exec` de script avec `keepOpen: false`) se termine d'elle-même, une notification ouvre la fin de sa sortie pour la copier, la partager ou rouvrir un terminal dans son dossier; les notifications ne citent que la session et le dossier, une rafale n'alerte qu'une fois, et les réglages permettent de les désactiver
 - `Correctif` Sur les versions récentes d'Android comme Android 17, un appui long sur le terminal affiche de nouveau les poignées de sélection et la barre Copier / Tout sélectionner, le texte peut donc être sélectionné et copié
 - `Correctif` Copier ou partager une très longue transcription ne fait plus planter le plugin (sous Android 7.0, le plantage fermait toutes les sessions); un texte trop long conserve ses 100000 derniers caractères et une notification l'indique
 

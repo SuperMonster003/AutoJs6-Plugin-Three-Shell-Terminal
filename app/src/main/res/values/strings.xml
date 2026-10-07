@@ -18,6 +18,10 @@
     <string name="app_settings_follow_system">Follow system</string>
     <string name="app_settings_language">Language</string>
     <string name="app_settings_theme_color">Theme color</string>
+    <string name="command_result_exit_code">Exit code %1$d</string>
+    <string name="command_result_open_terminal">Open terminal here</string>
+    <string name="command_result_title">Command output</string>
+    <string name="command_result_unavailable">The output of this command is no longer available. It is kept in memory only until the plugin restarts.</string>
     <string name="document_loading" tools:ignore="TypographyEllipsis">Loading...</string>
     <string name="launcher_icon_applied_note">The launcher may take a few seconds to refresh. Some home-screen shortcuts may need to be added again.</string>
     <string name="launcher_icon_auto">Adaptive icon (automatic)</string>
@@ -31,6 +35,11 @@
     <string name="notification_channel_description">Shows terminal sessions that keep running in the background and lets you close them</string>
     <string name="notification_channel_name">Terminal sessions</string>
     <string name="notification_close_sessions">Close sessions</string>
+    <string name="notification_command_failed">Command failed (exit code %1$d)</string>
+    <string name="notification_command_finished">Command finished</string>
+    <string name="notification_command_session">Session %1$s in %2$s</string>
+    <string name="notification_commands_channel_description">Tells you when a command that runs without an interactive shell, such as a script\'s exec, finishes</string>
+    <string name="notification_commands_channel_name">Finished commands</string>
     <string name="notification_title">Terminal session is running</string>
     <string name="notification_title_multiple" tools:ignore="PluralsCandidate">%1$d terminal sessions are running</string>
     <string name="plugin_description">A multi-session terminal running the system shell in a pty, with background sessions, a key bar and Node.js commands</string>
@@ -45,6 +54,8 @@
     <string name="settings_clear_data_confirm">Delete all terminal data under %1$s? Running sessions will be closed.</string>
     <string name="settings_clear_data_summary">Remove the terminal home, installed packages and npm caches</string>
     <string name="settings_clearing" tools:ignore="TypographyEllipsis">Clearing terminal data...</string>
+    <string name="settings_command_notifications">Command completion notifications</string>
+    <string name="settings_command_notifications_summary">Notify when a command started without an interactive shell, such as a script\'s exec, finishes; the notice shows its output</string>
     <string name="settings_data_cleared">Terminal data cleared</string>
     <string name="settings_license">License</string>
     <string name="settings_node_integration">Node.js integration</string>

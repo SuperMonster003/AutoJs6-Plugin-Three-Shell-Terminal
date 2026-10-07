@@ -20,6 +20,7 @@ class TerminalPreferencesTest {
         assertEquals("node_integration_enabled", TerminalPreferences.KEY_NODE_INTEGRATION_ENABLED)
         assertEquals("notification_permission_requested", TerminalPreferences.KEY_NOTIFICATION_PERMISSION_REQUESTED)
         assertEquals("node_trusted_signers", TerminalPreferences.KEY_NODE_TRUSTED_SIGNERS)
+        assertEquals("command_completion_notifications", TerminalPreferences.KEY_COMMAND_NOTIFICATIONS)
         assertEquals(listOf("appearance_language", "appearance_dark_mode", "appearance_color"), TerminalPreferences.APPEARANCE_KEYS)
         assertEquals(
             listOf("manager_status_collapsed", "manager_controls_collapsed", "manager_sessions_collapsed", "manager_settings_collapsed"),

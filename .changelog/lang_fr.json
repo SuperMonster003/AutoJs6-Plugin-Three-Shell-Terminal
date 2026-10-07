@@ -8,7 +8,8 @@
     "v1.1.0": {
       "released_date": "2026/10/07",
       "feature": [
-        "Approuver la signature d'un Node.js Runtime tiers: le diagnostic de l'environnement affiche le SHA-256 d'une signature non officielle et propose \"Faire confiance à cette signature\"; après une seconde confirmation, les nouvelles sessions peuvent utiliser ses commandes node / npm, et \"Signatures Node.js approuvées\" dans les paramètres révoque la confiance à tout moment"
+        "Approuver la signature d'un Node.js Runtime tiers: le diagnostic de l'environnement affiche le SHA-256 d'une signature non officielle et propose \"Faire confiance à cette signature\"; après une seconde confirmation, les nouvelles sessions peuvent utiliser ses commandes node / npm, et \"Signatures Node.js approuvées\" dans les paramètres révoque la confiance à tout moment",
+        "Notifications de fin de commande: lorsqu'une commande sans shell interactif (par exemple un `exec` de script avec `keepOpen: false`) se termine d'elle-même, une notification ouvre la fin de sa sortie pour la copier, la partager ou rouvrir un terminal dans son dossier; les notifications ne citent que la session et le dossier, une rafale n'alerte qu'une fois, et les réglages permettent de les désactiver"
       ],
       "fix": [
         "Sur les versions récentes d'Android comme Android 17, un appui long sur le terminal affiche de nouveau les poignées de sélection et la barre Copier / Tout sélectionner, le texte peut donc être sélectionné et copié",

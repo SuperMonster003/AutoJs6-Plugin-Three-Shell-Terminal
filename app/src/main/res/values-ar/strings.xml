@@ -18,6 +18,10 @@
     <string name="app_settings_follow_system">اتباع النظام</string>
     <string name="app_settings_language">اللغة</string>
     <string name="app_settings_theme_color">لون السمة</string>
+    <string name="command_result_exit_code">رمز الخروج %1$d</string>
+    <string name="command_result_open_terminal">فتح الطرفية هنا</string>
+    <string name="command_result_title">مخرجات الأمر</string>
+    <string name="command_result_unavailable">لم تعد مخرجات هذا الأمر متاحة. تحفظ في الذاكرة فقط حتى إعادة تشغيل الإضافة.</string>
     <string name="document_loading" tools:ignore="TypographyEllipsis">جار التحميل...</string>
     <string name="launcher_icon_applied_note">قد يستغرق تحديث المشغل بضع ثوان. قد تحتاج إلى إضافة بعض اختصارات الشاشة الرئيسية مرة أخرى.</string>
     <string name="launcher_icon_auto">أيقونة تكيفية (تلقائية)</string>
@@ -31,6 +35,11 @@
     <string name="notification_channel_description">يعرض جلسات الطرفية التي تستمر في العمل في الخلفية ويتيح إغلاقها</string>
     <string name="notification_channel_name">جلسات الطرفية</string>
     <string name="notification_close_sessions">إغلاق الجلسات</string>
+    <string name="notification_command_failed">فشل الأمر (رمز الخروج %1$d)</string>
+    <string name="notification_command_finished">اكتمل الأمر</string>
+    <string name="notification_command_session">الجلسة %1$s في %2$s</string>
+    <string name="notification_commands_channel_description">يخبرك عند انتهاء أمر يعمل دون صدفة تفاعلية, مثل exec في نص برمجي</string>
+    <string name="notification_commands_channel_name">الأوامر المنتهية</string>
     <string name="notification_title">جلسة الطرفية قيد التشغيل</string>
     <string name="notification_title_multiple" tools:ignore="PluralsCandidate">%1$d جلسات طرفية قيد التشغيل</string>
     <string name="plugin_description">طرفية متعددة الجلسات تشغل shell النظام في pty, مع جلسات في الخلفية وشريط مفاتيح وأوامر Node.js</string>
@@ -45,6 +54,8 @@
     <string name="settings_clear_data_confirm">هل تريد حذف كل بيانات الطرفية ضمن %1$s? سيتم إغلاق الجلسات قيد التشغيل.</string>
     <string name="settings_clear_data_summary">إزالة الدليل الرئيسي للطرفية والحزم المثبتة وذاكرة npm المؤقتة</string>
     <string name="settings_clearing" tools:ignore="TypographyEllipsis">جار مسح بيانات الطرفية...</string>
+    <string name="settings_command_notifications">إشعارات اكتمال الأوامر</string>
+    <string name="settings_command_notifications_summary">إشعار عند انتهاء أمر بدأ دون صدفة تفاعلية, مثل exec في نص برمجي; يعرض الإشعار مخرجاته</string>
     <string name="settings_data_cleared">تم مسح بيانات الطرفية</string>
     <string name="settings_license">الترخيص</string>
     <string name="settings_node_integration">تكامل Node.js</string>

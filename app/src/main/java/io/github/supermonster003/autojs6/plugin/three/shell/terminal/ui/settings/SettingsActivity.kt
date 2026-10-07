@@ -35,7 +35,8 @@ import java.util.Locale
  * The standalone settings page (roadmap D29, P5.1; standalone settings specification): the
  * appearance group (language, night mode, theme color, launcher icon, each defaulting to "follow
  * AutoJs6"), the terminal group (text size, npm registry, ignore-scripts, Node.js integration,
- * environment probe, user-trusted Node.js signers (P8), all-files access, clear data) and the information group (update check,
+ * environment probe, user-trusted Node.js signers and command completion notices (P8), all-files access,
+ * clear data) and the information group (update check,
  * version history, About). Every choice dialog follows choose-then-confirm; a change applies at
  * once, appearance changes by recreating the screen. The host's plugin center reaches this screen
  * through `org.autojs.plugin.TERMINAL_SETTINGS` behind the plugin permission, the terminal menu
@@ -144,6 +145,9 @@ class SettingsActivity : HostAppearanceActivity() {
             startActivity(Intent(this@SettingsActivity, NodeProbeActivity::class.java))
         })
         add(page, KEY_TRUSTED_SIGNERS, settingRow(getString(R.string.settings_trusted_signers), trustedSignersSummary(), R.drawable.ic_settings_key, KEY_TRUSTED_SIGNERS) { chooseTrustedSignerToRevoke() })
+        add(page, KEY_COMMAND_NOTIFICATIONS, switchRow(getString(R.string.settings_command_notifications), getString(R.string.settings_command_notifications_summary), R.drawable.ic_settings_notification, preferences.commandNotificationsEnabled, KEY_COMMAND_NOTIFICATIONS) { enabled ->
+            preferences.commandNotificationsEnabled = enabled
+        })
         add(page, KEY_STORAGE, settingRow(getString(R.string.settings_all_files_access), storageSummary(), R.drawable.ic_settings_storage, KEY_STORAGE) { openStorageAccess() })
         add(page, KEY_CLEAR_DATA, settingRow(getString(R.string.settings_clear_data), getString(R.string.settings_clear_data_summary), R.drawable.ic_settings_delete, KEY_CLEAR_DATA, chevron = false, titleColor = palette.danger) { confirmClearData() }, divider = false)
 
@@ -169,6 +173,7 @@ class SettingsActivity : HostAppearanceActivity() {
         rows[KEY_REGISTRY]?.setSummary(registrySummary())
         rows[KEY_IGNORE_SCRIPTS]?.setChecked(preferences.npmIgnoreScripts)
         rows[KEY_NODE_INTEGRATION]?.setChecked(preferences.nodeIntegrationEnabled)
+        rows[KEY_COMMAND_NOTIFICATIONS]?.setChecked(preferences.commandNotificationsEnabled)
         rows[KEY_STORAGE]?.setSummary(storageSummary())
         rows[KEY_LAUNCHER_ICON]?.setSummary(launcherIconSummary())
         rows[KEY_TRUSTED_SIGNERS]?.setSummary(trustedSignersSummary())
@@ -356,6 +361,7 @@ class SettingsActivity : HostAppearanceActivity() {
         const val KEY_NODE_INTEGRATION = "terminal-node-integration"
         const val KEY_NODE_PROBE = "terminal-node-probe"
         const val KEY_TRUSTED_SIGNERS = "terminal-trusted-signers"
+        const val KEY_COMMAND_NOTIFICATIONS = "terminal-command-notifications"
         const val KEY_STORAGE = "terminal-storage"
         const val KEY_CLEAR_DATA = "terminal-clear-data"
         const val KEY_UPDATE = "info-update"

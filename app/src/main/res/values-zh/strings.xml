@@ -18,6 +18,10 @@
     <string name="app_settings_follow_system">跟随系统</string>
     <string name="app_settings_language">语言</string>
     <string name="app_settings_theme_color">主题色</string>
+    <string name="command_result_exit_code">退出码 %1$d</string>
+    <string name="command_result_open_terminal">在此打开终端</string>
+    <string name="command_result_title">命令输出</string>
+    <string name="command_result_unavailable">该命令的输出已不可用. 输出只保存在内存中, 插件重启后即不再保留.</string>
     <string name="document_loading" tools:ignore="TypographyEllipsis">正在加载...</string>
     <string name="launcher_icon_applied_note">启动器可能需要几秒钟刷新. 部分主屏幕快捷方式可能需要重新添加.</string>
     <string name="launcher_icon_auto">自适应图标 (自动)</string>
@@ -31,6 +35,11 @@
     <string name="notification_channel_description">显示在后台持续运行的终端会话, 并可将其关闭</string>
     <string name="notification_channel_name">终端会话</string>
     <string name="notification_close_sessions">关闭会话</string>
+    <string name="notification_command_failed">命令失败 (退出码 %1$d)</string>
+    <string name="notification_command_finished">命令已完成</string>
+    <string name="notification_command_session">会话 %1$s, %2$s</string>
+    <string name="notification_commands_channel_description">不带交互式 shell 运行的命令 (例如脚本的 exec) 结束时通知你</string>
+    <string name="notification_commands_channel_name">已结束的命令</string>
     <string name="notification_title">终端会话运行中</string>
     <string name="notification_title_multiple" tools:ignore="PluralsCandidate">%1$d 个终端会话运行中</string>
     <string name="plugin_description">多会话终端, 在 pty 中运行系统 shell, 支持后台运行, 快捷按键及 Node.js 命令</string>
@@ -45,6 +54,8 @@
     <string name="settings_clear_data_confirm">删除 %1$s 下的全部终端数据? 运行中的会话将被关闭.</string>
     <string name="settings_clear_data_summary">删除终端主目录, 已安装的包与 npm 缓存</string>
     <string name="settings_clearing" tools:ignore="TypographyEllipsis">正在清除终端数据...</string>
+    <string name="settings_command_notifications">命令完成通知</string>
+    <string name="settings_command_notifications_summary">不带交互式 shell 启动的命令 (例如脚本的 exec) 结束时发出通知, 点击可查看输出</string>
     <string name="settings_data_cleared">终端数据已清除</string>
     <string name="settings_license">许可证</string>
     <string name="settings_node_integration">Node.js 集成</string>

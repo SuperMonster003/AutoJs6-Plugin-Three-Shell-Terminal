@@ -18,6 +18,10 @@
     <string name="app_settings_follow_system">システムに従う</string>
     <string name="app_settings_language">言語</string>
     <string name="app_settings_theme_color">テーマ色</string>
+    <string name="command_result_exit_code">終了コード %1$d</string>
+    <string name="command_result_open_terminal">ここで端末を開く</string>
+    <string name="command_result_title">コマンドの出力</string>
+    <string name="command_result_unavailable">このコマンドの出力はもう利用できません. 出力はメモリにのみ保持され, プラグインの再起動で失われます.</string>
     <string name="document_loading" tools:ignore="TypographyEllipsis">読み込み中...</string>
     <string name="launcher_icon_applied_note">反映まで数秒かかる場合があります. ホーム画面のショートカットを再追加する必要がある場合があります.</string>
     <string name="launcher_icon_auto">アダプティブ アイコン (自動)</string>
@@ -31,6 +35,11 @@
     <string name="notification_channel_description">バックグラウンドで実行中のターミナルセッションを表示し, 終了できるようにします</string>
     <string name="notification_channel_name">ターミナルセッション</string>
     <string name="notification_close_sessions">セッションを終了</string>
+    <string name="notification_command_failed">コマンドが失敗しました (終了コード %1$d)</string>
+    <string name="notification_command_finished">コマンドが完了しました</string>
+    <string name="notification_command_session">セッション %1$s, %2$s</string>
+    <string name="notification_commands_channel_description">対話シェルなしで実行するコマンド (スクリプトの exec など) が終了したときに通知します</string>
+    <string name="notification_commands_channel_name">終了したコマンド</string>
     <string name="notification_title">ターミナルセッションを実行中</string>
     <string name="notification_title_multiple" tools:ignore="PluralsCandidate">%1$d 件のターミナルセッションを実行中</string>
     <string name="plugin_description">pty でシステムシェルを実行するマルチセッション端末. バックグラウンド実行, キーバー, Node.js コマンドに対応</string>
@@ -45,6 +54,8 @@
     <string name="settings_clear_data_confirm">%1$s 以下のターミナルデータをすべて削除しますか? 実行中のセッションは閉じられます.</string>
     <string name="settings_clear_data_summary">ターミナルのホーム, インストール済みパッケージ, npm キャッシュを削除します</string>
     <string name="settings_clearing" tools:ignore="TypographyEllipsis">ターミナルデータを消去しています...</string>
+    <string name="settings_command_notifications">コマンド完了の通知</string>
+    <string name="settings_command_notifications_summary">対話シェルなしで開始したコマンド (スクリプトの exec など) の終了時に通知し, タップで出力を表示します</string>
     <string name="settings_data_cleared">ターミナルデータを消去しました</string>
     <string name="settings_license">ライセンス</string>
     <string name="settings_node_integration">Node.js 連携</string>

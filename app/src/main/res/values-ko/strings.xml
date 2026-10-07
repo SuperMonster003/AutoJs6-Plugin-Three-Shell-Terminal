@@ -18,6 +18,10 @@
     <string name="app_settings_follow_system">시스템 따르기</string>
     <string name="app_settings_language">언어</string>
     <string name="app_settings_theme_color">테마 색상</string>
+    <string name="command_result_exit_code">종료 코드 %1$d</string>
+    <string name="command_result_open_terminal">여기서 터미널 열기</string>
+    <string name="command_result_title">명령 출력</string>
+    <string name="command_result_unavailable">이 명령의 출력을 더 이상 사용할 수 없습니다. 출력은 메모리에만 보관되며 플러그인이 다시 시작되면 사라집니다.</string>
     <string name="document_loading" tools:ignore="TypographyEllipsis">불러오는 중...</string>
     <string name="launcher_icon_applied_note">런처가 새로 고침되기까지 몇 초가 걸릴 수 있습니다. 일부 홈 화면 바로가기를 다시 추가해야 할 수 있습니다.</string>
     <string name="launcher_icon_auto">적응형 아이콘 (자동)</string>
@@ -31,6 +35,11 @@
     <string name="notification_channel_description">백그라운드에서 계속 실행 중인 터미널 세션을 표시하고 종료할 수 있게 합니다</string>
     <string name="notification_channel_name">터미널 세션</string>
     <string name="notification_close_sessions">세션 닫기</string>
+    <string name="notification_command_failed">명령이 실패했습니다 (종료 코드 %1$d)</string>
+    <string name="notification_command_finished">명령이 완료되었습니다</string>
+    <string name="notification_command_session">세션 %1$s, %2$s</string>
+    <string name="notification_commands_channel_description">대화형 셸 없이 실행되는 명령 (예: 스크립트의 exec)이 끝나면 알려 줍니다</string>
+    <string name="notification_commands_channel_name">완료된 명령</string>
     <string name="notification_title">터미널 세션 실행 중</string>
     <string name="notification_title_multiple" tools:ignore="PluralsCandidate">터미널 세션 %1$d 개 실행 중</string>
     <string name="plugin_description">pty에서 시스템 셸을 실행하는 다중 세션 터미널. 백그라운드 실행, 키 바, Node.js 명령 지원</string>
@@ -45,6 +54,8 @@
     <string name="settings_clear_data_confirm">%1$s 아래의 모든 터미널 데이터를 삭제할까요? 실행 중인 세션은 닫힙니다.</string>
     <string name="settings_clear_data_summary">터미널 홈, 설치된 패키지, npm 캐시를 삭제합니다</string>
     <string name="settings_clearing" tools:ignore="TypographyEllipsis">터미널 데이터를 지우는 중...</string>
+    <string name="settings_command_notifications">명령 완료 알림</string>
+    <string name="settings_command_notifications_summary">대화형 셸 없이 시작한 명령 (예: 스크립트의 exec)이 끝나면 알리고, 탭하면 출력을 보여 줍니다</string>
     <string name="settings_data_cleared">터미널 데이터를 지웠습니다</string>
     <string name="settings_license">라이선스</string>
     <string name="settings_node_integration">Node.js 연동</string>

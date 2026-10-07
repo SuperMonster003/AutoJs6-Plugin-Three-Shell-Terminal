@@ -26,3 +26,33 @@ Recorded from 2026-10-07. Each section names the change, its tests and the devic
 
 The device test injects the probe screen's resolution, because no third-party signed Node.js Runtime exists
 on the test devices. The trust rule itself runs through the JVM table.
+
+## Command completion notices (roadmap P8)
+
+- Scope: a session the registry created with a command and `keepOpen: false` (a script's `exec`, the Binder
+  `openSession` with that flag). Interactive shells never notify.
+- Capture: such a session sets `keepFinalTranscript`; `TerminalPtySession.finish` keeps the last 64 KiB of the
+  transcript before the emulator releases it. The notice waits up to 2 seconds for that finish (a grandchild can hold
+  the pty open), then reads the live tail. The terminal's own "[Process completed (code N)]" line is dropped from the
+  kept output because the result screen shows the exit code, and because the reaper can append that line before
+  the last output was drained (see the follow-up below).
+- Notice: channel `three.shell.terminal.commands` (default importance). The title is "Command finished" or "Command
+  failed (exit code N)" and the text names only the session number and directory. Notices share one group whose
+  summary alerts once, so a script running many commands does not ring for each. No notice when the switch is off,
+  the notification permission is missing, `TerminalSessionManager.close` ended the session, or the resumed terminal
+  shows that session.
+- Result screen: `CommandResultActivity` (not exported, own task affinity) shows the exit code, directory and kept
+  output, with copy / share (the same 100000-character bound as the terminal) and "Open terminal here". Results live
+  in memory only (`FinishedCommands`, at most 8); after a process restart the screen says the output is gone.
+
+| Evidence | Configuration | Result |
+| --- | --- | --- |
+| JVM | `core/CommandNoticesTest` (decision table, id range and summary id, bounded store, completion line removal), `ManifestContractTest`, `TerminalPreferencesTest` | 190 passed |
+| DEVICE | `service/CommandNotificationsInstrumentationTest` on API 37 x86_64 AVD, Redmi 22120RN86C API 33, Sony G8441 API 28 | 2 / 2 each |
+| DEVICE | `binder` package on the API 37 AVD; `SettingsActivityInstrumentationTest` (16 rows) on API 37 and API 33 | 18 / 18; 7 / 7 each |
+| DEVICE | real notice and result screen on the API 37 AVD (screenshots reviewed, not committed) | title "Command failed (exit code 2)", text "Session 1 in ~", output and three actions shown |
+
+Follow-up observed: when a non-interactive command exits right after printing, the reaper appends
+"[Process completed (code N)]" before the reader has drained the final output, so the terminal screen and
+`readTranscript` can show that line above the last output lines. This predates P8; the pty lifecycle was left
+unchanged here because P6 stabilized it under load.

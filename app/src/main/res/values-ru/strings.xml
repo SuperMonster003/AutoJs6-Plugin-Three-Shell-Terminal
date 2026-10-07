@@ -18,6 +18,10 @@
     <string name="app_settings_follow_system">Следовать системе</string>
     <string name="app_settings_language">Язык</string>
     <string name="app_settings_theme_color">Цвет темы</string>
+    <string name="command_result_exit_code">Код выхода %1$d</string>
+    <string name="command_result_open_terminal">Открыть терминал здесь</string>
+    <string name="command_result_title">Вывод команды</string>
+    <string name="command_result_unavailable">Вывод этой команды больше недоступен. Он хранится только в памяти до перезапуска плагина.</string>
     <string name="document_loading" tools:ignore="TypographyEllipsis">Загрузка...</string>
     <string name="launcher_icon_applied_note">Обновление значка может занять несколько секунд. Некоторые ярлыки на главном экране может потребоваться добавить заново.</string>
     <string name="launcher_icon_auto">Адаптивный значок (автоматически)</string>
@@ -31,6 +35,11 @@
     <string name="notification_channel_description">Показывает сеансы терминала, продолжающие работать в фоне, и позволяет их закрыть</string>
     <string name="notification_channel_name">Сеансы терминала</string>
     <string name="notification_close_sessions">Закрыть сеансы</string>
+    <string name="notification_command_failed">Команда завершилась с ошибкой (код выхода %1$d)</string>
+    <string name="notification_command_finished">Команда завершена</string>
+    <string name="notification_command_session">Сеанс %1$s в %2$s</string>
+    <string name="notification_commands_channel_description">Сообщает о завершении команды, запущенной без интерактивной оболочки, например exec из сценария</string>
+    <string name="notification_commands_channel_name">Завершенные команды</string>
     <string name="notification_title">Сеанс терминала выполняется</string>
     <string name="notification_title_multiple" tools:ignore="PluralsCandidate">Выполняется сеансов терминала: %1$d</string>
     <string name="plugin_description">Многосеансовый терминал, запускающий системную оболочку в pty, с фоновыми сеансами, панелью клавиш и командами Node.js</string>
@@ -45,6 +54,8 @@
     <string name="settings_clear_data_confirm">Удалить все данные терминала в %1$s? Запущенные сеансы будут закрыты.</string>
     <string name="settings_clear_data_summary">Удалить домашний каталог терминала, установленные пакеты и кэш npm</string>
     <string name="settings_clearing" tools:ignore="TypographyEllipsis">Очистка данных терминала...</string>
+    <string name="settings_command_notifications">Уведомления о завершении команд</string>
+    <string name="settings_command_notifications_summary">Уведомлять о завершении команды, запущенной без интерактивной оболочки, например exec из сценария; уведомление показывает ее вывод</string>
     <string name="settings_data_cleared">Данные терминала очищены</string>
     <string name="settings_license">Лицензия</string>
     <string name="settings_node_integration">Интеграция Node.js</string>

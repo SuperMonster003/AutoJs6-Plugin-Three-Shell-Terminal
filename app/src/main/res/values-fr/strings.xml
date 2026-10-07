@@ -18,6 +18,10 @@
     <string name="app_settings_follow_system">Suivre le système</string>
     <string name="app_settings_language">Langue</string>
     <string name="app_settings_theme_color">Couleur du thème</string>
+    <string name="command_result_exit_code">Code de sortie %1$d</string>
+    <string name="command_result_open_terminal">Ouvrir un terminal ici</string>
+    <string name="command_result_title">Sortie de la commande</string>
+    <string name="command_result_unavailable">La sortie de cette commande n\'est plus disponible. Elle n\'est conservée qu\'en mémoire jusqu\'au redémarrage du plugin.</string>
     <string name="document_loading" tools:ignore="TypographyEllipsis">Chargement...</string>
     <string name="launcher_icon_applied_note">Le lanceur peut prendre quelques secondes pour se rafraîchir. Certains raccourcis peuvent devoir être ajoutés à nouveau.</string>
     <string name="launcher_icon_auto">Icône adaptative (automatique)</string>
@@ -31,6 +35,11 @@
     <string name="notification_channel_description">Affiche les sessions de terminal qui continuent en arrière-plan et permet de les fermer</string>
     <string name="notification_channel_name">Sessions de terminal</string>
     <string name="notification_close_sessions">Fermer les sessions</string>
+    <string name="notification_command_failed">Échec de la commande (code de sortie %1$d)</string>
+    <string name="notification_command_finished">Commande terminée</string>
+    <string name="notification_command_session">Session %1$s dans %2$s</string>
+    <string name="notification_commands_channel_description">Vous avertit lorsqu\'une commande exécutée sans shell interactif, comme le exec d\'un script, se termine</string>
+    <string name="notification_commands_channel_name">Commandes terminées</string>
     <string name="notification_title">Session de terminal en cours</string>
     <string name="notification_title_multiple" tools:ignore="PluralsCandidate">%1$d sessions de terminal en cours</string>
     <string name="plugin_description">Terminal multi-session exécutant le shell système dans un pty, avec sessions en arrière-plan, barre de touches et commandes Node.js</string>
@@ -45,6 +54,8 @@
     <string name="settings_clear_data_confirm">Supprimer toutes les données du terminal dans %1$s ? Les sessions en cours seront fermées.</string>
     <string name="settings_clear_data_summary">Supprimer le répertoire personnel du terminal, les paquets installés et les caches npm</string>
     <string name="settings_clearing" tools:ignore="TypographyEllipsis">Effacement des données du terminal...</string>
+    <string name="settings_command_notifications">Notifications de fin de commande</string>
+    <string name="settings_command_notifications_summary">Avertit lorsqu\'une commande lancée sans shell interactif, comme le exec d\'un script, se termine; la notification affiche sa sortie</string>
     <string name="settings_data_cleared">Données du terminal effacées</string>
     <string name="settings_license">Licence</string>
     <string name="settings_node_integration">Intégration Node.js</string>

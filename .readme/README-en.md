@@ -137,7 +137,8 @@ Platform facts that shape what the plugin can do:
 ******
 
 - **Why does `cd /sdcard/Scripts` fail?** The plugin needs its own storage grant. Open the plugin settings or follow the terminal banner to grant "All files access" (Android 11+), or the storage permission on older systems.
-- **Why is there no node command?** Install the Node.js Runtime plugin (1.5.0+) from the AutoJs6 plugin center; the "environment probe" in the plugin settings shows the exact reason (missing, too old, untrusted signature or launcher not executable).
+- **Can the terminal open a `content://` directory (for example one granted through the system file picker)?** No. A shell can only enter real file system paths, while a `content://` address is reachable only through its content provider. The script API refuses such addresses; other entries return to the home directory with a notice. For shared storage use a path such as `/sdcard/...` and grant all files access.
+- **Why is there no node command?** Install the Node.js Runtime plugin (1.5.0+) from the AutoJs6 plugin center; the "environment probe" in the plugin settings shows the exact reason (missing, too old, untrusted signature or launcher not executable). For an untrusted signer the probe lists its SHA-256; after you confirm the trust, new sessions can use its commands.
 - **Can the system stop background sessions?** Yes. Sessions cannot be restored after the plugin process is terminated. On HyperOS, MIUI and other restricted systems, allow notifications and background activity in Android settings; opening the terminal retries foreground protection when permitted. Leaving the screen normally keeps sessions running, but a foreground service cannot override system restrictions.
 
 ******

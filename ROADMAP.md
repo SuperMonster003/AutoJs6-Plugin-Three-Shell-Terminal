@@ -17,7 +17,7 @@
 
 ## 1. 固定决策
 
-以下决策 D1-D11 已由维护者于 2026-10-01 分三轮确认, 后续阶段不再重新讨论 (D2 含一处核实后的修正, 见附录 D 的 Q1); D12-D33 为据此派生的技术决策, D34 为维护者于 2026-10-01 对附录 D 的拍板; 附录 D 全部问题已关闭, 后续视同固定.
+以下决策 D1-D11 已由维护者于 2026-10-01 分三轮确认, 后续阶段不再重新讨论 (D2 含一处核实后的修正, 见附录 D 的 Q1); D12-D33 为据此派生的技术决策, D34 为维护者于 2026-10-01 对附录 D 的拍板; 附录 D 的 Q1-Q7 已关闭, 后续视同固定. 2026-10-07 的 P8 评估新增 Q8 / Q9 (已给出结论) 与 Q10 (待维护者拍板).
 
 | 编号 | 决策 | 含义 |
 | --- | --- | --- |
@@ -289,7 +289,7 @@ runtime/api/augment/terminal/           Terminal.kt (AugmentableKey("terminal"))
 
 建议会话切分: P0 一次 (骨架 + spike); P1 两次 (契约 + 客户端 + 入口改造 + 注册为一次; 删除旧终端 + 数据清理 + changelog + 文档为一次, 维护者已接受短期无终端 (D34 Q7), 两次可连续执行); P2 两到三次 (会话 / 服务 / 存储; Binder 与上限; Node CLI 与包管理); P3 一到两次; P4 两次 (第一 / 二档 + 错误; 第三档会话对象 + 输出管道 + 示例); P5 一到两次; P6 一到两次; P7 一次; P8 按需.
 
-当前进度 (2026-10-07): P0-P6 与 P7 的插件发布范围已完成. v1.0.0 (build 35, tag 7af6fc2) 已正式发布, 含 5 个签名 APK 与 SHA-256; 最终设备矩阵 13 次安装 / 26 项宿主检查全部通过, 受控进程终止恢复和云端 API 24 / API 35 检查通过. 官方索引已登记 46 个项目, 本插件的图稿与安装版本一致, Icon Studio 可识别为已发布. 发布证据见 docs/dev/p7-integration-evidence.md. 宿主推送仍按维护者原有门控独立处理. 下次功能开发起点为 P8.
+当前进度 (2026-10-07): P0-P7 的插件发布范围已完成, v1.0.0 (build 35, tag 7af6fc2) 已正式发布; 发布证据见 docs/dev/p7-integration-evidence.md. 同日复审已勾选条目, 修复两处 P3.1 迁入的界面缺陷并补齐证据; P8 已完成 "信任此签名", 命令完成通知, 终端配色与字体, 多标签页与 SAF 两项评估, 版本名进入 1.1.0 (未发布). 剩余: P8 Explorer Action v2 目录动作待维护者对附录 D Q10 拍板; 宿主推送仍按原门控; 1.1.0 发布需维护者授权后按 P7.3 的 gate 执行.
 
 ---
 
@@ -529,12 +529,12 @@ runtime/api/augment/terminal/           Terminal.kt (AugmentableKey("terminal"))
 
 ## P8: 1.1.0 候选
 
-- [ ] (插件 + 宿主) Explorer Action v2 目录动作 (D33 / Q6): 插件声明 `TARGET_DIRECTORY` 动作 "在终端中打开", 宿主删除 `menu_dir_options.xml` 的硬编码项与 `ExplorerPageViewHolder` 的分支; 保留项目工具栏与抽屉的 `TerminalLauncher` 路径.
+- [ ] (插件 + 宿主) Explorer Action v2 目录动作 (D33 / Q6): 插件声明 `TARGET_DIRECTORY` 动作 "在终端中打开", 宿主删除 `menu_dir_options.xml` 的硬编码项与 `ExplorerPageViewHolder` 的分支; 保留项目工具栏与抽屉的 `TerminalLauncher` 路径. (2026-10-07 评估: 当前协议 v22 只传 `content://` 目标与宿主会话, 不披露文件系统路径, 而终端必须 `cd` 到真实路径; 需维护者决定是否为协议增加窄口径的路径能力, 见附录 D Q10. 拍板前保持未勾选, 宿主硬编码入口继续有效)
 - [x] (插件) 配色方案 (至少 深 / 浅 / 跟随主题色 三套) 与等宽字体选择 (系统等宽 / 内置一款 OFL 字体); 字号与配色同步到设置页. (SOURCE / JVM / BUILD / DEVICE 2026-10-07: 设置页新增 "终端配色" (跟随外观 / 深色 / 浅色 / 按主题色着色, 主题色方案两种模式下对比度 >= 7:1) 与 "终端字体" (系统等宽 / 内置 JetBrains Mono NL 2.304, OFL-1.1, 无连字), 共 18 行; 界面回到前台时发现配色变化即重建并保留会话; emulatorview 补丁升级为 1.0.42-p8.1 (`PaintRenderer` 可设字体, 以 `Math.ceil` 取代 SDK 已移除的 `FloatMath`), 离线重建只改变该类; 字体来源与 SHA-256 记录于 `vendor/fonts/jetbrains-mono/` 与第三方声明, 关于页可离线查看 OFL; JVM 192/192; `TerminalAppearanceInstrumentationTest` 在 API 37 AVD 与 Redmi API 33 各 3/3, 签名发布包在 API 37 AVD 经设置页切换后生效; 发布 universal APK 2037690 字节 (+8.3%, 低于 10% 阈值); 见 `docs/dev/p8-evidence.md`)
 - [x] (插件) 命令完成通知: `exec` 的非交互会话退出时发通知 (可在设置关闭); 通知点击打开对应会话. (SOURCE / JVM / DEVICE 2026-10-07: `keepOpen: false` 且带命令的会话由注册表登记, 自行结束时 `TerminalPtySession.finish` 先保留输出末尾 64 KiB, `service/CommandNotifications` 在独立渠道 `three.shell.terminal.commands` 发通知 (标题为完成或失败与退出码, 正文只含会话编号与目录, 成组且摘要只提醒一次); 已结束的会话不再存在, 点击打开 `ui/CommandResultActivity` 显示保留的输出并可复制 / 分享 / 在原目录打开终端, 进程重启后提示输出不可用; 交互会话, `close()` 主动关闭, 设置开关关闭, 或终端正显示该会话时不通知; 设置页第 16 行 "命令完成通知" (默认开); JVM 190/190; `CommandNotificationsInstrumentationTest` 在 API 37 AVD, Redmi API 33, Sony G8441 API 28 各 2/2, API 37 `binder` 包 18/18; 见 `docs/dev/p8-evidence.md`)
 - [x] (插件) Node.js 插件签名的 "信任此签名" 确认流程 (D34 Q3): 探测详情页对非官方签名显示 SHA-256 与确认按钮, 确认后持久化到插件偏好, 设置页可撤销. (SOURCE / JVM / DEVICE 2026-10-07: `NodeCliTrust.Verdict.UserTrusted` 只匹配同一包完全相同的当前签名集合, 官方 / 自身规则优先, 轮换谱系不被覆盖; 偏好 `node_trusted_signers` 最多 8 条, 变更即清除定位器缓存; 终端横幅对未信任签名改为打开环境探测页, 其 "信任此签名" 经列出包名与摘要的破坏性确认后才保存, 设置页新增第 15 行 "受信任的 Node.js 签名" 先选后确认撤销; JVM 186/186; `ui.settings` 包在 API 37 AVD 与 Redmi API 33 各 12/12, Redmi `node` 包 5 通过 + 2 显式跳过; 见 `docs/dev/p8-evidence.md`)
-- [ ] (插件) 多标签页 UI 评估 (当前为多 Activity 实例 + 管理器); 评估结论写入附录 D.
-- [ ] (插件) 共享存储外的 `content://` 目录 (SAF) 评估: 终端只能操作真实路径, 结论预计为不支持, 文档注明.
+- [x] (插件) 多标签页 UI 评估 (当前为多 Activity 实例 + 管理器); 评估结论写入附录 D. (DOCS 2026-10-07: 附录 D Q8: 1.1.0 不做常驻标签栏 (纵向空间, 16 会话滚动, 与输入法 / 选择层 / P6 生命周期的回归面), 推荐 1.2.0 以工具栏标题弹出的会话列表作为轻量切换)
+- [x] (插件) 共享存储外的 `content://` 目录 (SAF) 评估: 终端只能操作真实路径, 结论预计为不支持, 文档注明. (DOCS 2026-10-07: 附录 D Q9: 不支持; 核对了脚本 API 拒绝 URI, Binder 返回 `DIRECTORY_INACCESSIBLE`, 界面回到 `HOME` 并提示三条路径; 10 语言 README 常见问题新增说明与 `/sdcard/...` 替代方式)
 
 ---
 
@@ -797,6 +797,24 @@ t.on('exit', code => console.log('done', code));
 - 推荐: P1.3 在 P3 完成后执行 (阶段总览已注明); 若维护者接受短期无终端, 可随 P1.2 一并执行以减少两套代码并存.
 - 拍板 (2026-10-01): 接受短期无终端, P1.3 随 P1.2 执行 (D34).
 
+### Q8 (P8 评估, 2026-10-07): 多标签页 UI
+
+- 现状: 每个终端任务只有一个 `TerminalActivity`, 切换会话时 `attachSession` 替换模拟器视图并附着另一个 pty; 会话经菜单 "终端管理器" 或宿主 / 通知入口切换, 只有从管理器打开时才叠出第二个终端 Activity. 注册表监听器已能实时反映 Binder 与脚本创建 / 关闭的会话.
+- 成本与风险: 常驻标签栏要与工具栏, 两行按键栏和输入法争夺纵向空间 (1080 x 2424 竖屏弹出输入法后终端区约 1000 px), 16 个会话上限下需要横向滚动; 标签切换要与输入法焦点, 文本选择层和 P6 已验收的旋转 / 分屏 / 重建行为协同, 回归面不小. 实现本身不复杂 (监听注册表 + 横向条目 + `attachSession`).
+- 结论: 1.1.0 不做常驻多标签页. 若需要更快的切换, 推荐轻量替代: 点击工具栏标题弹出会话列表 (编号, 目录, 状态), 选择后在当前界面 `attachSession`, 管理器继续负责新建 / 关闭 / 设置; 作为 1.2.0 候选, 不占用终端行数.
+
+### Q9 (P8 评估, 2026-10-07): 共享存储外的 `content://` 目录 (SAF)
+
+- 事实: shell 只能 `chdir` 到真实的文件系统路径; SAF 树 URI 只能经内容提供者以持久授权访问, 云盘, USB, 归档等提供者根本没有对应路径. `ExternalStorageProvider` 的 `primary:` 文档 ID 虽能映射到 `/storage/emulated/0`, 但那依赖提供者私有的 ID 格式, 且相比插件自己的全部文件访问没有增加任何能力.
+- 现有行为 (2026-10-07 核对源码): 宿主脚本 API `TerminalScriptArguments` 拒绝 `content://` 等 URI (`INVALID_ARGUMENT`); Binder `openSession` 的 `cwd` 经 `StorageAccess.resolveDirectory` 判为非绝对路径, 返回 `DIRECTORY_INACCESSIBLE`; 入口 Activity / 终端界面回到 `HOME` 并提示.
+- 结论: 不支持, 已在 10 语言 README 常见问题注明, 并给出 `/sdcard/...` + 全部文件访问的替代方式.
+
+### Q10 (P8 评估, 2026-10-07, 待维护者拍板): Explorer Action v2 目录动作需要真实路径
+
+- 事实: 宿主 Explorer Action 协议当前为 v22. 目标以 `AppFileProvider` 的 `content://` URI 传递, 目录目标附带 `HOST_SESSION` Binder 供枚举 (3-Stack Archive 即以此遍历目录); `PARENT_DISPLAY_PATH` 在契约中明确是 "display metadata, not a filesystem grant", v8 / v16 / v22 文档也反复声明插件不获得任意文件系统路径. 终端必须 `cd` 到真实路径, 与这一安全设计直接冲突; D33 / Q6 拍板时未核实这一点.
+- 选项: (A) 维持宿主硬编码的 "在终端中打开" (现状, 已验收); (B) 宿主为协议增加窄口径的可选能力, 例如 v23 目录目标在插件声明 `filesystemPath` 且动作为只读时附带规范化真实路径, 插件仍按自身存储授权解析 (路径只用于 `cd`, 不扩大访问面); (C) 以 `PARENT_DISPLAY_PATH` + 显示名拼出路径.
+- 建议: 不采用 C (把仅供显示的元数据当作路径, 违背契约且未来可能失效); 若维护者接受在该能力下披露路径则采用 B (宿主协议, 宿主文档与 10 语言 changelog 一并变更, 并新增宿主 `explorer-action-api` AAR 到插件锁文件), 否则维持 A. P8 第一项在拍板前保持未勾选.
+
 ---
 
 ## 附录 E: 证据等级, 设备池与退路
@@ -908,3 +926,12 @@ t.on('exit', code => console.log('done', code));
 - P5.3 推迟到 P6.2 的启动器光学复核此前没有记录, 本次在 API 37 AVD 的 Pixel 启动器完成 (见 P5.3 条目); P6.1-P6.3 与 P7.1-P7.3 已勾选条目补充行内证据摘要; 第 4.4 节图标行, D9 行, `AGENTS.md` 的仓库结构 (`.icons/`, `vendor/emulatorview/`, 图标工作流) 与 CI 说明按现状更新.
 - 保留事项: 宿主插件中心 Activity 仍未导出, Node.js 横幅的 "安装 Node.js Runtime" 继续打开 GitHub Releases (P3.1 遗留, 需宿主先导出 Intent); P1 记录的 "插件中心禁用态" 路由由宿主 JVM 决策表覆盖, 本次未在设备上复跑.
 - 设备说明: emulator-5586 (API 35) 正被宿主另一个 Compose 测试任务使用, 本次误装的插件包已卸载, 之后未再使用; adb 守护进程曾被外部重启; API 37 AVD 在内存耗尽 (交换约 80%, 负载 25) 时出现 Activity 启动超时, 维护者重启后复测通过.
+
+
+### 2026-10-07 P8 (1.1.0 候选)
+
+- 提交 (均为本地, 未推送): 22989e0 "信任此签名" (build 39), 4948fc5 命令完成通知 (build 40), 7f610c2 终端配色与字体 (build 41), c9b3fbd 字体许可证原文免于空白检查 (build 42), 以及本条所在的评估与文档提交. 版本名 1.1.0 自 076babd 起.
+- 验证: JVM 192/192; debug / androidTest / release (R8) / lintDebug 0 error 无新增警告 / 16 KB 对齐 / 36 个文档与 22 个 Icon Studio 资源检查通过; emulatorview 补丁离线重建可复现. 设备: API 37 x86_64 AVD 与 Redmi 22120RN86C API 33 的 `ui` 包各 28 项 (27 通过 + 1 项仅 API 24 的分屏用例跳过); 命令通知用例另在 Sony G8441 API 28 通过; `binder` 包 API 37 18/18; Redmi `node` 包 5 通过 + 2 跳过; 签名发布包在 API 37 AVD 经设置页切换配色与字体后生效. 发布 universal APK 2037690 字节 (+8.3%).
+- 评估: 附录 D Q8 (多标签页: 1.1.0 不做, 推荐 1.2.0 工具栏标题会话列表), Q9 (SAF: 不支持, README 注明), Q10 (Explorer Action v2 目录动作与协议 "不披露路径" 冲突, 待维护者拍板).
+- 后续事项: 非交互命令刚输出就退出时, 回收线程追加的 "[Process completed (code N)]" 可能排在最后几行输出之前 (P8 结果页已去掉该行, 终端界面与 `readTranscript` 仍可见, P6 已稳定的 pty 生命周期本次未改); 1.1.0 发布时同步兄弟仓库 `docs/nodejs/TERMINAL.md` 的信任规则 (该仓库有其它会话的未提交改动, 且当前文本对已发布的 1.0.0 仍准确); 文档仓库 `api/terminal.md` 可补充 `keepOpen: false` 的命令可能产生完成通知; 宿主插件中心 Activity 导出前, Node.js 横幅的安装动作继续打开 GitHub Releases.
+- 设备说明: API 37 AVD 上的终端字号偏好曾被一次因 adb 守护进程被外部重启而中断的用例留在 6 sp, 已恢复为 12; 其余真机的偏好未受影响.

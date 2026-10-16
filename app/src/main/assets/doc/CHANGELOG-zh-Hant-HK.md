@@ -6,7 +6,7 @@
 
 # v1.1.0
 
-###### 2026/10/07
+###### 2026/10/16
 
 * `新增` 信任第三方 Node.js Runtime 簽署: 環境探測頁對非官方簽署列出 SHA-256 並提供 "信任此簽署", 經二次確認後新工作階段即可使用其 node / npm 指令; 設定頁 "受信任的 Node.js 簽署" 可隨時撤銷
 * `新增` 指令完成通知: 不帶互動式 shell 的指令 (例如指令碼以 `keepOpen: false` 呼叫 `exec`) 自行結束時發出通知, 點按查看輸出末尾, 可複製, 分享或在原目錄開啟終端機; 通知只寫工作階段編號與目錄, 連續多條只提醒一次, 可在設定中關閉
@@ -15,6 +15,7 @@
 * `修復` 在 Android 17 等較新系統上, 長按終端後重新顯示選取控點與 "複製 / 全選" 工具列, 文字可以再次選取和複製
 * `修復` 複製或分享很長的終端記錄不再使外掛崩潰 (Android 7.0 上崩潰會結束全部工作階段); 過長時只使用最近的 100000 個字元並給出提示
 * `修復` 設定, 關於, 版本歷史, 環境探測與指令輸出頁面左上角的返回按鈕重新生效, 例如從 AutoJs6 插件中心進入外掛設定後可以返回插件中心
+* `修復` 阿拉伯語介面中, 3-Shell Terminal 不再被倒序顯示成 Shell Terminal-3
 * `依賴` 升級 jackpal emulatorview 修補 1.0.42-p6.1 -> 1.0.42-p8.1: 渲染器字型可由外掛設定, 並以 `Math.ceil` 取代 API 23 起已移出 SDK 的 `android.util.FloatMath`; 其餘類別逐位元組不變, `locks/vendored-aars.lock` 已更新
 * `依賴` 附加 JetBrains Mono NL 2.304 (SIL Open Font License 1.1) 作為可選的終端字型, 原樣打包並在關於頁提供授權條款, 來源與 SHA-256 記錄於 `vendor/fonts/jetbrains-mono/`
 * `依賴` 附加 `explorer-action-api.aar` (AutoJs6 模組 `plugin-api/explorer-action-api`, 主程式組建 6.8.0 / 5320, MPL 2.0) 作為 Explorer Action 協定 v23 契約, 用於檔案管理員目錄動作, 並在 `locks/host-api-aars.lock` 中鎖定雜湊

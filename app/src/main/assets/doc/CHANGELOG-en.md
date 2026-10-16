@@ -6,7 +6,7 @@
 
 # v1.1.0
 
-###### 2026/10/07
+###### 2026/10/16
 
 * `Feature` Trust a third-party Node.js Runtime signer: the environment probe lists the SHA-256 of an unofficial signer and offers "Trust this signer"; after a second confirmation new sessions can use its node / npm commands, and "Trusted Node.js signers" in the settings revokes the trust at any time
 * `Feature` Command completion notices: when a command without an interactive shell (for example a script's `exec` with `keepOpen: false`) ends by itself, a notice opens the end of its output to copy, share or reopen a terminal in its directory; notices name only the session and directory, a burst alerts once, and the settings can turn them off
@@ -15,6 +15,7 @@
 * `Fix` On newer Android versions such as Android 17, a long press on the terminal shows the selection handles and the Copy / Select all toolbar again, so text can be selected and copied
 * `Fix` Copying or sharing a very long transcript no longer crashes the plugin (on Android 7.0 the crash ended every session); overly long text keeps its most recent 100000 characters and a notice says so
 * `Fix` The back button at the top left of the Settings, About, Version history, environment probe and Command output screens works again, so the plugin settings opened from the AutoJs6 Plugin Center return to it
+* `Fix` In the Arabic interface, 3-Shell Terminal no longer appears reversed as Shell Terminal-3
 * `Dependency` Upgraded the jackpal emulatorview patch 1.0.42-p6.1 -> 1.0.42-p8.1: the plugin sets the renderer typeface, and `Math.ceil` replaces `android.util.FloatMath`, which left the SDK in API 23; every other class is byte-identical and `locks/vendored-aars.lock` is updated
 * `Dependency` Added JetBrains Mono NL 2.304 (SIL Open Font License 1.1) as the optional terminal font, bundled unmodified with its license on the About screen; source and SHA-256 are recorded in `vendor/fonts/jetbrains-mono/`
 * `Dependency` Added `explorer-action-api.aar` (AutoJs6 module `plugin-api/explorer-action-api`, host build 6.8.0 / 5320, MPL 2.0) as the Explorer Action protocol v23 contract for the file manager directory action, hash-locked in `locks/host-api-aars.lock`

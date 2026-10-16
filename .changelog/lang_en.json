@@ -6,7 +6,7 @@
   "changelog_label_dependency": "Dependency",
   "$data": {
     "v1.1.0": {
-      "released_date": "2026/10/07",
+      "released_date": "2026/10/16",
       "feature": [
         "Trust a third-party Node.js Runtime signer: the environment probe lists the SHA-256 of an unofficial signer and offers \"Trust this signer\"; after a second confirmation new sessions can use its node / npm commands, and \"Trusted Node.js signers\" in the settings revokes the trust at any time",
         "Command completion notices: when a command without an interactive shell (for example a script's `exec` with `keepOpen: false`) ends by itself, a notice opens the end of its output to copy, share or reopen a terminal in its directory; notices name only the session and directory, a burst alerts once, and the settings can turn them off",
@@ -16,7 +16,8 @@
       "fix": [
         "On newer Android versions such as Android 17, a long press on the terminal shows the selection handles and the Copy / Select all toolbar again, so text can be selected and copied",
         "Copying or sharing a very long transcript no longer crashes the plugin (on Android 7.0 the crash ended every session); overly long text keeps its most recent 100000 characters and a notice says so",
-        "The back button at the top left of the Settings, About, Version history, environment probe and Command output screens works again, so the plugin settings opened from the AutoJs6 Plugin Center return to it"
+        "The back button at the top left of the Settings, About, Version history, environment probe and Command output screens works again, so the plugin settings opened from the AutoJs6 Plugin Center return to it",
+        "In the Arabic interface, 3-Shell Terminal no longer appears reversed as Shell Terminal-3"
       ],
       "dependency": [
         "Upgraded the jackpal emulatorview patch 1.0.42-p6.1 -> 1.0.42-p8.1: the plugin sets the renderer typeface, and `Math.ceil` replaces `android.util.FloatMath`, which left the SDK in API 23; every other class is byte-identical and `locks/vendored-aars.lock` is updated",

@@ -65,7 +65,7 @@ The plugin provides the following capabilities:
 - Multiple sessions: create, switch, close and a session manager; a foreground service keeps sessions running after the screen is left, and its notification shows the current directory and the session count with a "Close sessions" action.
 - Terminal screen: a two-row key bar (Esc / Tab / Ctrl / arrows / common symbols), native text selection with Copy / Select all, transcript copy and share, text size, paste and clear; four terminal color schemes (follow the appearance / dark / light / tinted by the theme color) and the terminal font (system monospace or the built-in JetBrains Mono without ligatures).
 - Node.js toolchain: with the Node.js Runtime plugin (1.5.0+) installed, node / npm / npx / corepack / yarn / pnpm become available, together with the npm registry and "ignore install scripts" settings and the package menu (npm init / install / run script and more).
-- AutoJs6 entries: the home drawer switch (session count, close all), "Open in terminal" in the file manager directory menu and the project toolbar. Since AutoJs6 build 5320 the directory menu item comes from the plugin through the Explorer Action protocol, and AutoJs6 passes only the path of the selected directory.
+- AutoJs6 entries: the home drawer switch (session count, close all), "Open in terminal" in the file manager directory menu and the project toolbar. Since AutoJs6 build 5320 the directory menu item comes from the plugin through the Explorer Action protocol, and AutoJs6 passes only the path of the selected directory. From AutoJs6 6.8.1 this item is in the submenu `3-Shell Terminal`.
 - Script API `terminal` (alias `$terminal`): session management, visible execution (`exec`, `npm.run`) and a session object with `output` / `exit` events, `write` and `waitFor`; every failure is a `TerminalError` with a stable `code`.
 - Command completion notices: when a command without an interactive shell (for example a script's `exec` with `keepOpen: false`) ends by itself, a notice opens the end of its output to copy, share or reopen a terminal in its directory; the notice names only the session and directory, never the command or output, and can be turned off in the settings.
 - Standalone app: the launcher icon opens the terminal directly; a settings page (appearance following AutoJs6, text size, terminal colors and font, npm registry, Node.js integration, trusted Node.js signers, command completion notices, all files access, clear terminal data), About and the release history.
@@ -193,6 +193,12 @@ The plugin's plans and progress are maintained as a checkable list in ROADMAP.md
 ### Release History
 
 ******
+
+#### v1.1.1
+
+_2026/11/07_
+
+- `Improvement` The AutoJs6 file manager groups the menu options of this plugin under the submenu "3-Shell Terminal", named as in the Plugin Center (requires AutoJs6 6.8.1 or later)
 
 #### v1.1.0
 

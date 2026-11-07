@@ -100,6 +100,9 @@ class TerminalExplorerActionInstrumentationTest {
 
             val catalog = plugin.actionCatalog
             assertEquals(23, catalog.getInt(ExplorerActionCatalogKeys.PROTOCOL_VERSION))
+            // The first-level menu name of host protocol v27, declared without raising the catalog version.
+            assertEquals("app_name", catalog.getString("menuGroupLabelResourceName"))
+            assertEquals("3-Shell Terminal", catalog.getString("menuGroupLabelFallback"))
             val action = catalogActions(catalog).single()
             assertEquals(ThreeShellTerminalPlugin.EXPLORER_DIRECTORY_ACTION_ID, action.getString(ExplorerActionCatalogKeys.ID))
             assertEquals(ThreeShellTerminalExplorerActivity::class.java.name, action.getString(ExplorerActionCatalogKeys.ACTIVITY_CLASS_NAME))

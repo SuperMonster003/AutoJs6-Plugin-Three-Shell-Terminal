@@ -40,6 +40,26 @@ internal object TerminalExplorerAction {
     const val LABEL_FALLBACK = "Open in terminal"
 
     /**
+     * The name of the plugin's first-level menu in the AutoJs6 file manager (host Explorer Action protocol v27): the
+     * display name, as in the Plugin Center. The bundled explorer-action-api (v23) has no constants for the two
+     * catalog-level keys, hence the literal key names. Hosts from 6.8.1 read them from catalogs of every protocol
+     * version and older hosts ignore unknown keys, so the catalog stays at v23 and the minimum host version stays.
+     * zh-CN: 插件在 AutoJs6 文件管理器中的一级菜单名 (宿主 Explorer Action 协议 v27): 与插件中心一致的显示名. 内置的
+     * explorer-action-api (v23) 没有这两个目录级键的常量, 因此键名为字面量. 6.8.1 起的宿主从任何协议版本的目录读取它们,
+     * 更早的宿主忽略未知键, 所以目录仍为 v23, 最低宿主版本不变.
+     */
+    const val MENU_GROUP_LABEL_RESOURCE_NAME_KEY = "menuGroupLabelResourceName"
+
+    /** See [MENU_GROUP_LABEL_RESOURCE_NAME_KEY]. zh-CN: 见 [MENU_GROUP_LABEL_RESOURCE_NAME_KEY]. */
+    const val MENU_GROUP_LABEL_FALLBACK_KEY = "menuGroupLabelFallback"
+
+    /** The display name resource. zh-CN: 显示名资源. */
+    const val MENU_GROUP_LABEL_RESOURCE_NAME = "app_name"
+
+    /** The display name when the host cannot resolve the resource. zh-CN: 宿主无法解析资源时使用的显示名. */
+    const val MENU_GROUP_LABEL_FALLBACK = "3-Shell Terminal"
+
+    /**
      * The catalog entry as plain values so the JVM tests can freeze it; [catalog] maps it onto the
      * Bundle keys of the contract.
      * zh-CN: 以纯值表示的目录项, 供 JVM 测试冻结; [catalog] 将其映射为契约的 Bundle 键.
@@ -75,6 +95,8 @@ internal object TerminalExplorerAction {
     /** The `getActionCatalog()` answer. zh-CN: `getActionCatalog()` 的返回值. */
     fun catalog(): Bundle = Bundle().apply {
         putInt(ExplorerActionCatalogKeys.PROTOCOL_VERSION, spec.protocolVersion)
+        putString(MENU_GROUP_LABEL_RESOURCE_NAME_KEY, MENU_GROUP_LABEL_RESOURCE_NAME)
+        putString(MENU_GROUP_LABEL_FALLBACK_KEY, MENU_GROUP_LABEL_FALLBACK)
         putParcelableArrayList(
             ExplorerActionCatalogKeys.ACTIONS,
             arrayListOf(

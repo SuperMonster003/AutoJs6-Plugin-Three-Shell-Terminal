@@ -60,6 +60,31 @@ class TerminalExplorerActionTest {
         assertTrue(keep.contains("tools:keep=\"@string/${TerminalExplorerAction.LABEL_RESOURCE_NAME}\""))
     }
 
+    /**
+     * Host protocol v27 names the plugin's first-level menu through two catalog-level keys, read from catalogs of every
+     * protocol version; the catalog declares the display name and stays at v23 (the instrumentation test reads the
+     * keys over Binder).
+     */
+    @Test
+    fun `the catalog names the first-level menu after the plugin`() {
+        assertEquals("menuGroupLabelResourceName", TerminalExplorerAction.MENU_GROUP_LABEL_RESOURCE_NAME_KEY)
+        assertEquals("menuGroupLabelFallback", TerminalExplorerAction.MENU_GROUP_LABEL_FALLBACK_KEY)
+        assertEquals("app_name", TerminalExplorerAction.MENU_GROUP_LABEL_RESOURCE_NAME)
+        assertEquals("3-Shell Terminal", TerminalExplorerAction.MENU_GROUP_LABEL_FALLBACK)
+        assertTrue(Regex("[a-z][a-z0-9_]*").matches(TerminalExplorerAction.MENU_GROUP_LABEL_RESOURCE_NAME))
+        assertTrue(TerminalExplorerAction.MENU_GROUP_LABEL_FALLBACK.length <= 160)
+        assertEquals(23, TerminalExplorerAction.spec.protocolVersion)
+        val root = findProjectRoot()
+        val strings = String(Files.readAllBytes(root.resolve("app/src/main/res/values/strings_donottranslate.xml")), Charsets.UTF_8)
+        assertTrue(strings.contains("<string name=\"app_name\" translatable=\"false\">3-Shell Terminal</string>"))
+        val source = String(
+            Files.readAllBytes(root.resolve("app/src/main/java/io/github/supermonster003/autojs6/plugin/three/shell/terminal/explorer/TerminalExplorerAction.kt")),
+            Charsets.UTF_8,
+        )
+        assertTrue(source.contains("putString(MENU_GROUP_LABEL_RESOURCE_NAME_KEY, MENU_GROUP_LABEL_RESOURCE_NAME)"))
+        assertTrue(source.contains("putString(MENU_GROUP_LABEL_FALLBACK_KEY, MENU_GROUP_LABEL_FALLBACK)"))
+    }
+
     @Test
     fun `a well-formed request opens its directory`() {
         assertEquals("/storage/emulated/0/Scripts", request(targets = listOf(directory))?.directory)

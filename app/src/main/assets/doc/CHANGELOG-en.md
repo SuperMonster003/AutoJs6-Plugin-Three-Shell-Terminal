@@ -4,6 +4,12 @@
 
 ******
 
+# v1.1.1
+
+###### 2026/11/07
+
+* `Improvement` The AutoJs6 file manager groups the menu options of this plugin under the submenu "3-Shell Terminal", named as in the Plugin Center (requires AutoJs6 6.8.1 or later)
+
 # v1.1.0
 
 ###### 2026/10/16

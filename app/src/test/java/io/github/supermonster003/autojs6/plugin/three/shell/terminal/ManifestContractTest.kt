@@ -213,6 +213,9 @@ class ManifestContractTest {
             activity.children("intent-filter").any { f -> f.children("action").any { it.androidAttribute("name") == "org.autojs.plugin.TERMINAL_SETTINGS" } }
         }
         assertEquals(1, matches.size)
+        // The AutoJs6 plugin settings page opens the settings through this action (host feedback-680 P12).
+        val metaData = manifest.child("application").children("meta-data").associate { it.androidAttribute("name") to it.androidAttribute("value") }
+        assertEquals("org.autojs.plugin.TERMINAL_SETTINGS", metaData["org.autojs.plugin.SETTINGS_ACTION"])
         val probe = manifest.child("application").children("activity").single { it.androidAttribute("name") == ".ui.settings.NodeProbeActivity" }
         assertEquals("false", probe.androidAttribute("exported"))
     }

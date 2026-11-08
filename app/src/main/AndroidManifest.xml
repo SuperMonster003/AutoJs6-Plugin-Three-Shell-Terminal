@@ -58,6 +58,14 @@
             android:name="org.autojs.plugin.info.AUTHOR"
             android:value="@string/plugin_author" />
 
+        <!--
+            Settings page entry of the AutoJs6 plugin settings page (AutoJs6 6.8.1 and later, host feedback-680 P12):
+            the action the standalone settings activity answers. AutoJs6 opens the same action by package name without it.
+        -->
+        <meta-data
+            android:name="org.autojs.plugin.SETTINGS_ACTION"
+            android:value="org.autojs.plugin.TERMINAL_SETTINGS" />
+
         <activity
             android:name=".WakeActivity"
             android:excludeFromRecents="true"

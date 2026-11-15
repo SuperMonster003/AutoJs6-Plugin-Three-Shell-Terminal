@@ -4,10 +4,14 @@
 
 ******
 
-# v1.1.1
+# v1.2.0
 
-###### 2026/11/07
+###### 2026/11/15
 
+* `Función` Editor de comandos: los pegados largos o multilínea abren un editor con ajuste de línea; permite pegar en el terminal actual o ejecutar en una nueva sesión del directorio actual, mostrando el comando completo, el código de salida y una vista con copia
+* `Corrección` Pérdida del último byte UTF-8 de emoji y otros caracteres suplementarios al escribir con el teclado, y corrupción de caracteres posteriores como el chino
+* `Corrección` Pegados grandes que bloqueaban la interfaz y el eco; entrada ordenada en segundo plano, pegado sin Ctrl / Alt fijados y aviso de rechazo sin truncar la entrada cuando la cola está llena
+* `Corrección` Truncamiento de caracteres no ASCII en argumentos, nombres de directorios y variables de entorno al iniciar sesiones
 * `Mejora` El administrador de archivos de AutoJs6 agrupa las opciones de menú de este plugin en el submenú "3-Shell Terminal", con el mismo nombre que en el Centro de plugins (requiere AutoJs6 6.8.1 o posterior)
 
 # v1.1.0

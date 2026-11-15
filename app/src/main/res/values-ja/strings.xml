@@ -93,6 +93,14 @@
     <string name="terminal_clear_screen">画面をクリア</string>
     <string name="terminal_close_all_sessions">全セッションを閉じる</string>
     <string name="terminal_close_session">セッションを閉じる</string>
+    <string name="terminal_command_editor">コマンドエディター</string>
+    <string name="terminal_command_exit">終了コード</string>
+    <string name="terminal_command_hint">コマンド全体を確認して編集します. 実行すると現在のディレクトリに新しいセッションが開きます. 一時変数と対話型 su ログインは引き継がれません. 現在の端末に入力するには貼り付けを選んでください.</string>
+    <string name="terminal_command_invalid">NUL 文字を含まない 16 KiB 以下のコマンドを入力してください.</string>
+    <string name="terminal_command_label">コマンド</string>
+    <string name="terminal_command_paste">貼り付け</string>
+    <string name="terminal_command_run">実行</string>
+    <string name="terminal_command_view">送信したコマンドを表示</string>
     <string name="terminal_confirm_close_running">このセッションではまだプロセスが実行中です. それでも閉じますか?</string>
     <string name="terminal_controls">操作</string>
     <string name="terminal_copied_to_clipboard">クリップボードにコピーしました</string>
@@ -101,6 +109,7 @@
     <string name="terminal_error_occurred">エラーが発生しました</string>
     <string name="terminal_explorer_open_in_terminal">ターミナルで開く</string>
     <string name="terminal_help">ヘルプ</string>
+    <string name="terminal_input_busy">入力を送信できませんでした. セッションが閉じているか入力キューが満杯です.</string>
     <string name="terminal_input_tips">ターミナルに直接入力します. テキストを長押しし, ハンドルをドラッグして範囲を調整すると, コピーや全選択ができます.\n左側のキー領域を左右にスワイプすると他の記号が表示されます. CTRL と ALT は次のキーに適用されます.</string>
     <string name="terminal_manager">ターミナル管理</string>
     <string name="terminal_new_session">新規セッション</string>

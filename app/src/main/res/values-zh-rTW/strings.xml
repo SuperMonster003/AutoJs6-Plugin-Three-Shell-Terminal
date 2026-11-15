@@ -93,6 +93,14 @@
     <string name="terminal_clear_screen">清除畫面</string>
     <string name="terminal_close_all_sessions">關閉全部工作階段</string>
     <string name="terminal_close_session">關閉工作階段</string>
+    <string name="terminal_command_editor">指令編輯器</string>
+    <string name="terminal_command_exit">結束代碼</string>
+    <string name="terminal_command_hint">檢視及編輯完整指令. 執行會在目前目錄新增工作階段, 不繼承暫存變數或互動式 su 登入. 如需輸入目前終端機, 請選擇直接貼上.</string>
+    <string name="terminal_command_invalid">請輸入不含 NUL 字元且不超過 16 KiB 的指令.</string>
+    <string name="terminal_command_label">指令</string>
+    <string name="terminal_command_paste">直接貼上</string>
+    <string name="terminal_command_run">執行</string>
+    <string name="terminal_command_view">檢視已提交的指令</string>
     <string name="terminal_confirm_close_running">工作階段中仍有程序在執行, 確定關閉?</string>
     <string name="terminal_controls">控制</string>
     <string name="terminal_copied_to_clipboard">已複製到剪貼簿</string>
@@ -101,6 +109,7 @@
     <string name="terminal_error_occurred">發生錯誤</string>
     <string name="terminal_explorer_open_in_terminal">在終端機中開啟</string>
     <string name="terminal_help">說明</string>
+    <string name="terminal_input_busy">輸入未傳送. 工作階段已關閉或輸入佇列已滿.</string>
     <string name="terminal_input_tips">直接在終端機中輸入. 長按文字後可拖動控點調整選取範圍, 並選擇複製或全選.\n左右滑動左側按鍵區域可查看更多符號. CTRL 和 ALT 作用於下一個按鍵.</string>
     <string name="terminal_manager">終端機管理員</string>
     <string name="terminal_new_session">建立工作階段</string>

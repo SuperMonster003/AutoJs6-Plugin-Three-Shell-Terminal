@@ -93,6 +93,14 @@
     <string name="terminal_clear_screen">مسح الشاشة</string>
     <string name="terminal_close_all_sessions">إغلاق جميع الجلسات</string>
     <string name="terminal_close_session">إغلاق الجلسة</string>
+    <string name="terminal_command_editor">محرر الأوامر</string>
+    <string name="terminal_command_exit">رمز الخروج</string>
+    <string name="terminal_command_hint">راجع الأمر كاملا وعدله. يفتح التشغيل جلسة جديدة في المجلد الحالي دون المتغيرات المؤقتة أو تسجيل دخول su التفاعلي. يرسل اللصق النص إلى الطرفية الحالية.</string>
+    <string name="terminal_command_invalid">أدخل أمرا لا يتجاوز 16 KiB ولا يحتوي على محارف NUL.</string>
+    <string name="terminal_command_label">الأمر</string>
+    <string name="terminal_command_paste">لصق</string>
+    <string name="terminal_command_run">تشغيل</string>
+    <string name="terminal_command_view">عرض الأمر المرسل</string>
     <string name="terminal_confirm_close_running">لا تزال هناك عملية قيد التشغيل في هذه الجلسة. هل تريد الإغلاق على أي حال?</string>
     <string name="terminal_controls">عناصر التحكم</string>
     <string name="terminal_copied_to_clipboard">تم النسخ إلى الحافظة</string>
@@ -101,6 +109,7 @@
     <string name="terminal_error_occurred">حدث خطأ</string>
     <string name="terminal_explorer_open_in_terminal">فتح في الطرفية</string>
     <string name="terminal_help">مساعدة</string>
+    <string name="terminal_input_busy">لم يرسل الإدخال. الجلسة مغلقة أو قائمة انتظار الإدخال ممتلئة.</string>
     <string name="terminal_input_tips">اكتب مباشرة في الطرفية. اضغط مطولا على النص واسحب المقابض لضبط التحديد ثم اختر نسخ أو تحديد الكل.\nاسحب منطقة المفاتيح اليسرى أفقيا لعرض المزيد من الرموز. يطبق CTRL و ALT على المفتاح التالي.</string>
     <string name="terminal_manager">مدير الطرفية</string>
     <string name="terminal_new_session">جلسة جديدة</string>

@@ -37,6 +37,9 @@ object TerminalSessionManager {
         @Volatile
         var title: String = title
 
+        /** Explicit editor submissions only, kept in memory for this session's command viewer. */
+        var submittedCommand: String? = null
+
         /** Exit code of the shell once it has been reaped, null while it runs. zh-CN: shell 被回收后的退出码, 运行中为 null. */
         val exitCode: Int? get() = pty.exitCode
 
@@ -139,7 +142,7 @@ object TerminalSessionManager {
     }
 
     fun buildSpec(paths: TerminalPaths, extraEnvironment: Map<String, String?> = emptyMap()) = TerminalEnvironment.Spec(
-        home = paths.home.path,
+        home = paths.home.canonicalPath,
         prefix = paths.prefix.path,
         tmpDir = paths.tmp.path,
         profile = paths.profile.path,

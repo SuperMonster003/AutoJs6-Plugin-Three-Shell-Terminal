@@ -29,6 +29,7 @@ internal object SessionStarter {
         preferences: TerminalPreferences,
         requestedDirectory: String?,
         command: String? = null,
+        submittedCommand: String? = null,
         stillWanted: () -> Boolean,
         onProgress: (AlertDialog?) -> Unit = {},
         onDone: (Result<Started>) -> Unit,
@@ -46,7 +47,12 @@ internal object SessionStarter {
                 progress?.dismiss()
                 onProgress(null)
                 if (!stillWanted()) return@run
-                onDone(planned.mapCatching { plan -> Started(plan, SessionAssembly.start(activity, plan, command = command)) })
+                onDone(planned.mapCatching { plan ->
+                    val session = SessionAssembly.start(activity, plan, command = command,
+                        title = submittedCommand?.lineSequence()?.firstOrNull { it.isNotBlank() })
+                    session.submittedCommand = submittedCommand
+                    Started(plan, session)
+                })
             }
         }
     }

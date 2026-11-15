@@ -38,7 +38,6 @@ import java.util.concurrent.ExecutionException
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.FutureTask
-import java.util.concurrent.RejectedExecutionException
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 import java.util.concurrent.atomic.AtomicLong
@@ -70,8 +69,6 @@ internal class TerminalPluginBinder(
     private val lock = Any()
     private val pending = LinkedHashMap<String, PendingSession>()
     private val subscriptions = LinkedHashMap<String, OutputSubscription>()
-    private val inputWriters = HashMap<String, ExecutorService>()
-    private val queuedInputBytes = HashMap<String, Int>()
     private val subscriptionIds = AtomicLong(1)
     private val handedOut = ThreadLocal<ParcelFileDescriptor>()
     private val callbacks = CallbackRegistry { ownerPid -> closeSubscriptionsOf(ownerPid) }
@@ -305,10 +302,6 @@ internal class TerminalPluginBinder(
         TerminalSessionManager.removeCloseAllListener(closeAllListener)
         onClientsGone()
         worker.shutdown()
-        synchronized(lock) {
-            inputWriters.values.forEach { it.shutdown() }
-            inputWriters.clear()
-        }
     }
 
     /**
@@ -381,37 +374,13 @@ internal class TerminalPluginBinder(
 
     private fun queueInput(session: TerminalSessionManager.Session, bytes: ByteArray) {
         if (!session.isAlive) return
-        val executor = synchronized(lock) {
-            val queued = queuedInputBytes[session.id] ?: 0
-            if (queued + bytes.size > MAX_QUEUED_INPUT_BYTES) {
-                throw TerminalFailure(TerminalErrorCodes.INVALID_ARGUMENT, "input queue is full", session.id)
-            }
-            queuedInputBytes[session.id] = queued + bytes.size
-            inputWriters.getOrPut(session.id) {
-                Executors.newSingleThreadExecutor { runnable -> Thread(runnable, "TerminalInput-${session.id}").apply { isDaemon = true } }
-            }
+        if (!session.pty.writeRaw(bytes, 0, bytes.size)) {
+            throw TerminalFailure(TerminalErrorCodes.INVALID_ARGUMENT, "input queue is full or session is closed", session.id)
         }
-        try {
-            executor.execute {
-                try {
-                    session.pty.writeRaw(bytes, 0, bytes.size)
-                } finally {
-                    releaseQueuedInput(session.id, bytes.size)
-                }
-            }
-        } catch (_: RejectedExecutionException) {
-            releaseQueuedInput(session.id, bytes.size)
-        }
-    }
-
-    private fun releaseQueuedInput(id: String, size: Int) = synchronized(lock) {
-        val remaining = (queuedInputBytes[id] ?: 0) - size
-        if (remaining > 0) queuedInputBytes[id] = remaining else queuedInputBytes.remove(id)
     }
 
     private fun onSessionExited(session: TerminalSessionManager.Session, exitCode: Int) {
         if (closed) return
-        synchronized(lock) { inputWriters.remove(session.id) }?.shutdown()
         callbacks.dispatch { it.onSessionExited(session.id, exitCode) }
         // Subscriptions normally finish from the pty finish listener once the reader thread hits EOF; a session
         // whose emulator never ran, or whose pty is held open by a grandchild, gets the same closure after a grace period.
@@ -568,7 +537,6 @@ internal class TerminalPluginBinder(
         const val DEFAULT_COLUMNS = 80
         const val DEFAULT_ROWS = 24
 
-        private const val MAX_QUEUED_INPUT_BYTES = 4 * TerminalContract.MAX_INPUT_BYTES
         private const val MAX_TRANSCRIPT_REPLY_CHARS = (TerminalContract.MAX_TRANSCRIPT_BYTES - 64 * 1024) / 2
         private const val MAIN_THREAD_TIMEOUT_MS = 10_000L
         private const val EXIT_FLUSH_GRACE_MS = 2_000L

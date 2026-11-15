@@ -93,6 +93,14 @@
     <string name="terminal_clear_screen">Effacer l\'écran</string>
     <string name="terminal_close_all_sessions">Fermer toutes les sessions</string>
     <string name="terminal_close_session">Fermer la session</string>
+    <string name="terminal_command_editor">Éditeur de commandes</string>
+    <string name="terminal_command_exit">Code de sortie</string>
+    <string name="terminal_command_hint">Vérifiez et modifiez la commande complète. Exécuter ouvre une nouvelle session dans ce dossier, sans les variables temporaires ni la connexion su interactive. Coller envoie le texte au terminal actuel.</string>
+    <string name="terminal_command_invalid">Saisissez une commande de 16 KiB maximum, sans caractère NUL.</string>
+    <string name="terminal_command_label">Commande</string>
+    <string name="terminal_command_paste">Coller</string>
+    <string name="terminal_command_run">Exécuter</string>
+    <string name="terminal_command_view">Voir la commande envoyée</string>
     <string name="terminal_confirm_close_running">Un processus est encore en cours dans cette session. Fermer quand même ?</string>
     <string name="terminal_controls">Commandes</string>
     <string name="terminal_copied_to_clipboard">Copié dans le presse-papiers</string>
@@ -101,6 +109,7 @@
     <string name="terminal_error_occurred">Une erreur est survenue</string>
     <string name="terminal_explorer_open_in_terminal">Ouvrir dans le terminal</string>
     <string name="terminal_help">Aide</string>
+    <string name="terminal_input_busy">Texte non envoyé. La session est fermée ou la file de saisie est pleine.</string>
     <string name="terminal_input_tips">Saisissez directement dans le terminal. Appuyez longuement sur le texte, ajustez la sélection avec les poignées, puis choisissez Copier ou Tout sélectionner.\nBalayez la zone de touches gauche pour afficher plus de symboles. CTRL et ALT s\'appliquent à la touche suivante.</string>
     <string name="terminal_manager">Gestion du terminal</string>
     <string name="terminal_new_session">Nouvelle session</string>

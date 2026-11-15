@@ -93,6 +93,14 @@
     <string name="terminal_clear_screen">Очистить экран</string>
     <string name="terminal_close_all_sessions">Закрыть все сеансы</string>
     <string name="terminal_close_session">Закрыть сеанс</string>
+    <string name="terminal_command_editor">Редактор команд</string>
+    <string name="terminal_command_exit">Код завершения</string>
+    <string name="terminal_command_hint">Проверьте и измените команду целиком. Запуск откроет новый сеанс в текущем каталоге без временных переменных и интерактивного входа su. Вставка отправляет текст в текущий терминал.</string>
+    <string name="terminal_command_invalid">Введите команду размером до 16 KiB без символов NUL.</string>
+    <string name="terminal_command_label">Команда</string>
+    <string name="terminal_command_paste">Вставить</string>
+    <string name="terminal_command_run">Выполнить</string>
+    <string name="terminal_command_view">Показать отправленную команду</string>
     <string name="terminal_confirm_close_running">В этом сеансе все еще выполняется процесс. Все равно закрыть?</string>
     <string name="terminal_controls">Управление</string>
     <string name="terminal_copied_to_clipboard">Скопировано в буфер обмена</string>
@@ -101,6 +109,7 @@
     <string name="terminal_error_occurred">Произошла ошибка</string>
     <string name="terminal_explorer_open_in_terminal">Открыть в терминале</string>
     <string name="terminal_help">Справка</string>
+    <string name="terminal_input_busy">Ввод не отправлен. Сеанс закрыт или очередь ввода заполнена.</string>
     <string name="terminal_input_tips">Вводите текст прямо в терминале. Нажмите и удерживайте текст, настройте выделение маркерами и выберите Копировать или Выделить все.\nПрокрутите левую область клавиш по горизонтали для доступа к другим символам. CTRL и ALT применяются к следующей клавише.</string>
     <string name="terminal_manager">Диспетчер терминала</string>
     <string name="terminal_new_session">Новый сеанс</string>

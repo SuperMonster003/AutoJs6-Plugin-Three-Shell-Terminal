@@ -6,6 +6,12 @@ import android.graphics.Typeface
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputConnection
+import android.view.inputmethod.InputConnectionWrapper
+import android.view.inputmethod.TextAttribute
+import androidx.annotation.RequiresApi
+import io.github.supermonster003.autojs6.plugin.three.shell.terminal.core.TerminalCommand
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.core.TerminalEnvironment
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.core.TerminalPreferences
 import jackpal.androidterm.emulatorview.EmulatorView
@@ -41,6 +47,29 @@ class TerminalEmulatorView @JvmOverloads constructor(
 
     /** Long press at view coordinates; the Activity opens the frozen-transcript selection. zh-CN: 长按坐标, 由 Activity 打开冻结转录的选择层. */
     var onSelectionRequested: ((Float, Float) -> Unit)? = null
+
+    var onCommandInput: ((String) -> Unit)? = null
+
+    override fun onCreateInputConnection(outAttrs: EditorInfo): InputConnection? {
+        val base = super.onCreateInputConnection(outAttrs) ?: return null
+        return object : InputConnectionWrapper(base, false) {
+            override fun commitText(text: CharSequence?, newCursorPosition: Int): Boolean {
+                val value = text?.toString().orEmpty()
+                val editor = onCommandInput
+                if (editor != null && value.length > 1 && TerminalCommand.needsEditor(value)) {
+                    // Clear the upstream composition exactly as a normal commit would, without sending the paste.
+                    super.commitText("", 1)
+                    editor(value)
+                    return true
+                }
+                return super.commitText(text, newCursorPosition)
+            }
+
+            @RequiresApi(33)
+            override fun commitText(text: CharSequence, newCursorPosition: Int, textAttribute: TextAttribute?): Boolean =
+                commitText(text, newCursorPosition)
+        }
+    }
 
     val transcriptTopLine: Int get() = computeVerticalScrollOffset()
 

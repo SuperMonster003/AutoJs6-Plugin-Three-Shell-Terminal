@@ -13,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.FrameLayout
+import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
@@ -28,6 +29,7 @@ import io.github.supermonster003.autojs6.plugin.three.shell.terminal.R
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.ui.settings.AboutActivity
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.ui.settings.SettingsActivity
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.core.ShellQuoting
+import io.github.supermonster003.autojs6.plugin.three.shell.terminal.core.TerminalCommand
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.core.TerminalKeySequences
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.core.TerminalPaths
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.core.TerminalPreferences
@@ -60,6 +62,15 @@ import kotlin.math.max
  * 入口 Activity 或启动器图标进入时是任务根, 连同任务一起离开; 从管理器打开时叠在其上.
  */
 class TerminalActivity : HostAppearanceActivity() {
+
+    private var commandDialog: AlertDialog? = null
+    private data class CommandDraft(val text: String, val start: Int, val end: Int)
+
+    @Deprecated("Retained in memory only; command drafts must not be serialized into saved state")
+    override fun onRetainCustomNonConfigurationInstance(): Any? {
+        val edit = commandDialog?.takeIf { it.isShowing }?.findViewById<EditText>(R.id.terminal_command_editor) ?: return null
+        return CommandDraft(edit.text.toString(), edit.selectionStart, edit.selectionEnd)
+    }
 
     private lateinit var root: LinearLayout
     private lateinit var statusBarSpacer: View
@@ -94,10 +105,11 @@ class TerminalActivity : HostAppearanceActivity() {
 
     private val notificationPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) { }
 
-    override fun hasUnconfirmedDialog(): Boolean = progressDialog?.isShowing == true || textSelection != null
+    override fun hasUnconfirmedDialog(): Boolean = progressDialog?.isShowing == true || textSelection != null || commandDialog?.isShowing == true
 
     /** The open text selection, for instrumentation. zh-CN: 当前的文本选择层, 供 instrumentation 使用. */
     internal val textSelectionForTest: TerminalTextSelection? get() = textSelection
+    internal val commandDialogForTest: AlertDialog? get() = commandDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -133,6 +145,16 @@ class TerminalActivity : HostAppearanceActivity() {
             startSession(null, null)
         } else {
             openSession(intent, savedInstanceState?.getString(STATE_SESSION_ID))
+        }
+        @Suppress("DEPRECATION")
+        val draft = lastCustomNonConfigurationInstance as? CommandDraft
+        if (draft != null) terminalView.post {
+            if (!isFinishing && !isDestroyed) {
+                editCommand(draft.text)
+                commandDialog?.findViewById<EditText>(R.id.terminal_command_editor)?.setSelection(
+                    draft.start.coerceIn(0, draft.text.length), draft.end.coerceIn(0, draft.text.length),
+                )
+            }
         }
     }
 
@@ -212,7 +234,7 @@ class TerminalActivity : HostAppearanceActivity() {
      * a Node.js Runtime install or update) shows a progress dialog.
      * zh-CN: 在工作线程规划会话 (D18 目录, D17 工具链), 在主线程启动; 资产解压 (插件安装或更新后的首次) 显示进度.
      */
-    private fun startSession(requestedDirectory: String?, command: String?) {
+    private fun startSession(requestedDirectory: String?, command: String?, submittedCommand: String? = null) {
         val generation = ++startGeneration
         requestNotificationPermissionOnce()
         SessionStarter.start(
@@ -220,6 +242,7 @@ class TerminalActivity : HostAppearanceActivity() {
             preferences = preferences,
             requestedDirectory = requestedDirectory,
             command = command,
+            submittedCommand = submittedCommand,
             stillWanted = { generation == startGeneration && !isFinishing && !isDestroyed },
             onProgress = { dialog -> progressDialog = dialog },
         ) { started ->
@@ -332,6 +355,8 @@ class TerminalActivity : HostAppearanceActivity() {
      */
     override fun onDestroy() {
         startGeneration++
+        commandDialog?.dismiss()
+        commandDialog = null
         dismissProgress()
         TerminalSessionManager.removeListener(sessionListener)
         detachSession()
@@ -344,6 +369,7 @@ class TerminalActivity : HostAppearanceActivity() {
         session?.pty?.let {
             it.onProcessExited = null
             it.onInputAfterExit = null
+            it.onInputRejected = null
             it.onModifiersChanged = null
             it.setUpdateCallback(null)
         }
@@ -387,6 +413,8 @@ class TerminalActivity : HostAppearanceActivity() {
         }
         pty.onProcessExited = { onSessionEnded() }
         pty.onInputAfterExit = { finishScreen() }
+        pty.onInputRejected = { kit.toast(R.string.terminal_input_busy, long = true) }
+        view.onCommandInput = { editCommand(it) }
         pty.onModifiersChanged = { ctrl, alt -> keyBar.setModifiers(ctrl, alt) }
         keyBar.setModifiers(pty.ctrlArmed, pty.altArmed)
         if (pty.exitCode != null) {
@@ -542,6 +570,11 @@ class TerminalActivity : HostAppearanceActivity() {
         return true
     }
 
+    override fun onPrepareOptionsMenu(menu: Menu): Boolean {
+        menu.findItem(R.id.action_view_command)?.isEnabled = session?.submittedCommand != null
+        return super.onPrepareOptionsMenu(menu)
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId in NPM_MENU_ITEMS && !nodeBanner.ensureAvailable(nodeResolution)) {
             return true
@@ -555,6 +588,11 @@ class TerminalActivity : HostAppearanceActivity() {
             R.id.action_search_npm -> npmDialogs.searchNpm()
             R.id.action_copy_transcript -> copyToClipboard(session?.pty?.transcriptText)
             R.id.action_paste -> paste()
+            R.id.action_edit_command -> editCommand("")
+            R.id.action_view_command -> session?.submittedCommand?.let {
+                commandDialog?.dismiss()
+                commandDialog = TerminalCommandDialog.view(kit, it)
+            }
             R.id.action_share_transcript -> ExternalIntents.shareText(this, session?.pty?.transcriptText.orEmpty())
             R.id.action_node_probe -> nodeBanner.showProbeDetails(nodeResolution ?: Resolution.Unavailable.PluginMissing)
             R.id.action_show_keyboard -> showSoftKeyboard()
@@ -581,7 +619,28 @@ class TerminalActivity : HostAppearanceActivity() {
     private fun paste() {
         val text = Clipboard.get(this)?.toString().orEmpty()
         if (text.isEmpty()) return
-        session?.pty?.write(text)
+        if (TerminalCommand.needsEditor(text)) editCommand(text) else pasteLiteral(text)
+    }
+
+    private fun pasteLiteral(text: String): Boolean {
+        val accepted = session?.pty?.paste(text) == true
+        if (!accepted) kit.toast(R.string.terminal_input_busy, long = true)
+        return accepted
+    }
+
+    internal fun editCommand(text: String) {
+        commandDialog?.dismiss()
+        val current = session
+        val directory = current?.pty?.currentDirectory()?.path ?: current?.initialDirectory
+        commandDialog = TerminalCommandDialog.show(kit, text,
+            onPaste = { value ->
+                if (session !== current) false else pasteLiteral(value)
+            },
+            onRun = { command ->
+                val script = TerminalCommand.script(command, getString(R.string.terminal_command_label), getString(R.string.terminal_command_exit))
+                startSession(directory, script, submittedCommand = command)
+            },
+        )
     }
 
     private fun copyToClipboard(text: String?) {

@@ -93,6 +93,14 @@
     <string name="terminal_clear_screen">Limpiar pantalla</string>
     <string name="terminal_close_all_sessions">Cerrar todas las sesiones</string>
     <string name="terminal_close_session">Cerrar sesión</string>
+    <string name="terminal_command_editor">Editor de comandos</string>
+    <string name="terminal_command_exit">Código de salida</string>
+    <string name="terminal_command_hint">Revisa y edita el comando completo. Ejecutar abre una nueva sesión en este directorio, sin variables temporales ni la sesión su interactiva. Pegar envía el texto al terminal actual.</string>
+    <string name="terminal_command_invalid">Introduce un comando de hasta 16 KiB sin caracteres NUL.</string>
+    <string name="terminal_command_label">Comando</string>
+    <string name="terminal_command_paste">Pegar</string>
+    <string name="terminal_command_run">Ejecutar</string>
+    <string name="terminal_command_view">Ver comando enviado</string>
     <string name="terminal_confirm_close_running">Todavía hay un proceso en ejecución en esta sesión. Cerrar de todos modos?</string>
     <string name="terminal_controls">Controles</string>
     <string name="terminal_copied_to_clipboard">Copiado al portapapeles</string>
@@ -101,6 +109,7 @@
     <string name="terminal_error_occurred">Se produjo un error</string>
     <string name="terminal_explorer_open_in_terminal">Abrir en la terminal</string>
     <string name="terminal_help">Ayuda</string>
+    <string name="terminal_input_busy">No se envió la entrada. La sesión está cerrada o la cola de entrada está llena.</string>
     <string name="terminal_input_tips">Escriba directamente en el terminal. Mantenga pulsado el texto, arrastre los controles para ajustar la selección y elija Copiar o Seleccionar todo.\nDeslice la zona izquierda de teclas para ver más símbolos. CTRL y ALT se aplican a la siguiente tecla.</string>
     <string name="terminal_manager">Gestor del terminal</string>
     <string name="terminal_new_session">Nueva sesión</string>

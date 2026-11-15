@@ -93,6 +93,14 @@
     <string name="terminal_clear_screen">清屏</string>
     <string name="terminal_close_all_sessions">关闭全部会话</string>
     <string name="terminal_close_session">关闭会话</string>
+    <string name="terminal_command_editor">命令编辑器</string>
+    <string name="terminal_command_exit">退出码</string>
+    <string name="terminal_command_hint">查看和编辑完整命令. 执行会在当前目录新建会话, 不继承临时变量或交互式 su 登录. 如需输入当前终端, 请选择直接粘贴.</string>
+    <string name="terminal_command_invalid">请输入不含 NUL 字符且不超过 16 KiB 的命令.</string>
+    <string name="terminal_command_label">命令</string>
+    <string name="terminal_command_paste">直接粘贴</string>
+    <string name="terminal_command_run">执行</string>
+    <string name="terminal_command_view">查看提交的命令</string>
     <string name="terminal_confirm_close_running">会话中仍有进程在运行, 确定关闭?</string>
     <string name="terminal_controls">控制</string>
     <string name="terminal_copied_to_clipboard">已复制到剪贴板</string>
@@ -101,6 +109,7 @@
     <string name="terminal_error_occurred">发生错误</string>
     <string name="terminal_explorer_open_in_terminal">在终端中打开</string>
     <string name="terminal_help">帮助</string>
+    <string name="terminal_input_busy">输入未发送. 会话已关闭或输入队列已满.</string>
     <string name="terminal_input_tips">直接在终端中输入. 长按文本后可拖动手柄调整选区, 并选择复制或全选.\n左右滑动左侧按键区域可查看更多符号. CTRL 和 ALT 作用于下一个按键.</string>
     <string name="terminal_manager">终端管理器</string>
     <string name="terminal_new_session">新建会话</string>

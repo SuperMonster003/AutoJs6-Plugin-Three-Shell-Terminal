@@ -5,6 +5,7 @@ import android.os.ParcelFileDescriptor;
 import androidx.annotation.NonNull;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Same-package bridge to the package-private pty helpers of libtermexec.
@@ -41,7 +42,24 @@ public final class PtyBridge {
             @NonNull String[] argv,
             @NonNull String[] envp
     ) throws IOException {
-        return TermExec.createSubprocess(ptmx, cmd, argv, envp);
+        return TermExec.createSubprocess(ptmx, nativeBytes(cmd), nativeBytes(argv), nativeBytes(envp));
+    }
+
+    /**
+     * The hash-locked libtermexec process.cpp String8::set narrows each Java UTF-16 code unit to
+     * one byte; it does not encode UTF-8. Pass already encoded bytes as Latin-1 code units so the
+     * native narrowing yields exact UTF-8 for commands, directories and environment values.
+     * This adapter belongs only at that legacy JNI boundary, never in terminal input/output.
+     */
+    private static String nativeBytes(String value) {
+        if (value.indexOf('\0') >= 0) throw new IllegalArgumentException("NUL in process argument");
+        return new String(value.getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1);
+    }
+
+    private static String[] nativeBytes(String[] values) {
+        String[] encoded = new String[values.length];
+        for (int i = 0; i < values.length; i++) encoded[i] = nativeBytes(values[i]);
+        return encoded;
     }
 
     public static int waitFor(int pid) {

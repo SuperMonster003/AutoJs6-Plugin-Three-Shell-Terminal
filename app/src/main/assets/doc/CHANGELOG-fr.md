@@ -4,10 +4,14 @@
 
 ******
 
-# v1.1.1
+# v1.2.0
 
-###### 2026/11/07
+###### 2026/11/15
 
+* `Fonctionnalité` Éditeur de commandes: les collages longs ou multilignes sont affichés avec retour à la ligne; collage dans le terminal actuel ou exécution dans une nouvelle session du dossier actuel, avec commande complète, code de sortie et consultation avec copie
+* `Correctif` Perte du dernier octet UTF-8 des emoji et autres caractères supplémentaires saisis au clavier, avec corruption des caractères suivants comme le chinois
+* `Correctif` Blocage de l'interface et de l'écho lors des collages volumineux; envoi ordonné en arrière-plan, collage sans Ctrl / Alt verrouillés et rejet signalé sans troncature quand la file est pleine
+* `Correctif` Troncature des caractères non ASCII dans les arguments, les noms de dossiers et les variables à la création des sessions
 * `Amélioration` Le gestionnaire de fichiers d'AutoJs6 regroupe les options de menu de ce plugin dans le sous-menu "3-Shell Terminal", nommé comme dans le Centre des plugins (AutoJs6 6.8.1 ou ultérieur requis)
 
 # v1.1.0

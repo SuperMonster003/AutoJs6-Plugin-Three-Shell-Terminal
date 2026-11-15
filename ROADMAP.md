@@ -951,3 +951,10 @@ t.on('exit', code => console.log('done', code));
 - 插件: 设置, 关于, 版本历史, 环境探测与命令输出页左上角的返回按钮无效 (自 P5 起). 原因: 共用外壳 `buildScaffold` 在 `setSupportActionBar` 之前设置导航监听, AppCompat 在其中换上自己的监听, 点击变成未处理的 `android.R.id.home`. 修复: 监听移到 `setSupportActionBar` 之后, 基类 `HostAppearanceActivity` 另把 `android.R.id.home` 转到 `navigateBack()`; 新增 `SettingsActivityInstrumentationTest.theToolbarUpButtonLeavesEveryScaffoldScreen`. 证据: API 37 AVD 上宿主插件中心 -> 设置 -> 返回回到插件中心; `ui.settings` 包 13/13, `TerminalActivityInstrumentationTest` 4/4, 新用例在 Sony G8441 API 28 通过. 终端界面与兄弟仓库的同类外壳顺序正确, 不受影响.
 - 宿主 7990a40366 (插件中心详情对话框): 每发布一份插件列表就新建对话框并关闭旧的, 冷启动后立即打开详情会闪一次. 改为按内容比较: 未变化不动, 行内容变化原地更新, 只有中性按钮变化才重建; 内容比较补上 `installedAbis`. 证据: API 37 AVD 冷启动后立即打开详情, 修复前每次都替换一次对话框窗口, 修复后 4 次均只有一个窗口; 对话框打开期间重装插件, 同一窗口内 "最近更新" 由 00:30 变为 00:34.
 - 其它: 另一会话的 4b5ffb6 升级共享 Gradle 插件到 1.9.0 时未同步 `VERSION_BUILD`, 本次提交按计数规则一并校正; `AGENTS.md` 第 2 节的平台插件版本仍写 1.8.3, 留给该会话或维护者确认.
+
+
+### 2026-11-15 1.2.0 命令录入与完整性
+
+- 命令编辑器用于多行 / 长文本粘贴, 支持直接粘贴或在新会话执行, 显示命令原文与退出码, 并可查看 / 复制提交的完整命令. 新会话与原 Shell 的变量及 su 登录状态相互独立, 界面明确说明. 草稿在 Activity 重建期间只保留于内存.
+- 修复 Unicode 输入编码与旧 libtermexec 参数转换, 输入改为有界串行后台发送, 并分段发送以避免 Android 7 tty 丢字. 首页目录提示使用规范路径匹配 HOME.
+- 测试范围与证据见 [terminal-input-2026-11-15.md](docs/dev/terminal-input-2026-11-15.md). 采用插件私有临时文件复现嵌套 here-document, 不操作 ART 或开机脚本. 本次为本地改动与签名构建, 未发布.

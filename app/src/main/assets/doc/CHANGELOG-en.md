@@ -4,10 +4,14 @@
 
 ******
 
-# v1.1.1
+# v1.2.0
 
-###### 2026/11/07
+###### 2026/11/15
 
+* `Feature` Command editor: multiline or long pastes open a wrapping editor; paste into the current terminal or run in a new session in the current directory, with the complete command, exit code and a command viewer with Copy
+* `Fix` Keyboard input losing the last UTF-8 byte of emoji and other supplementary characters, and corrupting subsequent characters such as Chinese
+* `Fix` Large pastes blocking the UI and echo; input is sent in order in the background, literal paste bypasses sticky Ctrl / Alt, and a full queue reports rejection instead of truncating input
+* `Fix` Non-ASCII command arguments, directory names and environment values being truncated when starting a terminal session
 * `Improvement` The AutoJs6 file manager groups the menu options of this plugin under the submenu "3-Shell Terminal", named as in the Plugin Center (requires AutoJs6 6.8.1 or later)
 
 # v1.1.0

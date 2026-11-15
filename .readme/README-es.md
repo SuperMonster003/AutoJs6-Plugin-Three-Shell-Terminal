@@ -52,7 +52,7 @@ AutoJs6 descubre el plugin mediante su servicio Binder, abre la pantalla del ter
 
 ******
 
-La versión 1.1.0 añade colores y fuentes de la terminal, avisos de fin de comando y confianza en firmas de Node.js de terceros al terminal independiente, las sesiones en segundo plano, las API de scripts interactivos y los ajustes. Las API completas requieren AutoJs6 6.8.0 compilación 5315 o posterior; el protocolo básico requiere la compilación 5304, y la entrada del plugin en el menú de carpetas del gestor de archivos requiere la compilación 5320. Compatible con Android 7.0 o posterior.
+La versión 1.2.0 añade colores y fuentes de la terminal, avisos de fin de comando y confianza en firmas de Node.js de terceros al terminal independiente, las sesiones en segundo plano, las API de scripts interactivos y los ajustes. Las API completas requieren AutoJs6 6.8.0 compilación 5315 o posterior; el protocolo básico requiere la compilación 5304, y la entrada del plugin en el menú de carpetas del gestor de archivos requiere la compilación 5320. Compatible con Android 7.0 o posterior.
 
 ******
 
@@ -64,6 +64,7 @@ El complemento ofrece las siguientes capacidades:
 
 - Varias sesiones: crear, cambiar, cerrar y un gestor de sesiones; un servicio en primer plano mantiene las sesiones tras salir de la pantalla y su notificación muestra la carpeta actual y el número de sesiones con la acción "Cerrar sesiones".
 - Pantalla del terminal: barra de teclas de dos filas (Esc / Tab / Ctrl / flechas / símbolos habituales), selección de texto nativa con Copiar / Seleccionar todo, copia y compartición de la transcripción, tamaño del texto, pegar y limpiar; cuatro esquemas de color de la terminal (seguir la apariencia / oscuro / claro / teñido con el color del tema) y la fuente de la terminal (monoespaciada del sistema o JetBrains Mono integrada, sin ligaduras).
+- Editor de comandos: los pegados del menú o del IME de varias líneas o más de 80 caracteres abren un editor completo con ajuste de línea. Pega en el terminal actual o ejecuta en una nueva sesión del directorio actual mostrando el comando y su código de salida (límite de 16 KiB). No se heredan variables temporales ni la sesión su interactiva; incluye su cuando necesites Root. El texto enviado se conserva solo en la memoria de la sesión y puede consultarse o copiarse desde el menú de acciones de texto.
 - Cadena Node.js: con el plugin Node.js Runtime (1.5.0+) instalado quedan disponibles node / npm / npx / corepack / yarn / pnpm, junto con los ajustes de registro npm e "ignorar scripts de instalación" y el menú de paquetes (npm init / install / run script y más).
 - Entradas de AutoJs6: el interruptor del cajón de inicio (número de sesiones, cerrar todas), "Abrir en el terminal" en el menú de carpetas del gestor de archivos y en la barra de herramientas del proyecto. Desde la compilación 5320 de AutoJs6, la entrada del menú de carpetas la proporciona el plugin mediante el protocolo Explorer Action, y AutoJs6 solo pasa la ruta de la carpeta seleccionada. A partir de AutoJs6 6.8.1, esta entrada está en el submenú `3-Shell Terminal`.
 - API de script `terminal` (alias `$terminal`): gestión de sesiones, ejecución visible (`exec`, `npm.run`) y un objeto de sesión con eventos `output` / `exit`, `write` y `waitFor`; cada fallo es un `TerminalError` con un `code` estable.
@@ -194,10 +195,14 @@ Los planes y el progreso del plugin se mantienen como una lista verificable en R
 
 ******
 
-#### v1.1.1
+#### v1.2.0
 
-_2026/11/07_
+_2026/11/15_
 
+- `Función` Editor de comandos: los pegados largos o multilínea abren un editor con ajuste de línea; permite pegar en el terminal actual o ejecutar en una nueva sesión del directorio actual, mostrando el comando completo, el código de salida y una vista con copia
+- `Corrección` Pérdida del último byte UTF-8 de emoji y otros caracteres suplementarios al escribir con el teclado, y corrupción de caracteres posteriores como el chino
+- `Corrección` Pegados grandes que bloqueaban la interfaz y el eco; entrada ordenada en segundo plano, pegado sin Ctrl / Alt fijados y aviso de rechazo sin truncar la entrada cuando la cola está llena
+- `Corrección` Truncamiento de caracteres no ASCII en argumentos, nombres de directorios y variables de entorno al iniciar sesiones
 - `Mejora` El administrador de archivos de AutoJs6 agrupa las opciones de menú de este plugin en el submenú "3-Shell Terminal", con el mismo nombre que en el Centro de plugins (requiere AutoJs6 6.8.1 o posterior)
 
 #### v1.1.0

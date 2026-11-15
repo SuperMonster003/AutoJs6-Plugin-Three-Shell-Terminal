@@ -52,7 +52,7 @@ AutoJs6 discovers the plugin through its Binder service, opens the terminal scre
 
 ******
 
-Version 1.1.0 adds terminal colors and fonts, command completion notices and trust for third-party Node.js signers to the standalone terminal, background sessions, interactive script APIs and settings. Complete script APIs require AutoJs6 6.8.0 build 5315 or later; build 5304 is the base plugin-protocol requirement, and the plugin's file manager directory menu entry requires build 5320. Android 7.0 or later is supported.
+Version 1.2.0 adds terminal colors and fonts, command completion notices and trust for third-party Node.js signers to the standalone terminal, background sessions, interactive script APIs and settings. Complete script APIs require AutoJs6 6.8.0 build 5315 or later; build 5304 is the base plugin-protocol requirement, and the plugin's file manager directory menu entry requires build 5320. Android 7.0 or later is supported.
 
 ******
 
@@ -64,6 +64,7 @@ The plugin provides the following capabilities:
 
 - Multiple sessions: create, switch, close and a session manager; a foreground service keeps sessions running after the screen is left, and its notification shows the current directory and the session count with a "Close sessions" action.
 - Terminal screen: a two-row key bar (Esc / Tab / Ctrl / arrows / common symbols), native text selection with Copy / Select all, transcript copy and share, text size, paste and clear; four terminal color schemes (follow the appearance / dark / light / tinted by the theme color) and the terminal font (system monospace or the built-in JetBrains Mono without ligatures).
+- Command editor: menu and IME pastes containing multiple lines or more than 80 characters open a complete, wrapping editor. Paste into the current terminal or run in a new session in the current directory with the command and exit code shown (16 KiB command limit). New sessions do not inherit temporary variables or an interactive su login; include su in commands that need Root. Submitted text is kept only in session memory and can be viewed or copied from the text actions menu.
 - Node.js toolchain: with the Node.js Runtime plugin (1.5.0+) installed, node / npm / npx / corepack / yarn / pnpm become available, together with the npm registry and "ignore install scripts" settings and the package menu (npm init / install / run script and more).
 - AutoJs6 entries: the home drawer switch (session count, close all), "Open in terminal" in the file manager directory menu and the project toolbar. Since AutoJs6 build 5320 the directory menu item comes from the plugin through the Explorer Action protocol, and AutoJs6 passes only the path of the selected directory. From AutoJs6 6.8.1 this item is in the submenu `3-Shell Terminal`.
 - Script API `terminal` (alias `$terminal`): session management, visible execution (`exec`, `npm.run`) and a session object with `output` / `exit` events, `write` and `waitFor`; every failure is a `TerminalError` with a stable `code`.
@@ -194,10 +195,14 @@ The plugin's plans and progress are maintained as a checkable list in ROADMAP.md
 
 ******
 
-#### v1.1.1
+#### v1.2.0
 
-_2026/11/07_
+_2026/11/15_
 
+- `Feature` Command editor: multiline or long pastes open a wrapping editor; paste into the current terminal or run in a new session in the current directory, with the complete command, exit code and a command viewer with Copy
+- `Fix` Keyboard input losing the last UTF-8 byte of emoji and other supplementary characters, and corrupting subsequent characters such as Chinese
+- `Fix` Large pastes blocking the UI and echo; input is sent in order in the background, literal paste bypasses sticky Ctrl / Alt, and a full queue reports rejection instead of truncating input
+- `Fix` Non-ASCII command arguments, directory names and environment values being truncated when starting a terminal session
 - `Improvement` The AutoJs6 file manager groups the menu options of this plugin under the submenu "3-Shell Terminal", named as in the Plugin Center (requires AutoJs6 6.8.1 or later)
 
 #### v1.1.0

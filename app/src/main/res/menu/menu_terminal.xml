@@ -11,6 +11,8 @@
 
     <item android:title="@string/terminal_text_actions">
         <menu>
+            <item android:id="@+id/action_edit_command" android:title="@string/terminal_command_editor" />
+            <item android:id="@+id/action_view_command" android:title="@string/terminal_command_view" />
             <item android:id="@+id/action_paste" android:title="@android:string/paste" />
             <item android:id="@+id/action_copy_transcript" android:title="@string/terminal_copy_transcript" />
             <item android:id="@+id/action_share_transcript" android:title="@string/terminal_share_transcript" />

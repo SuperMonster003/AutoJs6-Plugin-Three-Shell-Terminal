@@ -93,6 +93,14 @@
     <string name="terminal_clear_screen">화면 지우기</string>
     <string name="terminal_close_all_sessions">모든 세션 닫기</string>
     <string name="terminal_close_session">세션 닫기</string>
+    <string name="terminal_command_editor">명령 편집기</string>
+    <string name="terminal_command_exit">종료 코드</string>
+    <string name="terminal_command_hint">전체 명령을 확인하고 편집합니다. 실행하면 현재 디렉터리에 새 세션이 열립니다. 임시 변수와 대화형 su 로그인은 유지되지 않습니다. 현재 터미널에 입력하려면 붙여넣기를 선택하세요.</string>
+    <string name="terminal_command_invalid">NUL 문자 없이 16 KiB 이하의 명령을 입력하세요.</string>
+    <string name="terminal_command_label">명령</string>
+    <string name="terminal_command_paste">붙여넣기</string>
+    <string name="terminal_command_run">실행</string>
+    <string name="terminal_command_view">전송한 명령 보기</string>
     <string name="terminal_confirm_close_running">이 세션에서 아직 프로세스가 실행 중입니다. 그래도 닫을까요?</string>
     <string name="terminal_controls">제어</string>
     <string name="terminal_copied_to_clipboard">클립보드에 복사했습니다</string>
@@ -101,6 +109,7 @@
     <string name="terminal_error_occurred">오류가 발생했습니다</string>
     <string name="terminal_explorer_open_in_terminal">터미널에서 열기</string>
     <string name="terminal_help">도움말</string>
+    <string name="terminal_input_busy">입력을 보내지 못했습니다. 세션이 닫혔거나 입력 대기열이 가득 찼습니다.</string>
     <string name="terminal_input_tips">터미널에 직접 입력하세요. 텍스트를 길게 누른 후 핸들을 드래그하여 범위를 조정하고 복사 또는 전체 선택을 사용할 수 있습니다.\n왼쪽 키 영역을 좌우로 밀면 더 많은 기호가 표시됩니다. CTRL과 ALT는 다음 키에 적용됩니다.</string>
     <string name="terminal_manager">터미널 관리자</string>
     <string name="terminal_new_session">새 세션</string>

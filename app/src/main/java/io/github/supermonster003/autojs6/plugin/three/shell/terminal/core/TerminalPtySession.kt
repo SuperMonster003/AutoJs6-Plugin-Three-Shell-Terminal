@@ -28,6 +28,7 @@ class TerminalPtySession(
 
     private val ptmx: ParcelFileDescriptor = ParcelFileDescriptor.open(File("/dev/ptmx"), ParcelFileDescriptor.MODE_READ_WRITE)
     private val mainHandler = Handler(Looper.getMainLooper())
+    private val inputWriter = TerminalInputWriter { bytes -> super.write(bytes, 0, bytes.size) }
     private val processLock = Any()
     @Volatile
     private var finished = false
@@ -57,6 +58,9 @@ class TerminalPtySession(
 
     /** Called on any keyboard input after the child exited. zh-CN: 子进程退出后收到任意键盘输入时回调. */
     var onInputAfterExit: (() -> Unit)? = null
+
+    /** Main-thread notification when a whole input chunk could not be accepted. */
+    var onInputRejected: (() -> Unit)? = null
 
     /**
      * Registry hook invoked (main thread) after [onProcessExited] so the session can be dropped even
@@ -112,14 +116,13 @@ class TerminalPtySession(
     /**
      * Writes bytes to the pty exactly as given, bypassing the sticky Ctrl / Alt modifiers of the
      * key bar (host input over Binder, plugin roadmap D20). Dropped, with `false`, after the child
-     * exited or before the emulator runs.
+     * exited, before the emulator runs, or when the bounded input queue is full.
      * zh-CN: 把字节原样写入 pty, 绕过快捷键栏的粘滞 Ctrl / Alt 修饰键 (宿主经 Binder 的输入, 路线图 D20); 子进程退出后
-     * 或模拟器尚未运行时丢弃并返回 false.
+     * 或模拟器尚未运行, 或有界输入队列已满时拒绝并返回 false.
      */
     fun writeRaw(data: ByteArray, offset: Int, count: Int): Boolean {
         if (finished || exitCode != null || !isRunning) return false
-        super.write(data, offset, count)
-        return true
+        return inputWriter.offer(data, offset, count)
     }
 
     init {
@@ -198,13 +201,30 @@ class TerminalPtySession(
             return
         }
         if (!ctrlArmed && !altArmed) {
-            super.write(data, offset, count)
+            enqueueInput(data, offset, count)
             return
         }
         val ctrl = ctrlArmed
         val alt = altArmed
         clearModifiers()
-        super.write(TerminalKeySequences.applyModifiers(String(data, offset, count, Charsets.UTF_8), ctrl, alt))
+        val bytes = TerminalKeySequences.applyModifiers(String(data, offset, count, Charsets.UTF_8), ctrl, alt).toByteArray(Charsets.UTF_8)
+        enqueueInput(bytes, 0, bytes.size)
+    }
+
+    // The upstream encoder subtracts one byte and reuses a stale two-character buffer. A supplementary
+    // code point loses its last UTF-8 byte, and a following BMP character can lose bytes as well.
+    override fun write(codePoint: Int) = write(String(Character.toChars(codePoint)))
+
+    private fun enqueueInput(data: ByteArray, offset: Int, count: Int) {
+        if (!inputWriter.offer(data, offset, count)) mainHandler.post { onInputRejected?.invoke() }
+    }
+
+    /** Clipboard text is literal input, never a sticky Ctrl / Alt shortcut. */
+    fun paste(text: String): Boolean {
+        if (finished || exitCode != null || !isRunning) return false
+        clearModifiers()
+        val bytes = text.replace("\r\n", "\n").toByteArray(Charsets.UTF_8)
+        return inputWriter.offer(bytes)
     }
 
     fun toggleCtrl() = setModifiers(!ctrlArmed, altArmed)
@@ -232,7 +252,8 @@ class TerminalPtySession(
         val alt = altArmed
         clearModifiers()
         val sequence = TerminalKeySequences.sequence(key, applicationCursorKeys = false)
-        super.write(if (alt) TerminalKeySequences.ESC + sequence else sequence)
+        val bytes = (if (alt) TerminalKeySequences.ESC + sequence else sequence).toByteArray(Charsets.UTF_8)
+        enqueueInput(bytes, 0, bytes.size)
     }
 
     /**
@@ -320,6 +341,7 @@ class TerminalPtySession(
             }
         }
         // The P6-patched TermSession also closes safely before emulator/writer initialization.
+        inputWriter.close()
         super.finish()
         pendingMessages.clear()
         finishListeners.forEach { listener -> runCatching(listener) }

@@ -23,6 +23,7 @@
     <string name="command_result_open_terminal">Ouvrir un terminal ici</string>
     <string name="command_result_title">Sortie de la commande</string>
     <string name="command_result_unavailable">La sortie de cette commande n\'est plus disponible. Elle n\'est conservée qu\'en mémoire jusqu\'au redémarrage du plugin.</string>
+    <string name="document_load_error">Impossible de lire le document intégré.</string>
     <string name="document_loading" tools:ignore="TypographyEllipsis">Chargement...</string>
     <string name="launcher_icon_applied_note">Le lanceur peut prendre quelques secondes pour se rafraîchir. Certains raccourcis peuvent devoir être ajoutés à nouveau.</string>
     <string name="launcher_icon_auto">Icône adaptative (automatique)</string>
@@ -44,7 +45,12 @@
     <string name="notification_title">Session de terminal en cours</string>
     <string name="notification_title_multiple" tools:ignore="PluralsCandidate">%1$d sessions de terminal en cours</string>
     <string name="plugin_description">Terminal multi-session exécutant le shell système dans un pty, avec sessions en arrière-plan, barre de touches et commandes Node.js</string>
-    <string name="release_history_error">Impossible de lire le document intégré.</string>
+    <string name="release_history_collapse_all">Tout réduire</string>
+    <string name="release_history_collapsed">Réduit</string>
+    <string name="release_history_expand_all">Tout développer</string>
+    <string name="release_history_expanded">Développé</string>
+    <string name="release_history_load_failed">Impossible de charger l\'historique des versions</string>
+    <string name="release_history_summary">Consulter l\'historique des versions inclus dans l\'application</string>
     <string name="release_history_title">Historique des versions</string>
     <string name="settings_all_files_access">Accès à tous les fichiers</string>
     <string name="settings_all_files_access_denied">Non accordé. Touchez pour l\'accorder dans les paramètres système</string>
@@ -69,6 +75,7 @@
     <string name="settings_node_probe_summary">Vérifier si le terminal peut exécuter node depuis le plugin Node.js Runtime</string>
     <string name="settings_notices">Mentions tierces</string>
     <string name="settings_open_failed">Aucune application ne peut ouvrir ce lien.</string>
+    <string name="settings_open_general_settings">Ouvrir les paramètres généraux</string>
     <string name="settings_probe_again">Vérifier à nouveau</string>
     <string name="settings_section_information">Informations</string>
     <string name="settings_source">Code source</string>

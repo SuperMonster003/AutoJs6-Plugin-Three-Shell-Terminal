@@ -23,6 +23,7 @@
     <string name="command_result_open_terminal">在此打开终端</string>
     <string name="command_result_title">命令输出</string>
     <string name="command_result_unavailable">该命令的输出已不可用. 输出只保存在内存中, 插件重启后即不再保留.</string>
+    <string name="document_load_error">无法读取内置文档.</string>
     <string name="document_loading" tools:ignore="TypographyEllipsis">正在加载...</string>
     <string name="launcher_icon_applied_note">启动器可能需要几秒钟刷新. 部分主屏幕快捷方式可能需要重新添加.</string>
     <string name="launcher_icon_auto">自适应图标 (自动)</string>
@@ -44,8 +45,13 @@
     <string name="notification_title">终端会话运行中</string>
     <string name="notification_title_multiple" tools:ignore="PluralsCandidate">%1$d 个终端会话运行中</string>
     <string name="plugin_description">多会话终端, 在 pty 中运行系统 shell, 支持后台运行, 快捷按键及 Node.js 命令</string>
-    <string name="release_history_error">无法读取内置文档.</string>
-    <string name="release_history_title">版本历史</string>
+    <string name="release_history_collapse_all">收起全部</string>
+    <string name="release_history_collapsed">已收起</string>
+    <string name="release_history_expand_all">展开全部</string>
+    <string name="release_history_expanded">已展开</string>
+    <string name="release_history_load_failed">无法加载发行历史</string>
+    <string name="release_history_summary">查看应用内置的发行历史</string>
+    <string name="release_history_title">发行历史</string>
     <string name="settings_all_files_access">全部文件访问</string>
     <string name="settings_all_files_access_denied">未授予, 点按前往系统设置授予</string>
     <string name="settings_all_files_access_granted">已授予, 可进入共享存储目录</string>
@@ -69,6 +75,7 @@
     <string name="settings_node_probe_summary">检测终端能否运行 Node.js 运行时插件提供的 node</string>
     <string name="settings_notices">第三方声明</string>
     <string name="settings_open_failed">没有应用可以打开此链接.</string>
+    <string name="settings_open_general_settings">打开通用设置页</string>
     <string name="settings_probe_again">重新检测</string>
     <string name="settings_section_information">信息</string>
     <string name="settings_source">源码</string>

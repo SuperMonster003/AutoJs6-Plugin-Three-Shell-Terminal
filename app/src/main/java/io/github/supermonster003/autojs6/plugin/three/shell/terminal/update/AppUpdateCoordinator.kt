@@ -10,19 +10,18 @@ import io.github.supermonster003.autojs6.plugin.three.shell.terminal.R
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.ui.ExternalIntents
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.ui.HostAppearanceActivity
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.ui.UiKit
-import io.github.supermonster003.autojs6.plugin.three.shell.terminal.ui.settings.BundledDocument
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.ui.settings.DocumentText
-import io.github.supermonster003.autojs6.plugin.three.shell.terminal.ui.settings.ReleaseHistoryActivity
+import io.github.supermonster003.autojs6.plugin.three.shell.terminal.ui.settings.openReleaseHistory
 import java.util.concurrent.Executors
 
 /**
  * The manual "Check for updates" flow (AGENTS.md 12, roadmap P5.2): a cancelable progress dialog
  * with a hard timeout, one toast per failure, a 12-hour reuse of the last answer, and a result
- * dialog whose neutral action opens the bundled history, whose positive action opens the release
+ * dialog whose neutral action opens the release history page, whose positive action opens the release
  * page in the browser and whose negative action ignores (or un-ignores) that version. Nothing runs
  * automatically and nothing is downloaded.
  * zh-CN: 手动 "检查更新" 流程 (AGENTS.md 12, P5.2): 可取消且带硬超时的进度对话框, 失败仅一条 toast, 结果复用
- * 12 小时, 结果对话框的中性按钮打开内置版本历史, 肯定按钮用浏览器打开发行页, 否定按钮忽略 (或取消忽略) 该版本;
+ * 12 小时, 结果对话框的中性按钮打开发行历史页, 肯定按钮用浏览器打开发行页, 否定按钮忽略 (或取消忽略) 该版本;
  * 没有自动检查, 不下载任何文件.
  */
 internal class AppUpdateCoordinator(private val activity: HostAppearanceActivity, private val installed: String) {
@@ -111,7 +110,7 @@ internal class AppUpdateCoordinator(private val activity: HostAppearanceActivity
                 if (ReleaseInfoCodec.validUrl(release.url, release.tag)) openPage(activity, release.url)
             }
             .setNeutralButton(R.string.release_history_title) { _, _ ->
-                activity.startActivity(ReleaseHistoryActivity.intent(activity, BundledDocument.HISTORY))
+                activity.openReleaseHistory()
             }
             .setNegativeButton(if (ignored) R.string.update_unignore else R.string.update_ignore) { _, _ ->
                 if (ignored) settings.unignore(listOf(release.tag)) else settings.ignore(release.tag)

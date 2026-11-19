@@ -23,6 +23,7 @@
     <string name="command_result_open_terminal">在此開啟終端</string>
     <string name="command_result_title">指令輸出</string>
     <string name="command_result_unavailable">該指令的輸出已不可用. 輸出只保存在記憶體中, 外掛重新啟動後即不再保留.</string>
+    <string name="document_load_error">無法讀取內置文件.</string>
     <string name="document_loading" tools:ignore="TypographyEllipsis">正在載入...</string>
     <string name="launcher_icon_applied_note">啟動器可能需要幾秒鐘刷新. 部分主畫面快捷方式可能需要重新添加.</string>
     <string name="launcher_icon_auto">自適應圖示 (自動)</string>
@@ -44,8 +45,13 @@
     <string name="notification_title">終端工作階段執行中</string>
     <string name="notification_title_multiple" tools:ignore="PluralsCandidate">%1$d 個終端工作階段執行中</string>
     <string name="plugin_description">多工作階段終端機, 在 pty 中執行系統 shell, 支援背景執行, 快捷按鍵及 Node.js 命令</string>
-    <string name="release_history_error">無法讀取內置文件.</string>
-    <string name="release_history_title">版本歷史</string>
+    <string name="release_history_collapse_all">收起全部</string>
+    <string name="release_history_collapsed">已收起</string>
+    <string name="release_history_expand_all">展開全部</string>
+    <string name="release_history_expanded">已展開</string>
+    <string name="release_history_load_failed">無法載入發行歷史</string>
+    <string name="release_history_summary">檢視應用程式內置的發行歷史</string>
+    <string name="release_history_title">發行歷史</string>
     <string name="settings_all_files_access">所有檔案存取</string>
     <string name="settings_all_files_access_denied">未授予, 點按前往系統設定授予</string>
     <string name="settings_all_files_access_granted">已授予, 可進入共享儲存目錄</string>
@@ -69,6 +75,7 @@
     <string name="settings_node_probe_summary">檢測終端能否執行 Node.js 執行階段外掛提供的 node</string>
     <string name="settings_notices">第三方聲明</string>
     <string name="settings_open_failed">沒有應用程式可以開啟此連結.</string>
+    <string name="settings_open_general_settings">開啟通用設定頁</string>
     <string name="settings_probe_again">重新檢測</string>
     <string name="settings_section_information">資訊</string>
     <string name="settings_source">原始碼</string>

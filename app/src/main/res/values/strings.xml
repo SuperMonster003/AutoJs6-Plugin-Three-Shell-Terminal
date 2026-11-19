@@ -23,6 +23,7 @@
     <string name="command_result_open_terminal">Open terminal here</string>
     <string name="command_result_title">Command output</string>
     <string name="command_result_unavailable">The output of this command is no longer available. It is kept in memory only until the plugin restarts.</string>
+    <string name="document_load_error">Unable to read the bundled document.</string>
     <string name="document_loading" tools:ignore="TypographyEllipsis">Loading...</string>
     <string name="launcher_icon_applied_note">The launcher may take a few seconds to refresh. Some home-screen shortcuts may need to be added again.</string>
     <string name="launcher_icon_auto">Adaptive icon (automatic)</string>
@@ -44,8 +45,13 @@
     <string name="notification_title">Terminal session is running</string>
     <string name="notification_title_multiple" tools:ignore="PluralsCandidate">%1$d terminal sessions are running</string>
     <string name="plugin_description">A multi-session terminal running the system shell in a pty, with background sessions, a key bar and Node.js commands</string>
-    <string name="release_history_error">Unable to read the bundled document.</string>
-    <string name="release_history_title">Version history</string>
+    <string name="release_history_collapse_all">Collapse all</string>
+    <string name="release_history_collapsed">Collapsed</string>
+    <string name="release_history_expand_all">Expand all</string>
+    <string name="release_history_expanded">Expanded</string>
+    <string name="release_history_load_failed">Unable to load the release history</string>
+    <string name="release_history_summary">Read the release history included with this app</string>
+    <string name="release_history_title">Release history</string>
     <string name="settings_all_files_access">All files access</string>
     <string name="settings_all_files_access_denied">Not granted. Tap to grant it in the system settings</string>
     <string name="settings_all_files_access_granted">Granted. Shared storage directories can be opened</string>
@@ -69,6 +75,7 @@
     <string name="settings_node_probe_summary">Check whether the terminal can run node from the Node.js Runtime plugin</string>
     <string name="settings_notices">Third-party notices</string>
     <string name="settings_open_failed">No application could open this link.</string>
+    <string name="settings_open_general_settings">Open general settings</string>
     <string name="settings_probe_again">Check again</string>
     <string name="settings_section_information">Information</string>
     <string name="settings_source">Source code</string>

@@ -23,6 +23,7 @@
     <string name="command_result_open_terminal">여기서 터미널 열기</string>
     <string name="command_result_title">명령 출력</string>
     <string name="command_result_unavailable">이 명령의 출력을 더 이상 사용할 수 없습니다. 출력은 메모리에만 보관되며 플러그인이 다시 시작되면 사라집니다.</string>
+    <string name="document_load_error">내장 문서를 읽을 수 없습니다.</string>
     <string name="document_loading" tools:ignore="TypographyEllipsis">불러오는 중...</string>
     <string name="launcher_icon_applied_note">런처가 새로 고침되기까지 몇 초가 걸릴 수 있습니다. 일부 홈 화면 바로가기를 다시 추가해야 할 수 있습니다.</string>
     <string name="launcher_icon_auto">적응형 아이콘 (자동)</string>
@@ -44,8 +45,13 @@
     <string name="notification_title">터미널 세션 실행 중</string>
     <string name="notification_title_multiple" tools:ignore="PluralsCandidate">터미널 세션 %1$d 개 실행 중</string>
     <string name="plugin_description">pty에서 시스템 셸을 실행하는 다중 세션 터미널. 백그라운드 실행, 키 바, Node.js 명령 지원</string>
-    <string name="release_history_error">내장 문서를 읽을 수 없습니다.</string>
-    <string name="release_history_title">버전 기록</string>
+    <string name="release_history_collapse_all">모두 접기</string>
+    <string name="release_history_collapsed">접힘</string>
+    <string name="release_history_expand_all">모두 펼치기</string>
+    <string name="release_history_expanded">펼쳐짐</string>
+    <string name="release_history_load_failed">릴리스 기록을 불러올 수 없습니다</string>
+    <string name="release_history_summary">앱에 포함된 릴리스 기록을 확인합니다</string>
+    <string name="release_history_title">릴리스 기록</string>
     <string name="settings_all_files_access">모든 파일 액세스</string>
     <string name="settings_all_files_access_denied">허용되지 않음. 탭하여 시스템 설정에서 허용하세요</string>
     <string name="settings_all_files_access_granted">허용됨. 공유 저장소 디렉터리를 열 수 있습니다</string>
@@ -69,6 +75,7 @@
     <string name="settings_node_probe_summary">터미널이 Node.js 런타임 플러그인의 node 를 실행할 수 있는지 확인합니다</string>
     <string name="settings_notices">타사 고지</string>
     <string name="settings_open_failed">이 링크를 열 앱이 없습니다.</string>
+    <string name="settings_open_general_settings">일반 설정 페이지 열기</string>
     <string name="settings_probe_again">다시 확인</string>
     <string name="settings_section_information">정보</string>
     <string name="settings_source">소스 코드</string>

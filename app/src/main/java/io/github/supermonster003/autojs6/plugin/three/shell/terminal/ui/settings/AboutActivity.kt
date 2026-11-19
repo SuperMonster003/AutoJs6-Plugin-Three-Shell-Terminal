@@ -19,10 +19,10 @@ import io.github.supermonster003.autojs6.plugin.three.shell.terminal.update.Rele
 
 /**
  * Identity, developer and licenses of the plugin (roadmap D31, P5.2): version with build number and
- * build date, the bundled documents (history, license, third-party notices), the jackpal
+ * build date, the release history page, the bundled documents (license, third-party notices), the jackpal
  * Android-Terminal-Emulator license and notice (Apache-2.0) and the AutoJs6 plugin API artifacts
  * (MPL 2.0). Every document opens offline; only "Source code" and "Developer page" leave the plugin.
- * zh-CN: 插件的身份, 开发者与许可证 (D31, P5.2): 带构建号与构建日期的版本, 内置文档 (版本历史, 许可证,
+ * zh-CN: 插件的身份, 开发者与许可证 (D31, P5.2): 带构建号与构建日期的版本, 发行历史页, 内置文档 (许可证,
  * 第三方声明), jackpal Android-Terminal-Emulator 的许可证与声明 (Apache-2.0) 以及 AutoJs6 插件 API 构件
  * (MPL 2.0); 全部文档离线打开, 只有 "源码" 与 "开发者主页" 离开插件.
  */
@@ -51,7 +51,7 @@ class AboutActivity : HostAppearanceActivity() {
                     updates.check()
                 }.view,
             )
-            link(R.string.release_history_title, R.drawable.ic_settings_history, TAG_HISTORY) { open(BundledDocument.HISTORY) }
+            link(R.string.release_history_title, R.drawable.ic_settings_history, TAG_HISTORY) { openReleaseHistory() }
             link(R.string.settings_source, R.drawable.ic_settings_code, TAG_SOURCE) { AppUpdateCoordinator.openPage(this@AboutActivity, ReleaseInfoCodec.SOURCE) }
             link(R.string.about_developer_page, R.drawable.ic_settings_person, TAG_DEVELOPER) { AppUpdateCoordinator.openPage(this@AboutActivity, DEVELOPER_PAGE) }
             link(R.string.settings_license, R.drawable.ic_settings_license, TAG_LICENSE) { open(BundledDocument.LICENSE) }
@@ -138,7 +138,7 @@ class AboutActivity : HostAppearanceActivity() {
     }
 
     private fun open(document: BundledDocument) {
-        startActivity(ReleaseHistoryActivity.intent(this, document))
+        startActivity(DocumentActivity.intent(this, document))
     }
 
     override fun hasUnconfirmedDialog(): Boolean = ::updates.isInitialized && updates.isShowingDialog

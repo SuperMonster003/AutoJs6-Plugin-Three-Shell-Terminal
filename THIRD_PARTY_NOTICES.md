@@ -59,9 +59,11 @@ roadmap phases P2 and P3 and keep that license.
 | Material Components for Android | `com.google.android.material:material` | 1.13.0 | Apache License 2.0 | Material 3 widgets and themes |
 | Gson | `com.google.code.gson:gson` | 2.13.2 | Apache License 2.0 | JSON documents of the Binder contract |
 | Kotlin standard library | `org.jetbrains.kotlin:kotlin-stdlib` | managed by the platform versions plugin | Apache License 2.0 | Language runtime |
+| Jetpack Compose (runtime, ui, foundation, material3, animation) | `androidx.compose:compose-bom` | 2026.09.00 | Apache License 2.0 | The release history page (plugin-center P21.8); `ui-graphics` depends on `androidx.graphics:graphics-path`, whose `libandroidx.graphics.path.so` (four ABIs, stored uncompressed, 16 KB aligned) is the only native library besides the terminal's own |
+| AndroidX Activity Compose | `androidx.activity:activity-compose` | 1.12.2 | Apache License 2.0 | Hosts the Compose page in its activity |
 
-Test-only dependencies (JUnit 4, AndroidX Test runner / rules / ext-junit, Apache License 2.0 or EPL 1.0) are
-not shipped in the APK.
+Test-only dependencies (JUnit 4, AndroidX Test runner / rules / ext-junit, Espresso, Compose UI Test, Apache License
+2.0 or EPL 1.0) are not shipped in the APK.
 
 ## Build tooling (not distributed)
 

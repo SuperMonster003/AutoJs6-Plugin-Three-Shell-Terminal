@@ -160,7 +160,10 @@ class ThreeShellTerminalPluginContractTest {
         val packaged = apks.flatMap { apk ->
             java.util.zip.ZipFile(apk).use { zip -> zip.entries().asSequence().map { it.name }.filter { it.startsWith("lib/$processAbi/") }.toList() }
         }
-        assertEquals(NativeLibraryInventory.libraryNames.map { "lib/$processAbi/$it" }.toSet(), packaged.toSet())
+        // Compose (the release history page, plugin-center P21.8) adds androidx.graphics.path, which is not one of the
+        // plugin's own libraries in NativeLibraryInventory.
+        val expected = NativeLibraryInventory.libraryNames + COMPOSE_NATIVE_LIBRARY
+        assertEquals(expected.map { "lib/$processAbi/$it" }.toSet(), packaged.toSet())
     }
 
     @Test
@@ -248,5 +251,6 @@ class ThreeShellTerminalPluginContractTest {
         const val AUTHOR_META_DATA = "org.autojs.plugin.info.AUTHOR"
         const val NATIVE_PAGE_ALIGNMENT_META_DATA = "org.autojs.plugin.contract.NATIVE_PAGE_ALIGNMENT"
         const val REQUIRES_HOST_VERSION_META_DATA = "requiresHostVersion"
+        const val COMPOSE_NATIVE_LIBRARY = "libandroidx.graphics.path.so"
     }
 }

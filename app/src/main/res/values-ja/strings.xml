@@ -23,6 +23,7 @@
     <string name="command_result_open_terminal">ここで端末を開く</string>
     <string name="command_result_title">コマンドの出力</string>
     <string name="command_result_unavailable">このコマンドの出力はもう利用できません. 出力はメモリにのみ保持され, プラグインの再起動で失われます.</string>
+    <string name="document_load_error">内蔵ドキュメントを読み込めません.</string>
     <string name="document_loading" tools:ignore="TypographyEllipsis">読み込み中...</string>
     <string name="launcher_icon_applied_note">反映まで数秒かかる場合があります. ホーム画面のショートカットを再追加する必要がある場合があります.</string>
     <string name="launcher_icon_auto">アダプティブ アイコン (自動)</string>
@@ -44,8 +45,13 @@
     <string name="notification_title">ターミナルセッションを実行中</string>
     <string name="notification_title_multiple" tools:ignore="PluralsCandidate">%1$d 件のターミナルセッションを実行中</string>
     <string name="plugin_description">pty でシステムシェルを実行するマルチセッション端末. バックグラウンド実行, キーバー, Node.js コマンドに対応</string>
-    <string name="release_history_error">内蔵ドキュメントを読み込めません.</string>
-    <string name="release_history_title">バージョン履歴</string>
+    <string name="release_history_collapse_all">すべて折りたたむ</string>
+    <string name="release_history_collapsed">折りたたみ中</string>
+    <string name="release_history_expand_all">すべて展開する</string>
+    <string name="release_history_expanded">展開中</string>
+    <string name="release_history_load_failed">リリース履歴を読み込めませんでした</string>
+    <string name="release_history_summary">アプリに含まれるリリース履歴を表示します</string>
+    <string name="release_history_title">リリース履歴</string>
     <string name="settings_all_files_access">すべてのファイルへのアクセス</string>
     <string name="settings_all_files_access_denied">未許可. タップしてシステム設定で許可します</string>
     <string name="settings_all_files_access_granted">許可済み. 共有ストレージのディレクトリを開けます</string>
@@ -69,6 +75,7 @@
     <string name="settings_node_probe_summary">ターミナルが Node.js ランタイムプラグインの node を実行できるか確認します</string>
     <string name="settings_notices">第三者に関する表示</string>
     <string name="settings_open_failed">このリンクを開くアプリがありません.</string>
+    <string name="settings_open_general_settings">共通設定ページを開く</string>
     <string name="settings_probe_again">再確認</string>
     <string name="settings_section_information">情報</string>
     <string name="settings_source">ソースコード</string>

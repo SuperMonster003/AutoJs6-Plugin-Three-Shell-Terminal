@@ -1,5 +1,6 @@
 package io.github.supermonster003.autojs6.plugin.three.shell.terminal.ui.settings
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.graphics.drawable.GradientDrawable
 import android.net.Uri
@@ -10,12 +11,15 @@ import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.RelativeSizeSpan
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.LinearLayout
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.EntryCaller
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.R
+import io.github.supermonster003.autojs6.plugin.three.shell.terminal.ThreeShellTerminalPlugin
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.core.TerminalPaths
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.core.TerminalPreferences
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.core.TerminalSettingsActions
@@ -37,15 +41,19 @@ import java.util.Locale
  * AutoJs6"), the terminal group (text size, color scheme and font (P8), npm registry, ignore-scripts, Node.js integration,
  * environment probe, user-trusted Node.js signers and command completion notices (P8), all-files access,
  * clear data) and the information group (update check,
- * version history, About). Every choice dialog follows choose-then-confirm; a change applies at
+ * release history, About). Every choice dialog follows choose-then-confirm; a change applies at
  * once, appearance changes by recreating the screen. The host's plugin center reaches this screen
  * through `org.autojs.plugin.TERMINAL_SETTINGS` behind the plugin permission, the terminal menu
- * starts it explicitly; the same caller rule as the terminal entry applies ([EntryCaller]).
+ * starts it explicitly; the same caller rule as the terminal entry applies ([EntryCaller]). The
+ * overflow menu opens the general settings page that AutoJs6 6.8.1 and later show for this plugin
+ * (plugin-center P21.8, Q100 B); the item is hidden when AutoJs6 cannot resolve that page.
  *
  * zh-CN: 独立设置页 (D29, P5.1; 独立设置页规范): 外观组 (语言, 夜间模式, 主题色, 启动器图标, 默认均跟随 AutoJs6),
  * 终端组 (字号, npm 镜像源, 忽略安装脚本, Node.js 集成, 环境探测, 全部文件访问, 清除数据) 与信息组 (检查更新,
- * 版本历史, 关于). 选择对话框一律先选后确定, 更改立即生效, 外观更改通过重建界面生效. 宿主插件中心经受插件权限
+ * 发行历史, 关于). 选择对话框一律先选后确定, 更改立即生效, 外观更改通过重建界面生效. 宿主插件中心经受插件权限
  * 保护的 `org.autojs.plugin.TERMINAL_SETTINGS` 进入, 终端菜单显式启动; 调用方规则与终端入口相同 ([EntryCaller]).
+ * 溢出菜单打开 AutoJs6 6.8.1 及以上版本为本插件提供的通用设置页 (plugin-center P21.8, Q100 B); AutoJs6 解析不到该页时
+ * 不显示此项.
  */
 class SettingsActivity : HostAppearanceActivity() {
 
@@ -67,6 +75,7 @@ class SettingsActivity : HostAppearanceActivity() {
     private val preferences by lazy { TerminalPreferences(this) }
     private val settingsActions by lazy { TerminalSettingsActions(this) }
     private var progress: AlertDialog? = null
+    private var generalSettingsAvailable = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,6 +95,57 @@ class SettingsActivity : HostAppearanceActivity() {
     override fun onResume() {
         super.onResume()
         if (::scaffold.isInitialized) refreshSummaries()
+        // AutoJs6 may have been installed, updated or removed while this page was away.
+        if (canOpenGeneralSettings() != generalSettingsAvailable) invalidateOptionsMenu()
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        // The general settings page of AutoJs6 brings this page back (CLEAR_TOP | SINGLE_TOP) instead of opening a
+        // second one; the page reads nothing else from the intent, so it keeps its state.
+        setIntent(intent)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menu.add(Menu.NONE, MENU_GENERAL_SETTINGS, Menu.NONE, R.string.settings_open_general_settings)
+            .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu): Boolean {
+        generalSettingsAvailable = canOpenGeneralSettings()
+        menu.findItem(MENU_GENERAL_SETTINGS)?.isVisible = generalSettingsAvailable
+        return super.onPrepareOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == MENU_GENERAL_SETTINGS) {
+            openGeneralSettings()
+            return true
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    /** The general settings page that AutoJs6 shows for this plugin (plugin-center P17). */
+    private fun generalSettingsIntent(): Intent = Intent(ACTION_HOST_PLUGIN_SETTINGS)
+        .setPackage(ThreeShellTerminalPlugin.HOST_PACKAGE_NAME)
+        .putExtra(EXTRA_HOST_PLUGIN_PACKAGE, packageName)
+
+    /** AutoJs6 6.8.0 and earlier have no such page, so the menu item stays hidden. */
+    internal fun canOpenGeneralSettings(): Boolean = packageManager.resolveActivity(generalSettingsIntent(), 0) != null
+
+    /**
+     * Opens the general page in this task (no NEW_TASK), so Back returns here; when this page was opened from the
+     * general page, AutoJs6 returns to that one instead of stacking another. AutoJs6 shows its own message when it
+     * refuses the request; a build signed with another key resolves the page but the system refuses the start.
+     */
+    private fun openGeneralSettings() {
+        try {
+            startActivity(generalSettingsIntent())
+        } catch (_: SecurityException) {
+        } catch (_: ActivityNotFoundException) {
+            invalidateOptionsMenu()
+        }
     }
 
     override fun hasUnconfirmedDialog(): Boolean =
@@ -155,8 +215,8 @@ class SettingsActivity : HostAppearanceActivity() {
 
         page.addView(sectionHeader(getString(R.string.settings_section_information)))
         add(page, KEY_UPDATE, settingRow(getString(R.string.update_check), getString(R.string.update_installed, packageManager.getPackageInfo(packageName, 0).versionName.orEmpty()), R.drawable.ic_settings_update, KEY_UPDATE) { updates.check() })
-        add(page, KEY_HISTORY, settingRow(getString(R.string.release_history_title), null, R.drawable.ic_settings_history, KEY_HISTORY) {
-            startActivity(ReleaseHistoryActivity.intent(this@SettingsActivity, BundledDocument.HISTORY))
+        add(page, KEY_HISTORY, settingRow(getString(R.string.release_history_title), getString(R.string.release_history_summary), R.drawable.ic_settings_history, KEY_HISTORY) {
+            openReleaseHistory()
         })
         add(page, KEY_ABOUT, settingRow(getString(R.string.about_title), getString(R.string.about_summary), R.drawable.ic_settings_info, KEY_ABOUT) {
             startActivity(Intent(this@SettingsActivity, AboutActivity::class.java))
@@ -378,6 +438,12 @@ class SettingsActivity : HostAppearanceActivity() {
     companion object {
 
         private const val TAG = "ThreeShellTerminalSettings"
+
+        // The general settings page of AutoJs6 6.8.1 and later (plugin-center P17); literal values, as AutoJs6 declares
+        // them, since the plugin builds against the 6.8.0 protocol AARs.
+        internal const val ACTION_HOST_PLUGIN_SETTINGS = "org.autojs.autojs6.action.PLUGIN_SETTINGS"
+        internal const val EXTRA_HOST_PLUGIN_PACKAGE = "packageName"
+        internal const val MENU_GENERAL_SETTINGS = 1
         private const val REQUEST_STORAGE = 41
 
         const val KEY_LANGUAGE = "appearance-language"

@@ -23,6 +23,7 @@
     <string name="command_result_open_terminal">Abrir la terminal aquí</string>
     <string name="command_result_title">Salida del comando</string>
     <string name="command_result_unavailable">La salida de este comando ya no está disponible. Solo se conserva en memoria hasta que el complemento se reinicia.</string>
+    <string name="document_load_error">No se puede leer el documento integrado.</string>
     <string name="document_loading" tools:ignore="TypographyEllipsis">Cargando...</string>
     <string name="launcher_icon_applied_note">El lanzador puede tardar unos segundos en actualizarse. Puede ser necesario volver a agregar algunos accesos directos.</string>
     <string name="launcher_icon_auto">Icono adaptable (automático)</string>
@@ -44,7 +45,12 @@
     <string name="notification_title">Sesión de terminal en ejecución</string>
     <string name="notification_title_multiple" tools:ignore="PluralsCandidate">%1$d sesiones de terminal en ejecución</string>
     <string name="plugin_description">Terminal multisesión que ejecuta el shell del sistema en un pty, con sesiones en segundo plano, barra de teclas y comandos Node.js</string>
-    <string name="release_history_error">No se puede leer el documento integrado.</string>
+    <string name="release_history_collapse_all">Contraer todo</string>
+    <string name="release_history_collapsed">Contraído</string>
+    <string name="release_history_expand_all">Expandir todo</string>
+    <string name="release_history_expanded">Expandido</string>
+    <string name="release_history_load_failed">No se pudo cargar el historial de versiones</string>
+    <string name="release_history_summary">Consultar el historial de versiones incluido en la aplicación</string>
     <string name="release_history_title">Historial de versiones</string>
     <string name="settings_all_files_access">Acceso a todos los archivos</string>
     <string name="settings_all_files_access_denied">No concedido. Toca para concederlo en los ajustes del sistema</string>
@@ -69,6 +75,7 @@
     <string name="settings_node_probe_summary">Comprobar si la terminal puede ejecutar node desde el plugin Node.js Runtime</string>
     <string name="settings_notices">Avisos de terceros</string>
     <string name="settings_open_failed">Ninguna aplicación puede abrir este enlace.</string>
+    <string name="settings_open_general_settings">Abrir la configuración general</string>
     <string name="settings_probe_again">Comprobar de nuevo</string>
     <string name="settings_section_information">Información</string>
     <string name="settings_source">Código fuente</string>

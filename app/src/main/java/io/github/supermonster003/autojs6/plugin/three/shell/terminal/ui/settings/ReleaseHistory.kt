@@ -1,69 +1,122 @@
 package io.github.supermonster003.autojs6.plugin.three.shell.terminal.ui.settings
 
-import android.content.res.AssetManager
-import androidx.annotation.StringRes
-import io.github.supermonster003.autojs6.plugin.three.shell.terminal.R
+import android.content.Context
+import android.content.Intent
 import java.io.IOException
 import java.util.Locale
 
 /**
- * The documents bundled into the APK (AGENTS.md 12, roadmap D31): the localized changelog, the
- * plugin license, the third-party notices, the upstream jackpal license and notice and the license
- * of the bundled terminal font (roadmap P8), copied by the `bundleLegalAssets` Gradle task. The [key] travels in the Intent extra of the document screen.
- * zh-CN: 打包进 APK 的文档 (AGENTS.md 12, D31): 本地化更新日志, 插件许可证, 第三方声明以及由
- * `bundleLegalAssets` 任务复制的上游 jackpal 许可证与声明; [key] 作为文档界面的 Intent extra 传递.
+ * Opens the release history page (plugin-center P21.8): the "Release history" row of the settings page, the link on
+ * the About screen and the neutral button of the update dialog all lead here.
+ * zh-CN: 打开发行历史页 (plugin-center P21.8): 设置页的 "发行历史" 一行, 关于页的链接与更新对话框的中性按钮都到这里.
  */
-internal enum class BundledDocument(val key: String, val assetPath: String?, @param:StringRes val title: Int, val markdown: Boolean) {
-    HISTORY("history", null, R.string.release_history_title, true),
-    LICENSE("license", "legal/LICENSE", R.string.settings_license, false),
-    NOTICES("notices", "legal/THIRD_PARTY_NOTICES.md", R.string.settings_notices, true),
-    JACKPAL_LICENSE("jackpal-license", "legal/jackpal/LICENSE", R.string.about_jackpal_license, false),
-    JACKPAL_NOTICE("jackpal-notice", "legal/jackpal/NOTICE", R.string.about_jackpal_notice, false),
-    FONT_LICENSE("font-license", "legal/fonts/jetbrains-mono/OFL.txt", R.string.about_font_license, false);
-
-    companion object {
-        fun of(key: String?): BundledDocument = entries.firstOrNull { it.key == key } ?: HISTORY
-    }
+internal fun Context.openReleaseHistory() {
+    startActivity(Intent(this, ReleaseHistoryActivity::class.java))
 }
 
 /**
- * Locale to bundled changelog mapping (AGENTS.md 12): `doc/CHANGELOG-{tag}.md` for the ten
- * supported languages, English as the fallback. Reading is bounded to 1 MiB.
- * zh-CN: 语言到内置更新日志的映射 (AGENTS.md 12): 十种语言各取 `doc/CHANGELOG-{tag}.md`, 回退英文; 读取上限 1 MiB.
+ * Returns the releases of the first candidate asset that holds at least one, so a missing, blank or unparsable
+ * localized changelog falls back to the English one; empty when none of them does (the page shows its empty state).
  */
-internal object ReleaseHistory {
+internal fun loadReleaseHistory(candidates: List<String>, loader: (String) -> String): List<ReleaseHistoryEntry> {
+    for (path in candidates) {
+        val markdown = try { loader(path) } catch (_: IOException) { continue }
+        val entries = ReleaseHistoryParser.parse(markdown)
+        if (entries.isNotEmpty()) return entries
+    }
+    return emptyList()
+}
 
-    const val MAX_DOCUMENT_BYTES = 1024 * 1024
-
-    private val PLAIN_LANGUAGES = setOf("en", "ar", "es", "fr", "ja", "ko", "ru")
-
-    fun languageCode(locale: Locale): String = when {
-        locale.language == "zh" && (locale.country == "HK" || locale.country == "MO") -> "zh-Hant-HK"
-        locale.language == "zh" && (locale.country == "TW" || locale.script == "Hant") -> "zh-Hant-TW"
-        locale.language == "zh" -> "zh-Hans"
-        locale.language in PLAIN_LANGUAGES -> locale.language
-        else -> "en"
+/**
+ * Maps the UI locale to the bundled changelog asset shipped for it (`AUTOJS6_PLUGIN_RELEASE_HISTORY_AGENTS.md`,
+ * section 3): an explicit Hans script wins over the region, so zh-Hans-HK reads the simplified changelog.
+ */
+internal object ReleaseHistoryAssetPolicy {
+    fun assetFor(locale: Locale): String = when (locale.language.lowercase(Locale.ROOT)) {
+        "zh" -> when {
+            locale.script.equals("Hans", ignoreCase = true) -> "CHANGELOG-zh-Hans.md"
+            locale.country.equals("HK", ignoreCase = true) ||
+                locale.country.equals("MO", ignoreCase = true) -> "CHANGELOG-zh-Hant-HK.md"
+            locale.script.equals("Hant", ignoreCase = true) ||
+                locale.country.equals("TW", ignoreCase = true) -> "CHANGELOG-zh-Hant-TW.md"
+            else -> "CHANGELOG-zh-Hans.md"
+        }
+        "ar" -> "CHANGELOG-ar.md"
+        "es" -> "CHANGELOG-es.md"
+        "fr" -> "CHANGELOG-fr.md"
+        "ja" -> "CHANGELOG-ja.md"
+        "ko" -> "CHANGELOG-ko.md"
+        "ru" -> "CHANGELOG-ru.md"
+        else -> "CHANGELOG-en.md"
     }
 
-    fun candidates(locale: Locale): List<String> =
-        listOf("doc/CHANGELOG-${languageCode(locale)}.md", "doc/CHANGELOG-en.md").distinct()
+    /** The asset paths to try in order: the one for [locale], then English. */
+    fun candidatesFor(locale: Locale): List<String> =
+        listOf(assetFor(locale), FALLBACK).distinct().map { "doc/$it" }
 
-    /** The first candidate that reads as non-blank text; null when none does. */
-    fun load(locale: Locale, read: (String) -> String): String? {
-        for (path in candidates(locale)) {
-            try {
-                read(path).takeIf { it.isNotBlank() }?.let { return it }
-            } catch (_: IOException) {
-                // Try the next candidate; the English document is always bundled.
+    private const val FALLBACK = "CHANGELOG-en.md"
+}
+
+internal data class ReleaseHistoryItem(val tag: String?, val text: String)
+
+internal data class ReleaseHistoryEntry(
+    val version: String,
+    val date: String?,
+    val items: List<ReleaseHistoryItem>,
+) {
+    /** The items by category, each category once, in the order the categories first appear (untagged: tag null). */
+    val groups: List<ReleaseHistoryGroup>
+        get() = items.groupBy { it.tag }.map { (tag, grouped) -> ReleaseHistoryGroup(tag, grouped.map { it.text }) }
+
+    /** How many items each category has, in the same order; untagged items are not counted. */
+    val categoryCounts: List<Pair<String, Int>>
+        get() = groups.mapNotNull { group -> group.tag?.let { it to group.items.size } }
+}
+
+internal data class ReleaseHistoryGroup(val tag: String?, val items: List<String>)
+
+/**
+ * Parses the narrow markdown dialect of the bundled changelogs (generated by `.changelog/generate_markdown.py`):
+ * `# vX.Y.Z` or `## vX.Y.Z` version headings, `###### date` lines, and `` * `tag` text `` bullets. Anything else
+ * (the section title, the separator lines) is ignored.
+ */
+internal object ReleaseHistoryParser {
+    private val BULLET_PATTERN = Regex("^\\*\\s+(?:`([^`]+)`\\s*)?(.*)$")
+    private val VERSION_PATTERN = Regex("^#{1,2}\\s+(v\\S+)\\s*$")
+
+    fun parse(markdown: String): List<ReleaseHistoryEntry> {
+        val entries = mutableListOf<ReleaseHistoryEntry>()
+        var version: String? = null
+        var date: String? = null
+        var items = mutableListOf<ReleaseHistoryItem>()
+
+        fun flush() {
+            val flushedVersion = version ?: return
+            entries.add(ReleaseHistoryEntry(flushedVersion, date, items.toList()))
+        }
+
+        for (rawLine in markdown.lineSequence()) {
+            val line = rawLine.trim()
+            val versionMatch = VERSION_PATTERN.matchEntire(line)
+            when {
+                versionMatch != null -> {
+                    flush()
+                    version = versionMatch.groupValues[1]
+                    date = null
+                    items = mutableListOf()
+                }
+                line.startsWith("###### ") -> date = line.removePrefix("###### ").trim()
+                line.startsWith("* ") && version != null -> {
+                    val match = BULLET_PATTERN.matchEntire(line) ?: continue
+                    val tag = match.groupValues[1].takeIf { it.isNotEmpty() }
+                    val text = match.groupValues[2].trim()
+                    if (tag != null || text.isNotEmpty()) {
+                        items.add(ReleaseHistoryItem(tag, text))
+                    }
+                }
             }
         }
-        return null
+        flush()
+        return entries
     }
-
-    fun read(assets: AssetManager, path: String): String = assets.open(path).use { stream ->
-        val bytes = stream.readBytes()
-        require(bytes.size <= MAX_DOCUMENT_BYTES) { "bundled document too large: $path" }
-        bytes.toString(Charsets.UTF_8)
-    }
-
 }

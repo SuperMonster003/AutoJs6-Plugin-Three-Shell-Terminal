@@ -210,6 +210,12 @@
             android:theme="@style/Theme.ThreeShellTerminal" />
 
         <activity
+            android:name=".ui.settings.DocumentActivity"
+            android:exported="false"
+            android:theme="@style/Theme.ThreeShellTerminal" />
+
+        <!-- The release history page (plugin-center P21.8): the plugin's only Compose screen, reached from the settings page, About and the update dialog. -->
+        <activity
             android:name=".ui.settings.ReleaseHistoryActivity"
             android:exported="false"
             android:theme="@style/Theme.ThreeShellTerminal" />

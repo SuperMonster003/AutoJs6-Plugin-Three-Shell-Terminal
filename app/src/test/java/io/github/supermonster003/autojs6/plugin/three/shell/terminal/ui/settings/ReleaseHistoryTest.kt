@@ -2,55 +2,132 @@ package io.github.supermonster003.autojs6.plugin.three.shell.terminal.ui.setting
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Test
-import java.io.IOException
+import java.io.File
+import java.io.FileNotFoundException
 import java.util.Locale
 
-/** Locale to bundled changelog mapping with the English fallback (AGENTS.md 12). */
+/**
+ * The release history page (plugin-center P21.8, `AUTOJS6_PLUGIN_RELEASE_HISTORY_AGENTS.md`, section 10): the locale to
+ * bundled changelog mapping with the English fallback, the parser of the generated changelogs, and the bundled legal
+ * documents that stay on the document viewer.
+ */
 class ReleaseHistoryTest {
+    private fun first(tag: String) = ReleaseHistoryAssetPolicy.candidatesFor(Locale.forLanguageTag(tag)).first()
 
-    @Test
-    fun everySupportedLanguageMapsToItsOwnDocumentAndOthersFallBackToEnglish() {
-        assertEquals("zh-Hans", ReleaseHistory.languageCode(Locale.SIMPLIFIED_CHINESE))
-        assertEquals("zh-Hans", ReleaseHistory.languageCode(Locale.forLanguageTag("zh-Hans-SG")))
-        assertEquals("zh-Hant-HK", ReleaseHistory.languageCode(Locale.forLanguageTag("zh-HK")))
-        assertEquals("zh-Hant-HK", ReleaseHistory.languageCode(Locale.forLanguageTag("zh-Hant-MO")))
-        assertEquals("zh-Hant-TW", ReleaseHistory.languageCode(Locale.TRADITIONAL_CHINESE))
-        assertEquals("zh-Hant-TW", ReleaseHistory.languageCode(Locale.forLanguageTag("zh-Hant")))
-        listOf("en", "fr", "es", "ja", "ko", "ru", "ar").forEach { language ->
-            assertEquals(language, ReleaseHistory.languageCode(Locale.forLanguageTag(language)))
-            assertEquals(language, ReleaseHistory.languageCode(Locale.forLanguageTag("$language-XX")))
+    @Test fun mapsChineseLocalesAndFallsBackToEnglish() {
+        assertEquals("doc/CHANGELOG-zh-Hant-HK.md", first("zh-HK"))
+        assertEquals("doc/CHANGELOG-zh-Hant-HK.md", first("zh-Hant-MO"))
+        assertEquals("doc/CHANGELOG-zh-Hant-TW.md", first("zh-TW"))
+        assertEquals("doc/CHANGELOG-zh-Hant-TW.md", first("zh-Hant"))
+        assertEquals("doc/CHANGELOG-zh-Hans.md", first("zh-Hans-CN"))
+        assertEquals("doc/CHANGELOG-zh-Hans.md", first("zh-Hans-HK"))
+        assertEquals(listOf("doc/CHANGELOG-ar.md", "doc/CHANGELOG-en.md"), ReleaseHistoryAssetPolicy.candidatesFor(Locale.forLanguageTag("ar-EG")))
+        assertEquals(listOf("doc/CHANGELOG-en.md"), ReleaseHistoryAssetPolicy.candidatesFor(Locale.forLanguageTag("de-DE")))
+        assertEquals(listOf("doc/CHANGELOG-en.md"), ReleaseHistoryAssetPolicy.candidatesFor(Locale.ENGLISH))
+    }
+
+    /** A missing, blank or unparsable localized changelog falls back to English; nothing usable gives the empty state. */
+    @Test fun skipsMissingBlankOrUnparsableLocalizedAssetsAndReportsCompleteFailure() {
+        val candidates = ReleaseHistoryAssetPolicy.candidatesFor(Locale.FRANCE)
+        val english = "# v1.0.0\n\n###### 2026/10/04\n\n* `Feature` English note\n"
+        fun load(french: String?) = loadReleaseHistory(candidates) { path ->
+            when {
+                path.endsWith("-en.md") -> english
+                french == null -> throw FileNotFoundException(path)
+                else -> french
+            }
         }
-        assertEquals("en", ReleaseHistory.languageCode(Locale.GERMANY))
-        assertEquals("en", ReleaseHistory.languageCode(Locale.ROOT))
+        assertEquals("English note", load(null).single().items.single().text)
+        assertEquals("English note", load(" ").single().items.single().text)
+        assertEquals("English note", load("### Historique\n").single().items.single().text)
+        assertEquals("Note", load("# v1.0.0\n\n* `Nouveauté` Note\n").single().items.single().text)
+        assertTrue(loadReleaseHistory(candidates) { " " }.isEmpty())
+        assertTrue(loadReleaseHistory(candidates) { throw FileNotFoundException(it) }.isEmpty())
     }
 
-    @Test
-    fun candidatesListTheLocaleDocumentThenEnglishWithoutDuplicates() {
-        assertEquals(listOf("doc/CHANGELOG-ja.md", "doc/CHANGELOG-en.md"), ReleaseHistory.candidates(Locale.JAPAN))
-        assertEquals(listOf("doc/CHANGELOG-en.md"), ReleaseHistory.candidates(Locale.US))
-        assertEquals(listOf("doc/CHANGELOG-en.md"), ReleaseHistory.candidates(Locale.ITALY))
+    /** Every bundled changelog parses into as many releases as it has version headings, each with a date and items. */
+    @Test fun parsesTheBundledChangelogs() {
+        val heading = Regex("^#{1,2}\\s+v\\S+\\s*$")
+        listOf("zh-Hans", "en", "zh-Hant-HK", "zh-Hant-TW", "ar", "es", "fr", "ja", "ko", "ru").forEach { language ->
+            val markdown = File("src/main/assets/doc/CHANGELOG-$language.md").readText()
+            val entries = ReleaseHistoryParser.parse(markdown)
+            val headings = markdown.lineSequence().count { heading.matches(it.trim()) }
+            assertTrue("$language has releases", entries.isNotEmpty())
+            assertEquals("$language releases", headings, entries.size)
+            entries.forEach { entry ->
+                assertTrue("$language ${entry.version} has a date", !entry.date.isNullOrBlank())
+                assertTrue("$language ${entry.version} has items", entry.items.isNotEmpty())
+                assertTrue("$language ${entry.version} items are tagged", entry.items.all { it.tag != null })
+            }
+        }
+    }
+}
+
+class ReleaseHistoryParserTest {
+    @Test fun parsesTheGeneratedChangelogDialect() {
+        val markdown = """
+            ******
+
+            ### Release History
+
+            ******
+
+            ## v2.1.0
+
+            ###### 2026/10/13
+
+            * `Hint` First note
+            * `Improved` Second note
+
+            ## v2.0.0
+
+            ###### 2026/10/04
+
+            * `Feature` Third note
+            * Untagged note
+        """.trimIndent()
+        val entries = ReleaseHistoryParser.parse(markdown)
+        assertEquals(listOf("v2.1.0", "v2.0.0"), entries.map { it.version })
+        assertEquals("2026/10/13", entries[0].date)
+        assertEquals(listOf("Hint" to "First note", "Improved" to "Second note"), entries[0].items.map { it.tag to it.text })
+        assertEquals(listOf("Feature" to "Third note", null to "Untagged note"), entries[1].items.map { it.tag to it.text })
     }
 
-    @Test
-    fun loadSkipsMissingOrBlankDocumentsAndReturnsNullWhenNoneReads() {
-        val assets = mapOf("doc/CHANGELOG-en.md" to "# en", "doc/CHANGELOG-fr.md" to "  \n")
-        fun read(path: String): String = assets[path] ?: throw IOException(path)
-        assertEquals("# en", ReleaseHistory.load(Locale.FRANCE, ::read))
-        assertEquals("# en", ReleaseHistory.load(Locale.KOREA, ::read))
-        assertEquals("# en", ReleaseHistory.load(Locale.US, ::read))
-        assertNull(ReleaseHistory.load(Locale.US) { throw IOException(it) })
+    @Test fun parsesTheSingleHashHeadingToo() {
+        val entries = ReleaseHistoryParser.parse("# v1.0.0\n\n* `Feature` Note\n")
+        assertEquals("v1.0.0", entries.single().version)
+        assertEquals(1, entries.single().items.size)
     }
 
-    @Test
-    fun documentKeysResolveWithHistoryAsTheDefault() {
-        BundledDocument.entries.forEach { assertEquals(it, BundledDocument.of(it.key)) }
-        assertEquals(BundledDocument.HISTORY, BundledDocument.of(null))
-        assertEquals(BundledDocument.HISTORY, BundledDocument.of("unknown"))
+    /** The page names each category once and lists its items beneath; the collapsed summary counts them. */
+    @Test fun groupsItemsByCategoryInTheOrderTheyFirstAppear() {
+        val entry = ReleaseHistoryParser.parse(
+            "## v1.2.0\n\n* `Hint` A\n* `Added` B\n* `Added` C\n* `Fixed` D\n* `Added` E\n* Untagged F\n",
+        ).single()
         assertEquals(
-            listOf(null, "legal/LICENSE", "legal/THIRD_PARTY_NOTICES.md", "legal/jackpal/LICENSE", "legal/jackpal/NOTICE", "legal/fonts/jetbrains-mono/OFL.txt"),
+            listOf("Hint" to listOf("A"), "Added" to listOf("B", "C", "E"), "Fixed" to listOf("D"), null to listOf("Untagged F")),
+            entry.groups.map { it.tag to it.items },
+        )
+        assertEquals(listOf("Hint" to 1, "Added" to 3, "Fixed" to 1), entry.categoryCounts)
+    }
+
+    @Test fun ignoresSectionTitlesThatAreNotVersions() {
+        assertTrue(ReleaseHistoryParser.parse("### Release History\n\n* `Feature` Orphan\n").isEmpty())
+    }
+}
+
+class BundledDocumentTest {
+    /** The legal documents keep their keys and assets; an unknown key closes the viewer instead of showing a default. */
+    @Test fun documentKeysResolveAndUnknownKeysDoNot() {
+        BundledDocument.entries.forEach { assertEquals(it, BundledDocument.of(it.key)) }
+        assertNull(BundledDocument.of(null))
+        assertNull(BundledDocument.of("unknown"))
+        assertNull(BundledDocument.of("history"))
+        assertEquals(
+            listOf("legal/LICENSE", "legal/THIRD_PARTY_NOTICES.md", "legal/jackpal/LICENSE", "legal/jackpal/NOTICE", "legal/fonts/jetbrains-mono/OFL.txt"),
             BundledDocument.entries.map { it.assetPath },
         )
     }
-
 }

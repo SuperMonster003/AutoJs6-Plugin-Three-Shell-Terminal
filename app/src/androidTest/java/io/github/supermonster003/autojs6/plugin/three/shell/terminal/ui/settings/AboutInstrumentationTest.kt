@@ -34,10 +34,10 @@ import org.junit.runner.RunWith
 import java.util.concurrent.atomic.AtomicReference
 
 /**
- * Roadmap P5.2 device evidence: the About screen shows the installed version, every bundled
- * document opens offline with its expected content, and the manual update check drives the result
- * dialog (open release / history / ignore) from an injected source without touching the network.
- * Results are logged under [TAG].
+ * Roadmap P5.2 device evidence: the About screen shows the installed version and opens the release
+ * history page (plugin-center P21.8), every bundled legal document opens offline with its expected
+ * content, and the manual update check drives the result dialog (open release / history / ignore)
+ * from an injected source without touching the network. Results are logged under [TAG].
  */
 @RunWith(AndroidJUnit4::class)
 class AboutInstrumentationTest {
@@ -61,7 +61,7 @@ class AboutInstrumentationTest {
     }
 
     @Test
-    fun aboutShowsTheInstalledVersionAndOpensTheBundledHistory() {
+    fun aboutShowsTheInstalledVersionAndOpensTheReleaseHistory() {
         val about = launch(Intent(context, AboutActivity::class.java)) as AboutActivity
         val version = onMain { about.scaffold.content.findViewWithTag<ViewGroup>(AboutActivity.TAG_VERSION).children.filterIsInstance<TextView>().last().text.toString() }
         Log.i(TAG, "about version block: ${version.replace('\n', ' ')}")
@@ -70,10 +70,14 @@ class AboutInstrumentationTest {
         assertEquals(context.getString(R.string.plugin_author), onMain { about.scaffold.content.findViewWithTag<ViewGroup>(AboutActivity.TAG_AUTHOR).children.filterIsInstance<TextView>().last().text.toString() })
         onMain { about.scaffold.content.findViewWithTag<View>(AboutActivity.TAG_HISTORY).performClick() }
         val history = awaitValue { onMain { resumed<ReleaseHistoryActivity>() } }
-        val text = awaitDocument(history)
-        Log.i(TAG, "history document: ${text.length} chars, locale ${context.resources.configuration.locales[0].toLanguageTag()}")
-        assertTrue("history names the installed version", text.contains("v$versionName"))
-        assertTrue(text.contains(context.getString(R.string.plugin_description).take(8)) || text.contains("v$versionName"))
+        assertEquals(context.getString(R.string.release_history_title), onMain { history.title.toString() })
+        // The page lists the bundled changelog of the UI language; its newest release is the installed version.
+        val locale = context.resources.configuration.locales[0]
+        val versions = loadReleaseHistory(ReleaseHistoryAssetPolicy.candidatesFor(locale)) { path ->
+            context.assets.open(path).use { it.readBytes().toString(Charsets.UTF_8) }
+        }.map { it.version }
+        Log.i(TAG, "release history: ${versions.size} releases, locale ${locale.toLanguageTag()}")
+        assertEquals("the newest release is the installed version", "v$versionName", versions.first())
     }
 
     @Test
@@ -86,13 +90,13 @@ class AboutInstrumentationTest {
             BundledDocument.FONT_LICENSE to "SIL OPEN FONT LICENSE Version 1.1",
         )
         markers.forEach { (document, marker) ->
-            val screen = launch(ReleaseHistoryActivity.intent(context, document)) as ReleaseHistoryActivity
+            val screen = launch(DocumentActivity.intent(context, document)) as DocumentActivity
             assertEquals(context.getString(document.title), onMain { screen.scaffold.toolbar.title.toString() })
             val text = awaitDocument(screen)
             Log.i(TAG, "${document.key}: ${text.length} chars")
             assertTrue("${document.key} contains '$marker'", text.contains(marker))
             onMain { screen.finish() }
-            await { onMain { resumed<ReleaseHistoryActivity>() == null } }
+            await { onMain { resumed<DocumentActivity>() == null } }
         }
     }
 
@@ -136,11 +140,11 @@ class AboutInstrumentationTest {
 
     private fun launch(intent: Intent) = instrumentation.startActivitySync(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
 
-    private fun awaitDocument(screen: ReleaseHistoryActivity): String {
+    private fun awaitDocument(screen: DocumentActivity): String {
         val loading = context.getString(R.string.document_loading)
         return awaitValue {
             onMain {
-                val view = screen.scaffold.content.findViewWithTag<TextView>(ReleaseHistoryActivity.TAG_DOCUMENT)
+                val view = screen.scaffold.content.findViewWithTag<TextView>(DocumentActivity.TAG_DOCUMENT)
                 check(view != null) { "the document view reported an error" }
                 view.text.toString().takeIf { it != loading }
             }

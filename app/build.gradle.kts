@@ -4,6 +4,7 @@ import org.autojs.build.alignment.VerifyNativePageAlignment
 import org.gradle.api.provider.Property
 import java.security.MessageDigest
 import java.util.Properties
+import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
 
 plugins {
@@ -13,6 +14,8 @@ plugins {
     id("org.autojs.build.signs")
     id("org.autojs.build.jvm-convention")
     id("com.android.application")
+    // The release history page is Jetpack Compose (plugin-center P21.8, Q115 A).
+    id("org.jetbrains.kotlin.plugin.compose")
 }
 
 val globalApplicationId = "io.github.supermonster003.autojs6.plugin.three.shell.terminal"
@@ -23,6 +26,9 @@ val buildTypeRelease = "release"
 // CI emulator can load the pty bridge; universal carries all four.
 val nativeAbis = listOf("arm64-v8a", "armeabi-v7a", "x86_64", "x86")
 val nativeLibraryNames = listOf("libjackpal-androidterm5.so", "libjackpal-termexec2.so")
+// Not the plugin's own native code: Compose ui-graphics depends on androidx.graphics:graphics-path, which packages this
+// library for every ABI (plugin-center P21.8, Q115 A). It is not part of the vendored pty inventory (getInfo / NativeLibraryInventory).
+val composeNativeLibraryNames = listOf("libandroidx.graphics.path.so")
 
 // ---------------------------------------------------------------------------
 // Hash-locked AAR inputs. Host protocol AARs live in libs/ (locks/host-api-aars.lock); the jackpal
@@ -170,6 +176,7 @@ android {
     buildFeatures {
         aidl = true
         buildConfig = true
+        compose = true
         resValues = true
     }
 
@@ -234,12 +241,26 @@ dependencies {
     // Material 3 widgets and AppCompat theming for the terminal screen and the standalone settings (roadmap P3 / P5).
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
+    // Jetpack Compose for the release history page only (plugin-center P21.8, Q115 A): the BOM is the single version
+    // source; activity-compose has its own version. No tooling, navigation or image libraries.
+    implementation(platform(libs.compose.bom))
+    implementation(libs.compose.runtime)
+    implementation(libs.compose.ui)
+    implementation(libs.compose.foundation)
+    implementation(libs.compose.material3)
+    implementation(libs.compose.animation)
+    implementation(libs.compose.activity)
+    debugImplementation(libs.compose.ui.test.manifest)
 
     testImplementation(libs.junit)
 
     androidTestImplementation(libs.test.runner)
     androidTestImplementation(libs.test.rules)
     androidTestImplementation(libs.test.ext.junit)
+    // Compose UI tests pull Espresso 3.5.0, whose idling sync reflects on InputManager.getInstance (gone on API 36).
+    androidTestImplementation(libs.test.espresso.core)
+    androidTestImplementation(platform(libs.compose.bom))
+    androidTestImplementation(libs.compose.ui.test.junit4)
 }
 
 tasks {
@@ -271,8 +292,11 @@ tasks {
                     val nativeLibraries = zip.entries().asSequence()
                         .filter { it.name.startsWith("lib/") && it.name.endsWith(".so") }
                         .map { it.name }.toSet()
-                    val expectedLibraries = packagedAbis.flatMap { packagedAbi -> nativeLibraryNames.map { "lib/$packagedAbi/$it" } }.toSet()
+                    val expectedLibraries = packagedAbis.flatMap { packagedAbi -> (nativeLibraryNames + composeNativeLibraryNames).map { "lib/$packagedAbi/$it" } }.toSet()
                     check(nativeLibraries == expectedLibraries) { "Unexpected native library set in ${apk.name}: $nativeLibraries" }
+                    check(zip.entries().asSequence().filter { it.name in expectedLibraries }.all { it.method == ZipEntry.STORED }) {
+                        "Native libraries must be stored uncompressed in ${apk.name}"
+                    }
                     for (name in expectedLibraries) {
                         zip.getInputStream(zip.getEntry(name)).use { stream ->
                             check(stream.readNBytes(4).contentEquals(byteArrayOf(0x7f, 0x45, 0x4c, 0x46))) {

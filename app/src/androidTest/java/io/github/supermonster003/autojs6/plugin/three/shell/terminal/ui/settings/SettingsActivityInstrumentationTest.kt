@@ -15,6 +15,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry
 import androidx.test.runner.lifecycle.Stage
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.R
+import io.github.supermonster003.autojs6.plugin.three.shell.terminal.ThreeShellTerminalPlugin
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.core.TerminalPreferences
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.core.TerminalSettingsActions
 import io.github.supermonster003.autojs6.plugin.three.shell.terminal.node.NodeCliLocator
@@ -337,6 +338,31 @@ class SettingsActivityInstrumentationTest {
             Log.i(TAG, "toolbar Up left ${screen.javaClass.simpleName}")
         }
     }
+
+    /**
+     * Plugin center P21.8: "Open general settings" is shown only when the installed AutoJs6 resolves its general
+     * plugin settings page (6.8.1 and later); on AutoJs6 6.8.0 and earlier the toolbar has no overflow button.
+     */
+    @Test
+    fun theGeneralSettingsItemAppearsOnlyWhenAutoJs6HasThePage() {
+        val settings = launchSettings()
+        val intent = Intent(SettingsActivity.ACTION_HOST_PLUGIN_SETTINGS).setPackage(ThreeShellTerminalPlugin.HOST_PACKAGE_NAME)
+            .putExtra(SettingsActivity.EXTRA_HOST_PLUGIN_PACKAGE, context.packageName)
+        val resolvable = context.packageManager.resolveActivity(intent, 0) != null
+        assertEquals(resolvable, onMain { settings.canOpenGeneralSettings() })
+        val title = context.getString(R.string.settings_open_general_settings)
+        // AppCompat fills the toolbar menu after the first layout pass.
+        val item = awaitValue { onMain { settings.scaffold.toolbar.menu.findItem(SettingsActivity.MENU_GENERAL_SETTINGS) } }
+        onMain {
+            assertEquals(title, item.title.toString())
+            assertEquals("item visible when AutoJs6 resolves the page (resolvable: $resolvable)", resolvable, item.isVisible)
+        }
+        await { onMain { overflowButtons(settings).isNotEmpty() == resolvable } }
+        Log.i(TAG, "general settings item: resolvable $resolvable, visible ${onMain { item.isVisible }}")
+    }
+
+    private fun overflowButtons(settings: SettingsActivity): List<View> = settings.scaffold.toolbar.descendants()
+        .filter { it.parent is androidx.appcompat.widget.ActionMenuView && it.isShown }.toList()
 
     private fun launchSettings(): SettingsActivity = launch(SettingsActivity.intent(context)) as SettingsActivity
 

@@ -134,7 +134,8 @@ class ManifestContractTest {
         assertEquals(
             listOf(
                 ".WakeActivity", ".ThreeShellTerminalEntryActivity", ".ThreeShellTerminalExplorerActivity", ".ui.LauncherActivity", ".ui.TerminalActivity", ".ui.TerminalManagerActivity",
-                ".ui.settings.AboutActivity", ".ui.settings.ReleaseHistoryActivity", ".ui.settings.SettingsActivity", ".ui.settings.NodeProbeActivity",
+                ".ui.settings.AboutActivity", ".ui.settings.DocumentActivity", ".ui.settings.ReleaseHistoryActivity", ".ui.settings.SettingsActivity",
+                ".ui.settings.NodeProbeActivity",
                 ".ui.CommandResultActivity",
             ),
             activities,

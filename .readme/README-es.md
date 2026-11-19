@@ -204,6 +204,10 @@ _2026/11/15_
 - `Corrección` Pegados grandes que bloqueaban la interfaz y el eco; entrada ordenada en segundo plano, pegado sin Ctrl / Alt fijados y aviso de rechazo sin truncar la entrada cuando la cola está llena
 - `Corrección` Truncamiento de caracteres no ASCII en argumentos, nombres de directorios y variables de entorno al iniciar sesiones
 - `Mejora` El administrador de archivos de AutoJs6 agrupa las opciones de menú de este plugin en el submenú "3-Shell Terminal", con el mismo nombre que en el Centro de plugins (requiere AutoJs6 6.8.1 o posterior)
+- `Mejora` La página Historial de versiones se expande y contrae por versión: una versión contraída muestra su fecha y el número de entradas por categoría, una expandida nombra cada categoría una sola vez; todas las versiones se pueden expandir o contraer a la vez, la más reciente se abre expandida y el subtítulo muestra el nombre del plugin
+- `Mejora` Se reescribieron las instrucciones del Centro de plugins en cinco partes: primeros pasos, funciones principales, uso en scripts, requisitos y preguntas frecuentes
+- `Mejora` El menú de la esquina superior derecha de la página de ajustes añade "Abrir la configuración general", que abre la página de configuración general de este plugin en AutoJs6 (requiere AutoJs6 6.8.1 o posterior; las versiones anteriores no muestran este elemento del menú)
+- `Dependencia` Agregar Jetpack Compose BOM versión 2026.09.00 y androidx.activity:activity-compose versión 1.12.2 (página Historial de versiones)
 
 #### v1.1.0
 

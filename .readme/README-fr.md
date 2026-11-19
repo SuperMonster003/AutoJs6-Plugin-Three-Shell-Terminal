@@ -204,6 +204,10 @@ _2026/11/15_
 - `Correctif` Blocage de l'interface et de l'écho lors des collages volumineux; envoi ordonné en arrière-plan, collage sans Ctrl / Alt verrouillés et rejet signalé sans troncature quand la file est pleine
 - `Correctif` Troncature des caractères non ASCII dans les arguments, les noms de dossiers et les variables à la création des sessions
 - `Amélioration` Le gestionnaire de fichiers d'AutoJs6 regroupe les options de menu de ce plugin dans le sous-menu "3-Shell Terminal", nommé comme dans le Centre des plugins (AutoJs6 6.8.1 ou ultérieur requis)
+- `Amélioration` La page Historique des versions se développe et se réduit par version: une version réduite affiche sa date et le nombre d'entrées par catégorie, une version développée ne nomme chaque catégorie qu'une fois; toutes les versions peuvent être développées ou réduites d'un coup, la plus récente s'ouvre développée et le sous-titre affiche le nom du plugin
+- `Amélioration` Réécriture des instructions affichées dans le Centre des plugins en cinq parties: prise en main, fonctionnalités principales, utilisation dans les scripts, prérequis et questions fréquentes
+- `Amélioration` Le menu en haut à droite de la page des paramètres ajoute "Ouvrir les paramètres généraux", qui ouvre la page des paramètres généraux de ce plugin dans AutoJs6 (nécessite AutoJs6 6.8.1 ou version ultérieure; les versions antérieures n'affichent pas cet élément de menu)
+- `Dépendance` Ajout de Jetpack Compose BOM version 2026.09.00 et de androidx.activity:activity-compose version 1.12.2 (page Historique des versions)
 
 #### v1.1.0
 

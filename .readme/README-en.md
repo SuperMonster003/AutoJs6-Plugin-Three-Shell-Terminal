@@ -197,17 +197,22 @@ The plugin's plans and progress are maintained as a checkable list in ROADMAP.md
 
 #### v1.2.0
 
-_2026/11/15_
+_2026/11/20_
 
 - `Feature` Command editor: multiline or long pastes open a wrapping editor; paste into the current terminal or run in a new session in the current directory, with the complete command, exit code and a command viewer with Copy
 - `Fix` Keyboard input losing the last UTF-8 byte of emoji and other supplementary characters, and corrupting subsequent characters such as Chinese
 - `Fix` Large pastes blocking the UI and echo; input is sent in order in the background, literal paste bypasses sticky Ctrl / Alt, and a full queue reports rejection instead of truncating input
 - `Fix` Non-ASCII command arguments, directory names and environment values being truncated when starting a terminal session
-- `Improvement` The AutoJs6 file manager groups the menu options of this plugin under the submenu "3-Shell Terminal", named as in the Plugin Center (requires AutoJs6 6.8.1 or later)
 - `Improvement` The Version history page is now the Release history page and expands and collapses by version: a collapsed version shows its date and the number of entries per category, an expanded one names each category once; all versions can be expanded or collapsed at once, the newest one opens expanded and the subtitle shows the plugin name
 - `Improvement` Rewrote the instructions shown in the Plugin Center in five parts: getting started, main features, using it in scripts, requirements and FAQ
 - `Improvement` The menu at the top right of the settings page adds "Open general settings", which opens the general settings page of this plugin in AutoJs6 (requires AutoJs6 6.8.1 or later; earlier versions do not show the menu item)
 - `Dependency` Add Jetpack Compose BOM version 2026.09.00 and androidx.activity:activity-compose version 1.12.2 (release history page)
+
+#### v1.1.1
+
+_2026/11/07_
+
+- `Improvement` The AutoJs6 file manager groups the menu options of this plugin under the submenu "3-Shell Terminal", named as in the Plugin Center (requires AutoJs6 6.8.1 or later)
 
 #### v1.1.0
 
@@ -224,33 +229,6 @@ _2026/10/16_
 - `Dependency` Upgraded the jackpal emulatorview patch 1.0.42-p6.1 -> 1.0.42-p8.1: the plugin sets the renderer typeface, and `Math.ceil` replaces `android.util.FloatMath`, which left the SDK in API 23; every other class is byte-identical and `locks/vendored-aars.lock` is updated
 - `Dependency` Added JetBrains Mono NL 2.304 (SIL Open Font License 1.1) as the optional terminal font, bundled unmodified with its license on the About screen; source and SHA-256 are recorded in `vendor/fonts/jetbrains-mono/`
 - `Dependency` Added `explorer-action-api.aar` (AutoJs6 module `plugin-api/explorer-action-api`, host build 6.8.0 / 5320, MPL 2.0) as the Explorer Action protocol v23 contract for the file manager directory action, hash-locked in `locks/host-api-aars.lock`
-
-#### v1.0.0
-
-_2026/10/07_
-
-- `Hint` Version 1.0.0 provides the standalone terminal, background sessions, interactive script APIs and settings. Complete script APIs require AutoJs6 6.8.0 build 5315 or later; build 5304 is the base plugin-protocol requirement. Android 7.0 or later is supported
-- `Feature` Multiple sessions: create, switch, close and a session manager; a foreground service keeps sessions running after the screen is left, and its notification shows the current directory and the session count with a "Close sessions" action
-- `Feature` Terminal screen: a two-row key bar (Esc / Tab / Ctrl / arrows / common symbols), native text selection with Copy / Select all, transcript copy and share, text size, paste and clear
-- `Feature` Node.js toolchain: with the Node.js Runtime plugin (1.5.0+) installed, node / npm / npx / corepack / yarn / pnpm become available, together with the npm registry and "ignore install scripts" settings and the package menu (npm init / install / run script and more)
-- `Feature` AutoJs6 entries: the home drawer switch (session count, close all), "Open in terminal" in the file manager directory menu and the project toolbar
-- `Feature` Script API `terminal` (alias `$terminal`): session management, visible execution (`exec`, `npm.run`) and a session object with `output` / `exit` events, `write` and `waitFor`; every failure is a `TerminalError` with a stable `code`
-- `Feature` Standalone app: the launcher icon opens the terminal directly; a settings page (appearance following AutoJs6, text size, npm registry, Node.js integration, all files access, clear terminal data), About and the release history
-- `Feature` APKs split by ABI (arm64-v8a, armeabi-v7a, x86_64, x86) plus a universal APK, with native libraries aligned to 16 KB pages
-- `Feature` README, plugin center instruction and changelog in 10 languages
-- `Fix` A system restriction on background activity no longer crashes the plugin when a session starts. The session continues without foreground service protection.
-- `Fix` Long transcript reads keep their newest text within the cross-process reply size limit.
-- `Fix` Script transcript reads and output replay omit trailing screen padding while preserving prompt spaces and the boundary before live output
-- `Fix` A starting session could briefly disappear from host queries and prevent visible execution from opening its terminal
-- `Fix` Continuous output no longer blocks the terminal message queue; closing sessions during startup and natural process exits release their ptys and I/O workers
-- `Fix` Opening an existing terminal retries foreground-service protection when background restrictions prevented it from starting
-- `Fix` Reopening a task after the plugin process was terminated starts a fresh shell without replaying the old command
-- `Improvement` Consistent visual sizing for launcher and Plugin Center icons, with transparent backgrounds and neutral black, white or grayscale artwork
-- `Improvement` Plugin Center icons use the sizes, positions, light and dark artwork, and circular backgrounds adjusted in Icon Studio, retaining reproducible sources and parameters
-- `Improvement` Android App info icons share Icon Studio artwork and light/dark backgrounds while preserving transparent Plugin Center artwork and existing launcher choices
-- `Dependency` Added jackpal Android-Terminal-Emulator (term 1.0.70, emulatorview 1.0.42-p6.1, libtermexec 1.0, Apache-2.0) as the terminal emulation and pty native libraries, hash-locked in `locks/vendored-aars.lock`
-- `Dependency` Added `common-plugin-api.aar` and `nodejs-api.aar` (AutoJs6 modules `plugin-api/common-plugin-api` and `plugin-api/nodejs-api`, host build 6.8.0 / 5303, MPL 2.0) as the shared plugin contract and the Node.js manifest contract, hash-locked in `locks/host-api-aars.lock`
-- `Dependency` Added `terminal-api.aar` (AutoJs6 module `plugin-api/terminal-api`, host build 6.8.0 / 5304, MPL 2.0) as the terminal contract V1 (`ITerminalPlugin` / `ITerminalCallback`, identity, ceilings and error codes); the plugin identity constants now come from it, hash-locked in `locks/host-api-aars.lock`
 
 ##### For more release history
 

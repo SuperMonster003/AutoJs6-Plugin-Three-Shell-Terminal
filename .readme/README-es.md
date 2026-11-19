@@ -197,17 +197,22 @@ Los planes y el progreso del plugin se mantienen como una lista verificable en R
 
 #### v1.2.0
 
-_2026/11/15_
+_2026/11/20_
 
 - `Función` Editor de comandos: los pegados largos o multilínea abren un editor con ajuste de línea; permite pegar en el terminal actual o ejecutar en una nueva sesión del directorio actual, mostrando el comando completo, el código de salida y una vista con copia
 - `Corrección` Pérdida del último byte UTF-8 de emoji y otros caracteres suplementarios al escribir con el teclado, y corrupción de caracteres posteriores como el chino
 - `Corrección` Pegados grandes que bloqueaban la interfaz y el eco; entrada ordenada en segundo plano, pegado sin Ctrl / Alt fijados y aviso de rechazo sin truncar la entrada cuando la cola está llena
 - `Corrección` Truncamiento de caracteres no ASCII en argumentos, nombres de directorios y variables de entorno al iniciar sesiones
-- `Mejora` El administrador de archivos de AutoJs6 agrupa las opciones de menú de este plugin en el submenú "3-Shell Terminal", con el mismo nombre que en el Centro de plugins (requiere AutoJs6 6.8.1 o posterior)
 - `Mejora` La página Historial de versiones se expande y contrae por versión: una versión contraída muestra su fecha y el número de entradas por categoría, una expandida nombra cada categoría una sola vez; todas las versiones se pueden expandir o contraer a la vez, la más reciente se abre expandida y el subtítulo muestra el nombre del plugin
 - `Mejora` Se reescribieron las instrucciones del Centro de plugins en cinco partes: primeros pasos, funciones principales, uso en scripts, requisitos y preguntas frecuentes
 - `Mejora` El menú de la esquina superior derecha de la página de ajustes añade "Abrir la configuración general", que abre la página de configuración general de este plugin en AutoJs6 (requiere AutoJs6 6.8.1 o posterior; las versiones anteriores no muestran este elemento del menú)
 - `Dependencia` Agregar Jetpack Compose BOM versión 2026.09.00 y androidx.activity:activity-compose versión 1.12.2 (página Historial de versiones)
+
+#### v1.1.1
+
+_2026/11/07_
+
+- `Mejora` El administrador de archivos de AutoJs6 agrupa las opciones de menú de este plugin en el submenú "3-Shell Terminal", con el mismo nombre que en el Centro de plugins (requiere AutoJs6 6.8.1 o posterior)
 
 #### v1.1.0
 
@@ -224,33 +229,6 @@ _2026/10/16_
 - `Dependencia` Se actualiza el parche de jackpal emulatorview 1.0.42-p6.1 -> 1.0.42-p8.1: el complemento fija la fuente del renderizador y `Math.ceil` sustituye a `android.util.FloatMath`, retirado del SDK desde la API 23; las demás clases son idénticas byte a byte y `locks/vendored-aars.lock` se actualiza
 - `Dependencia` Se añade JetBrains Mono NL 2.304 (SIL Open Font License 1.1) como fuente opcional de la terminal, incluida sin cambios con su licencia en la pantalla Acerca de; el origen y el SHA-256 constan en `vendor/fonts/jetbrains-mono/`
 - `Dependencia` Se añade `explorer-action-api.aar` (módulo de AutoJs6 `plugin-api/explorer-action-api`, compilación del host 6.8.0 / 5320, MPL 2.0) como contrato del protocolo Explorer Action v23 para la acción de carpeta del gestor de archivos, con hash fijado en `locks/host-api-aars.lock`
-
-#### v1.0.0
-
-_2026/10/07_
-
-- `Aviso` La versión 1.0.0 ofrece terminal independiente, sesiones en segundo plano, API de scripts interactivos y ajustes. Las API completas requieren AutoJs6 6.8.0 compilación 5315 o posterior; el protocolo básico requiere la compilación 5304. Compatible con Android 7.0 o posterior
-- `Función` Varias sesiones: crear, cambiar, cerrar y un gestor de sesiones; un servicio en primer plano mantiene las sesiones tras salir de la pantalla y su notificación muestra la carpeta actual y el número de sesiones con la acción "Cerrar sesiones"
-- `Función` Pantalla del terminal: barra de teclas de dos filas (Esc / Tab / Ctrl / flechas / símbolos habituales), selección de texto nativa con Copiar / Seleccionar todo, copia y compartición de la transcripción, tamaño del texto, pegar y limpiar
-- `Función` Cadena Node.js: con el plugin Node.js Runtime (1.5.0+) instalado quedan disponibles node / npm / npx / corepack / yarn / pnpm, junto con los ajustes de registro npm e "ignorar scripts de instalación" y el menú de paquetes (npm init / install / run script y más)
-- `Función` Entradas de AutoJs6: el interruptor del cajón de inicio (número de sesiones, cerrar todas), "Abrir en el terminal" en el menú de carpetas del gestor de archivos y en la barra de herramientas del proyecto
-- `Función` API de script `terminal` (alias `$terminal`): gestión de sesiones, ejecución visible (`exec`, `npm.run`) y un objeto de sesión con eventos `output` / `exit`, `write` y `waitFor`; cada fallo es un `TerminalError` con un `code` estable
-- `Función` Aplicación independiente: el icono del lanzador abre directamente el terminal; página de ajustes (apariencia que sigue a AutoJs6, tamaño del texto, registro npm, integración Node.js, acceso a todos los archivos, borrar datos del terminal), Acerca de e historial de versiones
-- `Función` APK separados por ABI (arm64-v8a, armeabi-v7a, x86_64, x86) más un APK universal, con bibliotecas nativas alineadas a páginas de 16 KB
-- `Función` README, instrucciones del centro de plugins y registro de cambios en 10 idiomas
-- `Corrección` Las restricciones del sistema sobre la actividad en segundo plano ya no provocan un cierre del complemento al iniciar una sesión. La sesión continúa sin la protección del servicio en primer plano.
-- `Corrección` La lectura de transcripciones largas conserva el texto más reciente sin superar el límite de tamaño de las respuestas entre procesos.
-- `Corrección` La lectura y reproducción de la salida omiten las líneas vacías de relleno de pantalla y conservan los espacios del indicador y la separación de la salida siguiente
-- `Corrección` Una sesión al iniciarse podía desaparecer brevemente de las consultas del anfitrión e impedir la apertura de su terminal
-- `Corrección` La salida continua ya no bloquea la cola de mensajes del terminal; los cierres durante el inicio y la salida natural del proceso liberan los pty y los hilos de entrada y salida
-- `Corrección` Abrir un terminal existente vuelve a intentar la protección del servicio en primer plano si las restricciones impidieron iniciarlo
-- `Corrección` Al reabrir una tarea tras terminar el proceso del complemento se crea un shell nuevo sin volver a ejecutar el comando anterior
-- `Mejora` Tamaño visual uniforme de los iconos del lanzador y del Centro de complementos, con fondos transparentes y diseños en blanco, negro o grises neutros
-- `Mejora` Los iconos del centro de plugins usan los tamaños, posiciones, imágenes claras y oscuras y fondos circulares ajustados en Icon Studio, conservando fuentes y parámetros reproducibles
-- `Mejora` Los iconos de información de la aplicación de Android comparten las imágenes y los fondos claros y oscuros de Icon Studio, conservando las imágenes transparentes del centro de plugins y las opciones del lanzador
-- `Dependencia` Se añade jackpal Android-Terminal-Emulator (term 1.0.70, emulatorview 1.0.42-p6.1, libtermexec 1.0, Apache-2.0) como emulación de terminal y bibliotecas nativas pty, con hash bloqueado en `locks/vendored-aars.lock`
-- `Dependencia` Se añaden `common-plugin-api.aar` y `nodejs-api.aar` (módulos AutoJs6 `plugin-api/common-plugin-api` y `plugin-api/nodejs-api`, build del host 6.8.0 / 5303, MPL 2.0) como contrato de plugin compartido y contrato de manifiesto Node.js, con hash bloqueado en `locks/host-api-aars.lock`
-- `Dependencia` Se añade `terminal-api.aar` (módulo AutoJs6 `plugin-api/terminal-api`, build del host 6.8.0 / 5304, MPL 2.0) como contrato de terminal V1 (`ITerminalPlugin` / `ITerminalCallback`, identidad, límites y códigos de error); las constantes de identidad del plugin provienen ahora de él, con hash bloqueado en `locks/host-api-aars.lock`
 
 ##### Para más historial de versiones
 

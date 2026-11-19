@@ -6,17 +6,22 @@
 
 # v1.2.0
 
-###### 2026/11/15
+###### 2026/11/20
 
 * `Feature` Command editor: multiline or long pastes open a wrapping editor; paste into the current terminal or run in a new session in the current directory, with the complete command, exit code and a command viewer with Copy
 * `Fix` Keyboard input losing the last UTF-8 byte of emoji and other supplementary characters, and corrupting subsequent characters such as Chinese
 * `Fix` Large pastes blocking the UI and echo; input is sent in order in the background, literal paste bypasses sticky Ctrl / Alt, and a full queue reports rejection instead of truncating input
 * `Fix` Non-ASCII command arguments, directory names and environment values being truncated when starting a terminal session
-* `Improvement` The AutoJs6 file manager groups the menu options of this plugin under the submenu "3-Shell Terminal", named as in the Plugin Center (requires AutoJs6 6.8.1 or later)
 * `Improvement` The Version history page is now the Release history page and expands and collapses by version: a collapsed version shows its date and the number of entries per category, an expanded one names each category once; all versions can be expanded or collapsed at once, the newest one opens expanded and the subtitle shows the plugin name
 * `Improvement` Rewrote the instructions shown in the Plugin Center in five parts: getting started, main features, using it in scripts, requirements and FAQ
 * `Improvement` The menu at the top right of the settings page adds "Open general settings", which opens the general settings page of this plugin in AutoJs6 (requires AutoJs6 6.8.1 or later; earlier versions do not show the menu item)
 * `Dependency` Add Jetpack Compose BOM version 2026.09.00 and androidx.activity:activity-compose version 1.12.2 (release history page)
+
+# v1.1.1
+
+###### 2026/11/07
+
+* `Improvement` The AutoJs6 file manager groups the menu options of this plugin under the submenu "3-Shell Terminal", named as in the Plugin Center (requires AutoJs6 6.8.1 or later)
 
 # v1.1.0
 

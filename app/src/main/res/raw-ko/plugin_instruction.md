@@ -1,17 +1,63 @@
-3-Shell Terminal 은 AutoJs6 의 내장 터미널을 이어받습니다: 홈 드로어의 "터미널" 스위치, 파일 관리자 디렉터리 메뉴와 프로젝트 도구 모음의 "터미널에서 열기", 그리고 세션을 열고 제어하고 관찰하는 스크립트 측 전역 객체 `terminal`. 각 세션은 pty 에서 실행되는 시스템 셸 (`/system/bin/sh`) 이며 화면을 떠나도 백그라운드에서 계속 실행됩니다.
+3-Shell Terminal은 휴대폰에서 쓰는 대화형 터미널입니다. 시스템의 `/system/bin/sh`를 pty에서 실행하고, 여러 세션을 동시에 열 수 있으며, 화면을 벗어나도 세션은 백그라운드에서 계속 실행됩니다. Node.js Runtime 플러그인을 설치하면 node, npm 등의 명령도 쓸 수 있습니다. AutoJs6의 "터미널" 항목과 스크립트의 `terminal` 객체는 모두 이 플러그인이 제공합니다.
 
-1.2.0은 독립 터미널, 백그라운드 세션, 대화형 스크립트 API와 설정에 터미널 색상과 글꼴, 명령 완료 알림, 타사 Node.js 서명 신뢰를 더합니다. 전체 스크립트 API는 AutoJs6 6.8.0 빌드 5315 이상이 필요하며, 기본 플러그인 프로토콜은 빌드 5304부터, 파일 관리자 디렉터리 메뉴의 플러그인 항목은 빌드 5320부터 지원합니다. Android 7.0 이상을 지원합니다.
+### 시작하기
 
-### 사용 방법
+1. AutoJs6 홈 화면의 서랍에서 "터미널"을 탭하거나, 파일 관리자의 폴더 메뉴에서 "터미널에서 열기"를 선택합니다. 홈 화면의 3-Shell Terminal 아이콘을 탭해도 됩니다.
+2. 명령을 입력하고 Enter 키로 실행합니다. 화면 하단의 키 바에는 Esc, Tab, Ctrl, 방향 키와 자주 쓰는 기호가 있습니다.
+3. 툴바의 "세션" 메뉴에서 세션을 만들고, 전환하고, 닫습니다. 화면을 벗어나도 세션은 계속 실행되며, 알림을 탭하면 "터미널 관리자"가 열립니다.
+4. `/sdcard` 등 공유 저장소의 폴더에 들어가기 전에 터미널의 안내에 따라 "허용"을 탭하거나, 설정에서 "모든 파일 액세스"를 켭니다.
 
-1. AutoJs6 build 5304 (6.8.0) 이상이 설치된 기기에 [Releases](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/releases) 에서 기기 ABI 에 맞는 플러그인 APK (또는 universal APK) 를 설치합니다.
-2. AutoJs6 플러그인 센터를 열어 `3-Shell Terminal` 이 인식되는지 확인하고 활성화합니다.
-3. AutoJs6 홈 드로어에서 "터미널" 을 켜거나, 파일 관리자에서 디렉터리의 "터미널에서 열기" 를 선택하거나, 스크립트에서 `terminal.open(...)` 을 호출합니다. `/sdcard` 같은 공유 저장소의 디렉터리에 들어가려면 플러그인의 안내에 따라 "모든 파일 접근" 을 허용하세요.
+### 주요 기능
 
-### Node.js 명령
+- **여러 세션**: 세션을 만들고, 전환하고, 닫을 수 있으며 "터미널 관리자"에서 모든 세션을 볼 수 있습니다. 포그라운드 서비스가 백그라운드에서 세션을 유지하고, 알림에 현재 폴더와 세션 수를 표시합니다.
+- **터미널 화면**: 키 바, 텍스트 선택과 복사, "출력 기록 공유", 두 손가락으로 글자 크기 조절을 지원합니다. 설정에서 "터미널 색상" 4가지와 "터미널 글꼴" 2가지 중에서 고를 수 있습니다.
+- **명령 편집기**: 여러 줄이거나 긴 명령을 붙여 넣으면 먼저 전체 내용을 보여 줍니다. 현재 세션에 붙여 넣거나, 새 세션에서 실행하고 종료 코드를 확인할 수 있습니다.
+- **Node.js 도구**: Node.js Runtime 플러그인을 설치하면 node, npm, npx, corepack (yarn / pnpm)을 쓸 수 있습니다. 설정에서 "npm 레지스트리"를 고르거나 "npm 라이프사이클 스크립트 무시"를 켤 수 있습니다.
+- **명령 완료 알림**: 스크립트가 대화형 shell을 남기지 않고 실행한 명령이 끝나면 알림이 오며, 탭하면 출력의 끝부분을 볼 수 있습니다. 설정에서 "명령 완료 알림"을 끌 수 있습니다.
+- **별도 설정**: 언어, 야간 모드, 테마 색상은 기본적으로 AutoJs6를 따르며 따로 설정할 수도 있습니다. 런처 아이콘은 4가지 스타일이 있습니다. AutoJs6가 지원하면 설정 페이지의 메뉴에 "일반 설정 페이지 열기"가 표시됩니다.
 
-- Node.js Runtime 플러그인 1.5.0 이상이 필요합니다. 플러그인은 그 매니페스트 계약을 읽고 서명, 런처, npm / corepack 아카이브를 검증한 뒤 세션이 시작될 때마다 명령을 `PATH` 에 연결합니다. 플러그인이 없거나 검증에 실패해도 이 명령들을 제외하고 터미널은 계속 사용할 수 있습니다.
-- Android는 앱이 작성한 파일의 실행을 금지합니다. npm은 기본적으로 bin 링크를 비활성화하므로 `node_modules/.bin/*`와 `npx <패키지>`로 패키지 진입점을 직접 실행할 수 없습니다. `node node_modules/<패키지>/<진입점>.js`를 사용하세요. npm 패키지의 네이티브 실행 파일은 `EACCES`로 실패하며, 네이티브 애드온 (`.node`)은 로드할 수 없습니다.
-- corepack 은 기본적으로 내장된 pnpm 11.x 와 Yarn 1.x 를 사용하며 (`COREPACK_DEFAULT_TO_LATEST=0`), 명시적으로 지정한 버전은 요청 시 내려받습니다. npm 레지스트리는 설정에서 npmmirror 또는 사용자 지정 https URL 로 바꿀 수 있습니다.
+### 스크립트에서 사용하기
 
-설치 안내와 현재 진행 상황은 [프로젝트 README](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal)와 [ROADMAP.md](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/blob/master/ROADMAP.md)를 참고하세요.
+스크립트는 전역 객체 `terminal` (별칭 `$terminal`)로 세션을 만들고, 명령을 실행하고, 입력을 쓰고, 출력을 수신합니다:
+
+```js
+if (!terminal.isAvailable()) exit();
+let result = terminal.exec('uname -m', {
+    show: false,
+    keepOpen: false,
+    wait: true,
+});
+console.log(result.exitCode);
+let session = terminal.open({ show: false });
+session.on('output', (text) => console.log(text));
+session.write('ls\n');
+session.show();
+```
+
+- `exec`는 기본적으로 명령이 끝난 뒤에도 대화형 shell을 남깁니다. 종료 코드를 기다리려면 `keepOpen: false`와 `wait: true`를 함께 지정합니다.
+- 동기 메서드는 스크립트 스레드를 차단하므로 UI 스레드에서 호출할 수 없습니다. 대부분의 메서드에는 Promise를 반환하는 `Async` 형태도 있습니다.
+- 스크립트가 끝나도 세션은 계속 실행되므로, 더 이상 필요 없으면 `session.close()`를 호출합니다. 작업이 실패하면 `code`가 담긴 `TerminalError`가 발생합니다.
+- 모든 옵션과 이벤트는 [AutoJs6 문서 > 터미널](https://docs.autojs6.com/#/terminal)을 참고하세요.
+
+### 요구 사항
+
+- Android 7.0 이상, AutoJs6 6.8.0 이상.
+- node, npm 등의 명령에는 [Node.js Runtime](https://github.com/SuperMonster003/AutoJs6-Plugin-NodeJs-Runtime) 플러그인 1.5.0 이상이 필요합니다.
+- 공유 저장소의 폴더에 들어가려면 "모든 파일 액세스" (Android 11 이상) 또는 저장소 권한이 필요합니다. 알림 권한은 세션 알림과 명령 완료 알림에 쓰입니다.
+- 명령은 이 플러그인 자체의 ID와 권한으로 실행되며, AutoJs6의 권한을 물려받지 않습니다. AutoJs6 권한이 필요한 명령은 스크립트에서 `shell()`을 사용하세요.
+
+### 자주 묻는 질문
+
+**`/sdcard` 아래 폴더에 들어갈 수 없음**
+
+이 플러그인은 자체 저장소 권한이 필요합니다. 터미널의 안내에 따라 "허용"을 탭하거나, 설정에서 "모든 파일 액세스"를 켜세요. Android 10 이하에서는 저장소 권한만 허용하면 됩니다. `content://` 주소는 파일 경로가 아니므로 들어갈 수 없습니다.
+
+**node 명령을 찾을 수 없음**
+
+Node.js Runtime 플러그인이 설치되어 있고 설정의 "Node.js 연동"이 켜져 있는지 확인한 뒤, "Node.js 런처 확인"을 열어 원인을 확인하세요. 플러그인 서명이 공식 서명이 아니면 그 페이지에 서명의 SHA-256이 표시되며, 신뢰를 확인하면 새 세션에서 쓸 수 있습니다.
+
+**백그라운드 세션이 시스템에 의해 종료됨**
+
+시스템이 플러그인 프로세스를 종료하면 세션은 복구할 수 없습니다. HyperOS, MIUI 등은 백그라운드 실행을 제한할 수 있으므로, 시스템 설정에서 3-Shell Terminal의 알림과 백그라운드 실행을 허용하세요.
+
+키, 스크립트 인터페이스, 권한에 대한 자세한 설명은 [프로젝트 페이지](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal)를 참고하세요.

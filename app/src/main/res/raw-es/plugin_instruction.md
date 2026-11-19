@@ -1,17 +1,63 @@
-3-Shell Terminal asume el terminal integrado de AutoJs6: el interruptor "Terminal" del cajón de inicio, "Abrir en el terminal" en el menú de carpetas del gestor de archivos y en la barra de herramientas del proyecto, y el objeto global `terminal` del lado del script para abrir, controlar y observar sesiones. Cada sesión es un shell del sistema (`/system/bin/sh`) ejecutado en un pty que sigue en segundo plano al salir de la pantalla.
+3-Shell Terminal es una terminal interactiva en su teléfono: ejecuta el `/system/bin/sh` del sistema en un pty, mantiene varias sesiones abiertas a la vez y las deja en ejecución en segundo plano cuando sale de la pantalla. Con el plugin Node.js Runtime instalado, también puede usar comandos como node y npm. La entrada "Terminal" de AutoJs6 y el objeto `terminal` de los scripts los proporciona este plugin.
 
-La versión 1.2.0 añade colores y fuentes de la terminal, avisos de fin de comando y confianza en firmas de Node.js de terceros al terminal independiente, las sesiones en segundo plano, las API de scripts interactivos y los ajustes. Las API completas requieren AutoJs6 6.8.0 compilación 5315 o posterior; el protocolo básico requiere la compilación 5304, y la entrada del plugin en el menú de carpetas del gestor de archivos requiere la compilación 5320. Compatible con Android 7.0 o posterior.
+### Primeros pasos
 
-### Uso
+1. Toque "Terminal" en el cajón de la página principal de AutoJs6, o elija "Abrir en la terminal" en el menú de una carpeta del gestor de archivos; también puede tocar el icono de 3-Shell Terminal en la pantalla de inicio.
+2. Escriba un comando y pulse Intro para ejecutarlo. La barra de teclas de la parte inferior de la pantalla ofrece Esc, Tab, Ctrl, las flechas y símbolos habituales.
+3. Cree, cambie o cierre sesiones desde el menú "Sesiones" de la barra de herramientas. Las sesiones siguen en ejecución al salir de la pantalla; toque la notificación para abrir "Gestor del terminal".
+4. Antes de entrar en carpetas del almacenamiento compartido como `/sdcard`, toque "Conceder" cuando la terminal se lo indique, o active "Acceso a todos los archivos" en los ajustes.
 
-1. Instala el APK del plugin correspondiente a la ABI del dispositivo (o el APK universal) desde [Releases](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/releases) en un dispositivo con AutoJs6 build 5304 (6.8.0) o posterior.
-2. Abre el centro de plugins de AutoJs6, confirma que `3-Shell Terminal` se reconoce y actívalo.
-3. Activa "Terminal" en el cajón de inicio de AutoJs6, elige "Abrir en el terminal" sobre una carpeta del gestor de archivos o llama a `terminal.open(...)` desde un script. Concede "Acceso a todos los archivos" cuando el plugin lo pida para entrar en carpetas del almacenamiento compartido como `/sdcard`.
+### Funciones principales
 
-### Comandos Node.js
+- **Varias sesiones**: cree, cambie y cierre sesiones; "Gestor del terminal" las muestra todas. Un servicio en primer plano mantiene las sesiones en segundo plano, y la notificación muestra la carpeta actual y el número de sesiones.
+- **Pantalla de la terminal**: barra de teclas, selección y copia de texto, "Compartir transcripción" y zoom del texto con dos dedos; los ajustes ofrecen 4 esquemas de "Colores de la terminal" y 2 opciones de "Fuente de la terminal".
+- **Editor de comandos**: al pegar un comando largo o de varias líneas, primero se muestra el texto completo; puede pegarlo en la sesión actual, o ejecutarlo en una sesión nueva y ver el código de salida.
+- **Herramientas de Node.js**: con el plugin Node.js Runtime instalado, puede usar node, npm, npx y corepack (yarn / pnpm). En los ajustes puede elegir el "Registro de npm" o activar "Ignorar scripts de ciclo de vida de npm".
+- **Notificaciones de fin de comando**: cuando termina un comando que un script ejecutó sin mantener un shell interactivo, se publica una notificación; tóquela para ver el final de la salida. Puede desactivar "Notificaciones de fin de comando" en los ajustes.
+- **Ajustes propios**: el idioma, el modo nocturno y el color del tema siguen a AutoJs6 de forma predeterminada y también pueden ajustarse por separado; el icono del lanzador tiene 4 estilos. Cuando AutoJs6 lo admite, el menú de la página de ajustes ofrece "Abrir la configuración general".
 
-- Requiere el plugin Node.js Runtime 1.5.0 o posterior; el plugin lee su contrato de manifiesto, verifica la firma, el lanzador y el archivo npm / corepack, y enlaza los comandos en `PATH` cada vez que arranca una sesión. Sin el plugin, o si la verificación falla, el terminal sigue siendo utilizable sin esos comandos.
-- Android impide ejecutar archivos escritos por la aplicación. npm desactiva los enlaces bin de forma predeterminada, por lo que `node_modules/.bin/*` y `npx <paquete>` no pueden ejecutar directamente los puntos de entrada. Usa `node node_modules/<paquete>/<entrada>.js`. Los ejecutables nativos incluidos en paquetes npm fallan con `EACCES`, y no se pueden cargar extensiones nativas (`.node`).
-- corepack usa por defecto sus pnpm 11.x y Yarn 1.x integrados (`COREPACK_DEFAULT_TO_LATEST=0`) y descarga una versión nombrada explícitamente bajo petición; el registro npm puede cambiarse a npmmirror o a una URL https personalizada en los ajustes.
+### Uso en scripts
 
-Consulta el [README del proyecto](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal) y [ROADMAP.md](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal/blob/master/ROADMAP.md) para la guía de instalación y el progreso actual.
+Los scripts usan el objeto global `terminal` (alias `$terminal`) para crear sesiones, ejecutar comandos, escribir entradas y escuchar la salida:
+
+```js
+if (!terminal.isAvailable()) exit();
+let result = terminal.exec('uname -m', {
+    show: false,
+    keepOpen: false,
+    wait: true,
+});
+console.log(result.exitCode);
+let session = terminal.open({ show: false });
+session.on('output', (text) => console.log(text));
+session.write('ls\n');
+session.show();
+```
+
+- De forma predeterminada, `exec` mantiene un shell interactivo después de que termina el comando; para esperar el código de salida, establezca a la vez `keepOpen: false` y `wait: true`.
+- Los métodos síncronos bloquean el hilo del script y no se pueden llamar en el hilo de la interfaz; la mayoría de los métodos también tienen una forma `Async` que devuelve una Promise.
+- Las sesiones siguen en ejecución después de que el script termina; llame a `session.close()` cuando ya no las necesite. Una operación fallida lanza un `TerminalError` con un `code`.
+- Para todas las opciones y eventos, consulte [Documentación de AutoJs6 > Terminal](https://docs.autojs6.com/#/terminal).
+
+### Requisitos
+
+- Android 7.0 o posterior y AutoJs6 6.8.0 o posterior.
+- Los comandos como node y npm necesitan el plugin [Node.js Runtime](https://github.com/SuperMonster003/AutoJs6-Plugin-NodeJs-Runtime) 1.5.0 o posterior.
+- Entrar en carpetas del almacenamiento compartido requiere "Acceso a todos los archivos" (Android 11 y posteriores) o el permiso de almacenamiento; el permiso de notificaciones se usa para las notificaciones de sesión y de fin de comando.
+- Los comandos se ejecutan con la identidad y los permisos propios de este plugin, no con los de AutoJs6; para los comandos que necesitan los permisos de AutoJs6, use `shell()` en un script.
+
+### Preguntas frecuentes
+
+**No se puede entrar en carpetas de `/sdcard`**
+
+Este plugin necesita su propio permiso de almacenamiento. Toque "Conceder" cuando la terminal se lo indique, o active "Acceso a todos los archivos" en los ajustes; en Android 10 y anteriores basta con conceder el permiso de almacenamiento. Una dirección `content://` no es una ruta de archivo y no se puede entrar en ella.
+
+**No se encuentra el comando node**
+
+Compruebe que el plugin Node.js Runtime está instalado y que "Integración de Node.js" está activada en los ajustes, y luego abra "Comprobación del lanzador de Node.js" para ver el motivo. Si el plugin no tiene la firma oficial, esa página muestra el SHA-256 de su firma; una vez que confirme que confía en él, las sesiones nuevas podrán usarlo.
+
+**El sistema cierra las sesiones en segundo plano**
+
+Cuando el sistema cierra el proceso del plugin, sus sesiones no se pueden recuperar. Sistemas como HyperOS y MIUI pueden restringir la actividad en segundo plano; en los ajustes del sistema, permita que 3-Shell Terminal envíe notificaciones y se ejecute en segundo plano.
+
+Las teclas, la interfaz de scripts y los permisos se detallan en la [página del proyecto](https://github.com/SuperMonster003/AutoJs6-Plugin-Three-Shell-Terminal).

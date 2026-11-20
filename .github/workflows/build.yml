@@ -102,7 +102,10 @@ jobs:
           arch: ${{ matrix.arch }}
           profile: ${{ matrix.profile }}
           avd-name: Three_Shell_Terminal_Conformance_CI_${{ matrix.api-level }}
+          # A freshly booted emulator may show "System UI isn't responding", whose dialog takes the window focus that the
+          # device tests wait for; hide_error_dialogs keeps such dialogs from appearing.
           script: |
+            adb shell settings put global hide_error_dialogs 1
             chmod +x gradlew
             # Run the entire device suite, including P6 output pressure and session cleanup.
             # Node.js integration cases skip when the optional runtime is not installed.

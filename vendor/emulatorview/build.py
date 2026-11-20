@@ -60,7 +60,7 @@ def main() -> None:
     provenance = {
         "upstreamCommit": "35188f8a8b57989a4a4ec9485e11187b46be26d9",
         "originalAarSha256": BASE_SHA256,
-        "patchVersion": "1.0.42-p8.1",
+        "patchVersion": "1.0.42-p8.2",
         "compiler": subprocess.check_output([str(javac), "-version"], text=True).strip(),
         "androidJarSha256": hashlib.sha256(args.android_jar.read_bytes()).hexdigest(),
         "sources": {p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest() for p in sources},

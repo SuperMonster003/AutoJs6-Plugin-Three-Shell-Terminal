@@ -204,6 +204,10 @@ public class TermSession {
                 // P6: finish() can run before this Handler is published.
                 if (mFinished) {
                     Looper.myLooper().quit();
+                    // P8.2: quit() only marks the queue; loop() returns at once and lets
+                    // MessageQueue dispose its native eventfd / epoll descriptors now
+                    // instead of waiting for a finalizer.
+                    Looper.loop();
                     return;
                 }
                 // Drain anything in the queue from before we started

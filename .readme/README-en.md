@@ -195,6 +195,13 @@ The plugin's plans and progress are maintained as a checkable list in ROADMAP.md
 
 ******
 
+#### v1.2.1
+
+_2026/11/20_
+
+- `Fix` A terminal session closed soon after creation on a busy device occasionally keeping two file descriptors open until garbage collection
+- `Dependency` Upgraded the jackpal emulatorview patch 1.0.42-p8.1 -> 1.0.42-p8.2: when a session closes before its writer thread starts, the writer releases the eventfd and epoll descriptors of its message queue at once; only `TermSession` changes, every other class is byte-identical and `locks/vendored-aars.lock` is updated
+
 #### v1.2.0
 
 _2026/11/20_
@@ -213,22 +220,6 @@ _2026/11/20_
 _2026/11/07_
 
 - `Improvement` The AutoJs6 file manager groups the menu options of this plugin under the submenu "3-Shell Terminal", named as in the Plugin Center (requires AutoJs6 6.8.1 or later)
-
-#### v1.1.0
-
-_2026/10/16_
-
-- `Feature` Trust a third-party Node.js Runtime signer: the environment probe lists the SHA-256 of an unofficial signer and offers "Trust this signer"; after a second confirmation new sessions can use its node / npm commands, and "Trusted Node.js signers" in the settings revokes the trust at any time
-- `Feature` Command completion notices: when a command without an interactive shell (for example a script's `exec` with `keepOpen: false`) ends by itself, a notice opens the end of its output to copy, share or reopen a terminal in its directory; notices name only the session and directory, a burst alerts once, and the settings can turn them off
-- `Feature` Terminal colors and font: the settings add "Terminal colors" (follow the light / dark appearance, dark, light, tinted by the theme color) and "Terminal font" (system monospace or the built-in JetBrains Mono without ligatures); the selection overlay and the command output screen use the same font, and returning to the terminal applies the change while the session keeps running
-- `Feature` "Open in terminal" in the file manager directory menu now comes from the plugin (AutoJs6 6.8.0 build 5320 or later): AutoJs6 passes only the path of the selected directory and grants no extra access; the most recent session changes into it, or a new session starts there when none exists; earlier AutoJs6 builds keep showing their own menu item
-- `Fix` On newer Android versions such as Android 17, a long press on the terminal shows the selection handles and the Copy / Select all toolbar again, so text can be selected and copied
-- `Fix` Copying or sharing a very long transcript no longer crashes the plugin (on Android 7.0 the crash ended every session); overly long text keeps its most recent 100000 characters and a notice says so
-- `Fix` The back button at the top left of the Settings, About, Version history, environment probe and Command output screens works again, so the plugin settings opened from the AutoJs6 Plugin Center return to it
-- `Fix` In the Arabic interface, 3-Shell Terminal no longer appears reversed as Shell Terminal-3
-- `Dependency` Upgraded the jackpal emulatorview patch 1.0.42-p6.1 -> 1.0.42-p8.1: the plugin sets the renderer typeface, and `Math.ceil` replaces `android.util.FloatMath`, which left the SDK in API 23; every other class is byte-identical and `locks/vendored-aars.lock` is updated
-- `Dependency` Added JetBrains Mono NL 2.304 (SIL Open Font License 1.1) as the optional terminal font, bundled unmodified with its license on the About screen; source and SHA-256 are recorded in `vendor/fonts/jetbrains-mono/`
-- `Dependency` Added `explorer-action-api.aar` (AutoJs6 module `plugin-api/explorer-action-api`, host build 6.8.0 / 5320, MPL 2.0) as the Explorer Action protocol v23 contract for the file manager directory action, hash-locked in `locks/host-api-aars.lock`
 
 ##### For more release history
 

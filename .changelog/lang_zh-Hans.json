@@ -5,6 +5,15 @@
   "changelog_label_improvement": "优化",
   "changelog_label_dependency": "依赖",
   "$data": {
+    "v1.2.1": {
+      "released_date": "2026/11/20",
+      "fix": [
+        "设备繁忙时新建终端会话后很快关闭, 个别会话关闭后仍占用两个文件描述符, 要等垃圾回收才释放的问题"
+      ],
+      "dependency": [
+        "升级 jackpal emulatorview 补丁 1.0.42-p8.1 -> 1.0.42-p8.2: 会话在写线程启动前就已关闭时, 写线程立即释放消息队列的 eventfd 与 epoll 描述符; 只改动 `TermSession`, 其余类逐字节不变, `locks/vendored-aars.lock` 已更新"
+      ]
+    },
     "v1.2.0": {
       "released_date": "2026/11/20",
       "feature": [

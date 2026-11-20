@@ -32,6 +32,16 @@ The 2026-10-07 P8 patch (`1.0.42-p8.1`) changes only `PaintRenderer`:
 The original `PaintRenderer.java` from the same upstream commit is in `upstream/`. Rebuilding reproduces
 every other class byte for byte, including `TermSession`.
 
+The 2026-11-20 P8.2 patch (`1.0.42-p8.2`) changes only the writer thread in `TermSession`:
+
+- When shutdown precedes Handler initialization, the writer calls `Looper.loop()` right after
+  `Looper.quit()`. `quit()` only marks the queue; the loop returns at once and disposes the
+  `MessageQueue`, which closes its native eventfd and epoll descriptors. Before, those two
+  descriptors stayed open until the finalizer ran, so under load the 100-cycle descriptor check
+  on API 24 could exceed its baseline.
+
+Only `TermSession$3` (the writer thread) changes in bytecode; `TermSession` differs only in line numbers.
+
 Rebuild with JDK 21 and the Android SDK platform jar recorded by SHA-256 in
 `provenance.json`:
 

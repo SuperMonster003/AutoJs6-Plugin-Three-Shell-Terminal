@@ -5,6 +5,15 @@
   "changelog_label_improvement": "개선",
   "changelog_label_dependency": "의존성",
   "$data": {
+    "v1.2.1": {
+      "released_date": "2026/11/20",
+      "fix": [
+        "부하가 높은 기기에서 터미널 세션을 만든 직후 닫으면 드물게 닫힌 세션이 가비지 컬렉션 전까지 파일 디스크립터 2개를 유지하는 문제"
+      ],
+      "dependency": [
+        "jackpal emulatorview 패치를 1.0.42-p8.1 -> 1.0.42-p8.2로 업그레이드: 쓰기 스레드가 시작되기 전에 세션이 닫히면 쓰기 스레드가 메시지 큐의 eventfd와 epoll 디스크립터를 즉시 해제합니다. `TermSession`만 변경되었으며 다른 클래스는 바이트 단위로 동일하고 `locks/vendored-aars.lock`을 갱신했습니다"
+      ]
+    },
     "v1.2.0": {
       "released_date": "2026/11/20",
       "feature": [

@@ -5,6 +5,15 @@
   "changelog_label_improvement": "優化",
   "changelog_label_dependency": "依賴",
   "$data": {
+    "v1.2.1": {
+      "released_date": "2026/11/20",
+      "fix": [
+        "裝置繁忙時新增終端機工作階段後很快關閉, 個別工作階段關閉後仍佔用兩個檔案描述符, 要等垃圾回收才釋放的問題"
+      ],
+      "dependency": [
+        "升級 jackpal emulatorview 修補 1.0.42-p8.1 -> 1.0.42-p8.2: 工作階段在寫入執行緒啟動前已關閉時, 寫入執行緒立即釋放訊息佇列的 eventfd 及 epoll 描述符; 只改動 `TermSession`, 其餘類別逐位元組不變, `locks/vendored-aars.lock` 已更新"
+      ]
+    },
     "v1.2.0": {
       "released_date": "2026/11/20",
       "feature": [

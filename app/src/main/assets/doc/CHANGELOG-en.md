@@ -4,6 +4,13 @@
 
 ******
 
+# v1.2.1
+
+###### 2026/11/20
+
+* `Fix` A terminal session closed soon after creation on a busy device occasionally keeping two file descriptors open until garbage collection
+* `Dependency` Upgraded the jackpal emulatorview patch 1.0.42-p8.1 -> 1.0.42-p8.2: when a session closes before its writer thread starts, the writer releases the eventfd and epoll descriptors of its message queue at once; only `TermSession` changes, every other class is byte-identical and `locks/vendored-aars.lock` is updated
+
 # v1.2.0
 
 ###### 2026/11/20

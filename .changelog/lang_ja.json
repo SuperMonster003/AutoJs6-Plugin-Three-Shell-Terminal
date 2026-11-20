@@ -5,6 +5,15 @@
   "changelog_label_improvement": "改善",
   "changelog_label_dependency": "依存関係",
   "$data": {
+    "v1.2.1": {
+      "released_date": "2026/11/20",
+      "fix": [
+        "負荷の高いデバイスで端末セッションを作成してすぐ閉じると, まれに閉じたセッションがガベージコレクションまで 2 つのファイルディスクリプタを保持する問題"
+      ],
+      "dependency": [
+        "jackpal emulatorview パッチを 1.0.42-p8.1 -> 1.0.42-p8.2 に更新: 書き込みスレッドの開始前にセッションが閉じられた場合, 書き込みスレッドはメッセージキューの eventfd と epoll のディスクリプタを直ちに解放します. 変更は `TermSession` のみで, その他のクラスはバイト単位で同一です. `locks/vendored-aars.lock` を更新しました"
+      ]
+    },
     "v1.2.0": {
       "released_date": "2026/11/20",
       "feature": [

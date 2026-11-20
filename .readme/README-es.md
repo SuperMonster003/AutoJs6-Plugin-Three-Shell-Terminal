@@ -195,6 +195,13 @@ Los planes y el progreso del plugin se mantienen como una lista verificable en R
 
 ******
 
+#### v1.2.1
+
+_2026/11/20_
+
+- `Corrección` Sesiones de terminal cerradas poco después de crearse en un dispositivo ocupado que a veces mantenían abiertos dos descriptores de archivo hasta la recolección de basura
+- `Dependencia` Se actualiza el parche de jackpal emulatorview 1.0.42-p8.1 -> 1.0.42-p8.2: si una sesión se cierra antes de que arranque su hilo de escritura, este libera de inmediato los descriptores eventfd y epoll de su cola de mensajes; solo cambia `TermSession`, las demás clases son idénticas byte a byte y `locks/vendored-aars.lock` se actualiza
+
 #### v1.2.0
 
 _2026/11/20_
@@ -213,22 +220,6 @@ _2026/11/20_
 _2026/11/07_
 
 - `Mejora` El administrador de archivos de AutoJs6 agrupa las opciones de menú de este plugin en el submenú "3-Shell Terminal", con el mismo nombre que en el Centro de plugins (requiere AutoJs6 6.8.1 o posterior)
-
-#### v1.1.0
-
-_2026/10/16_
-
-- `Función` Confiar en la firma de un Node.js Runtime de terceros: el diagnóstico del entorno muestra el SHA-256 de una firma no oficial y ofrece "Confiar en esta firma"; tras una segunda confirmación, las nuevas sesiones pueden usar sus comandos node / npm, y "Firmas de Node.js de confianza" en los ajustes revoca la confianza en cualquier momento
-- `Función` Avisos de fin de comando: cuando un comando sin shell interactivo (por ejemplo un `exec` de script con `keepOpen: false`) termina por sí mismo, un aviso abre el final de su salida para copiarla, compartirla o reabrir un terminal en su carpeta; los avisos solo indican la sesión y la carpeta, una ráfaga alerta una sola vez y los ajustes permiten desactivarlos
-- `Función` Colores y fuente de la terminal: los ajustes añaden "Colores de la terminal" (seguir la apariencia clara / oscura, oscuro, claro, teñido con el color del tema) y "Fuente de la terminal" (monoespaciada del sistema o JetBrains Mono integrada, sin ligaduras); la selección y la pantalla de salida de comandos usan la misma fuente, y volver a la terminal aplica el cambio sin detener la sesión
-- `Función` "Abrir en la terminal" del menú de carpetas del gestor de archivos ahora lo proporciona el plugin (AutoJs6 6.8.0 compilación 5320 o posterior): AutoJs6 pasa solo la ruta de la carpeta seleccionada y no concede acceso adicional; la sesión más reciente cambia a ella, o se inicia allí una nueva sesión si no hay ninguna; las compilaciones anteriores de AutoJs6 siguen mostrando su propia entrada de menú
-- `Corrección` En versiones recientes de Android como Android 17, una pulsación larga en la terminal vuelve a mostrar los controles de selección y la barra Copiar / Seleccionar todo, de modo que el texto se puede seleccionar y copiar
-- `Corrección` Copiar o compartir una transcripción muy larga ya no bloquea el complemento (en Android 7.0 el bloqueo cerraba todas las sesiones); un texto demasiado largo conserva sus últimos 100000 caracteres y un aviso lo indica
-- `Corrección` El botón de volver de la esquina superior izquierda de las pantallas Ajustes, Acerca de, historial de versiones, diagnóstico del entorno y Salida del comando vuelve a funcionar, de modo que los ajustes abiertos desde el centro de complementos de AutoJs6 regresan a él
-- `Corrección` En la interfaz en árabe, 3-Shell Terminal ya no aparece invertido como Shell Terminal-3
-- `Dependencia` Se actualiza el parche de jackpal emulatorview 1.0.42-p6.1 -> 1.0.42-p8.1: el complemento fija la fuente del renderizador y `Math.ceil` sustituye a `android.util.FloatMath`, retirado del SDK desde la API 23; las demás clases son idénticas byte a byte y `locks/vendored-aars.lock` se actualiza
-- `Dependencia` Se añade JetBrains Mono NL 2.304 (SIL Open Font License 1.1) como fuente opcional de la terminal, incluida sin cambios con su licencia en la pantalla Acerca de; el origen y el SHA-256 constan en `vendor/fonts/jetbrains-mono/`
-- `Dependencia` Se añade `explorer-action-api.aar` (módulo de AutoJs6 `plugin-api/explorer-action-api`, compilación del host 6.8.0 / 5320, MPL 2.0) como contrato del protocolo Explorer Action v23 para la acción de carpeta del gestor de archivos, con hash fijado en `locks/host-api-aars.lock`
 
 ##### Para más historial de versiones
 

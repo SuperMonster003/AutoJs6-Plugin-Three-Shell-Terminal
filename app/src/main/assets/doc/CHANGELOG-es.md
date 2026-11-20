@@ -4,6 +4,13 @@
 
 ******
 
+# v1.2.1
+
+###### 2026/11/20
+
+* `Corrección` Sesiones de terminal cerradas poco después de crearse en un dispositivo ocupado que a veces mantenían abiertos dos descriptores de archivo hasta la recolección de basura
+* `Dependencia` Se actualiza el parche de jackpal emulatorview 1.0.42-p8.1 -> 1.0.42-p8.2: si una sesión se cierra antes de que arranque su hilo de escritura, este libera de inmediato los descriptores eventfd y epoll de su cola de mensajes; solo cambia `TermSession`, las demás clases son idénticas byte a byte y `locks/vendored-aars.lock` se actualiza
+
 # v1.2.0
 
 ###### 2026/11/20

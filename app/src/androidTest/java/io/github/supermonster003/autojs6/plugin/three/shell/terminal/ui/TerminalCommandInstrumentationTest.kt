@@ -58,19 +58,36 @@ class TerminalCommandInstrumentationTest {
                 edit.requestFocus()
                 (activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).showSoftInput(edit, 0)
             }
+            // A cold emulator can take longer than a fixed pause to bring up its first keyboard.
+            await {
+                var shown = false
+                scenario.onActivity { shown = (ViewCompat.getRootWindowInsets(it.window.decorView)?.getInsets(WindowInsetsCompat.Type.ime())?.bottom ?: 0) > 0 }
+                shown
+            }
             SystemClock.sleep(600)
             scenario.onActivity { activity ->
                 val host = activity.window.decorView
-                val ime = ViewCompat.getRootWindowInsets(host)!!.getInsets(WindowInsetsCompat.Type.ime()).bottom
+                val insets = ViewCompat.getRootWindowInsets(host)!!
+                val ime = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom
                 assertTrue("keyboard must be visible", ime > 0)
                 val keyboardTop = maxOf(host.height, activity.resources.displayMetrics.heightPixels) - ime
+                val dialog = activity.commandDialogForTest!!
+                val card = IntArray(2).also { dialog.window!!.decorView.getLocationOnScreen(it) }[1]
+                val statusBar = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top
+                assertTrue("dialog starts under the status bar: top=$card, status bar=$statusBar", card >= statusBar)
                 for (which in listOf(AlertDialog.BUTTON_POSITIVE, AlertDialog.BUTTON_NEGATIVE, AlertDialog.BUTTON_NEUTRAL)) {
-                    val button = activity.commandDialogForTest!!.getButton(which)
+                    val button = dialog.getButton(which)
                     val bounds = Rect()
                     assertTrue(button.getGlobalVisibleRect(bounds))
                     assertEquals(button.height, bounds.height())
                     assertTrue("button overlaps keyboard: $bounds, keyboard top=$keyboardTop", bounds.bottom <= keyboardTop)
                 }
+                // The editor itself must keep room for a few lines above the keyboard, not just the buttons.
+                val edit = dialog.findViewById<EditText>(R.id.terminal_command_editor)!!
+                val editor = Rect()
+                assertTrue("editor is hidden", edit.getGlobalVisibleRect(editor))
+                assertTrue("editor shows less than 3 lines: $editor, line height=${edit.lineHeight}", editor.height() >= edit.lineHeight * 3)
+                assertTrue("editor overlaps keyboard: $editor, keyboard top=$keyboardTop", editor.bottom <= keyboardTop)
             }
             screenshot("command-editor-keyboard")
         } finally {

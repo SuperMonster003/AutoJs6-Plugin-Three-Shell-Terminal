@@ -8,6 +8,7 @@
 
 ###### 2026/11/20
 
+* `Corrección` Cuadro de edición del editor de comandos que quedaba oculto y botones recortados al abrir el teclado en pantallas bajas; la ventana del editor ahora se ajusta a su contenido y queda entre la barra de estado y el teclado
 * `Corrección` Sesiones de terminal cerradas poco después de crearse en un dispositivo ocupado que a veces mantenían abiertos dos descriptores de archivo hasta la recolección de basura
 * `Dependencia` Se actualiza el parche de jackpal emulatorview 1.0.42-p8.1 -> 1.0.42-p8.2: si una sesión se cierra antes de que arranque su hilo de escritura, este libera de inmediato los descriptores eventfd y epoll de su cola de mensajes; solo cambia `TermSession`, las demás clases son idénticas byte a byte y `locks/vendored-aars.lock` se actualiza
 

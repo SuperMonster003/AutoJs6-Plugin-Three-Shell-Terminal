@@ -8,6 +8,7 @@
     "v1.2.1": {
       "released_date": "2026/11/20",
       "fix": [
+        "The command editor's edit box being squeezed out of view and its buttons cut off when the keyboard opens on short screens; the editor window now fits its content and stays between the status bar and the keyboard",
         "A terminal session closed soon after creation on a busy device occasionally keeping two file descriptors open until garbage collection"
       ],
       "dependency": [

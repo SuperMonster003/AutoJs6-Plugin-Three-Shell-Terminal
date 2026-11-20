@@ -8,6 +8,7 @@
 
 ###### 2026/11/20
 
+* `Correctif` Zone de saisie de l'éditeur de commandes repoussée hors de la vue et boutons tronqués à l'ouverture du clavier sur les écrans peu hauts; la fenêtre de l'éditeur s'adapte désormais à son contenu et reste entre la barre d'état et le clavier
 * `Correctif` Sessions de terminal fermées peu après leur création sur un appareil chargé qui gardaient parfois deux descripteurs de fichier ouverts jusqu'au ramasse-miettes
 * `Dépendance` Mise à niveau du correctif jackpal emulatorview 1.0.42-p8.1 -> 1.0.42-p8.2: quand une session se ferme avant le démarrage de son thread d'écriture, celui-ci libère aussitôt les descripteurs eventfd et epoll de sa file de messages; seule `TermSession` change, toutes les autres classes sont identiques octet par octet et `locks/vendored-aars.lock` est mis à jour
 

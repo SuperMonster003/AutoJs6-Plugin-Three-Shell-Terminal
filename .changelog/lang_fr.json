@@ -8,6 +8,7 @@
     "v1.2.1": {
       "released_date": "2026/11/20",
       "fix": [
+        "Zone de saisie de l'éditeur de commandes repoussée hors de la vue et boutons tronqués à l'ouverture du clavier sur les écrans peu hauts; la fenêtre de l'éditeur s'adapte désormais à son contenu et reste entre la barre d'état et le clavier",
         "Sessions de terminal fermées peu après leur création sur un appareil chargé qui gardaient parfois deux descripteurs de fichier ouverts jusqu'au ramasse-miettes"
       ],
       "dependency": [
